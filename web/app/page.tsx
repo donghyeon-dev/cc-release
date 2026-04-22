@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/assets";
 import { getLatestUpdatedAt, getReleases } from "@/lib/data";
 import { formatDateTimeKorean } from "@/lib/format";
 import { ReleaseList } from "@/components/ReleaseList";
@@ -14,7 +15,7 @@ export default async function Home() {
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:gap-4">
               <img
-                src="/icon.svg"
+                src={withBasePath("/icon.svg")}
                 alt=""
                 aria-hidden
                 className="h-11 w-11 shrink-0 rounded-lg shadow-sm sm:mt-1"

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { withBasePath } from "@/lib/assets";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,6 +33,9 @@ export const metadata: Metadata = {
   title: "Claude Code 릴리즈 요약",
   description:
     "Claude Code 릴리즈를 개발자 관점에서 한국어로 요약한 일일 업데이트 페이지.",
+  icons: {
+    icon: [{ url: withBasePath("/icon.svg"), type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({

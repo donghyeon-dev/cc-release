@@ -1,0 +1,46 @@
+[
+  {
+    "version": "v1.0.0-sample-2",
+    "tagName": "v1.0.0-sample-2",
+    "publishedAt": "2026-04-21T09:00:00Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v1.0.0-sample-2",
+    "originalBody": "## What's Changed\n\n### Features\n- Added new `/routine` slash command for scheduling recurring tasks\n- Improved MCP server auto-discovery in project directories\n- Cowork integration now supports file attachments\n\n### Fixes\n- Fixed hang when large PRs contain binary diffs\n- Resolved intermittent token refresh error on Windows\n\n### Chores\n- Updated bundled Node runtime to v22.14",
+    "summary": {
+      "headline": "Routine 슬래시 커맨드 추가, MCP 자동 탐지 개선, Windows 토큰 갱신 버그 수정",
+      "newFeatures": [
+        "`/routine` 슬래시 커맨드로 반복 작업 스케줄링 가능",
+        "Cowork 통합에서 파일 첨부 지원"
+      ],
+      "changes": [
+        "프로젝트 디렉토리 내 MCP 서버 자동 탐지 개선",
+        "번들 Node 런타임 v22.14로 업그레이드"
+      ],
+      "fixes": [
+        "대용량 PR 바이너리 diff 처리 중 hang 발생 현상 수정",
+        "Windows에서 간헐적으로 발생하던 토큰 갱신 실패 수정"
+      ],
+      "devImpact": "Windows 사용자는 토큰 갱신 버그가 해결되어 재로그인 빈도가 줄어들 것. `/routine`은 자동화 파이프라인 설계 시 활용 가능."
+    },
+    "summarizedAt": "2026-04-22T00:00:00Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
+    "version": "v1.0.0-sample-1",
+    "tagName": "v1.0.0-sample-1",
+    "publishedAt": "2026-04-15T09:00:00Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v1.0.0-sample-1",
+    "originalBody": "## What's Changed\n\n### Features\n- Initial release with basic agent orchestration\n- Support for custom subagents\n\n### Fixes\n- None\n\n**Full Changelog**: https://github.com/anthropics/claude-code/commits/v1.0.0-sample-1",
+    "summary": {
+      "headline": "샘플 릴리즈 - UI 검증용 초기 데이터",
+      "newFeatures": [
+        "기본 에이전트 오케스트레이션",
+        "커스텀 서브에이전트 지원"
+      ],
+      "changes": [],
+      "fixes": [],
+      "devImpact": "이 항목은 UI 초기 렌더링 검증용 샘플 데이터. Cowork 첫 실행 시 실제 데이터로 교체됨."
+    },
+    "summarizedAt": "2026-04-22T00:00:00Z",
+    "summaryModel": "claude-opus-4-7"
+  }
+]

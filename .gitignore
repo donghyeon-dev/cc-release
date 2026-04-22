@@ -1,0 +1,38 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.pnpm-debug.log*
+
+# Build artifacts
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# OMC state (local only)
+.omc/
+
+# Claude Code local state
+.claude/
+
+# Misc
+*.log
+
+# Local dev helpers (not meant for CI)
+web/serve-*.mjs
+.omc/screenshot-*.png

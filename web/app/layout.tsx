@@ -12,6 +12,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const themeInitScript = `
+(() => {
+  try {
+    const saved = window.localStorage.getItem("cc-release-theme");
+    const theme = saved === "white" || saved === "black"
+      ? saved
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "black"
+        : "white";
+    document.documentElement.dataset.theme = theme;
+  } catch {
+    document.documentElement.dataset.theme = "white";
+  }
+})();
+`;
+
 export const metadata: Metadata = {
   title: "Claude Code 릴리즈 요약",
   description:
@@ -26,8 +42,13 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
+      data-theme="white"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-full">{children}</body>
     </html>
   );

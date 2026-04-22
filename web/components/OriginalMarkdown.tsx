@@ -12,14 +12,14 @@ export function OriginalMarkdown({ body }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-6 border-t border-zinc-200 dark:border-zinc-800 pt-4">
+    <div className="mt-6 border-t border-zinc-100 pt-4 dark:border-zinc-900">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+        className="flex items-center gap-2 rounded-md px-1 py-1 text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100"
       >
         <span
-          className={`inline-block transition-transform ${open ? "rotate-90" : ""}`}
+          className={`inline-block text-xs transition-transform ${open ? "rotate-90" : ""}`}
           aria-hidden
         >
           ▶
@@ -28,7 +28,7 @@ export function OriginalMarkdown({ body }: Props) {
       </button>
       {open && (
         <div className="mt-4">
-          <div className="markdown-body rounded-md bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 text-sm leading-relaxed">
+          <div className="markdown-body rounded-lg border border-zinc-200 bg-[#fafaf8] p-4 text-sm leading-relaxed dark:border-zinc-800 dark:bg-zinc-900/70">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{body}</ReactMarkdown>
           </div>
         </div>

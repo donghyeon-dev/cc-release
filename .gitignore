@@ -37,3 +37,6 @@ Thumbs.db
 # Local dev helpers (not meant for CI)
 web/serve-*.mjs
 .omc/screenshot-*.png
+
+# GitHub token (로컬 전용, 절대 커밋하지 말 것)
+.secrets/

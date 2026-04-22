@@ -73,9 +73,11 @@ interface Release {
 }
 ```
 
-## Cowork 루틴 설정
+## 배포 & Cowork 설정
 
-상세 프롬프트는 [`scripts/cowork-prompt.md`](./scripts/cowork-prompt.md) 참조.
+단계별 배포 · Cowork 루틴 등록 가이드는 [`docs/SETUP.md`](./docs/SETUP.md) 참조.
+
+Cowork 프롬프트 원문은 [`scripts/cowork-prompt.md`](./scripts/cowork-prompt.md).
 
 1. Claude Desktop 실행 → Cowork 패널 오픈
 2. `Create routine` 클릭

@@ -123,6 +123,60 @@ body {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
+button.inline-code {
+  appearance: none;
+  display: inline;
+  text-align: left;
+  font: inherit;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  line-height: inherit;
+  margin: 0;
+  vertical-align: baseline;
+}
+
+.inline-code-link {
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.inline-code-link:hover,
+.inline-code-link:focus-visible {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+  outline: none;
+}
+[data-theme="black"] .inline-code-link:hover,
+[data-theme="black"] .inline-code-link:focus-visible {
+  background: #422006;
+  border-color: #f59e0b;
+  color: #fde68a;
+}
+
+.inline-code-highlight,
+.markdown-body code.inline-code-highlight {
+  background: #fde68a;
+  border-color: #f59e0b;
+  color: #78350f;
+  box-shadow: 0 0 0 1px #f59e0b;
+  scroll-margin-top: 4rem;
+}
+[data-theme="black"] .inline-code-highlight,
+[data-theme="black"] .markdown-body code.inline-code-highlight {
+  background: #78350f;
+  border-color: #fbbf24;
+  color: #fef3c7;
+  box-shadow: 0 0 0 1px #fbbf24;
+}
+
+.bullet-highlight {
+  background: rgba(254, 243, 199, 0.7);
+  scroll-margin-top: 4rem;
+}
+[data-theme="black"] .bullet-highlight {
+  background: rgba(251, 191, 36, 0.12);
+}
 .markdown-body pre {
   margin: 0.75em 0;
   padding: 0.75em 0.9em;

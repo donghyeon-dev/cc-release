@@ -1,8 +1,10 @@
 # Cowork 루틴 프롬프트 - Claude Code 릴리즈 요약 업데이트
 
 > 이 프롬프트를 Claude Desktop의 Cowork 루틴에 등록합니다.
-> 스케줄: 매일 09:00 (KST)
+> 스케줄: 평일 (월-금) 09:00 (KST)
 > 권한: GitHub (repo 읽기/쓰기), 파일 시스템 (로컬 clone 디렉토리)
+>
+> 월간 루틴 실행 한도: 25회 (Pro 기준). 평일 월-금이면 월 약 20-22회로 한도 내.
 
 ## 프롬프트 본문
 
@@ -102,6 +104,14 @@ git push origin main
 
 1. Claude Desktop 실행 → 우상단 Cowork 아이콘
 2. "Create routine" → 위 프롬프트 본문 붙여넣기
-3. Schedule: Daily at 09:00
+3. Schedule: **Weekdays (Mon-Fri) at 09:00**, Timezone `Asia/Seoul`
+   - 주간 스케줄 UI가 없으면 cron 표현식 `0 9 * * 1-5` 사용
 4. Connectors: GitHub (repo scope), Filesystem (workspace path)
 5. 첫 실행: 수동으로 "Run now" 클릭하여 샘플 데이터가 실제 데이터로 갱신되는지 검증
+
+## 실행 한도 주의사항
+
+- Cowork 월간 루틴 실행은 **25회 제한** (Pro 플랜 기준).
+- 평일만 돌리면 월 20~22회로 한도 내.
+- 수동 "Run now" 도 카운트에 포함될 가능성 있음. 테스트는 월 초에 여유있게.
+- 매일 돌리면 월 30~31회로 한도 초과 → 주말 제외 필수.

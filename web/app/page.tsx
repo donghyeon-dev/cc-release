@@ -14,7 +14,7 @@ export default async function Home() {
             Claude Code 릴리즈 노트 요약
           </h1>
           <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">
-            개발자 관점에서 핵심만 정리한 Claude Code 릴리즈 소식. 매일 오전 9시 자동 업데이트.
+            개발자 관점에서 핵심만 정리한 Claude Code 릴리즈 소식. 평일 오전 9시 자동 업데이트.
           </p>
           {updatedAt && (
             <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-500">

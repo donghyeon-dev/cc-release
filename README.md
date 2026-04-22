@@ -25,13 +25,16 @@ cc-release/
 ### 데이터 흐름
 
 ```
-매일 09:00
+평일 (월-금) 09:00 KST
   Claude Desktop (Cowork 루틴)
     └─ GitHub API 로 anthropics/claude-code 신규 릴리즈 조회
         └─ 개발자 관점 요약 생성 (한국어)
             └─ data/releases.json 에 prepend + git push
                 └─ GitHub Actions 가 Next.js 빌드 & GH Pages 배포
 ```
+
+> Cowork Pro 플랜은 월간 루틴 실행 25회 제한이 있어 주말을 제외.
+> 평일만 돌려도 주말 사이 릴리즈는 월요일 실행에서 catch-up 됨.
 
 ## 로컬 개발
 

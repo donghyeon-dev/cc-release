@@ -2,11 +2,19 @@ import { Fragment } from "react";
 
 interface Props {
   text: string;
+  onCodeClick?: (token: string) => void;
+  highlightToken?: string | null;
+  sourceTag?: string;
 }
 
 const BACKTICK_PATTERN = /`([^`\n]+)`/g;
 
-export function InlineCode({ text }: Props) {
+export function InlineCode({
+  text,
+  onCodeClick,
+  highlightToken,
+  sourceTag,
+}: Props) {
   if (!text) return null;
   if (!text.includes("`")) return <>{text}</>;
 
@@ -24,11 +32,41 @@ export function InlineCode({ text }: Props) {
         </Fragment>,
       );
     }
-    nodes.push(
-      <code key={`c-${key++}`} className="inline-code">
-        {match[1]}
-      </code>,
-    );
+    const token = match[1];
+    const isHighlight = !!highlightToken && highlightToken === token;
+    const className = [
+      "inline-code",
+      onCodeClick ? "inline-code-link" : "",
+      isHighlight ? "inline-code-highlight" : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    if (onCodeClick) {
+      nodes.push(
+        <button
+          key={`c-${key++}`}
+          type="button"
+          className={className}
+          data-code-token={token}
+          data-source={sourceTag}
+          onClick={() => onCodeClick(token)}
+        >
+          {token}
+        </button>,
+      );
+    } else {
+      nodes.push(
+        <code
+          key={`c-${key++}`}
+          className={className}
+          data-code-token={token}
+          data-source={sourceTag}
+        >
+          {token}
+        </code>,
+      );
+    }
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < text.length) {

@@ -20,14 +20,16 @@ export function ReleaseCard({ release }: Props) {
         >
           {formatDateKorean(release.publishedAt)}
         </time>
-        <a
-          href={release.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ml-auto text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 underline underline-offset-2 transition-colors"
-        >
-          GitHub에서 보기 ↗
-        </a>
+        {release.url && (
+          <a
+            href={release.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 underline underline-offset-2 transition-colors"
+          >
+            GitHub에서 보기 ↗
+          </a>
+        )}
       </header>
 
       <SummarySection summary={release.summary} />

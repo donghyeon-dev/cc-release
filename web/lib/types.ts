@@ -10,7 +10,7 @@ export interface Release {
   version: string;
   tagName: string;
   publishedAt: string;
-  url: string;
+  url?: string;
   originalBody: string;
   summary: ReleaseSummary;
   summarizedAt: string;

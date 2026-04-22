@@ -1,4 +1,5 @@
 import type { ReleaseSummary } from "@/lib/types";
+import { InlineCode } from "./InlineCode";
 
 interface Props {
   summary: ReleaseSummary;
@@ -23,7 +24,9 @@ function Bucket({ label, items, accent }: BucketProps) {
         {items.map((item, i) => (
           <li key={i} className="flex gap-2">
             <span className="text-zinc-400 select-none mt-0.5">•</span>
-            <span>{item}</span>
+            <span>
+              <InlineCode text={item} />
+            </span>
           </li>
         ))}
       </ul>
@@ -35,7 +38,7 @@ export function SummarySection({ summary }: Props) {
   return (
     <div className="space-y-5">
       <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 leading-snug">
-        {summary.headline}
+        <InlineCode text={summary.headline} />
       </p>
 
       <div className="space-y-4">
@@ -61,7 +64,9 @@ export function SummarySection({ summary }: Props) {
           <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
             개발자 영향도
           </p>
-          <p>{summary.devImpact}</p>
+          <p>
+            <InlineCode text={summary.devImpact} />
+          </p>
         </div>
       )}
     </div>

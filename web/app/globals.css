@@ -76,12 +76,21 @@ body {
   margin: 0.25em 0;
 }
 
-.markdown-body code {
+.markdown-body code,
+.inline-code {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.875em;
   padding: 0.1em 0.35em;
   border-radius: 3px;
   background: rgba(127, 127, 127, 0.15);
+  color: inherit;
+  white-space: nowrap;
+}
+
+.inline-code {
+  /* 긴 식별자는 줄바꿈 허용해 레이아웃 깨짐 방지 */
+  white-space: normal;
+  word-break: break-word;
 }
 .markdown-body pre {
   margin: 0.75em 0;

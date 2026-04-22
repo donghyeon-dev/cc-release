@@ -1,6 +1,6 @@
 import { getLatestUpdatedAt, getReleases } from "@/lib/data";
 import { formatDateTimeKorean } from "@/lib/format";
-import { ReleaseCard } from "@/components/ReleaseCard";
+import { ReleaseList } from "@/components/ReleaseList";
 
 export default async function Home() {
   const releases = await getReleases();
@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <main className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
-        <header className="mb-10">
+        <header className="mb-6">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             Claude Code 릴리즈 노트 요약
           </h1>
@@ -28,11 +28,7 @@ export default async function Home() {
             아직 수집된 릴리즈가 없습니다.
           </div>
         ) : (
-          <div className="space-y-6">
-            {releases.map((r) => (
-              <ReleaseCard key={r.tagName} release={r} />
-            ))}
-          </div>
+          <ReleaseList releases={releases} />
         )}
 
         <footer className="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800 text-center text-xs text-zinc-500">

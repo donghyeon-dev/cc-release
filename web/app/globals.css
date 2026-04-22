@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="black"], [data-theme="black"] *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --inline-code-background: #f1f1ef;
+  --inline-code-border: #deded9;
+  --inline-code-foreground: #b83a3a;
+  --code-block-background: #f6f6f4;
 }
 
 @theme inline {
@@ -12,11 +18,24 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme="white"] {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #171717;
+  --inline-code-background: #f1f1ef;
+  --inline-code-border: #deded9;
+  --inline-code-foreground: #b83a3a;
+  --code-block-background: #f6f6f4;
+}
+
+[data-theme="black"] {
+  color-scheme: dark;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --inline-code-background: #27272a;
+  --inline-code-border: #3f3f46;
+  --inline-code-foreground: #fda4af;
+  --code-block-background: #18181b;
 }
 
 body {
@@ -24,6 +43,16 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.release-copy {
+  overflow-wrap: anywhere;
 }
 
 .markdown-body h1,
@@ -82,21 +111,77 @@ body {
   font-size: 0.875em;
   padding: 0.1em 0.35em;
   border-radius: 3px;
-  background: rgba(127, 127, 127, 0.15);
-  color: inherit;
+  border: 1px solid var(--inline-code-border);
+  background: var(--inline-code-background);
+  color: var(--inline-code-foreground);
   white-space: nowrap;
 }
 
 .inline-code {
   /* 긴 식별자는 줄바꿈 허용해 레이아웃 깨짐 방지 */
   white-space: normal;
+  overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+button.inline-code {
+  appearance: none;
+  display: inline;
+  text-align: left;
+  font: inherit;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  line-height: inherit;
+  margin: 0;
+  vertical-align: baseline;
+}
+
+.inline-code-link {
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.inline-code-link:hover,
+.inline-code-link:focus-visible {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+  outline: none;
+}
+[data-theme="black"] .inline-code-link:hover,
+[data-theme="black"] .inline-code-link:focus-visible {
+  background: #422006;
+  border-color: #f59e0b;
+  color: #fde68a;
+}
+
+.inline-code-highlight,
+.markdown-body code.inline-code-highlight {
+  background: #fde68a;
+  border-color: #f59e0b;
+  color: #78350f;
+  box-shadow: 0 0 0 1px #f59e0b;
+  scroll-margin-top: 4rem;
+}
+[data-theme="black"] .inline-code-highlight,
+[data-theme="black"] .markdown-body code.inline-code-highlight {
+  background: #78350f;
+  border-color: #fbbf24;
+  color: #fef3c7;
+  box-shadow: 0 0 0 1px #fbbf24;
+}
+
+.bullet-highlight {
+  background: rgba(254, 243, 199, 0.7);
+  scroll-margin-top: 4rem;
+}
+[data-theme="black"] .bullet-highlight {
+  background: rgba(251, 191, 36, 0.12);
 }
 .markdown-body pre {
   margin: 0.75em 0;
   padding: 0.75em 0.9em;
   border-radius: 4px;
-  background: rgba(127, 127, 127, 0.1);
+  background: var(--code-block-background);
   overflow-x: auto;
   font-size: 0.85rem;
 }
@@ -110,10 +195,9 @@ body {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-@media (prefers-color-scheme: dark) {
-  .markdown-body a {
-    color: #60a5fa;
-  }
+
+[data-theme="black"] .markdown-body a {
+  color: #60a5fa;
 }
 
 .markdown-body blockquote {

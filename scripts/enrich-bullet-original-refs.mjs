@@ -16,7 +16,7 @@
 //   --from vX.Y.Z        시작 버전 (기본 v2.0.73)
 //   --to vX.Y.Z          끝 버전 (기본 v2.1.117)
 //   --force              이미 객체인 bullet 도 재계산
-//   --jaccard N          Tier 2 유사도 임계값 (기본 0.2)
+//   --jaccard N          Tier 2 유사도 임계값 (기본 0.1)
 
 import fs from "node:fs";
 import path from "node:path";
@@ -39,7 +39,7 @@ const LIMIT = getOpt("--limit") ? Number(getOpt("--limit")) : Infinity;
 const ONLY = getOpt("--only");
 const FROM = getOpt("--from", "v2.0.73");
 const TO = getOpt("--to", "v2.1.117");
-const JACCARD_THRESHOLD = Number(getOpt("--jaccard", "0.2"));
+const JACCARD_THRESHOLD = Number(getOpt("--jaccard", "0.1"));
 
 function parseVersion(v) {
   const parts = (v ?? "").replace(/^v/, "").split(".").map(Number);

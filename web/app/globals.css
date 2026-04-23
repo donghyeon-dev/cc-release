@@ -177,6 +177,46 @@ button.inline-code {
 [data-theme="black"] .bullet-highlight {
   background: rgba(251, 191, 36, 0.12);
 }
+
+.impact-ref-marker {
+  display: inline;
+  appearance: none;
+  background: transparent;
+  border: none;
+  font: inherit;
+  font-size: 0.72em;
+  font-weight: 600;
+  color: #b45309;
+  margin-left: 0.15em;
+  padding: 0 0.25em;
+  border-radius: 3px;
+  cursor: pointer;
+  vertical-align: super;
+  line-height: 1;
+}
+button.impact-ref-marker:hover,
+button.impact-ref-marker:focus-visible {
+  background: #fef3c7;
+  outline: none;
+}
+[data-theme="black"] .impact-ref-marker {
+  color: #fbbf24;
+}
+[data-theme="black"] button.impact-ref-marker:hover,
+[data-theme="black"] button.impact-ref-marker:focus-visible {
+  background: #422006;
+}
+
+.bullet-ref-anchor {
+  font-size: 0.7em;
+  font-weight: 600;
+  color: #b45309;
+  margin-left: 0.35em;
+  vertical-align: super;
+}
+[data-theme="black"] .bullet-ref-anchor {
+  color: #fbbf24;
+}
 .markdown-body pre {
   margin: 0.75em 0;
   padding: 0.75em 0.9em;

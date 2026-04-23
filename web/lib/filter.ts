@@ -1,4 +1,5 @@
 import type { Release } from "./types";
+import { isStructuredDevImpact } from "./types";
 
 const VERSION_PATTERN = /^v?\d+(?:\.\d+){0,2}$/;
 
@@ -14,6 +15,15 @@ function matchesVersionPrefix(release: Release, query: string): boolean {
   return version.startsWith(`${normalized}.`);
 }
 
+function devImpactToSearchText(
+  devImpact: Release["summary"]["devImpact"],
+): string {
+  if (isStructuredDevImpact(devImpact)) {
+    return devImpact.map((item) => item.text).join(" ");
+  }
+  return devImpact ?? "";
+}
+
 function buildSearchCorpus(release: Release): string {
   const parts: string[] = [
     release.version,
@@ -22,10 +32,10 @@ function buildSearchCorpus(release: Release): string {
     ...release.summary.newFeatures,
     ...release.summary.changes,
     ...release.summary.fixes,
-    release.summary.devImpact,
+    devImpactToSearchText(release.summary.devImpact),
     release.originalBody,
   ];
-  return parts.join("  ").toLowerCase();
+  return parts.join("  ").toLowerCase();
 }
 
 export function matchRelease(release: Release, rawQuery: string): boolean {

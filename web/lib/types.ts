@@ -1,9 +1,19 @@
+export interface DevImpactRef {
+  bucket: "newFeatures" | "changes" | "fixes";
+  index: number;
+}
+
+export interface DevImpactItem {
+  text: string;
+  refs: DevImpactRef[];
+}
+
 export interface ReleaseSummary {
   headline: string;
   newFeatures: string[];
   changes: string[];
   fixes: string[];
-  devImpact: string;
+  devImpact: string | DevImpactItem[];
 }
 
 export interface Release {
@@ -15,4 +25,19 @@ export interface Release {
   summary: ReleaseSummary;
   summarizedAt: string;
   summaryModel: string;
+}
+
+export function isStructuredDevImpact(
+  devImpact: string | DevImpactItem[] | undefined,
+): devImpact is DevImpactItem[] {
+  return Array.isArray(devImpact);
+}
+
+export function isInStructuredRange(version: string): boolean {
+  const v = version.replace(/^v/, "").split(".").map(Number);
+  const [M, m, p] = [v[0] ?? 0, v[1] ?? 0, v[2] ?? 0];
+  if (M > 2) return true;
+  if (M < 2) return false;
+  if (m > 0) return true;
+  return p >= 73;
 }

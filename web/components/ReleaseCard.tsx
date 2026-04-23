@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Release } from "@/lib/types";
+import type { DevImpactRef, Release } from "@/lib/types";
 import { formatDateKorean } from "@/lib/format";
 import { SummarySection } from "./SummarySection";
 import { OriginalMarkdown } from "./OriginalMarkdown";
@@ -14,6 +14,7 @@ export function ReleaseCard({ release }: Props) {
   const cardRef = useRef<HTMLElement>(null);
   const [originalOpen, setOriginalOpen] = useState(false);
   const [highlightToken, setHighlightToken] = useState<string | null>(null);
+  const [activeRef, setActiveRef] = useState<DevImpactRef | null>(null);
 
   const handleTokenClick = (token: string) => {
     if (highlightToken === token) {
@@ -21,7 +22,21 @@ export function ReleaseCard({ release }: Props) {
       return;
     }
     setHighlightToken(token);
+    setActiveRef(null);
     setOriginalOpen(true);
+  };
+
+  const handleRefClick = (ref: DevImpactRef) => {
+    if (
+      activeRef &&
+      activeRef.bucket === ref.bucket &&
+      activeRef.index === ref.index
+    ) {
+      setActiveRef(null);
+      return;
+    }
+    setActiveRef(ref);
+    setHighlightToken(null);
   };
 
   useEffect(() => {
@@ -41,6 +56,21 @@ export function ReleaseCard({ release }: Props) {
     }, 80);
     return () => window.clearTimeout(timer);
   }, [highlightToken, originalOpen]);
+
+  useEffect(() => {
+    if (!activeRef || !cardRef.current) return;
+    const root = cardRef.current;
+    const selector = `[data-ref-anchor="${CSS.escape(
+      `${activeRef.bucket}:${activeRef.index}`,
+    )}"]`;
+    const timer = window.setTimeout(() => {
+      const target = root.querySelector(selector);
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 80);
+    return () => window.clearTimeout(timer);
+  }, [activeRef]);
 
   return (
     <article
@@ -75,7 +105,9 @@ export function ReleaseCard({ release }: Props) {
         <SummarySection
           summary={release.summary}
           highlightToken={highlightToken}
+          activeRef={activeRef}
           onDevImpactTokenClick={handleTokenClick}
+          onDevImpactRefClick={handleRefClick}
         />
         <OriginalMarkdown
           body={release.originalBody}

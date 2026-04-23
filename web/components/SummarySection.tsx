@@ -1,18 +1,29 @@
-import type { ReleaseSummary } from "@/lib/types";
+import type { DevImpactRef, ReleaseSummary } from "@/lib/types";
 import { InlineCode } from "./InlineCode";
+import {
+  buildRefNumberMap,
+  getBulletRefNumber,
+  hasClickableBackticks,
+  normalizeDevImpact,
+} from "@/lib/dev-impact";
 
 interface Props {
   summary: ReleaseSummary;
   highlightToken?: string | null;
+  activeRef?: DevImpactRef | null;
   onDevImpactTokenClick?: (token: string) => void;
+  onDevImpactRefClick?: (ref: DevImpactRef) => void;
 }
 
 interface BucketProps {
   label: string;
+  bucket: DevImpactRef["bucket"];
   items: string[];
   accent: string;
   marker: string;
   highlightToken?: string | null;
+  activeRef?: DevImpactRef | null;
+  refMap: Map<string, number>;
 }
 
 function bulletMatches(item: string, token: string | null | undefined) {
@@ -20,7 +31,16 @@ function bulletMatches(item: string, token: string | null | undefined) {
   return item.includes("`" + token + "`");
 }
 
-function Bucket({ label, items, accent, marker, highlightToken }: BucketProps) {
+function Bucket({
+  label,
+  bucket,
+  items,
+  accent,
+  marker,
+  highlightToken,
+  activeRef,
+  refMap,
+}: BucketProps) {
   if (items.length === 0) return null;
   return (
     <section className="border-t border-zinc-100 pt-4 first:border-t-0 first:pt-0 dark:border-zinc-900">
@@ -32,10 +52,15 @@ function Bucket({ label, items, accent, marker, highlightToken }: BucketProps) {
       </h3>
       <ul className="space-y-2 text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">
         {items.map((item, i) => {
-          const matched = bulletMatches(item, highlightToken);
+          const matchedByToken = bulletMatches(item, highlightToken);
+          const matchedByRef =
+            !!activeRef && activeRef.bucket === bucket && activeRef.index === i;
+          const matched = matchedByToken || matchedByRef;
+          const refNumber = getBulletRefNumber(bucket, i, refMap);
           return (
             <li
               key={i}
+              data-ref-anchor={`${bucket}:${i}`}
               className={`grid grid-cols-[1rem_1fr] gap-2 rounded-md transition-colors ${
                 matched ? "bullet-highlight" : ""
               }`}
@@ -47,6 +72,9 @@ function Bucket({ label, items, accent, marker, highlightToken }: BucketProps) {
                   highlightToken={highlightToken}
                   sourceTag="korean"
                 />
+                {refNumber !== undefined && (
+                  <sup className="bullet-ref-anchor">{refNumber}</sup>
+                )}
               </span>
             </li>
           );
@@ -56,25 +84,18 @@ function Bucket({ label, items, accent, marker, highlightToken }: BucketProps) {
   );
 }
 
-function getDevImpactItems(devImpact: string) {
-  return devImpact
-    .split(/(?<=[.!?])\s+/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
 export function SummarySection({
   summary,
   highlightToken,
+  activeRef,
   onDevImpactTokenClick,
+  onDevImpactRefClick,
 }: Props) {
-  const devImpactItems = summary.devImpact
-    ? getDevImpactItems(summary.devImpact)
-    : [];
-
+  const devImpactItems = normalizeDevImpact(summary.devImpact);
+  const refMap = buildRefNumberMap(devImpactItems);
   const hasClickableTokens =
-    !!onDevImpactTokenClick &&
-    devImpactItems.some((item) => item.includes("`"));
+    !!onDevImpactTokenClick && hasClickableBackticks(devImpactItems);
+  const hasRefMarkers = refMap.size > 0;
 
   return (
     <div className="release-copy space-y-6">
@@ -93,18 +114,45 @@ export function SummarySection({
                 <span className="mt-2 h-1.5 w-1.5 rounded-full bg-zinc-400 dark:bg-zinc-600" />
                 <span className="min-w-0 break-words">
                   <InlineCode
-                    text={item}
+                    text={item.text}
                     onCodeClick={onDevImpactTokenClick}
                     highlightToken={highlightToken}
                     sourceTag="devimpact"
                   />
+                  {item.refs.map((ref, j) => {
+                    const num = getBulletRefNumber(ref.bucket, ref.index, refMap);
+                    if (num === undefined) return null;
+                    if (!onDevImpactRefClick) {
+                      return (
+                        <sup key={j} className="impact-ref-marker" aria-hidden>
+                          {num}
+                        </sup>
+                      );
+                    }
+                    return (
+                      <button
+                        key={j}
+                        type="button"
+                        className="impact-ref-marker"
+                        onClick={() => onDevImpactRefClick(ref)}
+                        aria-label={`근거 항목 ${num}번 보기`}
+                      >
+                        {num}
+                      </button>
+                    );
+                  })}
                 </span>
               </li>
             ))}
           </ul>
-          {hasClickableTokens && (
+          {(hasClickableTokens || hasRefMarkers) && (
             <p className="mt-3 text-[11px] leading-snug text-zinc-500 dark:text-zinc-500">
-              키워드를 클릭하면 관련 한글 항목과 원문을 함께 강조합니다.
+              {hasRefMarkers
+                ? "숫자 표시를 누르면 근거가 된 항목으로 이동합니다. "
+                : ""}
+              {hasClickableTokens
+                ? "키워드를 클릭하면 관련 한글 항목과 원문을 함께 강조합니다."
+                : ""}
             </p>
           )}
         </div>
@@ -113,24 +161,33 @@ export function SummarySection({
       <div className="space-y-5">
         <Bucket
           label="새 기능"
+          bucket="newFeatures"
           items={summary.newFeatures}
           accent="text-emerald-600 dark:text-emerald-400"
           marker="bg-emerald-500"
           highlightToken={highlightToken}
+          activeRef={activeRef}
+          refMap={refMap}
         />
         <Bucket
           label="변경"
+          bucket="changes"
           items={summary.changes}
           accent="text-blue-600 dark:text-blue-400"
           marker="bg-blue-500"
           highlightToken={highlightToken}
+          activeRef={activeRef}
+          refMap={refMap}
         />
         <Bucket
           label="수정"
+          bucket="fixes"
           items={summary.fixes}
           accent="text-amber-600 dark:text-amber-400"
           marker="bg-amber-500"
           highlightToken={highlightToken}
+          activeRef={activeRef}
+          refMap={refMap}
         />
       </div>
     </div>

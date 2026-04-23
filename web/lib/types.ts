@@ -8,11 +8,16 @@ export interface DevImpactItem {
   refs: DevImpactRef[];
 }
 
+export interface BulletWithRefs {
+  text: string;
+  originalRefs: number[];
+}
+
 export interface ReleaseSummary {
   headline: string;
-  newFeatures: string[];
-  changes: string[];
-  fixes: string[];
+  newFeatures: Array<string | BulletWithRefs>;
+  changes: Array<string | BulletWithRefs>;
+  fixes: Array<string | BulletWithRefs>;
   devImpact: string | DevImpactItem[];
 }
 
@@ -40,4 +45,10 @@ export function isInStructuredRange(version: string): boolean {
   if (M < 2) return false;
   if (m > 0) return true;
   return p >= 73;
+}
+
+export function isBulletWithRefs(
+  item: string | BulletWithRefs,
+): item is BulletWithRefs {
+  return typeof item === "object" && item !== null && "text" in item;
 }

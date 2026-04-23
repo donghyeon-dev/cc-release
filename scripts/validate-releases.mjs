@@ -181,9 +181,28 @@ for (let i = 0; i < data.length; i++) {
         err(`${tag}: summary.${arrField} 배열 아님`);
       } else {
         for (let j = 0; j < r.summary[arrField].length; j++) {
-          const bullet = r.summary[arrField][j];
-          if (typeof bullet !== "string") {
-            err(`${tag}: summary.${arrField}[${j}] 문자열 아님`);
+          const raw = r.summary[arrField][j];
+          let bullet;
+          if (typeof raw === "string") {
+            bullet = raw;
+          } else if (raw && typeof raw === "object") {
+            if (typeof raw.text !== "string") {
+              err(`${tag}: summary.${arrField}[${j}].text 문자열 아님`);
+              continue;
+            }
+            if (!Array.isArray(raw.originalRefs)) {
+              err(`${tag}: summary.${arrField}[${j}].originalRefs 배열 아님`);
+              continue;
+            }
+            for (let k = 0; k < raw.originalRefs.length; k++) {
+              const ref = raw.originalRefs[k];
+              if (!Number.isInteger(ref) || ref < 0) {
+                err(`${tag}: summary.${arrField}[${j}].originalRefs[${k}] 음이 아닌 정수 아님`);
+              }
+            }
+            bullet = raw.text;
+          } else {
+            err(`${tag}: summary.${arrField}[${j}] 문자열 또는 객체 아님`);
             continue;
           }
           if (labelPrefixRe.test(bullet)) {

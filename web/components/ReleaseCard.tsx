@@ -15,6 +15,8 @@ export function ReleaseCard({ release }: Props) {
   const [originalOpen, setOriginalOpen] = useState(false);
   const [highlightToken, setHighlightToken] = useState<string | null>(null);
   const [activeRef, setActiveRef] = useState<DevImpactRef | null>(null);
+  const [activeOriginal, setActiveOriginal] = useState<{ index: number; nonce: number } | null>(null);
+  const activeOriginalIndex = activeOriginal?.index ?? null;
 
   const handleTokenClick = (token: string) => {
     if (highlightToken === token) {
@@ -37,6 +39,15 @@ export function ReleaseCard({ release }: Props) {
     }
     setActiveRef(ref);
     setHighlightToken(null);
+  };
+
+  const handleBulletOriginalClick = (refs: number[]) => {
+    if (refs.length === 0) return;
+    const target = refs[0];
+    setActiveOriginal({ index: target, nonce: Date.now() });
+    setOriginalOpen(true);
+    setHighlightToken(null);
+    setActiveRef(null);
   };
 
   useEffect(() => {
@@ -72,6 +83,33 @@ export function ReleaseCard({ release }: Props) {
     return () => window.clearTimeout(timer);
   }, [activeRef]);
 
+  useEffect(() => {
+    if (!activeOriginal || !cardRef.current || !originalOpen) return;
+    const root = cardRef.current;
+    const selector = `[data-original-line="${activeOriginal.index}"]`;
+    let attempts = 0;
+    let raf = 0;
+    const tryScroll = () => {
+      const target = root.querySelector(selector);
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.classList.add("original-line-highlight");
+        window.setTimeout(
+          () => target.classList.remove("original-line-highlight"),
+          1800,
+        );
+        return;
+      }
+      if (attempts++ < 10) {
+        raf = window.requestAnimationFrame(tryScroll);
+      }
+    };
+    raf = window.requestAnimationFrame(tryScroll);
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, [activeOriginal, originalOpen]);
+
   return (
     <article
       ref={cardRef}
@@ -106,8 +144,10 @@ export function ReleaseCard({ release }: Props) {
           summary={release.summary}
           highlightToken={highlightToken}
           activeRef={activeRef}
+          activeOriginalIndex={activeOriginalIndex}
           onDevImpactTokenClick={handleTokenClick}
           onDevImpactRefClick={handleRefClick}
+          onBulletOriginalClick={handleBulletOriginalClick}
         />
         <OriginalMarkdown
           body={release.originalBody}

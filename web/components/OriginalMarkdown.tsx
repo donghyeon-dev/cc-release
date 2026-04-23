@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -21,6 +21,18 @@ function nodeText(children: React.ReactNode): string {
 
 export const OriginalMarkdown = forwardRef<HTMLDivElement, Props>(
   function OriginalMarkdown({ body, open, onToggle, highlightToken }, ref) {
+    const contentRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+      if (!open) return;
+      const root = contentRef.current;
+      if (!root) return;
+      const items = root.querySelectorAll("li");
+      items.forEach((li, i) => {
+        li.setAttribute("data-original-line", String(i));
+      });
+    });
+
     const components: Components = {
       code({ className, children, ...props }) {
         const isBlock = typeof className === "string" && className.startsWith("language-");
@@ -66,7 +78,10 @@ export const OriginalMarkdown = forwardRef<HTMLDivElement, Props>(
         </button>
         {open && (
           <div ref={ref} className="mt-4">
-            <div className="markdown-body rounded-lg border border-zinc-200 bg-[#fafaf8] p-4 text-sm leading-relaxed dark:border-zinc-800 dark:bg-zinc-900/70">
+            <div
+              ref={contentRef}
+              className="markdown-body rounded-lg border border-zinc-200 bg-[#fafaf8] p-4 text-sm leading-relaxed dark:border-zinc-800 dark:bg-zinc-900/70"
+            >
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
                 {body}
               </ReactMarkdown>

@@ -22,17 +22,30 @@
 
 ## 작업 절차
 
-### 1. 로컬 워크스페이스 확인
+### 1. 로컬 워크스페이스 확인 및 임시 worktree 생성
 
-현재 작업 디렉토리가 `donghyeon-dev/cc-release` 의 로컬 체크아웃인지
-확인한다. `git remote -v` 로 origin 이 `donghyeon-dev/cc-release` 인지,
-`git status` 로 clean 상태인지 체크.
+레포 루트를 `REPO=/c/Users/user/Documents/Personal/cc-release` 로 고정.
+`git remote -v` 로 origin 이 `donghyeon-dev/cc-release` 인지 확인.
 
-작업 전 최신화:
-- `git checkout main`
-- `git pull --rebase origin main`
+**현재 브랜치를 건드리지 않기 위해 임시 worktree 를 생성한다:**
 
-dirty 상태면 중단하고 보고. 사용자가 미리 커밋해야 함.
+```bash
+WORKTREE="$REPO/.worktrees/digest-run"
+git -C "$REPO" fetch origin main
+git -C "$REPO" worktree add "$WORKTREE" origin/main
+```
+
+이후 모든 파일 작업 및 커밋은 `$WORKTREE` 경로에서 수행.
+검증 스크립트도 `node $WORKTREE/scripts/validate-releases.mjs` 로 실행.
+
+작업 완료(또는 오류 중단) 후 반드시 worktree 를 정리:
+
+```bash
+git -C "$REPO" worktree remove "$WORKTREE" --force
+```
+
+worktree 생성 실패 시 (기존 `.worktrees/digest-run` 잔존 등):
+`git -C "$REPO" worktree remove "$WORKTREE" --force` 로 제거 후 재시도.
 
 ### 2. 기존 릴리즈 목록 로드
 
@@ -184,7 +197,7 @@ git push origin main
 
 - `git pull --rebase` 실패 (충돌): 변경사항을 `.omc/backup-<timestamp>.json`
   에 저장하고 보고 후 중단.
-- dirty working tree: 작업 중단하고 보고. 사용자에게 수동 커밋 요청.
+- worktree 생성 실패 (잔존 디렉토리): `git worktree remove --force` 후 재시도. 재시도도 실패하면 보고 후 중단.
 - GitHub API rate limit (403): 보고 후 종료, 다음 스케줄 대기.
 - merge conflict on push: `git pull --rebase` 후 재시도. 여전히 실패하면
   변경사항을 `.omc/backup-<timestamp>.json` 에 저장하고 보고.

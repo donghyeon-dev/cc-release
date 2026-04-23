@@ -21,7 +21,16 @@ function nodeText(children: React.ReactNode): string {
 
 export const OriginalMarkdown = forwardRef<HTMLDivElement, Props>(
   function OriginalMarkdown({ body, open, onToggle, highlightToken }, ref) {
+    let liCounter = 0;
     const components: Components = {
+      li({ children, ...props }) {
+        const index = liCounter++;
+        return (
+          <li data-original-line={index} {...props}>
+            {children}
+          </li>
+        );
+      },
       code({ className, children, ...props }) {
         const isBlock = typeof className === "string" && className.startsWith("language-");
         if (isBlock) {

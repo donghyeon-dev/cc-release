@@ -15,6 +15,7 @@ export function ReleaseCard({ release }: Props) {
   const [originalOpen, setOriginalOpen] = useState(false);
   const [highlightToken, setHighlightToken] = useState<string | null>(null);
   const [activeRef, setActiveRef] = useState<DevImpactRef | null>(null);
+  const [activeOriginalIndex, setActiveOriginalIndex] = useState<number | null>(null);
 
   const handleTokenClick = (token: string) => {
     if (highlightToken === token) {
@@ -37,6 +38,15 @@ export function ReleaseCard({ release }: Props) {
     }
     setActiveRef(ref);
     setHighlightToken(null);
+  };
+
+  const handleBulletOriginalClick = (refs: number[]) => {
+    if (refs.length === 0) return;
+    const target = refs[0];
+    setActiveOriginalIndex(target);
+    setOriginalOpen(true);
+    setHighlightToken(null);
+    setActiveRef(null);
   };
 
   useEffect(() => {
@@ -72,6 +82,21 @@ export function ReleaseCard({ release }: Props) {
     return () => window.clearTimeout(timer);
   }, [activeRef]);
 
+  useEffect(() => {
+    if (activeOriginalIndex === null || !cardRef.current) return;
+    const root = cardRef.current;
+    const selector = `[data-original-line="${activeOriginalIndex}"]`;
+    const timer = window.setTimeout(() => {
+      const target = root.querySelector(selector);
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.classList.add("original-line-highlight");
+        window.setTimeout(() => target.classList.remove("original-line-highlight"), 1800);
+      }
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, [activeOriginalIndex, originalOpen]);
+
   return (
     <article
       ref={cardRef}
@@ -106,8 +131,10 @@ export function ReleaseCard({ release }: Props) {
           summary={release.summary}
           highlightToken={highlightToken}
           activeRef={activeRef}
+          activeOriginalIndex={activeOriginalIndex}
           onDevImpactTokenClick={handleTokenClick}
           onDevImpactRefClick={handleRefClick}
+          onBulletOriginalClick={handleBulletOriginalClick}
         />
         <OriginalMarkdown
           body={release.originalBody}

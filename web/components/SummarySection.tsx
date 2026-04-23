@@ -1,3 +1,4 @@
+import type { BulletWithRefs } from "@/lib/types";
 import type { DevImpactRef, ReleaseSummary } from "@/lib/types";
 import { InlineCode } from "./InlineCode";
 import {
@@ -6,29 +7,38 @@ import {
   hasClickableBackticks,
   normalizeDevImpact,
 } from "@/lib/dev-impact";
+import {
+  getBulletText,
+  getBulletOriginalRefs,
+} from "@/lib/bullet";
 
 interface Props {
   summary: ReleaseSummary;
   highlightToken?: string | null;
   activeRef?: DevImpactRef | null;
+  activeOriginalIndex?: number | null;
   onDevImpactTokenClick?: (token: string) => void;
   onDevImpactRefClick?: (ref: DevImpactRef) => void;
+  onBulletOriginalClick?: (refs: number[]) => void;
 }
 
 interface BucketProps {
   label: string;
   bucket: DevImpactRef["bucket"];
-  items: string[];
+  items: Array<string | BulletWithRefs>;
   accent: string;
   marker: string;
   highlightToken?: string | null;
   activeRef?: DevImpactRef | null;
+  activeOriginalIndex?: number | null;
   refMap: Map<string, number>;
+  onBulletOriginalClick?: (refs: number[]) => void;
 }
 
-function bulletMatches(item: string, token: string | null | undefined) {
+function bulletMatches(item: string | BulletWithRefs, token: string | null | undefined) {
   if (!token) return false;
-  return item.includes("`" + token + "`");
+  const text = getBulletText(item);
+  return text.includes("`" + token + "`");
 }
 
 function Bucket({
@@ -39,7 +49,9 @@ function Bucket({
   marker,
   highlightToken,
   activeRef,
+  activeOriginalIndex: _activeOriginalIndex,
   refMap,
+  onBulletOriginalClick,
 }: BucketProps) {
   if (items.length === 0) return null;
   return (
@@ -52,6 +64,9 @@ function Bucket({
       </h3>
       <ul className="space-y-2 text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">
         {items.map((item, i) => {
+          const text = getBulletText(item);
+          const originalRefs = getBulletOriginalRefs(item);
+          const clickable = originalRefs.length > 0 && !!onBulletOriginalClick;
           const matchedByToken = bulletMatches(item, highlightToken);
           const matchedByRef =
             !!activeRef && activeRef.bucket === bucket && activeRef.index === i;
@@ -61,14 +76,26 @@ function Bucket({
             <li
               key={i}
               data-ref-anchor={`${bucket}:${i}`}
+              {...(originalRefs.length > 0
+                ? { "data-original-anchor": originalRefs.join(",") }
+                : {})}
               className={`grid grid-cols-[1rem_1fr] gap-2 rounded-md transition-colors ${
                 matched ? "bullet-highlight" : ""
               }`}
             >
-              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+              {clickable ? (
+                <button
+                  type="button"
+                  aria-label="원문 근거 보기"
+                  className="mt-2 h-1.5 w-1.5 rounded-full bg-zinc-300 bullet-dot bullet-dot-clickable dark:bg-zinc-700"
+                  onClick={() => onBulletOriginalClick(originalRefs)}
+                />
+              ) : (
+                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+              )}
               <span className="min-w-0 break-words">
                 <InlineCode
-                  text={item}
+                  text={text}
                   highlightToken={highlightToken}
                   sourceTag="korean"
                 />
@@ -88,8 +115,10 @@ export function SummarySection({
   summary,
   highlightToken,
   activeRef,
+  activeOriginalIndex,
   onDevImpactTokenClick,
   onDevImpactRefClick,
+  onBulletOriginalClick,
 }: Props) {
   const devImpactItems = normalizeDevImpact(summary.devImpact);
   const refMap = buildRefNumberMap(devImpactItems);
@@ -167,7 +196,9 @@ export function SummarySection({
           marker="bg-emerald-500"
           highlightToken={highlightToken}
           activeRef={activeRef}
+          activeOriginalIndex={activeOriginalIndex}
           refMap={refMap}
+          onBulletOriginalClick={onBulletOriginalClick}
         />
         <Bucket
           label="변경"
@@ -177,7 +208,9 @@ export function SummarySection({
           marker="bg-blue-500"
           highlightToken={highlightToken}
           activeRef={activeRef}
+          activeOriginalIndex={activeOriginalIndex}
           refMap={refMap}
+          onBulletOriginalClick={onBulletOriginalClick}
         />
         <Bucket
           label="수정"
@@ -187,7 +220,9 @@ export function SummarySection({
           marker="bg-amber-500"
           highlightToken={highlightToken}
           activeRef={activeRef}
+          activeOriginalIndex={activeOriginalIndex}
           refMap={refMap}
+          onBulletOriginalClick={onBulletOriginalClick}
         />
       </div>
     </div>

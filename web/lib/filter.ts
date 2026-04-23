@@ -1,5 +1,6 @@
 import type { Release } from "./types";
 import { isStructuredDevImpact } from "./types";
+import { getBulletText } from "./bullet";
 
 const VERSION_PATTERN = /^v?\d+(?:\.\d+){0,2}$/;
 
@@ -29,9 +30,9 @@ function buildSearchCorpus(release: Release): string {
     release.version,
     release.tagName,
     release.summary.headline,
-    ...release.summary.newFeatures,
-    ...release.summary.changes,
-    ...release.summary.fixes,
+    ...release.summary.newFeatures.map(getBulletText),
+    ...release.summary.changes.map(getBulletText),
+    ...release.summary.fixes.map(getBulletText),
     devImpactToSearchText(release.summary.devImpact),
     release.originalBody,
   ];

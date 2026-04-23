@@ -178,6 +178,34 @@ button.inline-code {
   background: rgba(251, 191, 36, 0.12);
 }
 
+.bullet-dot-clickable {
+  appearance: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.15s, background-color 0.15s;
+}
+.bullet-dot-clickable:hover,
+.bullet-dot-clickable:focus-visible {
+  transform: scale(1.6);
+  background: #f59e0b;
+  outline: none;
+}
+[data-theme="black"] .bullet-dot-clickable:hover,
+[data-theme="black"] .bullet-dot-clickable:focus-visible {
+  background: #fbbf24;
+}
+
+.original-line-highlight {
+  background: rgba(254, 243, 199, 0.85);
+  border-radius: 4px;
+  transition: background-color 0.4s ease;
+  scroll-margin-top: 4rem;
+}
+[data-theme="black"] .original-line-highlight {
+  background: rgba(251, 191, 36, 0.18);
+}
+
 .impact-ref-marker {
   display: inline;
   appearance: none;

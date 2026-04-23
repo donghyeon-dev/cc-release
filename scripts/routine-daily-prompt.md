@@ -70,7 +70,14 @@ GitHub 공식 응답에서만 수행.
     "newFeatures": ["..."],
     "changes": ["..."],
     "fixes": ["..."],
-    "devImpact": "..."
+    "devImpact": [
+      {
+        "text": "개발자 관점 영향 문장 (한국어)",
+        "refs": [
+          { "bucket": "newFeatures", "index": 0 }
+        ]
+      }
+    ]
   },
   "summarizedAt": "<현재 UTC ISO8601>",
   "summaryModel": "claude-sonnet-4-6"
@@ -102,18 +109,41 @@ GitHub 공식 응답에서만 수행.
 
 ### devImpact 작성 기준
 
-다음 중 하나 **실제로 있을 때만** 2-3문장으로 구체적으로 작성:
+`devImpact` 는 `DevImpactItem` 배열. 각 원소는 `{ text, refs }` 구조.
+
+- `text`: 개발자 관점 영향 문장 (한국어). 한 문장 단위로 분리.
+- `refs`: 해당 문장의 근거가 되는 bullet 을 가리키는 참조 배열.
+  - `bucket`: `"newFeatures"` / `"changes"` / `"fixes"` 중 하나
+  - `index`: 해당 bucket 배열의 0-based 인덱스
+  - 근거 bullet 이 여러 개면 모두 나열
+  - 직접 대응되는 bullet 이 없으면 `refs: []` (주석 번호 미표시)
+- 해당 내용이 아예 없으면 **빈 배열 `[]`** (억지로 채우지 말 것).
+
+다음 중 하나 **실제로 있을 때만** text 항목으로 작성:
 - breaking change / 마이그레이션 필요
 - 기본값 변경
 - 환경변수·설정키 신설/삭제
 - 보안·권한 동작 변경
 - 특정 플랫폼 한정 영향
 
-해당 없으면 **빈 문자열 `""`** (억지로 채우지 말 것).
-
-금지 상투 문구 (이런 내용이면 빈 문자열이 낫다):
+금지 상투 문구 (이런 내용이면 빈 배열이 낫다):
 - "환경 변수나 설정 경로가 동작에 영향을 줄 수 있으므로..."
 - "권한 판정이나 샌드박스 정책이 달라질 수 있어..."
+
+**devImpact 예시**:
+
+```
+"devImpact": [
+  {
+    "text": "Pro/Max 사용자의 Opus 4.6·Sonnet 4.6 기본 effort 가 `high` 로 상향됨.",
+    "refs": [{ "bucket": "changes", "index": 5 }]
+  },
+  {
+    "text": "응답 품질은 올라가지만 토큰 사용량이 늘 수 있어 비용 모니터링 권장.",
+    "refs": [{ "bucket": "changes", "index": 5 }]
+  }
+]
+```
 
 ### 5. 파일 업데이트
 

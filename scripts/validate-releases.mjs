@@ -94,6 +94,16 @@ const forbiddenDevImpactPhrases = [
   "환경 변수나 설정 경로가 동작에 영향을 줄 수 있으므로",
   "권한 판정이나 샌드박스 정책이 달라질 수 있어",
 ];
+const VALID_DEV_IMPACT_BUCKETS = new Set(["newFeatures", "changes", "fixes"]);
+
+function isInStructuredRange(version) {
+  const v = (version ?? "").replace(/^v/, "").split(".").map(Number);
+  const [M, m, p] = [v[0] ?? 0, v[1] ?? 0, v[2] ?? 0];
+  if (M > 2) return true;
+  if (M < 2) return false;
+  if (m > 0) return true;
+  return p >= 73;
+}
 const labelPrefixRe = /^(기능 추가|문제 수정|동작 개선|성능 개선|MCP 동작 개선|MCP 기능 추가|MCP 문제 수정|SDK 동작 개선|플러그인 동작 개선|보안 검증 강화):/;
 const fiveEnglishWordsRe = /\b[A-Za-z]+(?:[\s/_.-]+[A-Za-z]+){4,}\b/;
 const seenSummaryBullets = new Map();
@@ -199,14 +209,65 @@ for (let i = 0; i < data.length; i++) {
         }
       }
     }
-    if (typeof r.summary.devImpact !== "string") {
-      err(`${tag}: summary.devImpact 문자열 아님`);
-    } else {
+    const di = r.summary.devImpact;
+    const inRange = isInStructuredRange(r.version);
+    if (Array.isArray(di)) {
+      for (let k = 0; k < di.length; k++) {
+        const item = di[k];
+        if (!item || typeof item !== "object") {
+          err(`${tag}: summary.devImpact[${k}] 객체 아님`);
+          continue;
+        }
+        if (typeof item.text !== "string") {
+          err(`${tag}: summary.devImpact[${k}].text 문자열 아님`);
+        } else {
+          for (const phrase of forbiddenDevImpactPhrases) {
+            if (item.text.includes(phrase)) {
+              err(`${tag}: summary.devImpact[${k}].text 상투 문구 포함: ${phrase}`);
+            }
+          }
+        }
+        if (!Array.isArray(item.refs)) {
+          err(`${tag}: summary.devImpact[${k}].refs 배열 아님`);
+        } else {
+          const seenRef = new Set();
+          for (let j = 0; j < item.refs.length; j++) {
+            const ref = item.refs[j];
+            if (!ref || typeof ref !== "object") {
+              err(`${tag}: summary.devImpact[${k}].refs[${j}] 객체 아님`);
+              continue;
+            }
+            if (!VALID_DEV_IMPACT_BUCKETS.has(ref.bucket)) {
+              err(`${tag}: summary.devImpact[${k}].refs[${j}].bucket 잘못됨 (${ref.bucket})`);
+              continue;
+            }
+            if (!Number.isInteger(ref.index) || ref.index < 0) {
+              err(`${tag}: summary.devImpact[${k}].refs[${j}].index 정수 아님 (${ref.index})`);
+              continue;
+            }
+            const bucketArr = r.summary[ref.bucket];
+            if (Array.isArray(bucketArr) && ref.index >= bucketArr.length) {
+              err(`${tag}: summary.devImpact[${k}].refs[${j}].index 범위 초과 (${ref.bucket}.length=${bucketArr.length}, got ${ref.index})`);
+            }
+            const key = `${ref.bucket}:${ref.index}`;
+            if (seenRef.has(key)) {
+              err(`${tag}: summary.devImpact[${k}].refs 중복 ref (${key})`);
+            }
+            seenRef.add(key);
+          }
+        }
+      }
+    } else if (typeof di === "string") {
+      if (inRange && di.trim() !== "") {
+        err(`${tag}: summary.devImpact 가 범위(v2.0.73+) 안에서 string 으로 남아있음 — DevImpactItem[] 필요`);
+      }
       for (const phrase of forbiddenDevImpactPhrases) {
-        if (r.summary.devImpact.includes(phrase)) {
+        if (di.includes(phrase)) {
           err(`${tag}: summary.devImpact 상투 문구 포함: ${phrase}`);
         }
       }
+    } else {
+      err(`${tag}: summary.devImpact 가 string 또는 배열 아님`);
     }
   }
 

@@ -67,14 +67,14 @@ function Bucket({
             >
               <span className="mt-2 h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
               <span className="min-w-0 break-words">
-                {refNumber !== undefined && (
-                  <sup className="bullet-ref-anchor">{refNumber}</sup>
-                )}
                 <InlineCode
                   text={item}
                   highlightToken={highlightToken}
                   sourceTag="korean"
                 />
+                {refNumber !== undefined && (
+                  <sup className="bullet-ref-anchor">{refNumber}</sup>
+                )}
               </span>
             </li>
           );

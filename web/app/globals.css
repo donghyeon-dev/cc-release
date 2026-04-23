@@ -211,7 +211,7 @@ button.impact-ref-marker:focus-visible {
   font-size: 0.7em;
   font-weight: 600;
   color: #b45309;
-  margin-right: 0.35em;
+  margin-left: 0.35em;
   vertical-align: super;
 }
 [data-theme="black"] .bullet-ref-anchor {

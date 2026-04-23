@@ -84,7 +84,9 @@
       "fixes": [
         {
           "text": "Plain-CLI OAuth 세션이 만료된 액세스 토큰으로 `Please run /login` 메시지로 죽던 문제 — 이제 401 에 반응해 토큰 자동 갱신",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`WebFetch` 가 매우 큰 HTML 페이지에서 hang 되던 문제 — HTML→markdown 변환 전 입력 자르기",
@@ -144,11 +146,15 @@
         },
         {
           "text": "백그라운드 작업 있을 때 idle re-render 루프로 Linux 메모리 증가하던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         },
         {
           "text": "[VSCode] 여러 대형 marketplace 설정 시 Manage Plugins 패널 깨지던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "Opus 4.7 세션의 `/context` 비율이 부풀려져 자동 compact 가 너무 일찍 발동하던 문제 수정 — 200K 기준이 아닌 실제 1M 컨텍스트로 계산",
@@ -273,7 +279,9 @@
         },
         {
           "text": "슬래시 커맨드 메뉴가 필터 결과 0건일 때 사라지지 않고 `No commands match` 표시",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "Settings Usage 탭이 5시간/주간 사용량을 즉시 표시, rate-limit 시에도 실패하지 않음",
@@ -294,12 +302,14 @@
         {
           "text": "Kitty 키보드 프로토콜 터미널 (iTerm2, Ghostty, kitty, WezTerm, Windows Terminal) 에서 `Ctrl+-` 실행취소 안 되던 문제 수정",
           "originalRefs": [
-            13
+            13,
+            14
           ]
         },
         {
           "text": "Kitty 프로토콜 터미널 (Warp fullscreen, kitty, Ghostty, WezTerm) 에서 `Cmd+Left/Right` 가 줄 처음/끝으로 이동하지 않던 문제 수정",
           "originalRefs": [
+            13,
             14
           ]
         },
@@ -319,11 +329,15 @@
         },
         {
           "text": "VS Code 통합 터미널에서 스크롤 시 빈 셀이 흩어지고 composer 크롬이 사라지던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "요청 셋업 중 병렬 요청이 완료될 때 cache control TTL 순서로 간헐적 API 400 에러 나던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`/branch` 가 50MB 넘는 transcript 대화를 거부하던 문제 수정",
@@ -413,7 +427,9 @@
         },
         {
           "text": "Fullscreen 모드에서 `Shift+↑/↓` 로 선택 영역을 가시 영역 밖까지 확장 가능",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "멀티라인 입력에서 `Ctrl+A`·`Ctrl+E` 가 readline 처럼 논리 줄 시작/끝으로 이동",
@@ -448,7 +464,8 @@
         {
           "text": "CLI 가 번들 JavaScript 대신 플랫폼별 optional dependency 로 제공되는 네이티브 Claude Code 바이너리를 실행",
           "originalRefs": [
-            0
+            0,
+            36
           ]
         },
         {
@@ -473,7 +490,9 @@
         },
         {
           "text": "no-op 인 `cd <current-dir> && git …` 는 더 이상 권한 프롬프트 트리거 안 함",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "macOS 의 `/private/{etc,var,tmp,home}` 경로가 `Bash(rm:*)` allow 규칙에서 위험 삭제 대상으로 취급",
@@ -511,7 +530,9 @@
         },
         {
           "text": "프롬프트에 미전송 텍스트 작성 중 session recap 이 자동 실행되던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`/copy` Full response 가 GitHub/Notion/Slack 붙여넣기용 markdown 테이블 컬럼 정렬 안 되던 문제 수정",
@@ -537,7 +558,9 @@
         },
         {
           "text": "`copied N chars` 토스트가 이모지 같은 멀티 코드 유닛 문자를 과잉 카운트하던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "Windows 에서 `/insights` 가 `EBUSY` 로 크래시하던 문제 수정",
@@ -547,7 +570,9 @@
         },
         {
           "text": "exit 확인 다이얼로그가 일회성 scheduled task 를 recurring 으로 오표시하던 문제 수정 — 이제 카운트다운 표시",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "Fullscreen 모드에서 슬래시/@ 완성 메뉴가 프롬프트 테두리에 맞붙지 않던 문제 수정",
@@ -595,11 +620,17 @@
         },
         {
           "text": "Remote Control 세션이 서브에이전트 transcript 스트리밍 안 되던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            7,
+            8
+          ]
         },
         {
           "text": "세션 종료 시 Remote Control 세션이 아카이브되지 않던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            7,
+            8
+          ]
         },
         {
           "text": "Bedrock `Application Inference Profile` ARN 으로 Opus 4.7 사용 시 `thinking.type.enabled is not supported` 400 에러 나던 문제 수정",
@@ -798,7 +829,9 @@
         },
         {
           "text": "v2.1.110 의 non-streaming fallback 재시도 상한 되돌림 — API 과부하 시 긴 대기 대신 즉시 실패로 이어졌던 문제",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         }
       ],
       "fixes": [
@@ -858,7 +891,9 @@
         },
         {
           "text": "bash/PowerShell/MCP 도구 출력의 bare URL 이 터미널 줄바꿈 시 클릭 안 되던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            32
+          ]
         },
         {
           "text": "Windows 에서 `CLAUDE_ENV_FILE` 과 SessionStart hook 환경 파일이 적용되지 않던 문제 수정",
@@ -923,7 +958,8 @@
         {
           "text": "푸시 알림 도구 추가 — Remote Control 과 `Push when Claude decides` 설정 활성화 시 Claude 가 모바일 푸시 발송",
           "originalRefs": [
-            2
+            2,
+            8
           ]
         },
         {
@@ -975,7 +1011,9 @@
         },
         {
           "text": "Write 도구가 IDE diff 에서 사용자가 제안 내용 편집 후 수락했음을 모델에 알림",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "Bash 도구가 문서화된 최대 타임아웃을 강제 — 임의 큰 값 수용 중단",
@@ -1002,15 +1040,21 @@
         },
         {
           "text": "API 도달 불가 시 non-streaming fallback 재시도로 몇 분간 hang 되던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "Focus 모드에서 session recap·로컬 슬래시 커맨드 출력·시스템 상태 라인 안 보이던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "fullscreen 에서 도구 실행 중 텍스트 선택 시 CPU 치솟던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "`plugin.json` 에 선언된 의존성을 marketplace 항목이 생략했을 때 플러그인 설치가 이를 따르지 않던 문제 수정 — `/plugin` 설치가 auto-install 된 의존성 목록 표시",
@@ -1055,7 +1099,9 @@
         },
         {
           "text": "신뢰할 수 없는 파일명에서 `Open in editor` 의 커맨드 인젝션 방어 강화",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "`PermissionRequest` 훅이 반환한 `updatedInput` 이 `permissions.deny` 규칙에 재검증되지 않던 문제 수정, `setMode:'bypassPermissions'` 업데이트가 `disableBypassPermissionsMode` 를 존중하도록 수정",
@@ -1071,7 +1117,9 @@
         },
         {
           "text": "stdio MCP 서버가 stdout 에 non-JSON 줄 하나만 나와도 연결 끊던 문제 수정 (2.1.105 리그레션)",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         },
         {
           "text": "headless/SDK 세션 auto-title 이 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`·`CLAUDE_CODE_DISABLE_TERMINAL_TITLE` 설정돼도 추가 Haiku 요청 발생시키던 문제 수정",
@@ -1091,11 +1139,15 @@
         },
         {
           "text": "Remote Control 세션이 너무 오래된 경우 재로그인 프롬프트 대신 일반 에러 표시하던 문제 수정",
-          "originalRefs": []
+          "originalRefs": [
+            8,
+            32
+          ]
         },
         {
           "text": "claude.ai 에서 Remote Control 세션 이름 변경해도 로컬 CLI 세션에 반영 안 되던 문제 수정",
           "originalRefs": [
+            8,
             32
           ]
         }
@@ -1224,7 +1276,9 @@
         },
         {
           "text": "에러 메시지 개선 — 서버 rate limit 과 플랜 usage limit 구분, 5xx/529 는 status.claude.com 링크 표시, 알 수 없는 슬래시 커맨드는 가장 가까운 매치 제안",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "파일 읽기·편집·문법 하이라이팅 메모리 점유 감소 — 언어 문법을 on-demand 로드",
@@ -1402,7 +1456,9 @@
         },
         {
           "text": "`JSON`·JSON·`file write display:` 터미널 표시와 입력 처리 — `file write display:` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`/config`·`labels descriptions clarity` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -1422,7 +1478,9 @@
         },
         {
           "text": "`stale agent worktree` 동작 범위 조정 — `stale agent worktree` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`jq`·`JSON`·MCP 동작 범위 조정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -1434,11 +1492,15 @@
       "fixes": [
         {
           "text": "5minutes·`stalled API stream` 멈춤 조건 처리 — `stalled API stream` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`network messages: connection` 오류 조건 보정 — `network messages: connection` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`/doctor`·`f` 오류 조건 보정 — `layout status icons` 실패 조건의 원인 확인 가능",
@@ -1448,19 +1510,26 @@
         },
         {
           "text": "`images attached queued` 오류 조건 보정 — `images attached queued` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`screen going blank` 오류 조건 보정 — `screen going blank` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`leading whitespace getting` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`ASCII`·`leading whitespace being` 오류 조건 보정 — `leading whitespace being` 실패 조건의 원인 확인 가능",
           "originalRefs": [
+            15,
             16
           ]
         },
@@ -1472,11 +1541,15 @@
         },
         {
           "text": "`100`·`alt+enter inserting newline` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`Creating worktree` 터미널 표시와 입력 처리 — `Creating worktree` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`queued prompts disappearing` 오류 조건 보정 — `queued prompts disappearing` 실패 조건의 원인 확인 가능",
@@ -1486,11 +1559,15 @@
         },
         {
           "text": "`one-shot scheduled tasks` 오류 조건 보정 — `one-shot scheduled tasks` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`inbound channel notifications` 오류 조건 보정 — `inbound channel notifications` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "`package.json`·`marketplace plugins lockfile` 플러그인 의존성 해석 — 설치 중 누락·충돌 의존성 진단 가능",
@@ -1500,7 +1577,9 @@
         },
         {
           "text": "`marketplace auto-update leaving` 플러그인 설치·목록 관리 — `marketplace auto-update leaving` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "`/resume`·`--worktree`·`/branch` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -1510,15 +1589,21 @@
         },
         {
           "text": "`feedback survey shortcut` 오류 조건 보정 — `feedback survey shortcut` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "`JSON`·MCP·JSON·`Connection closed` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         },
         {
           "text": "MCP·`MCP tools missing` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         },
         {
           "text": "`/model`·`us.*`·`settings.json` 설정 항목 처리 — 엔터프라이즈 provider 설정의 요청 실패 감소",
@@ -1532,7 +1617,10 @@
         },
         {
           "text": "`crash resume session` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            25,
+            31
+          ]
         },
         {
           "text": "`/help`·`dropping tab bar` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -1654,15 +1742,21 @@
         },
         {
           "text": "`brief mode retry` 동작 범위 조정 — `brief mode retry` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`focus mode: writes` 동작 범위 조정 — `focus mode: writes` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`rate-limit retry messages` 동작 범위 조정 — `rate-limit retry messages` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`claude -p --resume <name>`·`/rename`·`--name` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -1709,19 +1803,27 @@
       "fixes": [
         {
           "text": "`tool-not-available explain why` 컨텍스트 사용량 계산 — `tool-not-available explain why` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`refusal messages include` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "Bash 명령 처리의 command injection 취약점 차단 — 변조된 입력 실행 위험 완화",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`memory leak long` 터미널 표시와 입력 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "`--resume`·`--continue` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소 — v2.1.101 항목",
@@ -1779,11 +1881,15 @@
         },
         {
           "text": "MCP·`subagents inheriting MCP` 오류 조건 보정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         },
         {
           "text": "`sub-agents running isolated` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "`mktemp: No such file or directory`·Bash 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -1895,7 +2001,9 @@
         },
         {
           "text": "VSCode·`file attachment below` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            45
+          ]
         }
       ],
       "devImpact": [
@@ -2028,7 +2136,9 @@
         },
         {
           "text": "`footer indicators stay` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            45
+          ]
         },
         {
           "text": "`/agents`·`tabbed layout: Running` 동작 범위 조정 — `tabbed layout: Running` 입력·설정 확인 단계 축소",
@@ -2044,7 +2154,9 @@
         },
         {
           "text": "`Accept Edits mode` 셸 명령 실행 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            48
+          ]
         },
         {
           "text": "`j`·`k`·`NORMAL` 동작 범위 조정 — `Vim mode: /` 입력·설정 확인 단계 축소",
@@ -2058,7 +2170,9 @@
         },
         {
           "text": "`transcript entries carry` 동작 범위 조정 — `transcript entries carry` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            52
+          ]
         },
         {
           "text": "`/claude-api`·`Updated skill cover` 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -2089,11 +2203,15 @@
         },
         {
           "text": "Bash·`Bash tool permission` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "Bash·`compound Bash commands` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`LANG`·`TZ`·`NO_COLOR` 셸 명령 실행 처리 — `read-only commands env-var` 실패 조건의 원인 확인 가능",
@@ -2109,7 +2227,9 @@
         },
         {
           "text": "`stalled streaming responses` 오류 조건 보정 — `stalled streaming responses` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`Retry-After`·`429`·13s 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
@@ -2129,7 +2249,9 @@
         },
         {
           "text": "macOS·`macOS text replacements` 오류 조건 보정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "`--dangerously-skip-permissions`·Bash 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -2140,7 +2262,9 @@
         },
         {
           "text": "`managed-settings allow rules` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`permissions.additionalDirectories`·`changes applying mid-session` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -2185,11 +2309,15 @@
         },
         {
           "text": "MCP·`crash fullscreen mode` 터미널 표시와 입력 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "`copying wrapped URLs` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         },
         {
           "text": "`--resume`·`file-edit diffs disappearing` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -2237,7 +2365,9 @@
         },
         {
           "text": "`voice mode leaking` 오류 조건 보정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            35
+          ]
         },
         {
           "text": "`DISABLE_AUTOUPDATER`·npm 오류 조건 보정 — `fully suppressing npm` 실패 조건의 원인 확인 가능",
@@ -2247,15 +2377,21 @@
         },
         {
           "text": "Remote Control·`memory leak Remote` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            37
+          ]
         },
         {
           "text": "`background subagents fail` 오류 조건 보정 — `background subagents fail` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            38
+          ]
         },
         {
           "text": "`JSON`·JSON·`JSON validation failed` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            39
+          ]
         },
         {
           "text": "`feedback survey rendering` 터미널 표시와 입력 처리 — `feedback survey rendering` 실패 조건의 원인 확인 가능",
@@ -2271,7 +2407,9 @@
         },
         {
           "text": "`stale subagent worktree` 오류 조건 보정 — `stale subagent worktree` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            42
+          ]
         },
         {
           "text": "`sandbox.network.allowMachLookup`·macOS 권한·샌드박스 판정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
@@ -2415,7 +2553,9 @@
         },
         {
           "text": "`image handling: pasted` 동작 범위 조정 — `image handling: pasted` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            36
+          ]
         },
         {
           "text": "`@`·`/` 기본 동작 변경 — 별도 옵션 없이 새 흐름 적용",
@@ -2426,27 +2566,39 @@
         },
         {
           "text": "`claude.ai`·`Bridge sessions show` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            38
+          ]
         },
         {
           "text": "`footer layout: indicators` 동작 범위 조정 — `footer layout: indicators` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            39
+          ]
         },
         {
           "text": "`context-low warning show` 컨텍스트 사용량 계산 — `context-low warning show` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            40
+          ]
         },
         {
           "text": "`markdown blockquotes show` 동작 범위 조정 — `markdown blockquotes show` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            41
+          ]
         },
         {
           "text": "`session transcript size` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            42
+          ]
         },
         {
           "text": "`transcript accuracy: per-block` 동작 범위 조정 — `transcript accuracy: per-block` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            43
+          ]
         },
         {
           "text": "`/claude-api`·`Updated skill cover` 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소 — v2.1.97 항목",
@@ -2464,7 +2616,9 @@
         },
         {
           "text": "Bash·`hardened Bash tool` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`toString`·`settings.json` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소 — v2.1.97 항목",
@@ -2474,7 +2628,9 @@
         },
         {
           "text": "`managed-settings allow rules` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소 — v2.1.97 항목",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`permissions.additionalDirectories`·`changes settings applying` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -2534,7 +2690,9 @@
         },
         {
           "text": "`messages typed while` 오류 조건 보정 — `messages typed while` 실패 조건의 원인 확인 가능 — v2.1.97 항목",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`Stop`·`SubagentStop`·`JSON` 터미널 표시와 입력 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -2550,7 +2708,9 @@
         },
         {
           "text": "`compaction writing duplicate` 오류 조건 보정 — `compaction writing duplicate` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`claude plugin update`·`reporting already latest` 플러그인 설치·목록 관리 — `reporting already latest` 실패 조건의 원인 확인 가능",
@@ -2675,7 +2835,9 @@
         },
         {
           "text": "`auto mode bypass-permissions` 자동 모델 선택 사용 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            34
+          ]
         },
         {
           "text": "`TRACEPARENT`·`OTEL`·Bash 관측성 이벤트 필드 기록 — 운영 로그에서 명령·토큰·비용 원인 추적 가능 — v2.1.97 항목",
@@ -2859,7 +3021,9 @@
         },
         {
           "text": "`429`·`agents appearing stuck` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`claude doctor`·macOS 오류 조건 보정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
@@ -2870,7 +3034,8 @@
         {
           "text": "`YAML`·`plugin skill hooks` 플러그인 설치·목록 관리 — `plugin skill hooks` 실패 조건의 원인 확인 가능",
           "originalRefs": [
-            8
+            8,
+            9
           ]
         },
         {
@@ -2888,7 +3053,9 @@
         },
         {
           "text": "`scrollback showing same` 터미널 표시와 입력 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`❯`·`multiline prompts transcript` 오류 조건 보정 — `multiline prompts transcript` 실패 조건의 원인 확인 가능",
@@ -2906,7 +3073,9 @@
         },
         {
           "text": "`alt-screen rendering content` 터미널 표시와 입력 처리 — `alt-screen rendering content` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`FORCE_HYPERLINK`·`settings.json`·`env` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -2917,7 +3086,9 @@
         },
         {
           "text": "`native terminal cursor` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`us.`·Bedrock·Sonnet 3.5 오류 조건 보정 — 엔터프라이즈 provider 설정의 요청 실패 감소",
@@ -2927,15 +3098,21 @@
         },
         {
           "text": "SDK·`SDK/print mode preserving` SDK 이벤트·입출력 처리 — headless·자동화 클라이언트의 이벤트 처리 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`FFFD`·`CJK other multibyte` 오류 조건 보정 — `CJK other multibyte` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "VSCode·`dropdown menus selecting` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            23
+          ]
         },
         {
           "text": "`settings.json`·VSCode 권한·샌드박스 판정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -3016,7 +3193,9 @@
         },
         {
           "text": "`Pro see footer` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`&`·`$` 성능·자원 사용 조정 — `Write tool diff` 입력·설정 확인 단계 축소",
@@ -3058,7 +3237,9 @@
         },
         {
           "text": "`subagent spawning permanently` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`ok:false`·`preventContinuation:true` 오류 조건 보정 — `prompt-type Stop hooks` 실패 조건의 원인 확인 가능",
@@ -3068,15 +3249,21 @@
         },
         {
           "text": "`JSON`·JSON·`tool input validation` 오류 조건 보정 — `tool input validation` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`400`·`API could occur` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`accidental feedback survey` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`esc to interrupt` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -3100,7 +3287,9 @@
         },
         {
           "text": "`/clear`·`idle-return /clear save` 컨텍스트 사용량 계산 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`claude.ai`·MCP MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -3224,7 +3413,9 @@
         },
         {
           "text": "`plan mode remote` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`permissions.defaultMode: \"auto\"`·`JSON`·`permissions.defaultMode` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -3234,7 +3425,9 @@
         },
         {
           "text": "Windows·`Windows version cleanup` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         }
       ],
       "devImpact": [
@@ -3286,15 +3479,22 @@
       "changes": [
         {
           "text": "`JSON`·JSON·MCP·`performance: eliminated per-turn` 성능·자원 사용 조정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`performance: SSE transport` 성능·자원 사용 조정 — `performance: SSE transport` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "SDK·`performance: SDK sessions` 성능·자원 사용 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            15,
+            17
+          ]
         },
         {
           "text": "`/resume`·`all-projects view load` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -3318,7 +3518,9 @@
         },
         {
           "text": "`infinite loop rate-limit` 크래시 조건 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`--resume`·MCP 세션 재개 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -3341,19 +3543,27 @@
         },
         {
           "text": "`CLAUDE`·`collapsed search/read summary` 터미널 표시와 입력 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`auto mode respecting` 자동 모델 선택 사용 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`click-to-expand hover text` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`UI crash malformed` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`/model`·`/config` 터미널 표시와 입력 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -3463,7 +3673,10 @@
         },
         {
           "text": "PowerShell·`PowerShell tool prompt` PowerShell 도구 opt-in 제어 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            39,
+            46
+          ]
         },
         {
           "text": "`TaskCreated`·`Documented hook event` 동작 범위 조정 — `Documented hook event` 입력·설정 확인 단계 축소",
@@ -3479,7 +3692,10 @@
         },
         {
           "text": "PowerShell·Windows·`PowerShell tool Windows:` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            34,
+            46
+          ]
         },
         {
           "text": "`/env`·PowerShell·Bash PowerShell 도구 opt-in 제어 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -3535,15 +3751,21 @@
         },
         {
           "text": "`JSON`·JSON·`memory leak large` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "50MB·`crash removing message` 크래시 조건 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "LSP·`LSP server zombie` 크래시 조건 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`~/.claude/history.jsonl`·`history.jsonl`·`~/.claude/history.jsonl`` 오류 조건 보정 — `prompt history entries` 실패 조건의 원인 확인 가능",
@@ -3573,11 +3795,15 @@
         },
         {
           "text": "MCP·`MCP tool truncating` 오류 조건 보정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "SDK·`skill reminders other` 컨텍스트 사용량 계산 — headless·자동화 클라이언트의 이벤트 처리 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`file_path`·`PreToolUse/PostToolUse hooks receive` 오류 조건 보정 — `PreToolUse/PostToolUse hooks receive` 실패 조건의 원인 확인 가능",
@@ -3587,15 +3813,21 @@
         },
         {
           "text": "`autocompact thrash loop` 컨텍스트 사용량 계산 — `autocompact thrash loop` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            20
+          ]
         },
         {
           "text": "`prompt cache misses` 멈춤 조건 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`CLAUDE`·`nested CLAUDE.md files` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "`--resume`·`crash transcript contains` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -3605,7 +3837,9 @@
         },
         {
           "text": "`Rate limit reached` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "`if`·`ls && git push`·`FOO=bar git push` 셸 명령 실행 처리 — `hooks condition filtering` 실패 조건의 원인 확인 가능",
@@ -3615,7 +3849,9 @@
         },
         {
           "text": "`collapsed search/read group` 터미널 표시와 입력 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "`invalidates`·`notification clearing currently-displayed` 터미널 표시와 입력 처리 — `notification clearing currently-displayed` 실패 조건의 원인 확인 가능",
@@ -3625,7 +3861,9 @@
         },
         {
           "text": "`prompt briefly disappearing` 오류 조건 보정 — `prompt briefly disappearing` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         },
         {
           "text": "`Devanagari other combining-mark` 오류 조건 보정 — `Devanagari other combining-mark` 실패 조건의 원인 확인 가능",
@@ -3635,11 +3873,14 @@
         },
         {
           "text": "`rendering artifacts main-screen` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            30
+          ]
         },
         {
           "text": "macOS·`voice mode failing` 권한·샌드박스 판정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
           "originalRefs": [
+            7,
             31
           ]
         },
@@ -3651,7 +3892,9 @@
         },
         {
           "text": "iTerm2·`periodic UI jitter` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            33
+          ]
         },
         {
           "text": "`git push`·PowerShell·Windows PowerShell 도구 opt-in 제어 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -3661,11 +3904,15 @@
         },
         {
           "text": "`potential out-of-memory crash` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            35
+          ]
         },
         {
           "text": "Bash·`Bash tool warn` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            37
+          ]
         },
         {
           "text": "`Edit`·`Bash`·`sed -n` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -3675,7 +3922,9 @@
         },
         {
           "text": "50K·`hook output over` 컨텍스트 사용량 계산 — `hook output over` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            41
+          ]
         },
         {
           "text": "`cleanupPeriodDays: 0`·`settings.json` 보존 기간 정리 대상 확대 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -3798,11 +4047,15 @@
         },
         {
           "text": "Bedrock·Vertex·Foundry 동작 범위 조정 — 엔터프라이즈 provider 설정의 요청 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`Saved N memories` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`/skills`·`250` 컨텍스트 사용량 계산 — `Skill descriptions listing` 입력·설정 확인 단계 축소",
@@ -3813,7 +4066,9 @@
         },
         {
           "text": "`unavailable for your plan` 자동 모델 선택 사용 — `unavailable for your plan` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         }
       ],
       "fixes": [
@@ -3831,7 +4086,9 @@
         },
         {
           "text": "Windows·`unnecessary config disk` 성능·자원 사용 조정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`/feedback`·`potential out-of-memory crash` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
@@ -3853,7 +4110,9 @@
         },
         {
           "text": "OAuth·`masked input leaking` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "macOS·Linux·`Permission denied` 플러그인 설치·목록 관리 — 플랫폼별 네이티브 실행 경로의 차이 감소",
@@ -3867,7 +4126,9 @@
         },
         {
           "text": "`scroll following messages` 터미널 표시와 입력 처리 — `scroll following messages` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`/plugin`·`n` 플러그인 설치·목록 관리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -3877,7 +4138,9 @@
         },
         {
           "text": "`regression pressing Enter` 오류 조건 보정 — `regression pressing Enter` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`ultrathink`·`hint lingering after` 오류 조건 보정 — `hint lingering after` 실패 조건의 원인 확인 가능",
@@ -3887,7 +4150,9 @@
         },
         {
           "text": "`memory growth long` 터미널 표시와 입력 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`/skills`·`menu sort alphabetically` 멈춤 조건 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -3898,17 +4163,22 @@
         },
         {
           "text": "VSCode·`Not responding` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            23
+          ]
         },
         {
           "text": "VSCode·OAuth·`extension defaulting Max` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
           "originalRefs": [
+            23,
             24
           ]
         },
         {
           "text": "`Read tool uses` 멈춤 조건 처리 — `Read tool uses` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         }
       ],
       "devImpact": [
@@ -4002,7 +4272,9 @@
         },
         {
           "text": "MCP·OAuth·`MCP OAuth follows` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`managed-settings.json`·`settings.json` 플러그인 설치·목록 관리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -4018,7 +4290,9 @@
         },
         {
           "text": "`-mention file autocomplete` 파일·명령 자동완성 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "PowerShell·`PowerShell dangerous command` PowerShell 도구 opt-in 제어 — 자동 승인 규칙의 우회 가능성 축소",
@@ -4029,12 +4303,15 @@
         {
           "text": "`WASM`·`scroll performance large` 터미널 표시와 입력 처리 — `scroll performance large` 입력·설정 확인 단계 축소",
           "originalRefs": [
+            26,
             28
           ]
         },
         {
           "text": "`Reduced UI stutter` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            29
+          ]
         }
       ],
       "fixes": [
@@ -4088,15 +4365,21 @@
         },
         {
           "text": "`memory leak remote` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`ECONNRESET`·`persistent ECONNRESET during` 오류 조건 보정 — `persistent ECONNRESET during` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`prompts getting stuck` 슬래시 명령 탐색과 실행 개선 — `prompts getting stuck` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`type:'sdk'`·`--mcp-config`·SDK MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -4106,11 +4389,15 @@
         },
         {
           "text": "VSCode·`raw key sequences` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "Remote Control·`Requires Action` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "`shift+enter meta+enter being` 파일·명령 자동완성 범위 조정 — `shift+enter meta+enter being` 실패 조건의 원인 확인 가능",
@@ -4126,7 +4413,9 @@
         },
         {
           "text": "Ghostty·Kitty·WezTerm 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         }
       ],
       "devImpact": [
@@ -4164,7 +4453,9 @@
       "newFeatures": [
         {
           "text": "PowerShell 도구 opt-in 제공 — `code.claude.com`, PowerShell로 사용 제어",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL_SUPPORTS`·`_MODEL_NAME`·`_DESCRIPTION` 새 사용 경로 제공 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -4212,11 +4503,15 @@
         },
         {
           "text": "MCP·`MCP tool descriptions` 컨텍스트 사용량 계산 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "45seconds·`Background bash tasks` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "1M·1.5m·1512.6k 터미널 표시와 입력 처리 — Opus 4.7에서 조기 auto-compact 방지",
@@ -4260,7 +4555,9 @@
         },
         {
           "text": "`Reduced terminal flickering` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            35
+          ]
         },
         {
           "text": "`/voice`·`/mobile`·`/chrome` 슬래시 명령 탐색과 실행 개선 — `Slash commands unavailable` 입력·설정 확인 단계 축소",
@@ -4300,7 +4597,9 @@
         },
         {
           "text": "`voice push-to-talk: holding` 오류 조건 보정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`up/down arrow keys` 오류 조건 보정 — `up/down arrow keys` 실패 조건의 원인 확인 가능",
@@ -4332,7 +4631,9 @@
         },
         {
           "text": "`missing background color` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`Edit(.claude)`·`allow edit own` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -4348,27 +4649,39 @@
         },
         {
           "text": "MCP·`MCP tool/resource cache` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "`GVFS`·`startup performance partial` 성능·자원 사용 조정 — `startup performance partial` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         },
         {
           "text": "`native terminal cursor` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소 — v2.1.84 항목",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "macOS·`Not logged in` 오류 조건 보정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         },
         {
           "text": "`cold-start race core` 오류 조건 보정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         },
         {
           "text": "`Reduced scroll-to-top resets` 터미널 표시와 입력 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            34
+          ]
         },
         {
           "text": "`owner/repo#123`·`#123`·`123` 멈춤 조건 처리 — `issue/PR references only` 실패 조건의 원인 확인 가능",
@@ -4474,11 +4787,16 @@
         },
         {
           "text": "`plugin startup commands` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            43
+          ]
         },
         {
           "text": "Remote Control·`Remote Control session` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            38,
+            44
+          ]
         },
         {
           "text": "`WebFetch`·`Claude-User`·`robots.txt` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -4496,7 +4814,9 @@
         },
         {
           "text": "`Reduced scrollback resets` 터미널 표시와 입력 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            47
+          ]
         },
         {
           "text": "`claude -p`·`HTTP`·600ms 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -4506,11 +4826,15 @@
         },
         {
           "text": "Bash·`Bash ghost-text suggestions` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            49
+          ]
         },
         {
           "text": "`Interrupting prompt before` 동작 범위 조정 — `Interrupting prompt before` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            51
+          ]
         },
         {
           "text": "`/status`·`works while responding` 동작 범위 조정 — `works while responding` 입력·설정 확인 단계 축소",
@@ -4526,7 +4850,9 @@
         },
         {
           "text": "60seconds·VSCode 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            57
+          ]
         }
       ],
       "fixes": [
@@ -4544,7 +4870,9 @@
         },
         {
           "text": "`mouse tracking escape` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "macOS·`hanging exit macOS` 멈춤 조건 처리 — 플랫폼별 네이티브 실행 경로의 차이 감소",
@@ -4560,11 +4888,15 @@
         },
         {
           "text": "5seconds·`hang diffing very` 멈춤 조건 처리 — `hang diffing very` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "8second·`second UI freeze` 성능·자원 사용 조정 — `second UI freeze` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`claude.ai`·3s·MCP MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -4596,7 +4928,9 @@
         },
         {
           "text": "`stale slash command` 슬래시 명령 탐색과 실행 개선 — `stale slash command` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            20
+          ]
         },
         {
           "text": "`/config`·`menu showing both` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -4606,7 +4940,9 @@
         },
         {
           "text": "`background subagents becoming` 컨텍스트 사용량 계산 — `background subagents becoming` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "`running` 멈춤 조건 처리 — `running` 실패 조건의 원인 확인 가능",
@@ -4620,7 +4956,9 @@
         },
         {
           "text": "`uninstalled plugin hooks` 플러그인 설치·목록 관리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         },
         {
           "text": "`queued commands flickering` 셸 명령 실행 처리 — `queued commands flickering` 실패 조건의 원인 확인 가능",
@@ -4630,25 +4968,36 @@
         },
         {
           "text": "`slash commands being` 슬래시 명령 탐색과 실행 개선 — `slash commands being` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         },
         {
           "text": "`scrollback jumping collapsed` 터미널 표시와 입력 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            28,
+            29
+          ]
         },
         {
           "text": "`scrollback jumping top` 터미널 표시와 입력 처리 — `scrollback jumping top` 실패 조건의 원인 확인 가능",
           "originalRefs": [
+            28,
             29
           ]
         },
         {
           "text": "SDK·`SDK session history` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            30,
+            58
+          ]
         },
         {
           "text": "`copy-on-select firing you` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            31
+          ]
         },
         {
           "text": "`ghost characters appearing` 오류 조건 보정 — `ghost characters appearing` 실패 조건의 원인 확인 가능",
@@ -4671,12 +5020,15 @@
         {
           "text": "3seconds·`space key being` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
           "originalRefs": [
+            12,
             35
           ]
         },
         {
           "text": "`ALSA`·`WSL1`·Linux 터미널 표시와 입력 처리 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            36
+          ]
         },
         {
           "text": "`which`·`voice mode SoX` 오류 조건 보정 — `voice mode SoX` 실패 조건의 원인 확인 가능",
@@ -4686,7 +5038,9 @@
         },
         {
           "text": "Remote Control·`Remote Control sessions` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소 — v2.1.83 항목",
-          "originalRefs": []
+          "originalRefs": [
+            38
+          ]
         },
         {
           "text": "Remote Control·`footer navigation selecting` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -4696,15 +5050,22 @@
         },
         {
           "text": "`memory leak remote` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소 — v2.1.83 항목",
-          "originalRefs": []
+          "originalRefs": [
+            40
+          ]
         },
         {
           "text": "21k·64k·120s 오류 조건 보정 — `Increased non-streaming fallback` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            50
+          ]
         },
         {
           "text": "MCP·`Plugin MCP servers` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            48,
+            53
+          ]
         },
         {
           "text": "`XDG_DATA_HOME`·`claude-cli://`·Linux 오류 조건 보정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
@@ -4816,7 +5177,9 @@
         },
         {
           "text": "MCP·`MCP read/search tool` 동작 범위 조정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`!`·`bash mode discoverability` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -4826,17 +5189,24 @@
         },
         {
           "text": "Remote Control·`Remote Control session` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소 — v2.1.81 항목",
-          "originalRefs": []
+          "originalRefs": [
+            18,
+            22
+          ]
         },
         {
           "text": "`CIMD`·`991`·MCP OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            23
+          ]
         }
       ],
       "fixes": [
         {
           "text": "OAuth·`multiple concurrent sessions` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`check your network` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -4844,7 +5214,9 @@
         },
         {
           "text": "`voice mode audio` 오류 조건 보정 — `voice mode audio` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`·`400`·Vertex 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
@@ -4873,11 +5245,15 @@
         },
         {
           "text": "`plugin hooks blocking` 플러그인 설치·목록 관리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`race condition background` 멈춤 조건 처리 — `race condition background` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`/btw`·`including pasted text` 오류 조건 보정 — `including pasted text` 실패 조건의 원인 확인 가능",
@@ -4893,7 +5269,9 @@
         },
         {
           "text": "`terminal tab title` 터미널 표시와 입력 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`invisible hook attachments` 오류 조건 보정 — `invisible hook attachments` 실패 조건의 원인 확인 가능",
@@ -4903,7 +5281,10 @@
         },
         {
           "text": "Remote Control·`Remote Control sessions` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소 — v2.1.81 항목",
-          "originalRefs": []
+          "originalRefs": [
+            16,
+            17
+          ]
         },
         {
           "text": "`/rename`·Remote Control 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
@@ -4919,7 +5300,9 @@
         },
         {
           "text": "`plugin freshness ref-tracked` 플러그인 설치·목록 관리 — `plugin freshness ref-tracked` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`\"showClearContextOnPlanAccept\": true`·`clear context` 컨텍스트 사용량 계산 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -4935,7 +5318,9 @@
         },
         {
           "text": "`PATH`·VSCode·Windows 셸 명령 실행 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         }
       ],
       "devImpact": [
@@ -4985,7 +5370,9 @@
         },
         {
           "text": "`CLI tool usage` 플러그인 설치·목록 관리 — `CLI tool usage` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`effort`·`frontmatter skills slash` 슬래시 명령 탐색과 실행 개선 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -5021,7 +5408,9 @@
         },
         {
           "text": "`background tasks panel` 동작 범위 조정 — `background tasks panel` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`/plugin install`·`/plugin` 플러그인 설치·목록 관리 — `Simplified plugin install` 입력·설정 확인 단계 축소",
@@ -5043,7 +5432,9 @@
         },
         {
           "text": "`voice mode WebSocket` 오류 조건 보정 — `voice mode WebSocket` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`400`·Bedrock·Vertex 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
@@ -5185,7 +5576,9 @@
         },
         {
           "text": "`429`·`enterprise being unable` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`SessionEnd`·`/resume` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -5195,15 +5588,20 @@
         },
         {
           "text": "`non-streaming API fallback` 멈춤 조건 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "VSCode·`Thinking` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "VSCode·`missing session diff` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
           "originalRefs": [
+            14,
             17
           ]
         }
@@ -5275,7 +5673,9 @@
         },
         {
           "text": "`memory usage startup` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            23
+          ]
         }
       ],
       "fixes": [
@@ -5299,7 +5699,9 @@
         },
         {
           "text": "`infinite loop API` 오류 조건 보정 — `infinite loop API` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`deny: [\"mcp__servername\"]`·MCP 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -5333,11 +5735,16 @@
         },
         {
           "text": "`ctrl+u normal mode` 터미널 표시와 입력 처리 — `ctrl+u normal mode` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`voice mode modifier-combo` 오류 조건 보정 — `voice mode modifier-combo` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            14,
+            15
+          ]
         },
         {
           "text": "`WSL2`·`WSL1`·Windows 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -5458,7 +5865,9 @@
         },
         {
           "text": "`Background bash tasks` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            35
+          ]
         },
         {
           "text": "`Sessions auto-named plan` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
@@ -5512,7 +5921,9 @@
         },
         {
           "text": "`auto-updater starting overlapping` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`--resume`·`silently truncating recent` 세션 재개 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
@@ -5535,11 +5946,15 @@
         },
         {
           "text": "`memory growth long-running` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`cost token usage` 오류 조건 보정 — `cost token usage` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS`·`stripping beta tool-schema` 오류 조건 보정 — `stripping beta tool-schema` 실패 조건의 원인 확인 가능",
@@ -5549,7 +5964,9 @@
         },
         {
           "text": "Bash·`Bash tool reporting` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`paste being lost` 오류 조건 보정 — `paste being lost` 실패 조건의 원인 확인 가능",
@@ -5571,7 +5988,9 @@
         },
         {
           "text": "OAuth·`Desktop sessions incorrectly` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`git-subdir`·`plugins different subdirectories` 플러그인 설치·목록 관리 — `plugins different subdirectories` 실패 조건의 원인 확인 가능",
@@ -5581,11 +6000,15 @@
         },
         {
           "text": "`ordered list numbers` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`race condition stale-worktree` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`/mcp`·`input deadlock opening` 오류 조건 보정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -5611,11 +6034,15 @@
         },
         {
           "text": "`background colors rendering` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            23
+          ]
         },
         {
           "text": "iTerm2·`iTerm2 session crash` 크래시 조건 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "`⌘V`·`prefix+]` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
@@ -5631,11 +6058,15 @@
         },
         {
           "text": "`IDE integration auto-connecting` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         },
         {
           "text": "`CJK characters visually` 오류 조건 보정 — `CJK characters visually` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         },
         {
           "text": "`teammate panes closing` 오류 조건 보정 — `teammate panes closing` 실패 조건의 원인 확인 가능",
@@ -5764,19 +6195,27 @@
         },
         {
           "text": "`background agent behavior` 컨텍스트 사용량 계산 — `background agent behavior` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         },
         {
           "text": "`model fallback notifications` 동작 범위 조정 — `model fallback notifications` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         },
         {
           "text": "`blockquote readability dark` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            29
+          ]
         },
         {
           "text": "`stale worktree cleanup` 동작 범위 조정 — `stale worktree cleanup` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            30
+          ]
         },
         {
           "text": "Remote Control·`Interactive session` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
@@ -5807,17 +6246,22 @@
         },
         {
           "text": "`Unknown skill` 슬래시 명령 탐색과 실행 개선 — `Unknown skill` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`plan mode asking` 오류 조건 보정 — `plan mode asking` 실패 조건의 원인 확인 가능",
           "originalRefs": [
-            9
+            9,
+            10
           ]
         },
         {
           "text": "`voice mode swallowing` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`/voice`·Windows·npm 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -5846,23 +6290,33 @@
         },
         {
           "text": "Bash·`don t ask` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`auto-compaction retrying indefinitely` 오류 조건 보정 — `auto-compaction retrying indefinitely` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "MCP·`MCP reconnect spinner` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "LSP·`LSP plugins registering` 플러그인 설치·목록 관리 — `LSP plugins registering` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`clipboard copying tmux` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`/export`·`showing only filename` 오류 조건 보정 — `showing only filename` 실패 조건의 원인 확인 가능",
@@ -5884,19 +6338,28 @@
         },
         {
           "text": "Remote Control·`several Remote Control` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            31
+          ]
         },
         {
           "text": "`bridge sessions failing` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "`slash commands found` 슬래시 명령 탐색과 실행 개선 — `slash commands found` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            8,
+            25
+          ]
         },
         {
           "text": "VSCode·`gitignore patterns containing` 파일·명령 자동완성 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            34
+          ]
         }
       ],
       "devImpact": [
@@ -5996,11 +6459,16 @@
         },
         {
           "text": "MCP·OAuth·`MCP OAuth authentication` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`HTTP`·`200`·MCP OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            5,
+            6
+          ]
         },
         {
           "text": "`audio-input`·macOS 권한·샌드박스 판정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
@@ -6022,19 +6490,27 @@
         },
         {
           "text": "`marketplace update syncing` 플러그인 설치·목록 관리 — `marketplace update syncing` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`unknown slash commands` 슬래시 명령 탐색과 실행 개선 — `unknown slash commands` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "Windows·VSCode·`Hebrew Arabic other` 터미널 표시와 입력 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "LSP·Windows 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`--plugin-dir`·`so local dev` 플러그인 설치·목록 관리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -6092,7 +6568,9 @@
       "changes": [
         {
           "text": "`Up arrow after` 동작 범위 조정 — `Up arrow after` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`IDE detection speed` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -6114,7 +6592,10 @@
         },
         {
           "text": "Remote Control·`Remote Control spawn` 컨텍스트 사용량 계산 — `Remote Control spawn` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            15,
+            22
+          ]
         }
       ],
       "fixes": [
@@ -6126,7 +6607,9 @@
         },
         {
           "text": "`100`·`freezes CPU loops` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`git pull`·`.claude/skills/` 멈춤 조건 처리 — `deadlock could freeze` 실패 조건의 원인 확인 가능",
@@ -6136,7 +6619,9 @@
         },
         {
           "text": "Bash·`Bash tool output` 셸 명령 실행 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`model: opus`·`sonnet`·`haiku` 오류 조건 보정 — 엔터프라이즈 provider 설정의 요청 실패 감소",
@@ -6146,7 +6631,9 @@
         },
         {
           "text": "`background bash processes` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`/resume`·`showing current session` 세션 재개 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -6174,24 +6661,34 @@
         },
         {
           "text": "`JSON`·JSON·`JSON-output hooks injecting` 컨텍스트 사용량 계산 — `JSON-output hooks injecting` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`voice mode session` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "Linux·`Linux sandbox failing` 권한·샌드박스 판정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "Linux·`Linux native modules` 오류 조건 보정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            13,
+            14
+          ]
         },
         {
           "text": "Remote Control·`media_type: Field required` 오류 조건 보정 — `media_type: Field required` 실패 조건의 원인 확인 가능",
           "originalRefs": [
-            15
+            15,
+            22
           ]
         },
         {
@@ -6202,11 +6699,17 @@
         },
         {
           "text": "`voice mode automatically` 오류 조건 보정 — `voice mode automatically` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            12,
+            21
+          ]
         },
         {
           "text": "Bedrock·Vertex·Foundry 멈춤 조건 처리 — 엔터프라이즈 provider 설정의 요청 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5,
+            23
+          ]
         },
         {
           "text": "`/output-style`·`/config` 셸 명령 실행 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -6216,7 +6719,9 @@
         },
         {
           "text": "`HTTP`·`400`·VSCode 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         }
       ],
       "devImpact": [
@@ -6316,7 +6821,9 @@
         },
         {
           "text": "`up-arrow history show` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`JSON`·OAuth·JSON·`voice input transcription` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
@@ -6338,11 +6845,15 @@
         },
         {
           "text": "`CPU utilization long` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            34
+          ]
         },
         {
           "text": "VSCode·`VSCode: effort level` 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            52
+          ]
         },
         {
           "text": "`vscode://anthropic.claude-code/open`·`prompt`·`session` 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -6379,11 +6890,16 @@
         },
         {
           "text": "`marketplace clone failure` 오류 조건 보정 — `marketplace clone failure` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`bash command parsing` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            15,
+            24
+          ]
         },
         {
           "text": "`find -exec`·npm 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -6411,7 +6927,9 @@
         },
         {
           "text": "`skill hooks firing` 오류 조건 보정 — `skill hooks firing` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`No speech detected` 오류 조건 보정 — `No speech detected` 실패 조건의 원인 확인 가능",
@@ -6437,7 +6955,9 @@
         },
         {
           "text": "`feedback survey appearing` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "`--effort`·`CLI flag being` 성능·자원 사용 조정 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -6473,7 +6993,9 @@
         },
         {
           "text": "`digit keys selecting` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            32
+          ]
         },
         {
           "text": "`/tmp/claude/`·`/tmp` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -6507,7 +7029,9 @@
         },
         {
           "text": "`Always Allow` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            39
+          ]
         },
         {
           "text": "`transcript_path`·`prompt`·`read -r` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -6518,7 +7042,9 @@
         },
         {
           "text": "SDK·`session crashes Desktop/SDK` 크래시 조건 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            41
+          ]
         },
         {
           "text": "`CLAUDE_CODE_DISABLE_TERMINAL_TITLE`·`terminal title being` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -6550,11 +7076,15 @@
         },
         {
           "text": "`multi-line session titles` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            47
+          ]
         },
         {
           "text": "`queued messages showing` 오류 조건 보정 — `queued messages showing` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            48
+          ]
         },
         {
           "text": "WebFetch·Glob·Bash 웹 도구 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -6562,11 +7092,15 @@
         },
         {
           "text": "VSCode·`VSCode: scroll speed` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            50
+          ]
         },
         {
           "text": "VSCode·`VSCode: Shift+Enter submitting` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            51
+          ]
         }
       ],
       "devImpact": [
@@ -6650,7 +7184,9 @@
         },
         {
           "text": "`cron scheduling tools` 새 사용 경로 제공 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`voice:pushToTalk`·`keybindings.json`·`meta+k` 새 사용 경로 제공 — `keybinding make voice` 기능을 명령 흐름에서 직접 사용",
@@ -6668,11 +7204,15 @@
       "changes": [
         {
           "text": "`startup time deferring` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "10minutes·`bridge session reconnection` 동작 범위 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            23
+          ]
         },
         {
           "text": "`claude.ai`·`Removed startup notification` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -6684,15 +7224,23 @@
       "fixes": [
         {
           "text": "`stdin freeze long-running` 멈춤 조건 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "8second·`second startup freeze` 성능·자원 사용 조정 — `second startup freeze` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            5,
+            6
+          ]
         },
         {
           "text": "`claude.ai`·OAuth OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            6,
+            11
+          ]
         },
         {
           "text": "`/fork`·`forked conversations sharing` 오류 조건 보정 — `forked conversations sharing` 실패 조건의 원인 확인 가능",
@@ -6702,15 +7250,21 @@
         },
         {
           "text": "`Read tool putting` 컨텍스트 사용량 계산 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`false-positive permission prompts` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`plugin installations being` 플러그인 설치·목록 관리 — `plugin installations being` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`claude.ai`·MCP MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소 — v2.1.71 항목",
@@ -6718,11 +7272,15 @@
         },
         {
           "text": "`background agent completion` 컨텍스트 사용량 계산 — `background agent completion` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "Bash·`duplicate output Bash` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`not installed` 오류 조건 보정 — `not installed` 실패 조건의 원인 확인 가능",
@@ -6855,13 +7413,17 @@
       "newFeatures": [
         {
           "text": "VSCode·`full markdown document` 새 사용 경로 제공 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            27
+          ]
         }
       ],
       "changes": [
         {
           "text": "`compaction preserve images` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`/rename`·`work while processing` 동작 범위 조정 — `work while processing` 입력·설정 확인 단계 축소",
@@ -6877,7 +7439,9 @@
         },
         {
           "text": "`Reduced startup memory` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         },
         {
           "text": "`/poll`·`300`·10minutes 동작 범위 조정 — `Reduced Remote Control` 입력·설정 확인 단계 축소",
@@ -6887,7 +7451,9 @@
         },
         {
           "text": "VSCode·`spark icon VS` 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "`/mcp`·VSCode·MCP OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
@@ -6923,7 +7489,9 @@
         },
         {
           "text": "`Enter inserting newline` 오류 조건 보정 — `Enter inserting newline` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`Set-Clipboard`·`ASCII`·Windows PowerShell 도구 opt-in 제어 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -6933,7 +7501,9 @@
         },
         {
           "text": "VSCode·Windows·`extra VS windows` 터미널 표시와 입력 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "Windows·`voice mode failing` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -6967,7 +7537,9 @@
         },
         {
           "text": "`not found in marketplace` 플러그인 설치·목록 관리 — `not found in marketplace` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`/security-review`·`unknown option merge-base` 셸 명령 실행 처리 — 자동 승인 규칙의 우회 가능성 축소",
@@ -6989,7 +7561,9 @@
         },
         {
           "text": "`feature flags read` 성능·자원 사용 조정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "`permissions.defaultMode`·`acceptEdits`·`plan` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -7005,11 +7579,15 @@
         },
         {
           "text": "VSCode·`teleport marker rendering` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`no speech detected` 오류 조건 보정 — `no speech detected` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            20
+          ]
         }
       ],
       "devImpact": [
@@ -7067,7 +7645,9 @@
         },
         {
           "text": "`QWERTY`·`numeric keypad selecting` 새 사용 경로 제공 — `numeric keypad selecting` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`/remote-control`·`claude remote-control`·`/remote-control My Project` 새 사용 경로 제공 — 작업 중단 후 이어가기 실패 감소",
@@ -7078,7 +7658,9 @@
         },
         {
           "text": "`Voice STT languages` 새 사용 경로 제공 — `Voice STT languages` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`with low effort` 터미널 표시와 입력 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -7143,7 +7725,9 @@
         },
         {
           "text": "OAuth·`policy limit fetching` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "`pathPattern`·`strictKnownMarketplaces`·`hostPattern` 마켓플레이스 제한 정책 적용 범위 확대 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -7161,11 +7745,15 @@
       "changes": [
         {
           "text": "50ms·`spinner performance isolating` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            77
+          ]
         },
         {
           "text": "`UI rendering performance` 터미널 표시와 입력 처리 — `UI rendering performance` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            78
+          ]
         },
         {
           "text": "`--worktree`·`startup eliminating git` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -7176,11 +7764,17 @@
         },
         {
           "text": "macOS·`macOS startup eliminating` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            79,
+            80
+          ]
         },
         {
           "text": "macOS·`macOS startup Claude.ai` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            80,
+            81
+          ]
         },
         {
           "text": "`-p`·`claude.ai`·MCP 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -7190,7 +7784,9 @@
         },
         {
           "text": "`voice startup removing` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            83
+          ]
         },
         {
           "text": "MCP·WebFetch 컨텍스트 사용량 계산 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -7204,15 +7800,21 @@
         },
         {
           "text": "LSP·`LSP tool rendering` 컨텍스트 사용량 계산 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            86
+          ]
         },
         {
           "text": "`session upload memory` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            87
+          ]
         },
         {
           "text": "`file operation performance` 성능·자원 사용 조정 — `file operation performance` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            88
+          ]
         },
         {
           "text": "`--append-system-prompt-file`·`--system-prompt-file` 동작 범위 조정 — `documentation clarify work` 입력·설정 확인 단계 축소",
@@ -7227,20 +7829,29 @@
         {
           "text": "SDK·`Reduced memory footprint` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
           "originalRefs": [
+            90,
             91
           ]
         },
         {
           "text": "`Reduced memory usage` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            90,
+            92
+          ]
         },
         {
           "text": "`Reduced token usage` 동작 범위 조정 — `Reduced token usage` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            92,
+            93
+          ]
         },
         {
           "text": "VSCode·`Compacted chat` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            100
+          ]
         }
       ],
       "fixes": [
@@ -7307,19 +7918,27 @@
         },
         {
           "text": "`stash being cleared` 오류 조건 보정 — `stash being cleared` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         },
         {
           "text": "`ctrl+o freezing many` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            29
+          ]
         },
         {
           "text": "`plan mode feedback` 오류 조건 보정 — `plan mode feedback` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            30
+          ]
         },
         {
           "text": "`cursor moving down` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            31
+          ]
         },
         {
           "text": "`/stats`·`crash transcript files` 크래시 조건 처리 — `crash transcript files` 실패 조건의 원인 확인 가능",
@@ -7329,7 +7948,9 @@
         },
         {
           "text": "`brief hang after` 멈춤 조건 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            33
+          ]
         },
         {
           "text": "`--setting-sources user`·`--setting-sources` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -7357,15 +7978,21 @@
         },
         {
           "text": "SDK·`memory leak long-running` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            38
+          ]
         },
         {
           "text": "`400`·`API forked agents` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            39
+          ]
         },
         {
           "text": "`unexpected tool_use_id found` 오류 조건 보정 — `unexpected tool_use_id found` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            40
+          ]
         },
         {
           "text": "`name`·`teammates accidentally spawning` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -7387,7 +8014,9 @@
         },
         {
           "text": "`voice space bar` 오류 조건 보정 — `voice space bar` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            44
+          ]
         },
         {
           "text": "Windows·`worktree file copy` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -7421,11 +8050,15 @@
         },
         {
           "text": "`multi-GB memory spike` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            50
+          ]
         },
         {
           "text": "`Escape interrupting running` 오류 조건 보정 — `Escape interrupting running` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            51
+          ]
         },
         {
           "text": "`/voice`·`/cost`·Remote Control 슬래시 명령 탐색과 실행 개선 — 작업 중단 후 이어가기 실패 감소",
@@ -7452,7 +8085,9 @@
         },
         {
           "text": "`memory leak interactive` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            56
+          ]
         },
         {
           "text": "`--mcp-config`·`hang points corrupted` 멈춤 조건 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -7488,7 +8123,9 @@
         },
         {
           "text": "`terminal flicker caused` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            62
+          ]
         },
         {
           "text": "macOS·MCP·OAuth·`UI frame drops` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
@@ -7498,7 +8135,9 @@
         },
         {
           "text": "`occasional frame stalls` 오류 조건 보정 — `occasional frame stalls` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            64
+          ]
         },
         {
           "text": "`TeammateIdle`·`TaskCompleted`·`{\"continue\": false, \"stopReason\": \"...\"}` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -7514,7 +8153,9 @@
         },
         {
           "text": "`SKILL`·`skill descriptions colons` 오류 조건 보정 — `skill descriptions colons` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            67
+          ]
         },
         {
           "text": "`description:`·`project skills frontmatter` 오류 조건 보정 — `project skills frontmatter` 실패 조건의 원인 확인 가능",
@@ -7536,7 +8177,10 @@
         },
         {
           "text": "`extra blank lines` 오류 조건 보정 — `extra blank lines` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            31,
+            71
+          ]
         },
         {
           "text": "`/config`·`Tab/arrow keys cycling` 설정 항목 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -7553,20 +8197,27 @@
         {
           "text": "Remote Control·`Remote Control active` 오류 조건 보정 — `Remote Control active` 실패 조건의 원인 확인 가능",
           "originalRefs": [
+            52,
             74
           ]
         },
         {
           "text": "`Voice waveform cursor` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            75
+          ]
         },
         {
           "text": "`Voice input showing` 오류 조건 보정 — `Voice input showing` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            76
+          ]
         },
         {
           "text": "Sonnet 4.5·Sonnet 4.6·`Sonnet 4.5 Pro/Max/Team` 멈춤 조건 처리 — `Sonnet 4.5 Pro/Max/Team` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            94
+          ]
         },
         {
           "text": "`/resume`·`(session)` 세션 재개 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -7586,7 +8237,9 @@
         },
         {
           "text": "`resuming after compaction` 멈춤 조건 처리 — `resuming after compaction` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            98
+          ]
         },
         {
           "text": "`activeForm`·SDK 멈춤 조건 처리 — headless·자동화 클라이언트의 이벤트 처리 안정화",
@@ -7602,7 +8255,9 @@
         },
         {
           "text": "VSCode·`RTL text rendering` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            102
+          ]
         }
       ],
       "devImpact": [
@@ -7681,7 +8336,9 @@
         },
         {
           "text": "Opus 4·Opus 4.6·`Removed Opus 4.1` 이름·저장 위치 변경 — 참조 중인 설정과 문서 갱신 필요",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         }
       ],
       "fixes": [
@@ -7755,11 +8412,14 @@
         },
         {
           "text": "`HTTP`·`POST`·`JSON` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "MCP·OAuth·`manual URL paste` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
           "originalRefs": [
+            7,
             8
           ]
         },
@@ -7773,7 +8433,9 @@
       "changes": [
         {
           "text": "`Project configs auto` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`/model`·`command show currently` 슬래시 명령 탐색과 실행 개선 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -7783,37 +8445,52 @@
         },
         {
           "text": "`memory usage long` 컨텍스트 사용량 계산 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "VSCode·`VSCode: session rename` 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         }
       ],
       "fixes": [
         {
           "text": "`/cost`·`local slash command` 슬래시 명령 탐색과 실행 개선 — `local slash command` 실패 조건의 원인 확인 가능",
           "originalRefs": [
-            1
+            1,
+            4
           ]
         },
         {
           "text": "`listener leak bridge` 오류 조건 보정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            6,
+            15
+          ]
         },
         {
           "text": "MCP·OAuth·`listener leak MCP` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
           "originalRefs": [
+            6,
             7
           ]
         },
         {
           "text": "`memory leak navigating` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9,
+            12
+          ]
         },
         {
           "text": "`listener leak interactive` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            6,
+            10
+          ]
         },
         {
           "text": "`file count cache` 오류 조건 보정 — `file count cache` 실패 조건의 원인 확인 가능",
@@ -7823,43 +8500,70 @@
         },
         {
           "text": "`memory leak bash` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9,
+            12
+          ]
         },
         {
           "text": "MCP·`MCP tool/resource cache` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소 — v2.1.63 항목",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`IDE host IP` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`WebSocket listener leak` 오류 조건 보정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            6,
+            15
+          ]
         },
         {
           "text": "`memory leak git` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9,
+            16
+          ]
         },
         {
           "text": "`JSON`·JSON·`memory leak JSON` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9,
+            17
+          ]
         },
         {
           "text": "VSCode·`VSCode: remote sessions` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            18,
+            24
+          ]
         },
         {
           "text": "`REPL`·`race condition REPL` 오류 조건 보정 — `race condition REPL` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`memory leak long-running` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            16,
+            20
+          ]
         },
         {
           "text": "MCP·`memory leak MCP` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7,
+            21
+          ]
         },
         {
           "text": "`/clear`·`resetting cached skills` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -7994,17 +8698,23 @@
         },
         {
           "text": "`memory usage multi-agent` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         }
       ],
       "fixes": [
         {
           "text": "MCP·OAuth·`MCP OAuth token` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`shell commands showing` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         }
       ],
       "devImpact": []
@@ -8048,7 +8758,9 @@
       "fixes": [
         {
           "text": "`vscode.editor.openLast`·VSCode·`VS Code: another` 셸 명령 실행 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "devImpact": [
@@ -8088,7 +8800,9 @@
       "fixes": [
         {
           "text": "`EINVAL`·Windows 셸 명령 실행 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "devImpact": [
@@ -8128,11 +8842,15 @@
       "fixes": [
         {
           "text": "`UI flicker input` 터미널 표시와 입력 처리 — `UI flicker input` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`bulk agent kill` 셸 명령 실행 처리 — `bulk agent kill` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "Remote Control·`graceful shutdown sometimes` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
@@ -8155,18 +8873,22 @@
         {
           "text": "Windows·`crash could occur` 크래시 조건 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
           "originalRefs": [
-            5
+            5,
+            6
           ]
         },
         {
           "text": "Linux·Windows·`crash WebAssembly interpreter` 크래시 조건 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
           "originalRefs": [
+            5,
             6
           ]
         },
         {
           "text": "`ARM64`·2minutes·Windows 크래시 조건 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         }
       ],
       "devImpact": [
@@ -8206,7 +8928,9 @@
       "fixes": [
         {
           "text": "`vscode.editor.openLast`·VSCode·Windows·`VS Code: extension` 셸 명령 실행 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "devImpact": [
@@ -8250,7 +8974,9 @@
         },
         {
           "text": "npm·`custom npm registries` 플러그인 설치·목록 관리 — `custom npm registries` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         }
       ],
       "changes": [
@@ -8262,11 +8988,15 @@
         },
         {
           "text": "50K·100K 컨텍스트 사용량 계산 — `Tool results larger` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`HTTP`·`HTTP hooks routed` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`/model`·Sonnet 4.5 동작 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -8379,7 +9109,10 @@
         },
         {
           "text": "`memory usage during` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11,
+            13
+          ]
         },
         {
           "text": "`-p`·`WASM` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -8411,11 +9144,15 @@
         },
         {
           "text": "`RHEL`·Linux 오류 조건 보정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`memory leak agent` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`CLAUDE_CODE_SIMPLE`·`CLAUDE` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
@@ -8432,7 +9169,10 @@
         },
         {
           "text": "`memory leak completed` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4,
+            7
+          ]
         },
         {
           "text": "MCP·`MCP tools were` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -8440,27 +9180,40 @@
         },
         {
           "text": "LSP·`memory leak LSP` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`prompt suggestion cache` 오류 조건 보정 — `prompt suggestion cache` 실패 조건의 원인 확인 가능 — v2.1.50 항목",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`unbounded memory growth` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14,
+            18
+          ]
         },
         {
           "text": "`memory leak TaskOutput` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "`memory leak CircularBuffer` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            23
+          ]
         },
         {
           "text": "`memory leak shell` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            24
+          ]
         }
       ],
       "devImpact": [
@@ -8523,7 +9276,9 @@
         },
         {
           "text": "SDK·`Permission suggestions populated` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`/model`·1M·Sonnet 4.5 이름·저장 위치 변경 — 참조 중인 설정과 문서 갱신 필요",
@@ -8550,22 +9305,29 @@
         {
           "text": "MCP·`startup performance batching` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
           "originalRefs": [
+            14,
             16
           ]
         },
         {
           "text": "`permission prompts path` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         }
       ],
       "fixes": [
         {
           "text": "3seconds·`Ctrl+C ESC being` 오류 조건 보정 — `Ctrl+C ESC being` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`prompt suggestion cache` 오류 조건 보정 — `prompt suggestion cache` 실패 조건의 원인 확인 가능 — v2.1.49 항목",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`plugin enable`·`plugin disable`·`--scope` 플러그인 설치·목록 관리 — `auto-detect correct scope` 실패 조건의 원인 확인 가능",
@@ -8581,11 +9343,16 @@
         },
         {
           "text": "`WASM`·`unbounded WASM memory` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7,
+            11
+          ]
         },
         {
           "text": "`potential rendering issues` 터미널 표시와 입력 처리 — `potential rendering issues` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`HTTP`·MCP MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소 — v2.1.49 항목",
@@ -8593,7 +9360,10 @@
         },
         {
           "text": "`WASM`·`unbounded memory growth` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7,
+            11
+          ]
         },
         {
           "text": "`ConfigChange`·`hook event fires` 멈춤 조건 처리 — 자동 승인 규칙의 우회 가능성 축소",
@@ -8603,7 +9373,10 @@
         },
         {
           "text": "MCP·`startup performance caching` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14,
+            16
+          ]
         },
         {
           "text": "`disableAllHooks`·`setting respect managed` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -8677,11 +9450,15 @@
         },
         {
           "text": "`memory usage long-running` 컨텍스트 사용량 계산 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "500ms·`startup performance deferring` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`@`·`performance file mentions` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -8691,15 +9468,21 @@
         },
         {
           "text": "`memory usage trimming` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`memory usage during` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소 — v2.1.47 항목",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`Search patterns collapsed` 터미널 표시와 입력 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`ctrl+f`·`Use kill all` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -8709,11 +9492,15 @@
         },
         {
           "text": "`Simplified teammate navigation` 동작 범위 조정 — `Simplified teammate navigation` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`Increased initial session` 세션 재개 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            43
+          ]
         },
         {
           "text": "`~/.claude/backups/`·`~/.claude/backups/`` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -8752,7 +9539,9 @@
         },
         {
           "text": "`compaction failing conversation` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`MSYS2`·Windows 셸 명령 실행 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -8760,27 +9549,39 @@
         },
         {
           "text": "`bash permission classifier` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`FUSE`·`user-defined agents only` 오류 조건 보정 — `user-defined agents only` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`plugin agent skills` 플러그인 설치·목록 관리 — `plugin agent skills` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "Windows·`Windows: CWD tracking` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`400`·`API occurred sessions` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`single file write/edit` 오류 조건 보정 — `single file write/edit` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`/rename`·`custom session titles` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
@@ -8791,7 +9592,9 @@
         },
         {
           "text": "`collapsed read/search hint` 터미널 표시와 입력 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "`\\`·`bash commands backslash-newline` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -8807,7 +9610,9 @@
         },
         {
           "text": "MCP·`MCP servers appearing` 오류 조건 보정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            25
+          ]
         },
         {
           "text": "`/clear`·`session name persisting` 셸 명령 실행 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -8823,7 +9628,9 @@
         },
         {
           "text": "`/resume`·`/resume silently dropping` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         },
         {
           "text": "`claude doctor`·`misclassifying mise asdf-managed` 오류 조건 보정 — `misclassifying mise asdf-managed` 실패 조건의 원인 확인 가능",
@@ -8834,11 +9641,14 @@
         },
         {
           "text": "`read-only file system` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            32
+          ]
         },
         {
           "text": "`agent progress indicator` 오류 조건 보정 — `agent progress indicator` 실패 조건의 원인 확인 가능",
           "originalRefs": [
+            10,
             33
           ]
         },
@@ -8848,15 +9658,21 @@
         },
         {
           "text": "`background agent results` 오류 조건 보정 — `background agent results` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            35
+          ]
         },
         {
           "text": "Warp·`Warp terminal incorrectly` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            36
+          ]
         },
         {
           "text": "`CJK wide characters` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            37
+          ]
         },
         {
           "text": "`model`·`.claude/agents/*.md` 오류 조건 보정 — `custom agent field` 실패 조건의 원인 확인 가능",
@@ -8866,7 +9682,10 @@
         },
         {
           "text": "`plan mode being` 컨텍스트 사용량 계산 — `plan mode being` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            39,
+            41
+          ]
         },
         {
           "text": "`alwaysThinkingEnabled: true`·`settings.json`·Bedrock 설정 항목 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -8882,11 +9701,16 @@
         },
         {
           "text": "`session name being` 컨텍스트 사용량 계산 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            26,
+            42
+          ]
         },
         {
           "text": "Windows·`Windows: worktree session` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            44
+          ]
         },
         {
           "text": "`/resume <session-id>`·`/resume` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -8933,19 +9757,27 @@
         },
         {
           "text": "`inline spans markdown` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            53
+          ]
         },
         {
           "text": "`teammate spinners respecting` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            54
+          ]
         },
         {
           "text": "`shell commands permanently` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            55
+          ]
         },
         {
           "text": "`cmd.exe`·Windows·Bash 셸 명령 실행 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            56
+          ]
         },
         {
           "text": "`findReferences`·`node_modules/`·`venv/` 오류 조건 보정 — `LSP other location-based` 실패 조건의 원인 확인 가능",
@@ -8956,6 +9788,7 @@
         {
           "text": "`/resume`·`sessions large first` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
           "originalRefs": [
+            45,
             59
           ]
         },
@@ -8971,11 +9804,15 @@
         },
         {
           "text": "VSCode·`VSCode: conversation messages` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            62
+          ]
         },
         {
           "text": "`background tasks failing` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            63
+          ]
         },
         {
           "text": "`[25~`·Windows·Bash 셸 명령 실행 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -8985,11 +9822,16 @@
         },
         {
           "text": "`Edit tool silently` 오류 조건 보정 — `Edit tool silently` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            7,
+            66
+          ]
         },
         {
           "text": "`OSC hyperlinks only` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            67
+          ]
         }
       ],
       "devImpact": [
@@ -9059,7 +9901,9 @@
       "fixes": [
         {
           "text": "macOS·`orphaned CC processes` 터미널 표시와 입력 처리 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "devImpact": [
@@ -9121,15 +9965,21 @@
       "changes": [
         {
           "text": "`startup performance removing` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`memory usage shell` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`collapsed read/search groups` 동작 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "VSCode·`permission destination choice` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -9141,11 +9991,15 @@
       "fixes": [
         {
           "text": "Bedrock·Vertex·Foundry 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "macOS·`operation not permitted` 권한·샌드박스 판정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`ReferenceError`·`Task tool crashing` 크래시 조건 처리 — `Task tool crashing` 실패 조건의 원인 확인 가능",
@@ -9155,11 +10009,15 @@
         },
         {
           "text": "`autocomplete suggestions being` 파일·명령 자동완성 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`skills invoked subagents` 컨텍스트 사용량 계산 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`.claude.json.backup`·`claude.json.backup` 성능·자원 사용 조정 — `excessive files accumulating` 실패 조건의 원인 확인 가능",
@@ -9169,7 +10027,9 @@
         },
         {
           "text": "`plugin-provided commands agents` 플러그인 설치·목록 관리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         }
       ],
       "devImpact": [
@@ -9329,7 +10189,9 @@
         },
         {
           "text": "`ARM64`·Windows 새 사용 경로 제공 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         }
       ],
       "changes": [
@@ -9341,13 +10203,17 @@
         },
         {
           "text": "`narrow terminal layout` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         }
       ],
       "fixes": [
         {
           "text": "`AWS auth refresh` 멈춤 조건 처리 — `AWS auth refresh` 실패 조건의 원인 확인 가능 — v2.1.41 항목",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`@README.md#installation`·`README` 파일·명령 자동완성 범위 조정 — `file resolution failing` 실패 조건의 원인 확인 가능",
@@ -9369,11 +10235,15 @@
         },
         {
           "text": "`cursor jumping end` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`markdown link display` 터미널 표시와 입력 처리 — `markdown link display` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`auto-compact failure notifications` 오류 조건 보정 — `auto-compact failure notifications` 실패 조건의 원인 확인 가능",
@@ -9383,7 +10253,9 @@
         },
         {
           "text": "`permission wait time` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`proactive ticks firing` 오류 조건 보정 — `proactive ticks firing` 실패 조건의 원인 확인 가능",
@@ -9393,7 +10265,9 @@
         },
         {
           "text": "`clear stale permission` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "`hook blocking showing` 오류 조건 보정 — `hook blocking showing` 실패 조건의 원인 확인 가능",
@@ -9446,7 +10320,9 @@
       "fixes": [
         {
           "text": "`fatal being swallowed` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`process hanging after` 멈춤 조건 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -9456,7 +10332,9 @@
         },
         {
           "text": "`character loss terminal` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`blank lines verbose` 오류 조건 보정 — `blank lines verbose` 실패 조건의 원인 확인 가능",
@@ -9496,7 +10374,9 @@
       "fixes": [
         {
           "text": "VSCode·`VS terminal scroll-to-top` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`Tab key queueing` 슬래시 명령 탐색과 실행 개선 — `Tab key queueing` 실패 조건의 원인 확인 가능",
@@ -9506,7 +10386,9 @@
         },
         {
           "text": "`bash permission matching` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`text between tool` 오류 조건 보정 — `text between tool` 실패 조건의 원인 확인 가능",
@@ -9516,7 +10398,9 @@
         },
         {
           "text": "VSCode·`duplicate sessions resuming` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         }
       ],
       "devImpact": [
@@ -9602,7 +10486,9 @@
       "fixes": [
         {
           "text": "`crash agent teams` 터미널 표시와 입력 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`sandbox.excludedCommands`·`dangerouslyDisableSandbox`·`autoAllowBashIfSandboxed` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -9670,18 +10556,24 @@
         },
         {
           "text": "`claude.ai`·VSCode·OAuth OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "VSCode·`VSCode: git branch` 새 사용 경로 제공 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         }
       ],
       "changes": [],
       "fixes": [
         {
           "text": "`agent teammate sessions` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`warnings about agent` 오류 조건 보정 — `warnings about agent` 실패 조건의 원인 확인 가능",
@@ -9691,15 +10583,21 @@
         },
         {
           "text": "`submitting message while` 오류 조건 보정 — `submitting message while` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`API could occur` 오류 조건 보정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`404`·`API proxy compatibility` 오류 조건 보정 — `API proxy compatibility` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`settings.json`·`HTTP`·WebFetch 웹 도구 입력 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -9715,7 +10613,9 @@
         },
         {
           "text": "`ECONNREFUSED`·`Connection error` 오류 조건 보정 — `Connection error` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`invalid managed settings` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -9725,7 +10625,9 @@
         },
         {
           "text": "VSCode·`VSCode: scroll-to-bottom under-scrolling` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         }
       ],
       "devImpact": [
@@ -9775,7 +10677,9 @@
         },
         {
           "text": "`Summarize from here` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         }
       ],
       "changes": [
@@ -9793,15 +10697,21 @@
         },
         {
           "text": "`--resume`·`--agent` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`Skill character budget` 컨텍스트 사용량 계산 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "VSCode·`VSCode: spinner loading` 동작 범위 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         }
       ],
       "fixes": [
@@ -9825,7 +10735,9 @@
         },
         {
           "text": "VSCode·`VSCode: slash commands` 슬래시 명령 탐색과 실행 개선 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         }
       ],
       "devImpact": [
@@ -9881,11 +10793,15 @@
       "newFeatures": [
         {
           "text": "`session resume hint` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`full-width space input` 새 사용 경로 제공 — `full-width space input` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         }
       ],
       "changes": [
@@ -9897,21 +10813,29 @@
         },
         {
           "text": "`Reduced layout jitter` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "Bedrock·Vertex·Foundry 이름·저장 위치 변경 — 참조 중인 설정과 문서 갱신 필요",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         }
       ],
       "fixes": [
         {
           "text": "`PDF too large` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`Read-only file system` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`~/.claude.json`·`claude.json`·`~/.claude.json`` 크래시 조건 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -9927,11 +10851,15 @@
         },
         {
           "text": "LSP·`LSP shutdown/exit compatibility` 오류 조건 보정 — `LSP shutdown/exit compatibility` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`100`·20MB 오류 조건 보정 — `PDF request size` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         }
       ],
       "devImpact": [
@@ -10005,7 +10933,9 @@
         },
         {
           "text": "`token count tool` 새 사용 경로 제공 — `token count tool` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`reduced motion mode` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -10041,11 +10971,15 @@
         },
         {
           "text": "`phantom text blocks` 오류 조건 보정 — `phantom text blocks` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`prompt cache correctly` 멈춤 조건 처리 — `prompt cache correctly` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`/login`·`400` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
@@ -10065,11 +10999,15 @@
         },
         {
           "text": "`permission dialogs stealing` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "SDK·MCP·`subagents being able` SDK 이벤트·입출력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`.bashrc`·Windows 셸 명령 실행 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
@@ -10206,11 +11144,15 @@
         },
         {
           "text": "Windows·`Windows: console windows` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`401`·VSCode·OAuth OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         }
       ],
       "devImpact": [
@@ -10298,25 +11240,35 @@
       "changes": [
         {
           "text": "`terminal rendering performance` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소 — v2.1.23 항목",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         }
       ],
       "fixes": [
         {
           "text": "`mTLS proxy connectivity` 오류 조건 보정 — `mTLS proxy connectivity` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`per-user temp directory` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`400`·`race condition could` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`pending async hooks` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`tab completion updating` 오류 조건 보정 — `tab completion updating` 실패 조건의 원인 확인 가능",
@@ -10326,15 +11278,21 @@
         },
         {
           "text": "`ripgrep search timeouts` 오류 조건 보정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "Bash·`Bash commands show` 셸 명령 실행 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`merged pull requests` 멈춤 조건 처리 — `merged pull requests` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "Bedrock·`model options displaying` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -10401,7 +11359,9 @@
       "newFeatures": [
         {
           "text": "`full-width number input` 새 사용 경로 제공 — `full-width number input` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "changes": [
@@ -10411,7 +11371,9 @@
         },
         {
           "text": "`prefer file operation` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`python`·`pip`·`claudeCode.usePythonEnvironment` 셸 명령 실행 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -10423,15 +11385,21 @@
       "fixes": [
         {
           "text": "`shell completion cache` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`API resuming sessions` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`auto-compact triggering too` 오류 조건 보정 — `auto-compact triggering too` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`task IDs potentially` 오류 조건 보정 — `task IDs potentially` 실패 조건의 원인 확인 가능",
@@ -10487,11 +11455,15 @@
       "newFeatures": [
         {
           "text": "`arrow key history` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`external editor shortcut` 새 사용 경로 제공 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`CLAUDE.md`·`--add-dir`·`CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
@@ -10515,11 +11487,15 @@
         },
         {
           "text": "`task list dynamically` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`fork conversation hint` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            20
+          ]
         }
       ],
       "fixes": [
@@ -10529,27 +11505,39 @@
         },
         {
           "text": "`session compaction issues` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`agents sometimes ignoring` 오류 조건 보정 — `agents sometimes ignoring` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`wide character rendering` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`JSON`·JSON·MCP·`JSON parsing MCP` 오류 조건 보정 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`up/down arrow keys` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`draft prompt being` 셸 명령 실행 처리 — `draft prompt being` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`ghost text flickering` 슬래시 명령 탐색과 실행 개선 — `ghost text flickering` 실패 조건의 원인 확인 가능",
@@ -10559,7 +11547,9 @@
         },
         {
           "text": "`marketplace source removal` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`/context`·`duplicate output some` 컨텍스트 사용량 계산 — `duplicate output some` 실패 조건의 원인 확인 가능",
@@ -10569,11 +11559,16 @@
         },
         {
           "text": "`task list sometimes` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            14,
+            19
+          ]
         },
         {
           "text": "`syntax highlighting diffs` 오류 조건 보정 — `syntax highlighting diffs` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`crashes cancelling tool` 크래시 조건 처리 — `crashes cancelling tool` 실패 조건의 원인 확인 가능",
@@ -10593,7 +11588,9 @@
         },
         {
           "text": "`teammate messages render` 터미널 표시와 입력 처리 — `teammate messages render` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "`ToolSearch`·ToolSearch 멈춤 조건 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -10615,7 +11612,9 @@
         },
         {
           "text": "`background agents prompt` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            26
+          ]
         },
         {
           "text": "`Bash(*)`·`Bash`·Bash·`permission rules like` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -10625,7 +11624,9 @@
         },
         {
           "text": "`config backups timestamped` 멈춤 조건 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            28
+          ]
         }
       ],
       "devImpact": []
@@ -10690,19 +11691,27 @@
         },
         {
           "text": "`resuming sessions custom` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`pasted text content` 오류 조건 보정 — `pasted text content` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`agent list displaying` 터미널 표시와 입력 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`backgrounded hook commands` 셸 명령 실행 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`file write preview` 오류 조건 보정 — `file write preview` 실패 조건의 원인 확인 가능",
@@ -10712,7 +11721,9 @@
         },
         {
           "text": "`skills additional permissions` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`$ARGUMENTS.0`·`$ARGUMENTS[0]`·`ARGUMENTS` 멈춤 조건 처리 — `indexed argument syntax` 실패 조건의 원인 확인 가능",
@@ -10819,7 +11830,9 @@
       "newFeatures": [
         {
           "text": "`task management system` 새 사용 경로 제공 — `task management system` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "changes": [
@@ -10839,7 +11852,9 @@
       "fixes": [
         {
           "text": "`out-of-memory crashes resuming` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`/compact`·`context remaining` 컨텍스트 사용량 계산 — `context remaining` 실패 조건의 원인 확인 가능",
@@ -10849,11 +11864,15 @@
         },
         {
           "text": "`session titles resume` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "Windows·`race condition Windows` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         }
       ],
       "devImpact": [
@@ -10899,7 +11918,9 @@
       "changes": [
         {
           "text": "`UI rendering performance` 터미널 표시와 입력 처리 — `UI rendering performance` 입력·설정 확인 단계 축소 — v2.1.15 항목",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         }
       ],
       "fixes": [
@@ -10911,7 +11932,9 @@
         },
         {
           "text": "MCP·`MCP stdio server` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         }
       ],
       "devImpact": []
@@ -10936,17 +11959,23 @@
         },
         {
           "text": "`search installed plugins` 플러그인 설치·목록 관리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`pinning plugins specific` 플러그인 설치·목록 관리 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         }
       ],
       "changes": [
         {
           "text": "`backspace delete pasted` 동작 범위 조정 — `backspace delete pasted` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`/usage`·VSCode 셸 명령 실행 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -10958,15 +11987,21 @@
       "fixes": [
         {
           "text": "`regression context window` 컨텍스트 사용량 계산 — `regression context window` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`memory issues could` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`memory leak long-running` 셸 명령 실행 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`@`·`symbol incorrectly triggering` 파일·명령 자동완성 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -11014,11 +12049,15 @@
         },
         {
           "text": "`inconsistent back navigation` 플러그인 설치·목록 관리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "iTerm2·`iTerm2 progress bar` 오류 조건 보정 — `iTerm2 progress bar` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         }
       ],
       "devImpact": [
@@ -11058,7 +12097,9 @@
       "fixes": [
         {
           "text": "`message rendering` 터미널 표시와 입력 처리 — `message rendering` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "devImpact": []
@@ -11103,7 +12144,9 @@
         },
         {
           "text": "OAuth·`keyboard shortcut c` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         }
       ],
       "changes": [
@@ -11115,7 +12158,9 @@
         },
         {
           "text": "`file suggestions show` 파일·명령 자동완성 범위 조정 — `file suggestions show` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "VSCode·`install count display` 플러그인 설치·목록 관리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -11189,7 +12234,9 @@
         },
         {
           "text": "`session URL attribution` 새 사용 경로 제공 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`PreToolUse`·`additionalContext` 컨텍스트 사용량 계산 — `hooks return model` 기능을 명령 흐름에서 직접 사용",
@@ -11208,15 +12255,21 @@
       "fixes": [
         {
           "text": "`long sessions parallel` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "MCP·`MCP server reconnection` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "Kitty·Ghostty·iTerm2 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         }
       ],
       "devImpact": []
@@ -11241,17 +12294,23 @@
         },
         {
           "text": "`ability provide feedback` 권한·샌드박스 판정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`inline display agent` 터미널 표시와 입력 처리 — `inline display agent` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         }
       ],
       "changes": [
         {
           "text": "`typing responsiveness reducing` 터미널 표시와 입력 처리 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "`MCPSearch`·`disallowedTools`·MCP 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -11267,15 +12326,21 @@
         },
         {
           "text": "Windows·`file modified` 멈춤 조건 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`orphaned tool_result sibling` 오류 조건 보정 — `orphaned tool_result sibling` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`context window blocking` 컨텍스트 사용량 계산 — `context window blocking` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`/model`·`/theme` 슬래시 명령 탐색과 실행 개선 — `spinner briefly flashing` 실패 조건의 원인 확인 가능",
@@ -11285,7 +12350,9 @@
         },
         {
           "text": "`terminal title animation` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`plugins git submodules` 플러그인 설치·목록 관리 — `plugins git submodules` 실패 조건의 원인 확인 가능",
@@ -11415,7 +12482,9 @@
       "changes": [
         {
           "text": "`CLAUDE`·`external CLAUDE.md imports` 동작 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`/tasks`·`dialog go directly` 동작 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -11425,7 +12494,9 @@
         },
         {
           "text": "`autocomplete icons different` 파일·명령 자동완성 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`/mcp enable <name>`·`/mcp`·MCP 이름·저장 위치 변경 — 참조 중인 설정과 문서 갱신 필요",
@@ -11443,15 +12514,21 @@
         },
         {
           "text": "`permission bypass shell` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`false File been` 멈춤 조건 처리 — `false File been` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`text styling getting` 오류 조건 보정 — `text styling getting` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`feedback panel closing` 오류 조건 보정 — `feedback panel closing` 실패 조건의 원인 확인 가능",
@@ -11461,15 +12538,21 @@
         },
         {
           "text": "`rate limit warning` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "`rate limit options` 오류 조건 보정 — provider별 실패 원인 파악과 재시도 판단 용이",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         },
         {
           "text": "Kitty·`numpad keys outputting` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "Kitty·`Option+Return inserting newlines` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
@@ -11479,7 +12562,9 @@
         },
         {
           "text": "`corrupted config backup` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            14
+          ]
         },
         {
           "text": "`mcp list`·`mcp get`·MCP·`commands leaving orphaned` MCP 서버 연결 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -11495,15 +12580,21 @@
         },
         {
           "text": "OAuth·`Help improve Claude` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            20
+          ]
         },
         {
           "text": "`task notification display` 터미널 표시와 입력 처리 — `task notification display` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`Claude Code` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            22
+          ]
         },
         {
           "text": "VSCode·`usage indicator updating` 오류 조건 보정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -11590,7 +12681,9 @@
       "fixes": [
         {
           "text": "OAuth·`Help improve Claude` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지 — v2.1.4 항목",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         }
       ],
       "devImpact": [
@@ -11636,17 +12729,23 @@
       "changes": [
         {
           "text": "`slash command suggestion` 슬래시 명령 탐색과 실행 개선 — `slash command suggestion` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            10
+          ]
         },
         {
           "text": "VSCode·`clickable destination selector` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         }
       ],
       "fixes": [
         {
           "text": "`Merged slash commands` 슬래시 명령 탐색과 실행 개선 — `Merged slash commands` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`/doctor`·`detection warnings unreachable` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -11662,16 +12761,21 @@
         },
         {
           "text": "`false skill duplicate` 오류 조건 보정 — `false skill duplicate` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         },
         {
           "text": "`mismatch between background` 오류 조건 보정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            5
+          ]
         },
         {
           "text": "`sub-agents using wrong` 오류 조건 보정 — `sub-agents using wrong` 실패 조건의 원인 확인 가능",
           "originalRefs": [
-            6
+            6,
+            7
           ]
         },
         {
@@ -11682,11 +12786,15 @@
         },
         {
           "text": "`trust dialog acceptance` 오류 조건 보정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         },
         {
           "text": "`terminal rendering stability` 터미널 표시와 입력 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "60seconds·10minutes 멈춤 조건 처리 — `tool hook execution` 실패 조건의 원인 확인 가능",
@@ -11743,19 +12851,27 @@
       "newFeatures": [
         {
           "text": "`source path metadata` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         },
         {
           "text": "`clickable hyperlinks file` 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "Windows·`Windows Package Manager` 새 사용 경로 제공 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`auto-accept edits` 새 사용 경로 제공 — `auto-accept edits` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            3
+          ]
         },
         {
           "text": "`FORCE_AUTOUPDATE_PLUGINS`·`environment variable allow` 플러그인 설치·목록 관리 — 자동 승인 규칙의 우회 가능성 축소",
@@ -11773,11 +12889,15 @@
       "changes": [
         {
           "text": "macOS·iTerm2·Kitty 터미널 표시와 입력 처리 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            13
+          ]
         },
         {
           "text": "npm·`permission explainer flag` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`C:\\ProgramData\\ClaudeCode\\managed-settings.json`·`C:\\Program Files\\ClaudeCode\\managed-settings.json`·`settings.json` 이름·저장 위치 변경 — 참조 중인 설정과 문서 갱신 필요",
@@ -11789,11 +12909,15 @@
       "fixes": [
         {
           "text": "Bash 명령 처리의 command injection 취약점 차단 — 변조된 입력 실행 위험 완화 — v2.1.2 항목",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`WASM`·`memory leak tree-sitter` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`@include`·`CLAUDE` 성능·자원 사용 조정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -11821,7 +12945,9 @@
         },
         {
           "text": "MCP·`MCP tool names` 설정 항목 처리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`scp`·`message pasting images` 오류 조건 보정 — `message pasting images` 실패 조건의 원인 확인 가능",
@@ -11831,11 +12957,15 @@
         },
         {
           "text": "`large bash command` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "`large tool outputs` 멈춤 조건 처리 — `large tool outputs` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            17
+          ]
         },
         {
           "text": "`/plugins`·`installed tab unify` 플러그인 설치·목록 관리 — 서버가 많거나 연결이 불안정한 환경의 대기 시간 감소",
@@ -11945,7 +13075,9 @@
       "fixes": [
         {
           "text": "macOS·`macOS code-sign warning` 오류 조건 보정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            0
+          ]
         }
       ],
       "devImpact": [
@@ -12018,7 +13150,9 @@
         },
         {
           "text": "`unified Ctrl+B backgrounding` 셸 명령 실행 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            21
+          ]
         },
         {
           "text": "`/teleport`·`/remote-env`·`claude.ai` 슬래시 명령 탐색과 실행 개선 — 자동 승인 규칙의 우회 가능성 축소",
@@ -12035,12 +13169,16 @@
         },
         {
           "text": "`hooks agent frontmatter` 에이전트 frontmatter 훅 실행 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            25,
+            26
+          ]
         },
         {
           "text": "`hooks skill slash` 슬래시 명령 탐색과 실행 개선 — `hooks skill slash` 기능을 명령 흐름에서 직접 사용",
           "originalRefs": [
-            26
+            26,
+            57
           ]
         },
         {
@@ -12089,7 +13227,9 @@
         },
         {
           "text": "`prompt agent hook` 플러그인 설치·목록 관리 — `prompt agent hook` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            34
+          ]
         },
         {
           "text": "iTerm2·`Cmd+V image paste` 새 사용 경로 제공 — `Cmd+V image paste` 기능을 명령 흐름에서 직접 사용",
@@ -12099,15 +13239,21 @@
         },
         {
           "text": "`left/right arrow key` 새 사용 경로 제공 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            36
+          ]
         },
         {
           "text": "`real-time thinking block` 터미널 표시와 입력 처리 — `real-time thinking block` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            37
+          ]
         },
         {
           "text": "`filepath full output` 셸 명령 실행 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            38
+          ]
         },
         {
           "text": "`Skills separate category` 컨텍스트 사용량 계산 — `Skills separate category` 기능을 명령 흐름에서 직접 사용",
@@ -12117,7 +13263,9 @@
         },
         {
           "text": "`Removed permission prompt` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            101
+          ]
         }
       ],
       "changes": [
@@ -12129,7 +13277,9 @@
         },
         {
           "text": "`CLI help output` 셸 명령 실행 처리 — `CLI help output` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            19
+          ]
         },
         {
           "text": "`Multiple optimizations improve` 시작 처리 병렬화 — 서버가 많을 때 초기 대기 시간 감소",
@@ -12161,7 +13311,9 @@
         },
         {
           "text": "`sed in-place edit` 셸 명령 실행 처리 — `sed in-place edit` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            85
+          ]
         },
         {
           "text": "`compaction reliability` 동작 범위 조정 — `compaction reliability` 입력·설정 확인 단계 축소",
@@ -12171,11 +13323,15 @@
         },
         {
           "text": "`subagents continue working` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            88
+          ]
         },
         {
           "text": "`skills show progress` 터미널 표시와 입력 처리 — `skills show progress` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            89
+          ]
         },
         {
           "text": "`/skills/`·`user-invocable: false`·`/skills` 슬래시 명령 탐색과 실행 개선 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -12197,23 +13353,33 @@
         },
         {
           "text": "`token count display` 터미널 표시와 입력 처리 — `token count display` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            93
+          ]
         },
         {
           "text": "`incremental output async` 동작 범위 조정 — `incremental output async` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            94
+          ]
         },
         {
           "text": "`permission prompt UX` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            101
+          ]
         },
         {
           "text": "`Chrome notification shortened` 터미널 표시와 입력 처리 — `Chrome notification shortened` 입력·설정 확인 단계 축소",
-          "originalRefs": []
+          "originalRefs": [
+            96
+          ]
         },
         {
           "text": "`TIFF`·macOS 동작 범위 조정 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            97
+          ]
         },
         {
           "text": "`/stats`·`output` 동작 범위 조정 — `output` 입력·설정 확인 단계 축소",
@@ -12247,7 +13413,10 @@
       "fixes": [
         {
           "text": "iTerm2·WezTerm·Ghostty 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            47,
+            48
+          ]
         },
         {
           "text": "`respectGitignore`·`settings.json` 파일·명령 자동완성 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -12257,7 +13426,9 @@
         },
         {
           "text": "OAuth·`security sensitive data` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "`-c`·`--resume` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -12267,15 +13438,22 @@
         },
         {
           "text": "`pasted content being` 오류 조건 보정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "`Esc key queued` 오류 조건 보정 — `Esc key queued` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            10,
+            67
+          ]
         },
         {
           "text": "`command search prioritize` 셸 명령 실행 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            12
+          ]
         },
         {
           "text": "`updatedInput`·`ask` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -12291,11 +13469,15 @@
         },
         {
           "text": "LSP·`LSP tool being` 설정 항목 처리 — 팀 설정과 실행 환경에서 동작을 명시적으로 제어",
-          "originalRefs": []
+          "originalRefs": [
+            15
+          ]
         },
         {
           "text": "`git repository not found` 오류 조건 보정 — `git repository not found` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            16
+          ]
         },
         {
           "text": "`Chrome WSL environments` 오류 조건 보정 — `Chrome WSL environments` 실패 조건의 원인 확인 가능",
@@ -12305,7 +13487,9 @@
         },
         {
           "text": "Windows·`Windows native installer` 오류 조건 보정 — Windows 환경의 키 입력·경로·프로세스 동작 안정화",
-          "originalRefs": []
+          "originalRefs": [
+            18
+          ]
         },
         {
           "text": "`list_changed`·MCP MCP 서버 연결 처리 — 자동 승인 규칙의 우회 가능성 축소",
@@ -12315,19 +13499,28 @@
         },
         {
           "text": "OAuth·`OAuth token refresh` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            40,
+            43
+          ]
         },
         {
           "text": "`409`·`session persistence getting` 오류 조건 보정 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            41
+          ]
         },
         {
           "text": "`session resume failures` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            42
+          ]
         },
         {
           "text": "OAuth·`race condition stale` OAuth 인증 흐름 처리 — 토큰 만료 중에도 세션 유지",
-          "originalRefs": []
+          "originalRefs": [
+            43
+          ]
         },
         {
           "text": "`APAC`·`403`·Bedrock 권한·샌드박스 판정 — 엔터프라이즈 provider 설정의 요청 실패 감소",
@@ -12335,19 +13528,27 @@
         },
         {
           "text": "30K·`API context overflow` 컨텍스트 사용량 계산 — `API context overflow` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            45
+          ]
         },
         {
           "text": "`FIFO`·`hang reading FIFO` 멈춤 조건 처리 — `hang reading FIFO` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            46
+          ]
         },
         {
           "text": "Ghostty·iTerm2·Kitty 터미널 표시와 입력 처리 — 터미널 기반 반복 작업의 입력 지연과 표시 깨짐 감소",
-          "originalRefs": []
+          "originalRefs": [
+            47,
+            48
+          ]
         },
         {
           "text": "iTerm2·Ghostty·Kitty 오류 조건 보정 — `Alt+B Alt+F working` 실패 조건의 원인 확인 가능",
           "originalRefs": [
+            47,
             48
           ]
         },
@@ -12360,7 +13561,9 @@
         },
         {
           "text": "`files created Write` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            50
+          ]
         },
         {
           "text": "`$()`·`commands command substitution` 셸 명령 실행 처리 — `commands command substitution` 실패 조건의 원인 확인 가능",
@@ -12370,7 +13573,10 @@
         },
         {
           "text": "`multi-line bash commands` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            11,
+            52
+          ]
         },
         {
           "text": "`git -C /path log`·`Bash(git log:*)`·`/path` 셸 명령 실행 처리 — IDE 터미널과 확장 화면에서 표시 오류 감소",
@@ -12387,15 +13593,22 @@
         },
         {
           "text": "`pressing Enter after` 슬래시 명령 탐색과 실행 개선 — `pressing Enter after` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            55
+          ]
         },
         {
           "text": "`slash command argument` 슬래시 명령 탐색과 실행 개선 — `slash command argument` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            26,
+            56
+          ]
         },
         {
           "text": "`sometimes redundantly invoking` 슬래시 명령 탐색과 실행 개선 — `sometimes redundantly invoking` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            57
+          ]
         },
         {
           "text": "`/context`·`skill token estimates` 컨텍스트 사용량 계산 — `skill token estimates` 실패 조건의 원인 확인 가능",
@@ -12417,15 +13630,22 @@
         },
         {
           "text": "Bash·`duplicate Bash commands` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            11,
+            61
+          ]
         },
         {
           "text": "`noisy output background` 오류 조건 보정 — `noisy output background` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            38,
+            62
+          ]
         },
         {
           "text": "`background task completion` 오류 조건 보정 — `background task completion` 실패 조건의 원인 확인 가능",
           "originalRefs": [
+            38,
             63
           ]
         },
@@ -12435,7 +13655,9 @@
         },
         {
           "text": "`cursor disappearing after` 권한·샌드박스 판정 — IDE 터미널과 확장 화면에서 표시 오류 감소",
-          "originalRefs": []
+          "originalRefs": [
+            65
+          ]
         },
         {
           "text": "`/hooks`·`menu selecting wrong` 터미널 표시와 입력 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -12446,12 +13668,15 @@
         {
           "text": "`images queued prompts` 오류 조건 보정 — `images queued prompts` 실패 조건의 원인 확인 가능",
           "originalRefs": [
+            10,
             67
           ]
         },
         {
           "text": "`images being silently` 오류 조건 보정 — `images being silently` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            68
+          ]
         },
         {
           "text": "`Image was too large` 오류 조건 보정 — `Image was too large` 실패 조건의 원인 확인 가능",
@@ -12461,15 +13686,21 @@
         },
         {
           "text": "`extra blank lines` 오류 조건 보정 — `extra blank lines` 실패 조건의 원인 확인 가능 — v2.1.0 항목",
-          "originalRefs": []
+          "originalRefs": [
+            70
+          ]
         },
         {
           "text": "`ultrathink keyword highlighting` 오류 조건 보정 — `ultrathink keyword highlighting` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            71
+          ]
         },
         {
           "text": "`collapsed Reading X` 오류 조건 보정 — `collapsed Reading X` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            72
+          ]
         },
         {
           "text": "`ls`·`cat`·Bash 셸 명령 실행 처리 — 대화 중 필요한 항목을 더 빨리 찾음",
@@ -12479,15 +13710,22 @@
         },
         {
           "text": "`spinner token counter` 오류 조건 보정 — `spinner token counter` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            74,
+            92
+          ]
         },
         {
           "text": "`memory leak git` 성능·자원 사용 조정 — 장시간 세션의 자원 증가와 강제 종료 위험 감소 — v2.1.0 항목",
-          "originalRefs": []
+          "originalRefs": [
+            75
+          ]
         },
         {
           "text": "LSP·`no server available` 성능·자원 사용 조정 — `no server available` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            76
+          ]
         },
         {
           "text": "`feedback submission hanging` 멈춤 조건 처리 — `feedback submission hanging` 실패 조건의 원인 확인 가능",
@@ -12497,7 +13735,9 @@
         },
         {
           "text": "`search mode plugin` 플러그인 설치·목록 관리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            78
+          ]
         },
         {
           "text": "`hook success message` 오류 조건 보정 — `hook success message` 실패 조건의 원인 확인 가능",
@@ -12507,7 +13747,9 @@
         },
         {
           "text": "`automatically continue response` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
-          "originalRefs": []
+          "originalRefs": [
+            86
+          ]
         },
         {
           "text": "`Interrupted` 멈춤 조건 처리 — `Interrupted` 실패 조건의 원인 확인 가능",
@@ -12630,6 +13872,7 @@
         {
           "text": "`syntax highlighting info` 새 사용 경로 제공 — 대화 중 필요한 항목을 더 빨리 찾음",
           "originalRefs": [
+            2,
             3
           ]
         }
@@ -12651,7 +13894,10 @@
       "fixes": [
         {
           "text": "macOS·`guidance macOS Alt` 터미널 표시와 입력 처리 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            4,
+            9
+          ]
         },
         {
           "text": "`allowed-tools`·`skill being applied` 권한·샌드박스 판정 — 자동 승인 규칙의 우회 가능성 축소",
@@ -12661,7 +13907,9 @@
         },
         {
           "text": "Opus 4.5·`Opus 4.5 tip` 오류 조건 보정 — `Opus 4.5 tip` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            6
+          ]
         },
         {
           "text": "`potential crash syntax` 크래시 조건 처리 — `potential crash syntax` 실패 조건의 원인 확인 가능",
@@ -12677,11 +13925,15 @@
         },
         {
           "text": "macOS·`macOS keyboard shortcuts` 터미널 표시와 입력 처리 — 플랫폼별 네이티브 실행 경로의 차이 감소",
-          "originalRefs": []
+          "originalRefs": [
+            9
+          ]
         },
         {
           "text": "Windows·`improper rendering` 터미널 표시와 입력 처리 — Windows 환경의 키 입력·경로·프로세스 동작 안정화 — v2.0.74 항목",
-          "originalRefs": []
+          "originalRefs": [
+            11
+          ]
         }
       ],
       "devImpact": [
@@ -12725,11 +13977,15 @@
         },
         {
           "text": "`alt-y yank-pop cycle` 새 사용 경로 제공 — `alt-y yank-pop cycle` 기능을 명령 흐름에서 직접 사용",
-          "originalRefs": []
+          "originalRefs": [
+            1
+          ]
         },
         {
           "text": "`search filtering plugin` 플러그인 설치·목록 관리 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            2
+          ]
         },
         {
           "text": "`--session-id`·`--resume`·`--continue` 세션 재개 처리 — 작업 중단 후 이어가기 실패 감소",
@@ -12747,21 +14003,30 @@
         },
         {
           "text": "`theme picker UI` 동작 범위 조정 — 대화 중 필요한 항목을 더 빨리 찾음",
-          "originalRefs": []
+          "originalRefs": [
+            5,
+            6
+          ]
         },
         {
           "text": "`search UX across` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            7
+          ]
         },
         {
           "text": "VSCode·`tab icon badges` 판정 범위 조정 — 자동 승인 규칙의 우회 가능성 축소",
-          "originalRefs": []
+          "originalRefs": [
+            8
+          ]
         }
       ],
       "fixes": [
         {
           "text": "`slow input history` 오류 조건 보정 — `slow input history` 실패 조건의 원인 확인 가능",
-          "originalRefs": []
+          "originalRefs": [
+            4
+          ]
         }
       ],
       "devImpact": [

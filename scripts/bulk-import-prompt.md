@@ -47,9 +47,15 @@ GitHub Releases API 응답 배열. v2.0.73 ~ v2.1.117 (93건).
   "originalBody": "...",              // 영어 원문
   "summary": {
     "headline": "한 줄 요약 (40자 이내 권장, 한국어)",
-    "newFeatures": ["..."],
-    "changes": ["..."],
-    "fixes": ["..."],
+    "newFeatures": [
+      { "text": "불릿 텍스트 (한국어)", "originalRefs": [0, 2] }
+    ],
+    "changes": [
+      { "text": "불릿 텍스트 (한국어)", "originalRefs": [0, 2] }
+    ],
+    "fixes": [
+      { "text": "불릿 텍스트 (한국어)", "originalRefs": [0, 2] }
+    ],
     "devImpact": [                       // v2.0.73 이상만 배열. v2.0.72 이하는 문자열 허용
       {
         "text": "개발자 관점 영향 문장 (한국어)",
@@ -62,6 +68,19 @@ GitHub Releases API 응답 배열. v2.0.73 ~ v2.1.117 (93건).
   "summarizedAt": "2026-04-22T00:00:00Z", // 생성 시각 (현재 시각 UTC)
   "summaryModel": "gpt-<사용모델>"       // 실제 사용 모델명
 }
+
+## originalRefs 작성 기준
+
+각 bullet 은 문자열 또는 `{ text, originalRefs }` 객체로 작성할 수 있다.
+신규 릴리즈 요약에서는 **가능하면 객체 형식 + originalRefs 채우기** 를 우선한다.
+
+- `text`: 한국어 불릿 문장 (기존 규칙 그대로)
+- `originalRefs`: 이 불릿의 근거가 된 **원문 body 의 최상위 리스트 아이템 0-based index** 배열
+  - 원문을 Markdown 리스트로 파싱했을 때 `<li>` 가 나타나는 순서대로 0, 1, 2, ...
+  - 중첩된 리스트는 같은 부모 아이템으로 묶지 말고 개별 index 로 센다 (전체 DFS 순서)
+  - 근거 원문이 여러 줄이면 전부 나열
+  - 매칭이 애매하면 빈 배열 `[]` 또는 그냥 문자열로 두기 (억지 매핑 금지)
+- 원문이 Markdown 리스트 구조가 아니거나 불릿 매칭이 불가능하면 기존처럼 문자열로만 작성해도 된다.
 
 ## 데이터 소스 규칙 (★ 반드시 준수)
 

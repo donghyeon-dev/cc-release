@@ -48,12 +48,12 @@ export default function RootLayout({
       lang="ko"
       data-theme="white"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }

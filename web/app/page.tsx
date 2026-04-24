@@ -3,6 +3,7 @@ import { getLatestUpdatedAt, getReleases } from "@/lib/data";
 import { formatDateTimeKorean } from "@/lib/format";
 import { ReleaseList } from "@/components/ReleaseList";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { TourController } from "@/components/TourController";
 
 export default async function Home() {
   const releases = await getReleases();
@@ -34,7 +35,10 @@ export default async function Home() {
                 )}
               </div>
             </div>
-            <ThemeToggle />
+            <div className="flex shrink-0 items-center gap-2">
+              <TourController />
+              <ThemeToggle />
+            </div>
           </div>
         </header>
 

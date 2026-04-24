@@ -1,5 +1,141 @@
 [
   {
+    "version": "v2.1.119",
+    "tagName": "v2.1.119",
+    "publishedAt": "2026-04-23T23:24:00Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.119",
+    "originalBody": "* `/config` settings (theme, editor mode, verbose, etc.) now persist to `~/.claude/settings.json` and participate in project/local/policy override precedence\n* Added `prUrlTemplate` setting to point the footer PR badge at a custom code-review URL instead of github.com\n* Added `CLAUDE_CODE_HIDE_CWD` environment variable to hide the working directory in the startup logo\n* `--from-pr` now accepts GitLab merge-request, Bitbucket pull-request, and GitHub Enterprise PR URLs\n* `--print` mode now honors the agent's `tools:` and `disallowedTools:` frontmatter, matching interactive-mode behavior\n* `--agent <name>` now honors the agent definition's `permissionMode` for built-in agents\n* PowerShell tool commands can now be auto-approved in permission mode, matching Bash behavior\n* Hooks: `PostToolUse` and `PostToolUseFailure` hook inputs now include `duration_ms` (tool execution time, excluding permission prompts and PreToolUse hooks)\n* Subagent and SDK MCP server reconfiguration now connects servers in parallel instead of serially\n* Plugins pinned by another plugin's version constraint now auto-update to the highest satisfying git tag\n* Vim mode: Esc in INSERT no longer pulls a queued message back into the input; press Esc again to interrupt\n* Slash command suggestions now highlight the characters that matched your query\n* Slash command picker now wraps long descriptions onto a second line instead of truncating\n* `owner/repo#N` shorthand links in output now use your git remote's host instead of always pointing at github.com\n* Security: `blockedMarketplaces` now correctly enforces `hostPattern` and `pathPattern` entries\n* OpenTelemetry: `tool_result` and `tool_decision` events now include `tool_use_id`; `tool_result` also includes `tool_input_size_bytes`\n* Status line: stdin JSON now includes `effort.level` and `thinking.enabled`\n* Fixed pasting CRLF content (Windows clipboards, Xcode console) inserting an extra blank line between every line\n* Fixed multi-line paste losing newlines in terminals using kitty keyboard protocol sequences inside bracketed paste\n* Fixed Glob and Grep tools disappearing on native macOS/Linux builds when the Bash tool is denied via permissions\n* Fixed scrolling up in fullscreen mode snapping back to the bottom every time a tool finishes\n* Fixed MCP HTTP connections failing with \"Invalid OAuth error response\" when servers returned non-JSON bodies for OAuth discovery requests\n* Fixed Rewind overlay showing \"(no prompt)\" for messages with image attachments\n* Fixed auto mode overriding plan mode with conflicting \"Execute immediately\" instructions\n* Fixed async `PostToolUse` hooks that emit no response payload writing empty entries to the session transcript\n* Fixed spinner staying on when a subagent task notification is orphaned in the queue\n* Tool search is now disabled by default on Vertex AI to avoid an unsupported beta header error (opt in with `ENABLE_TOOL_SEARCH`)\n* Fixed `@`-file Tab completion replacing the entire prompt when used inside a slash command with an absolute path\n* Fixed a stray `p` character appearing at the prompt on startup in macOS Terminal.app via Docker or SSH\n* Fixed `${ENV_VAR}` placeholders in `headers` for HTTP/SSE/WebSocket MCP servers not being substituted before requests\n* Fixed MCP OAuth client secret stored via `--client-secret` not being sent during token exchange for servers requiring `client_secret_post`\n* Fixed `/skills` Enter key closing the dialog instead of pre-filling `/<skill-name>` in the prompt\n* Fixed `/agents` detail view mislabeling built-in tools unavailable to subagents as \"Unrecognized\"\n* Fixed MCP servers from plugins not spawning on Windows when the plugin cache was incomplete\n* Fixed `/export` showing the current default model instead of the model the conversation actually used\n* Fixed verbose output setting not persisting after restart\n* Fixed `/usage` progress bars overlapping with their \"Resets …\" labels\n* Fixed plugin MCP servers failing when `${user_config.*}` references an optional field left blank\n* Fixed list items containing a sentence-final number wrapping the number onto its own line\n* Fixed `/plan` and `/plan open` not acting on the existing plan when entering plan mode\n* Fixed skills invoked before auto-compaction being re-executed against the next user message\n* Fixed `/reload-plugins` and `/doctor` reporting load errors for disabled plugins\n* Fixed Agent tool with `isolation: \"worktree\"` reusing stale worktrees from prior sessions\n* Fixed disabled MCP servers appearing as \"failed\" in `/status`\n* Fixed `TaskList` returning tasks in arbitrary filesystem order instead of sorted by ID\n* Fixed spurious \"GitHub API rate limit exceeded\" hints when `gh` output contained PR titles mentioning \"rate limit\"\n* Fixed SDK/bridge `read_file` not correctly enforcing size cap on growing files\n* Fixed PR not linked to session when working in a git worktree\n* Fixed `/doctor` warning about MCP server entries overridden by a higher-precedence scope\n* Windows: removed false-positive \"Windows requires 'cmd /c' wrapper\" MCP config warning\n* [VSCode] Fixed voice dictation's first recording producing nothing on macOS while the microphone permission prompt is showing",
+    "summary": {
+      "headline": "`/config` 영속화·`--from-pr` 멀티플랫폼·`CLAUDE_CODE_HIDE_CWD` 등 40여 건 변경",
+      "newFeatures": [
+        "`/config` 에서 변경한 테마·에디터 모드·verbose 등이 `~/.claude/settings.json` 에 저장되고 프로젝트/로컬/정책 우선순위에 참여",
+        "`prUrlTemplate` 설정으로 푸터 PR 뱃지를 github.com 대신 커스텀 코드리뷰 URL로 지정 가능",
+        "`CLAUDE_CODE_HIDE_CWD` 환경변수로 시작 로고의 작업 디렉터리 표시 숨김",
+        "`--from-pr` 이 GitLab MR·Bitbucket PR·GitHub Enterprise PR URL까지 수용",
+        "`--print` 모드에서 에이전트 프론트매터의 `tools:`·`disallowedTools:` 적용 — 인터랙티브 모드와 동작 일치",
+        "`--agent <name>` 이 내장 에이전트 정의의 `permissionMode` 준수",
+        "PowerShell 도구 명령을 permission mode에서 자동 승인 가능 — Bash와 동일한 동작",
+        "`PostToolUse`·`PostToolUseFailure` hook 입력에 `duration_ms` (도구 실행 시간) 포함 — PreToolUse 및 권한 프롬프트 시간 제외",
+        "Subagent·SDK MCP 서버 재설정 시 직렬 대신 병렬 연결로 처리 속도 향상",
+        "Vertex AI에서 `ENABLE_TOOL_SEARCH=1` opt-in으로 tool search 활성화 가능 (기본 비활성)"
+      ],
+      "changes": [
+        "슬래시 명령 제안 목록에서 검색어와 매칭된 문자 강조 표시",
+        "슬래시 명령 피커에서 긴 설명이 잘리지 않고 두 번째 줄로 래핑",
+        "`owner/repo#N` 단축 링크가 항상 github.com 대신 git remote 호스트를 사용",
+        "OpenTelemetry `tool_result`·`tool_decision` 이벤트에 `tool_use_id` 포함; `tool_result` 에 `tool_input_size_bytes` 추가",
+        "status line stdin JSON에 `effort.level`·`thinking.enabled` 필드 추가",
+        "버전 제약으로 핀된 플러그인을 최고 만족 git 태그로 자동 업데이트"
+      ],
+      "fixes": [
+        "Windows 클립보드·Xcode 콘솔의 CRLF 붙여넣기 시 줄 사이 빈 줄 삽입되던 버그 수정",
+        "kitty keyboard protocol 환경에서 다중 줄 붙여넣기 시 줄바꿈 소실 수정",
+        "Bash 도구 권한 거부 시 native macOS/Linux 빌드에서 Glob·Grep 도구가 사라지던 버그 수정",
+        "fullscreen 모드에서 도구 완료마다 스크롤이 하단으로 강제 이동하던 버그 수정",
+        "MCP HTTP OAuth discovery 응답이 비JSON 본문 반환 시 `\"Invalid OAuth error response\"` 실패 수정",
+        "Rewind overlay에서 이미지 첨부 메시지에 `\"(no prompt)\"` 표시되던 버그 수정",
+        "auto mode가 plan mode와 충돌하며 `\"Execute immediately\"` 지시로 덮어쓰던 버그 수정",
+        "`async PostToolUse` hook이 응답 없이 종료 시 세션 트랜스크립트에 빈 항목 기록되던 버그 수정",
+        "서브에이전트 태스크 알림이 큐에서 고아가 될 때 spinner가 계속 표시되던 버그 수정",
+        "`@`-파일 탭 완성이 절대경로 포함 슬래시 명령 내에서 전체 프롬프트를 교체하던 버그 수정",
+        "macOS Terminal.app에서 Docker/SSH 경유 시 시작 프롬프트에 문자 `p` 오출력되던 버그 수정",
+        "HTTP/SSE/WebSocket MCP 서버 `headers` 의 `${ENV_VAR}` 플레이스홀더가 요청 전 치환 안 되던 버그 수정",
+        "`--client-secret` 으로 저장된 MCP OAuth 시크릿이 `client_secret_post` 필요 서버에서 전송 안 되던 버그 수정",
+        "`TaskList` 가 파일시스템 임의 순서 대신 ID 기준 정렬로 반환하도록 수정",
+        "`gh` 출력 PR 제목에 `\"rate limit\"` 문구 포함 시 `gh` rate limit 오탐 힌트 출력되던 버그 수정",
+        "git worktree에서 작업 시 PR이 세션에 연결되지 않던 버그 수정"
+      ],
+      "devImpact": [
+        {
+          "text": "`--print` 모드가 에이전트 프론트매터의 `tools:`·`disallowedTools:` 를 이제 적용하므로 기존 `--print` 기반 자동화 스크립트에서 도구 접근 동작이 변경될 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "Vertex AI 사용자는 tool search가 기본 비활성화됨 — 기존 사용 중이었다면 `ENABLE_TOOL_SEARCH=1` 환경변수 설정 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 9
+            }
+          ]
+        },
+        {
+          "text": "`blockedMarketplaces` 의 `hostPattern`·`pathPattern` 이 이제 올바르게 강제 적용되므로 기존 보안 설정 동작 재검토 권장.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-04-24T00:12:50Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.118",
+    "tagName": "v2.1.118",
+    "publishedAt": "2026-04-23T00:42:00Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.118",
+    "originalBody": "* Added vim visual mode (`v`) and visual-line mode (`V`) with selection, operators, and visual feedback\n* Merged `/cost` and `/stats` into `/usage` — both remain as typing shortcuts that open the relevant tab\n* Create and switch between named custom themes from `/theme`, or hand-edit JSON files in `~/.claude/themes/`; plugins can also ship themes via a `themes/` directory\n* Hooks can now invoke MCP tools directly via `type: \"mcp_tool\"`\n* Added `DISABLE_UPDATES` env var to completely block all update paths including manual `claude update` — stricter than `DISABLE_AUTOUPDATER`\n* WSL on Windows can now inherit Windows-side managed settings via the `wslInheritsWindowsSettings` policy key\n* Auto mode: include `\"$defaults\"` in `autoMode.allow`, `autoMode.soft_deny`, or `autoMode.environment` to add custom rules alongside the built-in list instead of replacing it\n* Added a \"Don't ask again\" option to the auto mode opt-in prompt\n* Added `claude plugin tag` to create release git tags for plugins with version validation\n* `--continue`/`--resume` now find sessions that added the current directory via `/add-dir`\n* `/color` now syncs the session accent color to claude.ai/code when Remote Control is connected\n* The `/model` picker now honors `ANTHROPIC_DEFAULT_*_MODEL_NAME`/`_DESCRIPTION` overrides when using a custom `ANTHROPIC_BASE_URL` gateway\n* When auto-update skips a plugin due to another plugin's version constraint, the skip now appears in `/doctor` and the `/plugin` Errors tab\n* Fixed `/mcp` menu hiding OAuth Authenticate/Re-authenticate actions for servers configured with `headersHelper`, and HTTP/SSE MCP servers with custom headers being stuck in \"needs authentication\" after a transient 401\n* Fixed MCP servers whose OAuth token response omits `expires_in` requiring re-authentication every hour\n* Fixed MCP step-up authorization silently refreshing instead of prompting for re-consent when the server's `insufficient_scope` 403 names a scope the current token already has\n* Fixed an unhandled promise rejection when an MCP server's OAuth flow times out or is cancelled\n* Fixed MCP OAuth refresh proceeding without its cross-process lock under contention\n* Fixed macOS keychain race where a concurrent MCP token refresh could overwrite a freshly-refreshed OAuth token, causing unexpected \"Please run /login\" prompts\n* Fixed OAuth token refresh failing when the server revokes a token before its local expiry time\n* Fixed credential save crash on Linux/Windows corrupting `~/.claude/.credentials.json`\n* Fixed `/login` having no effect in a session launched with `CLAUDE_CODE_OAUTH_TOKEN` — the env token is now cleared so disk credentials take effect\n* Fixed unreadable text in the \"new messages\" scroll pill and `/plugin` badges\n* Fixed plan acceptance dialog offering \"auto mode\" instead of \"bypass permissions\" when running with `--dangerously-skip-permissions`\n* Fixed agent-type hooks failing with \"Messages are required for agent hooks\" when configured for events other than `Stop` or `SubagentStop`\n* Fixed `prompt` hooks re-firing on tool calls made by an agent-hook verifier subagent\n* Fixed `/fork` writing the full parent conversation to disk per fork — now writes a pointer and hydrates on read\n* Fixed Alt+K / Alt+X / Alt+^ / Alt+\\_ freezing keyboard input\n* Fixed connecting to a remote session overwriting your local `model` setting in `~/.claude/settings.json`\n* Fixed typeahead showing \"No commands match\" error when pasting file paths that start with `/`\n* Fixed `plugin install` on an already-installed plugin not re-resolving a dependency installed at the wrong version\n* Fixed unhandled errors from file watcher on invalid paths or fd exhaustion\n* Fixed Remote Control sessions getting archived on transient CCR initialization blips during JWT refresh\n* Fixed subagents resumed via `SendMessage` not restoring the explicit `cwd` they were spawned with",
+    "summary": {
+      "headline": "vim 비주얼 모드·커스텀 테마·`DISABLE_UPDATES` 추가 및 MCP OAuth 대규모 수정",
+      "newFeatures": [
+        "`v`/`V` 키로 vim 비주얼 모드·비주얼 라인 모드 활성화 — 선택 범위, 연산자, 시각 피드백 완전 지원",
+        "`/cost`·`/stats` 가 `/usage` 로 통합 — 기존 단축키는 해당 탭으로 바로 연결",
+        "`/theme` 에서 커스텀 테마 생성·전환; `~/.claude/themes/` JSON 직접 편집 및 플러그인 `themes/` 디렉터리 배포 지원",
+        "Hooks에서 `type: \"mcp_tool\"` 지정으로 MCP 도구 직접 호출 가능",
+        "`DISABLE_UPDATES` 환경변수 신설 — `DISABLE_AUTOUPDATER` 보다 엄격하여 수동 `claude update` 포함 모든 업데이트 경로 차단",
+        "WSL 환경에서 `wslInheritsWindowsSettings` 정책 키로 Windows 측 관리 설정 상속 가능",
+        "`autoMode.allow`·`soft_deny`·`environment` 에 `\"$defaults\"` 포함 시 기본 내장 목록을 교체하지 않고 커스텀 규칙 추가 가능",
+        "auto mode opt-in 프롬프트에 \"Don't ask again\" 옵션 추가",
+        "`claude plugin tag` 명령으로 버전 검증 포함 플러그인 릴리즈 git 태그 생성",
+        "`--continue`/`--resume` 에서 `/add-dir` 로 추가된 현재 디렉터리 기반 세션 탐색 지원"
+      ],
+      "changes": [
+        "`/model` 피커가 커스텀 `ANTHROPIC_BASE_URL` 게이트웨이 사용 시 `ANTHROPIC_DEFAULT_*_MODEL_NAME`/`_DESCRIPTION` 오버라이드 반영",
+        "`/color` 가 Remote Control 연결 상태에서 세션 강조색을 claude.ai/code에 동기화",
+        "`/fork` 가 부모 대화 전체를 디스크에 기록하던 방식 → 포인터 저장 후 읽기 시 복원으로 변경 (디스크 절약)"
+      ],
+      "fixes": [
+        "`expires_in` 누락된 MCP OAuth 토큰 응답으로 인해 매 시간 재인증 요구되던 버그 수정",
+        "macOS 키체인 경쟁 조건으로 동시 MCP 토큰 갱신 시 OAuth 토큰 덮어씌워지며 \"Please run /login\" 뜨던 문제 수정",
+        "`CLAUDE_CODE_OAUTH_TOKEN` 환경변수로 시작한 세션에서 `/login` 이 무효화되던 버그 수정 — 이제 환경변수 토큰 제거 후 디스크 자격증명 적용",
+        "Linux/Windows에서 `~/.claude/.credentials.json` 손상 유발하던 자격증명 저장 크래시 수정",
+        "`--dangerously-skip-permissions` 실행 시 plan 수락 다이얼로그가 \"auto mode\" 를 잘못 표시하던 버그 수정",
+        "Alt+K / Alt+X / Alt+^ / `Alt+_` 입력 후 키보드 입력이 멈추던 버그 수정"
+      ],
+      "devImpact": [
+        {
+          "text": "`DISABLE_UPDATES` 환경변수 신설 — `DISABLE_AUTOUPDATER` 와 달리 수동 `claude update`까지 차단하므로 CI·관리 환경에서 완전한 업데이트 잠금이 필요하면 이 변수로 전환 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "`autoMode.allow` 등 커스텀 목록이 기존에 기본 규칙을 덮어쓰던 동작이 변경됨 — 기본 규칙 유지 시 `\"$defaults\"` 를 명시적으로 포함해야 함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 6
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-04-24T00:12:50Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.117",
     "tagName": "v2.1.117",
     "publishedAt": "2026-04-22T00:04:40Z",

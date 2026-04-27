@@ -52,3 +52,7 @@ export function isBulletWithRefs(
 ): item is BulletWithRefs {
   return typeof item === "object" && item !== null && "text" in item;
 }
+
+export interface SiteMeta {
+  lastRoutineRunAt?: string;
+}

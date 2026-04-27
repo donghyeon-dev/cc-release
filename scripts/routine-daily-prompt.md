@@ -61,7 +61,10 @@ curl -s https://api.github.com/repos/anthropics/claude-code/releases?per_page=30
 - `draft === false`, `prerelease === false`
 - `tag_name` 이 `known` 에 없는 것만 → `new_releases`
 
-`new_releases.length === 0` 이면 "신규 없음" 보고 후 종료 (커밋 생략).
+`new_releases.length === 0` 이면 릴리즈 데이터는 건드리지 않는다. 단,
+Routine 자체가 정상 실행되었음을 사이트 상단에 표시해야 하므로
+`node scripts/mark-routine-run.mjs` 를 실행해 `data/site-meta.json` 의
+`lastRoutineRunAt` 을 갱신하고, 메타데이터만 커밋·푸시한다.
 
 **금지**: releasebot.io 같은 제3자 미러 소스 사용 금지. 출처는 반드시
 `api.github.com` 또는 `https://github.com/anthropics/claude-code/releases`
@@ -182,6 +185,11 @@ GitHub 공식 응답에서만 수행.
 `data/releases.json` 의 배열 최상단에 `new_releases` 를 **publishedAt
 내림차순** 으로 prepend. JSON 들여쓰기 2칸, 끝에 개행 1개.
 
+그 다음 `node scripts/mark-routine-run.mjs` 를 실행해서
+`data/site-meta.json` 의 `lastRoutineRunAt` 을 현재 UTC ISO8601 값으로
+갱신한다. 이 값은 웹페이지 상단의 "마지막 업데이트" 기준이며,
+각 릴리즈의 `summarizedAt` 과는 별개다.
+
 ### 6. 로컬 검증
 
 다음 명령으로 검증 스크립트 실행:
@@ -193,13 +201,21 @@ node scripts/validate-releases.mjs
 
 ### 7. 커밋 & 푸시
 
-git add data/releases.json
+신규 릴리즈가 있으면:
+
+git add data/releases.json data/site-meta.json
 git commit -m "<메시지>"
 git push origin main
 
 커밋 메시지:
 - 신규 1건: `chore(data): add release <version> summary`
 - 신규 N건 (N >= 2): `chore(data): add N release summaries (<oldest>..<newest>)`
+
+신규 릴리즈가 없으면:
+
+git add data/site-meta.json
+git commit -m "chore(meta): record routine run"
+git push origin main
 
 ### 8. 보고
 
@@ -208,6 +224,7 @@ git push origin main
 처리 완료
 - 신규 릴리즈: N 건
 - 버전: v2.1.118, v2.1.119, ...
+- 마지막 업데이트: <data/site-meta.json 의 lastRoutineRunAt>
 - 검증: PASS
 - 커밋: <commit sha>
 - 배포 URL: https://donghyeon-dev.github.io/cc-release/

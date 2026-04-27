@@ -30,7 +30,10 @@
   `GET https://api.github.com/repos/anthropics/claude-code/releases?per_page=30`
 - 응답 중 `draft === false`, `prerelease === false` 인 항목만 대상으로 한다.
 - `tag_name` 이 `known` 에 없는 것만 필터 → `new_releases`.
-- `new_releases.length === 0` 이면 "신규 없음" 보고 후 **종료**.
+- `new_releases.length === 0` 이면 릴리즈 데이터는 건드리지 않는다. 단,
+  웹페이지 상단의 "마지막 업데이트"는 Cowork 루틴 실행 기준이어야 하므로
+  `node scripts/mark-routine-run.mjs` 를 실행해 `data/site-meta.json` 의
+  `lastRoutineRunAt` 을 갱신한 뒤 메타데이터만 커밋·푸시한다.
 
 ## 4. 각 신규 릴리즈 요약
 
@@ -68,11 +71,15 @@
 
 - 기존 배열 최상단에 `new_releases` 를 **publishedAt 내림차순으로** prepend.
 - JSON 들여쓰기 2칸, 끝에 개행 1개.
+- `node scripts/mark-routine-run.mjs` 를 실행해 `data/site-meta.json` 의
+  `lastRoutineRunAt` 을 현재 UTC ISO8601 값으로 갱신한다.
 
 ## 6. 커밋 & 푸시
 
+신규 릴리즈가 있으면:
+
 ```bash
-git add data/releases.json
+git add data/releases.json data/site-meta.json
 git commit -m "<메시지>"
 git push origin main
 ```
@@ -80,6 +87,14 @@ git push origin main
 커밋 메시지 규칙:
 - 신규 1건: `chore(data): add release <version> summary`
 - 신규 N건 (N >= 2): `chore(data): add N release summaries (<oldest>..<newest>)`
+
+신규 릴리즈가 없으면:
+
+```bash
+git add data/site-meta.json
+git commit -m "chore(meta): record routine run"
+git push origin main
+```
 
 ## 7. 보고
 
@@ -89,6 +104,7 @@ git push origin main
 처리 완료
 - 신규 릴리즈: N 건
 - 버전: v1.0.85, v1.0.86, ...
+- 마지막 업데이트: <data/site-meta.json 의 lastRoutineRunAt>
 - 커밋: <commit sha>
 - 배포 URL: https://donghyeon-dev.github.io/cc-release/
 ```

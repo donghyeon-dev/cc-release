@@ -128,14 +128,17 @@ Cowork 의 GitHub 커넥터가 OAuth 로 권한 요청합니다:
    - ✓ 신규 릴리즈 N건 식별
    - ✓ 각 릴리즈에 대해 요약 생성
    - ✓ `data/releases.json` 업데이트
+   - ✓ `data/site-meta.json` 의 `lastRoutineRunAt` 업데이트
    - ✓ `git push origin main` 성공
-3. GitHub 레포에서 새 커밋 확인 (`chore(data): add ...`)
+3. GitHub 레포에서 새 커밋 확인 (`chore(data): add ...` 또는 `chore(meta): record routine run`)
 4. 몇 분 뒤 Actions 가 자동 재배포 → 웹페이지에 실제 릴리즈 반영 확인
 
 ### 예상 결과
 
 - 샘플 데이터 (`v1.0.0-sample-1`, `v1.0.0-sample-2`) 는 그대로 남음
   (Cowork 는 기존 항목을 덮지 않음, 신규만 prepend)
+- 신규 릴리즈가 없어도 `data/site-meta.json` 만 갱신되어 상단 "마지막 업데이트"가
+  Routine 실행 시각으로 바뀜
 - **샘플 제거 원하는 경우**: 수동으로 `data/releases.json` 에서 sample 2건 삭제
   후 커밋·푸시. 이후 Cowork 가 실제 anthropics/claude-code 릴리즈로 채움.
 

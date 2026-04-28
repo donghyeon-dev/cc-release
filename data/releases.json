@@ -1,5 +1,304 @@
 [
   {
+    "version": "v2.1.121",
+    "tagName": "v2.1.121",
+    "publishedAt": "2026-04-28T00:31:31Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.121",
+    "originalBody": "## What's changed\n\n- Added `alwaysLoad` option to MCP server config — when `true`, all tools from that server skip tool-search deferral and are always available\n- Added `claude plugin prune` to remove orphaned auto-installed plugin dependencies; `plugin uninstall --prune` cascades\n- Added a type-to-filter search box to `/skills` so you can find a skill in long lists without scrolling\n- PostToolUse hooks can now replace tool output for all tools via `hookSpecificOutput.updatedToolOutput` (previously MCP-only)\n- Fullscreen mode: typing into the prompt no longer jumps scroll back to the bottom after you've scrolled up to read earlier output\n- Dialogs that overflow the terminal are now scrollable with arrow keys, PgUp/PgDn, home/end, and mouse wheel in both fullscreen and non-fullscreen modes\n- Clicking any line of a long URL that wraps across rows in fullscreen mode now opens the full URL\n- SDK and `claude -p`: `CLAUDE_CODE_FORK_SUBAGENT=1` now works in non-interactive sessions\n- `--dangerously-skip-permissions` no longer prompts for writes to `.claude/skills/`, `.claude/agents/`, and `.claude/commands/`\n- `/terminal-setup` now enables iTerm2's \"Applications in terminal may access clipboard\" setting so `/copy` works, including from tmux\n- MCP servers that hit a transient error during startup now auto-retry up to 3 times instead of staying disconnected\n- The terminal tab session title is now generated in your configured `language` setting\n- Claude.ai connectors with the same upstream URL are now deduplicated instead of appearing as duplicates\n- Vertex AI: support X.509 certificate-based Workload Identity Federation (mTLS ADC)\n- Faster startup after upgrading: removed the Recent Activity panel from the release-notes splash\n- LSP diagnostic summaries now expand on click/ctrl+o and show the expand hint\n- SDK: `mcp_authenticate` now supports `redirectUri` for custom scheme completion and claude.ai connectors\n- OpenTelemetry: added `stop_reason`, `gen_ai.response.finish_reasons`, and `user_system_prompt` (gated behind `OTEL_LOG_USER_PROMPTS`) to LLM request spans\n- [VSCode] Voice dictation now respects the `accessibility.voice.speechLanguage` setting when no Claude Code language is configured\n- [VSCode] `/context` now opens a native token usage dialog\n- Fixed unbounded memory growth (multi-GB RSS) when processing many images in a session\n- Fixed `/usage` leaking up to ~2GB of memory on machines with large transcript histories\n- Fixed memory leak when long-running tools fail to emit a clear progress event\n- Fixed Bash tool becoming permanently unusable when the directory Claude was started in is deleted or moved mid-session\n- Fixed `--resume` crashing on startup in external builds\n- Fixed `--resume` failing on large sessions when a transcript line was corrupted by an unclean shutdown — the corrupt line is now skipped\n- Fixed `thinking.type.enabled is not supported` error when using Bedrock application inference profile ARNs\n- Fixed Microsoft 365 MCP OAuth failing with duplicate or unsupported `prompt` parameter\n- Fixed scrollback duplication when pressing Ctrl+L or triggering a redraw in non-fullscreen mode on tmux, GNOME Terminal, Windows Terminal, and Konsole\n- Fixed claude.ai MCP connectors silently disappearing when the connector-list fetch hits a transient auth error at startup\n- Fixed \"Always allow\" rules for built-in tools in remote sessions not surviving worker restarts\n- Fixed `NO_PROXY` not being respected for all HTTP clients when set via `managed-settings.json` under the native build\n- Fixed managed settings approval prompt exiting the session even when accepted — now applies settings and continues\n- Fixed `/usage` returning \"rate limited\" after a stale OAuth token — now refreshes automatically\n- Fixed invalid legacy enum values in `settings.json` invalidating the entire settings file\n- Fixed `/usage` dialog content being clipped when no-flicker mode is off\n- Fixed `/focus` showing \"Unknown command\" when the fullscreen renderer is off — now explains how to enable it\n- Fixed embedded grep/find/rg shell wrappers failing when the running binary is deleted mid-session — now falls back to installed tools\n- Reduced peak file descriptor usage during `find` in the Bash tool on large directory trees",
+    "summary": {
+      "headline": "MCP alwaysLoad, plugin prune 추가, 메모리 누수 3종 수정",
+      "newFeatures": [
+        {
+          "text": "MCP 서버 설정에 `alwaysLoad: true` 추가 시 해당 서버 도구들이 tool-search 지연 없이 항상 활성화됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`claude plugin prune`으로 고아 플러그인 의존성 정리; `plugin uninstall --prune`은 연쇄 삭제 지원",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/skills` 목록에 텍스트 필터 검색창 추가 - 긴 목록에서 스크롤 없이 스킬 탐색 가능",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "PostToolUse hook이 `hookSpecificOutput.updatedToolOutput`으로 모든 도구 출력 교체 가능 (기존 MCP 전용에서 전체 도구로 확장)",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "Vertex AI에서 X.509 인증서 기반 Workload Identity Federation(mTLS ADC) 지원 추가",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "SDK `mcp_authenticate`에 `redirectUri` 파라미터 지원 (커스텀 스킴 완료 및 claude.ai 커넥터 처리)",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "OpenTelemetry LLM 요청 span에 `stop_reason`, `gen_ai.response.finish_reasons`, `user_system_prompt`(`OTEL_LOG_USER_PROMPTS` 게이팅) 필드 추가",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "[VSCode] `/context` 명령이 네이티브 토큰 사용량 다이얼로그를 열도록 변경",
+          "originalRefs": [
+            19
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "SDK 및 `claude -p` 환경에서 `CLAUDE_CODE_FORK_SUBAGENT=1`이 비대화형 세션에서도 동작",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`--dangerously-skip-permissions` 사용 시 `.claude/skills/`, `.claude/agents/`, `.claude/commands/` 쓰기 권한 프롬프트 생략",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "MCP 서버 시작 시 일시적 오류 발생 시 최대 3회 자동 재시도 (기존: 연결 끊긴 상태 유지)",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "터미널 탭 세션 제목이 `language` 설정값에 따라 생성됨",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "동일 upstream URL을 가진 claude.ai 커넥터 중복 표시 대신 자동 중복 제거",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "업그레이드 후 첫 실행 시 릴리즈 노트 splash에서 Recent Activity 패널 제거로 시작 속도 개선",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "LSP diagnostic 요약이 클릭 또는 `ctrl+o`로 확장되며 확장 힌트 표시",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "[VSCode] 음성 딕테이션이 Claude Code 언어 설정 없을 때 `accessibility.voice.speechLanguage` 설정 적용",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "Fullscreen 모드에서 스크롤 올린 후 프롬프트 입력 시 하단 자동 스크롤 방지",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "터미널 넘치는 다이얼로그를 방향키, PgUp/PgDn, Home/End, 마우스 휠로 스크롤 가능",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "Fullscreen 모드에서 여러 줄에 걸친 긴 URL의 어느 줄 클릭 시 전체 URL 열기",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`/terminal-setup`이 iTerm2 클립보드 접근 설정 자동 활성화로 tmux 포함 `/copy` 동작 보장",
+          "originalRefs": [
+            9
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "세션에서 다수 이미지 처리 시 메모리가 multi-GB RSS로 무제한 증가하던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "대형 트랜스크립트 히스토리 보유 시 `/usage`가 최대 ~2GB 메모리 누수하던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "장기 실행 도구가 progress 이벤트 미발생 시 메모리 누수하던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "Claude 시작 디렉토리가 세션 중 삭제/이동되면 Bash 도구가 영구 사용 불가 상태가 되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "외부 빌드에서 `--resume` 시작 시 크래시하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`--resume` 시 비정상 종료로 손상된 트랜스크립트 라인 있는 대형 세션 실패 수정 - 손상 라인 스킵 처리",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "`Bedrock` application inference profile ARN 사용 시 `thinking.type.enabled` 미지원 오류 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "Microsoft 365 MCP OAuth에서 `prompt` 파라미터 중복/미지원으로 실패하던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "tmux, GNOME Terminal, Windows Terminal, Konsole에서 `Ctrl+L` 또는 redraw 시 scrollback 중복 표시 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "시작 시 claude.ai MCP 커넥터 목록 fetch 일시적 인증 오류 시 커넥터가 조용히 사라지던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "원격 세션에서 내장 도구의 'Always allow' 규칙이 워커 재시작 후 초기화되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "네이티브 빌드에서 `managed-settings.json`의 `NO_PROXY` 설정이 일부 HTTP 클라이언트에 미적용되던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "managed settings 승인 프롬프트 수락 후 세션이 종료되던 문제 수정 - 이제 설정 적용 후 계속 실행",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "만료된 OAuth 토큰으로 `/usage` 호출 시 'rate limited' 반환하던 문제 수정 - 자동 갱신됨",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "`settings.json`의 잘못된 레거시 enum 값이 파일 전체를 무효화하던 문제 수정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "no-flicker 모드 꺼진 상태에서 `/usage` 다이얼로그 내용 클리핑되던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "fullscreen renderer 꺼진 상태에서 `/focus` 실행 시 'Unknown command' 표시하던 문제 수정 - 활성화 방법 안내로 변경",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "세션 중 실행 바이너리 삭제 시 grep/find/rg 래퍼 실패하던 문제 수정 - 설치된 도구로 폴백",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "Bash 도구의 `find` 실행 시 대형 디렉토리 트리에서 최대 파일 디스크립터 사용량 감소",
+          "originalRefs": [
+            38
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`CLAUDE_CODE_FORK_SUBAGENT=1` 환경변수가 비대화형 세션(`claude -p`, SDK)에서도 동작하므로 CI/자동화 파이프라인에서 서브에이전트 fork 활성화 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`--dangerously-skip-permissions` 범위가 `.claude/skills/`, `.claude/agents/`, `.claude/commands/` 쓰기까지 자동 포함됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "PostToolUse hook의 `hookSpecificOutput.updatedToolOutput`이 MCP 전용에서 모든 도구로 확장됨 - 기존 MCP 전용 hook 로직 재검토 권장.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "Vertex AI mTLS ADC 지원 추가로 X.509 인증서 기반 WIF 환경 설정 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "OpenTelemetry span에 `OTEL_LOG_USER_PROMPTS` 환경변수로 `user_system_prompt` 필드 활성화 가능 (기본 비활성).",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 6
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-04-28T01:04:00Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.119",
     "tagName": "v2.1.119",
     "publishedAt": "2026-04-23T23:24:00Z",

@@ -1,15 +1,26 @@
-export function formatDateKorean(iso: string): string {
+const TZ = "Asia/Seoul";
+
+function getParts(iso: string) {
   const d = new Date(iso);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  const fmt = new Intl.DateTimeFormat("en-CA", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  const parts = Object.fromEntries(fmt.formatToParts(d).map((p) => [p.type, p.value]));
+  return parts;
+}
+
+export function formatDateKorean(iso: string): string {
+  const { year, month, day } = getParts(iso);
+  return `${year}-${month}-${day}`;
 }
 
 export function formatDateTimeKorean(iso: string): string {
-  const d = new Date(iso);
-  const date = formatDateKorean(iso);
-  const h = String(d.getHours()).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
-  return `${date} ${h}:${min}`;
+  const { year, month, day, hour, minute } = getParts(iso);
+  return `${year}-${month}-${day} ${hour}:${minute}`;
 }

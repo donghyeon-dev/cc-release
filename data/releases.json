@@ -1,5 +1,160 @@
 [
   {
+    "version": "v2.1.122",
+    "tagName": "v2.1.122",
+    "publishedAt": "2026-04-28T22:05:00Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.122",
+    "originalBody": "## What's changed\n\n- Added `ANTHROPIC_BEDROCK_SERVICE_TIER` environment variable to select a Bedrock service tier (`default`, `flex`, or `priority`), sent as the `X-Amzn-Bedrock-Service-Tier` header\n- Pasting a PR URL into the `/resume` search box now finds the session that created that PR (GitHub, GitHub Enterprise, GitLab, and Bitbucket)\n- `/mcp` now shows claude.ai connectors hidden by a manually-added server with the same URL, with a hint to remove the duplicate\n- Clarified the `/mcp` message shown when an MCP server is still unauthorized after the browser sign-in flow\n- OpenTelemetry: numeric attributes on `api_request`/`api_error` log events are now emitted as numbers, not strings\n- OpenTelemetry: added `claude_code.at_mention` log event for `@`-mention resolution\n- Fixed `/branch` producing forks that fail with \"tool_use ids were found without tool_result blocks\" when the source session contained entries from rewound timelines\n- Fixed `/model` not showing the Effort option for Bedrock application inference profile ARNs, and those ARNs not receiving `output_config.effort`\n- Fixed Vertex AI / Bedrock returning `invalid_request_error: output_config: Extra inputs are not permitted` on session-title generation and other structured-output queries\n- Fixed Vertex AI `count_tokens` endpoint returning 400 errors for users behind proxy gateways\n- Fixed `spinnerTipsOverride.excludeDefault` not suppressing the time-based spinner tips\n- Fixed ToolSearch missing MCP tools that connected after session start in nonblocking mode\n- Fixed `!exit` / `!quit` in bash mode terminating the CLI instead of running as a shell command\n- Fixed images sent to newer models being resized to 2576px per side instead of the correct 2000px maximum\n- Fixed remote control session idle status redrawing twice per second, which could flood `tmux -CC` control pipes and pause the terminal\n- Fixed assistant messages appearing blank in some sessions due to a stale view preference\n- Fixed a malformed hooks entry in `settings.json` no longer invalidating the entire file\n- Voice mode: keybindings bound to Caps Lock now show an error since terminals don't deliver Caps Lock as a key event",
+    "summary": {
+      "headline": "Bedrock service tier 환경변수, /resume에 PR URL 검색 추가",
+      "newFeatures": [
+        {
+          "text": "`ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 추가 — `default`/`flex`/`priority` 중 선택해 `X-Amzn-Bedrock-Service-Tier` 헤더로 전송",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/resume` 검색창에 PR URL 붙여넣으면 해당 PR을 만든 세션을 찾아줌 (GitHub, GitHub Enterprise, GitLab, Bitbucket 지원)",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "OpenTelemetry에 `@`-mention 해석용 `claude_code.at_mention` 로그 이벤트 추가",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/mcp`가 동일 URL의 수동 등록 서버에 가려진 claude.ai 커넥터를 표시하고 중복 제거 힌트도 함께 노출",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "브라우저 로그인 후에도 MCP 서버가 미인증 상태일 때 `/mcp` 메시지 문구를 명확하게 정리",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "OpenTelemetry `api_request`/`api_error` 로그 이벤트의 수치 속성을 문자열이 아닌 숫자 타입으로 emit",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "음성 모드에서 Caps Lock에 키바인딩을 걸면 에러 표시 — 터미널이 Caps Lock 키 이벤트를 전달하지 않기 때문",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "되감은 타임라인 항목이 포함된 세션에서 `/branch`로 fork 시 `tool_use ids were found without tool_result blocks` 오류 발생하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "Bedrock의 `application inference profile ARN`에서 `/model`에 Effort 옵션이 안 보이고 `output_config.effort`가 전달되지 않던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Vertex AI / Bedrock에서 세션 제목 생성 등 structured-output 쿼리 시 `invalid_request_error: output_config: Extra inputs are not permitted` 반환되던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "프록시 게이트웨이 뒤 Vertex AI `count_tokens` 엔드포인트가 400 오류 반환하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`spinnerTipsOverride.excludeDefault`가 시간 기반 spinner tip을 억제하지 못하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "nonblocking 모드에서 세션 시작 후 연결된 MCP 도구를 ToolSearch가 누락하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "bash 모드의 `!exit` / `!quit`이 셸 명령으로 실행되지 않고 CLI를 종료시키던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "신형 모델로 전송되는 이미지가 정상 한도 2000px 대신 2576px로 리사이즈되던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "원격 제어 세션 idle 상태가 초당 2회 리드로우 되어 `tmux -CC` 제어 파이프 폭주 및 터미널 정지 유발하던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "오래된 뷰 설정으로 일부 세션에서 어시스턴트 메시지가 빈 화면으로 표시되던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`settings.json`의 hooks 항목이 잘못된 형식이어도 파일 전체를 무효화하지 않도록 수정",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수가 신설되어 `flex`/`priority` 티어를 명시적으로 선택할 수 있게 됨 — Bedrock 사용 시 `X-Amzn-Bedrock-Service-Tier` 헤더가 새로 송신되므로 미들웨어/프록시 로깅 영향 확인 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "신형 모델 전송 이미지 리사이즈 한도가 잘못된 2576px에서 정상 2000px로 복구되었으므로, 기존에 더 큰 해상도로 전달되던 이미지의 동작이 변경됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 7
+            }
+          ]
+        },
+        {
+          "text": "OpenTelemetry `api_request`/`api_error` 수치 속성 타입이 string→number로 바뀌어 기존 OTel 수집기 쪽 파서/집계 쿼리가 영향 받을 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-04-29T00:00:00Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.121",
     "tagName": "v2.1.121",
     "publishedAt": "2026-04-28T00:31:31Z",
@@ -296,6 +451,194 @@
       ]
     },
     "summarizedAt": "2026-04-28T01:04:00Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.120",
+    "tagName": "v2.1.120",
+    "publishedAt": "2026-04-25T00:14:00Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.120",
+    "originalBody": "## What's changed\n\n- Windows: Git for Windows (Git Bash) is no longer required — when absent, Claude Code uses PowerShell as the shell tool\n- Added `claude ultrareview [target]` subcommand to run `/ultrareview` non-interactively from CI or scripts — prints findings to stdout (`--json` for raw output) and exits 0 on completion or 1 on failure\n- Skills can now reference the current effort level with `${CLAUDE_EFFORT}` in their content\n- Set `AI_AGENT` environment variable for subprocesses so `gh` can attribute traffic to Claude Code\n- Spinner tips that recommend installing the desktop app or creating skills/agents are now hidden when you already have them\n- Show a \"use PgUp/PgDn to scroll\" hint when the terminal sends arrow keys instead of scroll events\n- Faster session start when you have many claude.ai connectors configured but not authorized\n- The auto mode denial message now links to the configuration docs\n- `claude plugin validate` now accepts `$schema`, `version`, and `description` at the top level of `marketplace.json` and `$schema` in `plugin.json`\n- Auto-compact in auto mode now displays `auto` (lowercase, no token count) instead of a misleading token value\n- Fixed pressing Esc during a stdio MCP tool call closing the entire server connection (regression in 2.1.105)\n- Fixed `/rewind` and other interactive overlays not responding to keyboard input after launching with `claude --resume`\n- Fixed terminal scrollback duplication in non-fullscreen mode (resize, dialog dismiss, long sessions)\n- Fixed `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` not suppressing usage metrics telemetry for API and enterprise users\n- Fixed false-positive \"Dangerous rm operation\" permission prompts in auto mode for multi-line bash commands containing both a pipe and a redirect\n- Fixed long selection menus clipping below the terminal in fullscreen mode — the focused option now stays on screen as you scroll\n- Fixed Write tool output collapsing instead of expanding when clicking \"+N lines\" in fullscreen\n- Fixed slash command picker jumping while typing, and improved highlight to only match contiguous substrings in blue\n- Fixed `/plugin` marketplace failing to load when one entry uses an unrecognized source format — that entry is shown but installing it prompts you to update\n- [VSCode] `/usage` now opens the native Account & Usage dialog instead of returning plain-text session cost\n- [VSCode] Voice dictation now respects the `language` setting in `~/.claude/settings.json`\n- Fixed `find` in the Bash tool exhausting open file descriptors on large directory trees, causing host-wide crashes (macOS/Linux native builds)",
+    "summary": {
+      "headline": "Windows PowerShell 폴백, `claude ultrareview` CLI 추가",
+      "newFeatures": [
+        {
+          "text": "`claude ultrareview [target]` 서브커맨드 추가 — CI/스크립트에서 `/ultrareview`를 비대화형으로 실행 (`--json` 옵션 지원, 성공 시 exit 0 / 실패 시 1)",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "스킬 콘텐츠에서 `${CLAUDE_EFFORT}`로 현재 effort 레벨을 참조할 수 있게 됨",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "서브프로세스에 `AI_AGENT` 환경변수를 설정해 `gh` 등이 트래픽을 Claude Code에 귀속시킬 수 있게 함",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "[VSCode] `/usage`가 plain-text 세션 비용 대신 네이티브 Account & Usage 다이얼로그를 엶",
+          "originalRefs": [
+            19
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Windows에서 Git for Windows(Git Bash) 미설치 시 셸 도구로 PowerShell을 사용하도록 폴백",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "데스크톱 앱·스킬·에이전트 설치를 권하는 spinner tip을 이미 보유 중일 때 숨김",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "터미널이 스크롤 이벤트 대신 화살표 키를 보낼 때 `use PgUp/PgDn to scroll` 힌트 노출",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "claude.ai 커넥터가 다수이지만 인증되지 않은 상태일 때 세션 시작 속도 개선",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "auto 모드 거부 메시지에 설정 문서 링크 추가",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`claude plugin validate`가 `marketplace.json` 최상단의 `$schema`/`version`/`description`과 `plugin.json`의 `$schema`를 허용하도록 완화",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "auto 모드 auto-compact 표시가 잘못된 토큰값 대신 소문자 `auto`로 출력됨",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "[VSCode] 음성 받아쓰기가 `~/.claude/settings.json`의 `language` 설정을 따름",
+          "originalRefs": [
+            20
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "stdio MCP 도구 호출 도중 Esc 입력이 서버 연결 전체를 끊어버리던 회귀(2.1.105) 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`claude --resume`으로 시작했을 때 `/rewind` 등 인터랙티브 오버레이가 키 입력에 반응하지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "non-fullscreen 모드에서 리사이즈·다이얼로그 종료·긴 세션 시 터미널 스크롤백이 중복되던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "API/엔터프라이즈 사용자에서 `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`가 usage metrics 텔레메트리를 막지 못하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "auto 모드에서 파이프와 리다이렉트가 함께 있는 멀티라인 bash 명령에 \"Dangerous rm operation\" 오탐 프롬프트 뜨던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "fullscreen 모드에서 긴 선택 메뉴가 터미널 아래로 잘리던 문제 수정 — 포커스된 옵션이 스크롤 시 화면에 유지됨",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "fullscreen에서 Write 도구 출력의 \"+N lines\" 클릭 시 펼쳐지지 않고 접혀버리던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "슬래시 명령 picker가 입력 중 점프하던 문제 수정 및 파란색 하이라이트가 연속 부분 문자열만 매칭하도록 개선",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "marketplace 엔트리 중 하나가 미지원 source 포맷이면 `/plugin`이 전체 로드 실패하던 문제 수정 — 해당 항목은 표시하되 설치 시 업데이트 안내",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "macOS/Linux 네이티브 빌드에서 Bash 도구 `find`가 거대한 디렉토리 트리에서 file descriptor 고갈로 호스트 전체 크래시 유발하던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Windows 환경에서 Git for Windows를 따로 설치할 필요 없이 PowerShell을 셸 도구로 사용 가능 — 기존에 Git Bash 설치를 전제하던 워크플로/문서 갱신 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`claude ultrareview` 서브커맨드 신설로 CI 파이프라인에서 `/ultrareview`를 `--json` 옵션과 종료 코드(0/1) 기반으로 호출 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "서브프로세스에 `AI_AGENT` 환경변수가 자동 주입되므로 `gh` 등 외부 CLI의 트래픽 속성 분류와 감사 로그 동작이 달라질 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "API/엔터프라이즈 환경에서 `DISABLE_TELEMETRY` / `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 설정이 이번 버전부터 실제로 usage metrics 송신을 차단함 — 기존에 차단된다고 가정했다면 실측 트래픽 변동 확인 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-04-29T00:00:00Z",
     "summaryModel": "claude-sonnet-4-6"
   },
   {

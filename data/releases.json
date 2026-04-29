@@ -1,5 +1,151 @@
 [
   {
+    "version": "v2.1.122",
+    "tagName": "v2.1.122",
+    "publishedAt": "2026-04-28T22:05:15Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.122",
+    "originalBody": "## What's changed\n\n- Added `ANTHROPIC_BEDROCK_SERVICE_TIER` environment variable to select a Bedrock service tier (`default`, `flex`, or `priority`), sent as the `X-Amzn-Bedrock-Service-Tier` header\n- Pasting a PR URL into the `/resume` search box now finds the session that created that PR (GitHub, GitHub Enterprise, GitLab, and Bitbucket)\n- `/mcp` now shows claude.ai connectors hidden by a manually-added server with the same URL, with a hint to remove the duplicate\n- Clarified the `/mcp` message shown when an MCP server is still unauthorized after the browser sign-in flow\n- OpenTelemetry: numeric attributes on `api_request`/`api_error` log events are now emitted as numbers, not strings\n- OpenTelemetry: added `claude_code.at_mention` log event for `@`-mention resolution\n- Fixed `/branch` producing forks that fail with \"tool_use ids were found without tool_result blocks\" when the source session contained entries from rewound timelines\n- Fixed `/model` not showing the Effort option for Bedrock application inference profile ARNs, and those ARNs not receiving `output_config.effort`\n- Fixed Vertex AI / Bedrock returning `invalid_request_error: output_config: Extra inputs are not permitted` on session-title generation and other structured-output queries\n- Fixed Vertex AI `count_tokens` endpoint returning 400 errors for users behind proxy gateways\n- Fixed `spinnerTipsOverride.excludeDefault` not suppressing the time-based spinner tips\n- Fixed ToolSearch missing MCP tools that connected after session start in nonblocking mode\n- Fixed `!exit` / `!quit` in bash mode terminating the CLI instead of running as a shell command\n- Fixed images sent to newer models being resized to 2576px per side instead of the correct 2000px maximum\n- Fixed remote control session idle status redrawing twice per second, which could flood `tmux -CC` control pipes and pause the terminal\n- Fixed assistant messages appearing blank in some sessions due to a stale view preference\n- Fixed a malformed hooks entry in `settings.json` no longer invalidating the entire file\n- Voice mode: keybindings bound to Caps Lock now show an error since terminals don't deliver Caps Lock as a key event",
+    "summary": {
+      "headline": "Bedrock 서비스 티어 선택·PR URL 세션 탐색 등 다수 수정",
+      "newFeatures": [
+        {
+          "text": "`ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수로 Bedrock 서비스 티어(`default`·`flex`·`priority`) 선택 — `X-Amzn-Bedrock-Service-Tier` 헤더로 전송",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/resume` 검색창에 GitHub·GitLab·Bitbucket PR URL 붙여넣기 시 해당 PR을 생성한 세션 자동 탐색",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "OpenTelemetry `api_request`/`api_error` 이벤트의 numeric 속성이 문자열 대신 실제 숫자 타입으로 emit",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "OpenTelemetry에 `@` 멘션 해석 추적용 `claude_code.at_mention` 로그 이벤트 추가",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/mcp`에서 동일 URL의 수동 추가 서버로 숨겨진 claude.ai 커넥터를 표시하고 중복 제거 힌트 제공",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "브라우저 로그인 후에도 MCP 서버가 미승인 상태일 때의 `/mcp` 안내 메시지 명확화",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`/branch`로 생성한 fork가 되감기 타임라인 항목 포함 세션에서 tool_use/tool_result 블록 불일치 오류로 실패하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "Bedrock ARN(`application inference profile`) 사용 시 `/model`에서 Effort 옵션이 표시되지 않고 `output_config.effort`도 전송되지 않던 버그 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Vertex AI·Bedrock에서 세션 제목 생성 등 structured-output 쿼리 시 `invalid_request_error: output_config: Extra inputs are not permitted` 오류 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "프록시 게이트웨이 뒤 환경에서 Vertex AI `count_tokens` 엔드포인트가 400 오류 반환하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`spinnerTipsOverride.excludeDefault` 설정이 시간 기반 스피너 팁을 억제하지 못하던 버그 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "nonblocking mode에서 세션 시작 후 연결된 MCP 도구를 `ToolSearch`가 누락하던 버그 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "bash mode에서 `!exit`/`!quit` 입력 시 셸 명령 실행 대신 CLI 전체가 종료되던 버그 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "최신 모델로 이미지 전송 시 2000px 최대값 대신 2576px로 리사이즈되던 버그 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "remote control 세션 idle 상태가 초당 2회 재렌더링되어 `tmux -CC` 컨트롤 파이프를 범람시키던 버그 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "stale view preference로 인해 일부 세션에서 assistant 메시지가 빈 칸으로 표시되던 버그 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`settings.json`의 잘못된 hooks 항목이 파일 전체를 무효화하던 버그 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Voice mode에서 Caps Lock에 키바인딩 설정 시 터미널이 해당 키 이벤트를 전달하지 않는다는 에러 표시",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`ANTHROPIC_BEDROCK_SERVICE_TIER` 환경변수 신설 — Bedrock `flex`·`priority` 티어 사용 시 반드시 설정 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "OpenTelemetry 수집 파이프라인에서 `api_request`/`api_error` 이벤트의 numeric 속성 타입이 string → number로 변경되어 스키마 파서 업데이트 필요할 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-04-29T00:14:24Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.121",
     "tagName": "v2.1.121",
     "publishedAt": "2026-04-28T00:31:31Z",

@@ -1,5 +1,262 @@
 [
   {
+    "version": "v2.1.126",
+    "tagName": "v2.1.126",
+    "publishedAt": "2026-05-01T02:05:23Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.126",
+    "originalBody": "## What's changed\n\n- The `/model` picker now lists models from your gateway's `/v1/models` endpoint when `ANTHROPIC_BASE_URL` points at an Anthropic-compatible gateway\n- - Added `claude project purge [path]` to delete all Claude Code state for a project (transcripts, tasks, file history, config entry) — supports `--dry-run`, `-y/--yes`, `-i/--interactive`, and `--all`\n- `--dangerously-skip-permissions` now bypasses prompts for writes to `.claude/`, `.git/`, `.vscode/`, shell config files, and other previously-protected paths (catastrophic removal commands still prompt as a safety net)\n- `claude auth login` now accepts the OAuth code pasted into the terminal when the browser callback can't reach localhost (WSL2, SSH, containers)\n- `claude_code.skill_activated` OpenTelemetry event now fires for user-typed slash commands and carries a new `invocation_trigger` attribute (`\"user-slash\"`, `\"claude-proactive\"`, or `\"nested-skill\"`)\n- Auto mode: the spinner now turns red when a permission check stalls, instead of looking like the tool is running\n- Host-managed deployments (`CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`) no longer auto-disable analytics on Bedrock/Vertex/Foundry\n- Windows: PowerShell 7 installed via the Microsoft Store, MSI without PATH, or `.NET global tool` is now detected\n- Windows: when the PowerShell tool is enabled, Claude now treats PowerShell as the primary shell instead of defaulting to Bash\n- Read tool: removed the per-file malware-assessment reminder that could cause spurious refusals and \"this is not malware\" commentary on legacy models\n- **Security:** Fixed `allowManagedDomainsOnly` / `allowManagedReadPathsOnly` being ignored when a higher-priority managed-settings source lacked a `sandbox` block\n- Fixed pasting an image larger than 2000px breaking the session — images are now downscaled on paste, and oversized images in history are automatically removed and the request retried\n- Fixed showing the login screen for \"OAuth not allowed for organization\" errors — now shows guidance to contact your admin\n- Fixed OAuth login failing with timeout on slow or proxied connections, in IPv6-only devcontainers, and when the browser callback can't reach localhost\n- Fixed a rare race where a concurrent credential write could clear a valid OAuth refresh token\n- Fixed API retry countdown sticking at \"0s\" instead of counting down between attempts\n- Fixed \"Stream idle timeout\" error after waking Mac from sleep mid-request\n- Fixed background and remote sessions falsely aborting with \"Stream idle timeout\" during long model thinking pauses\n- Fixed a hang where the assistant could finish thinking but show no output after a run of empty turns\n- Fixed overly fast trackpad scrolling in Cursor and VS Code 1.92–1.104 integrated terminals\n- Fixed claude.ai MCP connectors being suppressed by manual servers stuck in needs-auth state\n- Fixed Japanese/Korean/Chinese text rendering as garbled characters on Windows in no-flicker mode\n- Fixed `Ctrl+L` clearing the prompt input — it now only forces a screen redraw, matching readline behavior\n- Fixed deferred tools (WebSearch, WebFetch, etc.) not being available to skills with `context: fork` and other subagents on their first turn\n- Fixed plan-mode tools being unavailable in interactive sessions launched with `--channels`\n- Fixed `/plugin` Uninstall reporting \"Enabled\" instead of \"Uninstalled\"\n- Bounded total size of file-modified reminders when a linter touches many files at once\n- Fixed `/remote-control` retries appearing stuck on \"connecting…\" — each retry now shows its result\n- Fixed Remote Control failure notification not showing the error reason for initial connection failures\n- Windows: clipboard writes no longer expose copied content in process command-line arguments visible to EDR/SIEM telemetry; also fixes >22KB selections not reaching the clipboard\n- PowerShell tool: bare `--` (e.g. `git diff -- file`) is no longer mis-flagged as the `--%` stop-parsing token\n- Fixed Agent SDK hang when the model emits a malformed tool name in a parallel tool call batch\n",
+    "summary": {
+      "headline": "PowerShell 우선 셸·project purge 도입",
+      "newFeatures": [
+        {
+          "text": "`ANTHROPIC_BASE_URL` 이 Anthropic 호환 게이트웨이를 가리키면 `/model` 피커가 게이트웨이의 `/v1/models` 응답 모델을 표시",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "프로젝트 상태(트랜스크립트·태스크·파일 히스토리·설정 항목) 일괄 삭제용 `claude project purge [path]` 추가, `--dry-run` `-y` `-i` `--all` 지원",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "브라우저 콜백이 localhost 에 도달 못 하는 WSL2/SSH/컨테이너 환경에서 `claude auth login` 이 터미널에 붙여넣은 OAuth 코드 수락",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`claude_code.skill_activated` OTEL 이벤트가 사용자 슬래시 커맨드에서도 발생하며 `invocation_trigger` 속성(`user-slash`/`claude-proactive`/`nested-skill`) 추가",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Windows: Microsoft Store·PATH 미포함 MSI·`.NET global tool` 로 설치된 PowerShell 7 자동 감지",
+          "originalRefs": [
+            7
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`--dangerously-skip-permissions` 가 `.claude/` `.git/` `.vscode/` 셸 설정 파일 등 보호 경로 쓰기 프롬프트도 우회 (파괴적 삭제 명령은 여전히 프롬프트)",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "Auto 모드에서 권한 확인이 멈출 때 도구 실행 중처럼 보이지 않도록 스피너가 빨간색으로 표시",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Foundry 의 `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 호스트 관리 배포에서 더 이상 분석 자동 비활성화 안 함",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "Windows: PowerShell 도구 활성화 시 Bash 대신 PowerShell 을 기본 셸로 사용",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Read 도구의 파일별 멀웨어 평가 리마인더 제거 — 레거시 모델에서 발생하던 잘못된 거부와 \"this is not malware\" 코멘트 방지",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "린터가 다수 파일을 건드릴 때 file-modified 리마인더 총 크기 제한",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "Windows: 클립보드 쓰기 시 복사 내용이 EDR/SIEM 텔레메트리에 노출되는 프로세스 명령행 인자 사용 중단, 22KB 초과 선택 클립보드 미도달 문제도 함께 해결",
+          "originalRefs": [
+            29
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "보안: 상위 우선순위 managed-settings 소스에 `sandbox` 블록이 없을 때 `allowManagedDomainsOnly`/`allowManagedReadPathsOnly` 가 무시되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "2000px 초과 이미지 붙여넣기로 세션이 깨지던 현상 수정 — 붙여넣기 시 다운스케일, 히스토리 내 초대형 이미지는 자동 제거 후 요청 재시도",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "조직 OAuth 비허용 오류 시 로그인 화면 대신 관리자 문의 안내 표시",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "느리거나 프록시된 연결, IPv6 전용 devcontainer, localhost 콜백 불가 환경에서 OAuth 로그인 타임아웃 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "동시 자격증명 쓰기로 유효한 OAuth refresh token 이 지워질 수 있던 드문 레이스 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "재시도 사이 카운트다운이 `0s` 에 멈춰 있던 API 재시도 표시 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "Mac 절전 복귀 후 요청 중 발생하던 `Stream idle timeout` 오류 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "백그라운드·원격 세션이 모델의 긴 사고 정지 동안 `Stream idle timeout` 으로 잘못 중단되던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "연속된 빈 턴 이후 어시스턴트가 사고를 마쳤지만 출력 없이 멈추던 행 현상 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "Cursor 와 VS Code 1.92–1.104 통합 터미널의 트랙패드 스크롤이 지나치게 빠르던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "needs-auth 상태에 멈춘 수동 서버에 의해 claude.ai MCP 커넥터가 가려지던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "Windows no-flicker 모드에서 일본어/한국어/중국어 텍스트가 깨져 보이던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "`Ctrl+L` 이 프롬프트 입력을 지우던 문제 수정 — readline 동작에 맞춰 화면 리드로우만 수행",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "`context: fork` 스킬과 기타 서브에이전트의 첫 턴에 WebSearch·WebFetch 등 deferred 도구가 사용 불가하던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "`--channels` 로 시작한 인터랙티브 세션에서 plan-mode 도구가 사용 불가하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`/plugin` Uninstall 이 \"Uninstalled\" 대신 \"Enabled\" 로 표기되던 문구 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "`/remote-control` 재시도가 \"connecting…\" 에 멈춰 보이던 문제 수정 — 재시도마다 결과 표시",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "Remote Control 초기 연결 실패 알림이 오류 사유를 표시하지 않던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "PowerShell 도구가 `git diff -- file` 같은 단독 `--` 를 `--%` 파싱 중단 토큰으로 잘못 인식하던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "병렬 도구 호출 배치에서 모델이 잘못된 도구 이름을 내보낼 때 Agent SDK 가 행 걸리던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`--dangerously-skip-permissions` 의 우회 범위가 `.claude/` `.git/` `.vscode/` 셸 설정 등 보호 경로 쓰기까지 확장됨 — 자동화 스크립트에서 의도치 않은 설정 덮어쓰기 가능성 검토 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Windows + PowerShell 도구 활성화 환경에서는 기본 셸이 Bash 에서 PowerShell 로 전환됨 — 셸 가정에 의존하는 명령·훅 재확인 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 사용 중인 Bedrock/Vertex/Foundry 배포는 분석이 더 이상 자동 비활성화되지 않으므로 호스트 측에서 명시적으로 제어해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "OTEL 이벤트 `claude_code.skill_activated` 의 `invocation_trigger` 속성 신설로 사용자/프로액티브/중첩 스킬 호출을 구분 가능 — 대시보드 필터·집계 갱신 권장.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "관리형 설정의 `sandbox` 블록 부재 시 `allowManagedDomainsOnly`/`allowManagedReadPathsOnly` 가 무시되던 보안 회귀가 수정됨 — 정책 적용 결과 재검증 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-04T00:11:14.415Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.123",
     "tagName": "v2.1.123",
     "publishedAt": "2026-04-29T03:29:00Z",

@@ -1,5 +1,292 @@
 [
   {
+    "version": "v2.1.128",
+    "tagName": "v2.1.128",
+    "publishedAt": "2026-05-04T23:01:47Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.128",
+    "originalBody": "## What's changed\n\n- Bare `/color` (no args) now picks a random session color\n- `/mcp` now shows the tool count for connected servers and flags servers that connected with 0 tools\n- `--plugin-dir` now accepts `.zip` plugin archives in addition to directories\n- `--channels` now works with console (API key) authentication — console orgs with managed settings must set `channelsEnabled: true` to enable\n- Updated `/model` picker: collapsed duplicate Opus 4.7 entries, and current Opus now shows as \"Opus\" instead of \"Opus 4.7\"\n- Subprocesses (Bash, hooks, MCP, LSP) no longer inherit `OTEL_*` environment variables, so OTEL-instrumented apps run via the Bash tool no longer pick up the CLI's own OTLP endpoint\n- MCP: `workspace` is now a reserved server name — existing servers with that name will be skipped with a warning\n- Reconnecting MCP servers no longer flood the conversation with full tool-name lists on every reconnect — re-announced tools are summarized by server prefix\n- SDK hosts now receive a persistent `localSettings` suggestion for Bash permission prompts, so \"Always allow\" writes to `.claude/settings.local.json`\n- `EnterWorktree` now creates the new branch from local HEAD as documented, instead of `origin/<default-branch>` — unpushed commits are no longer dropped\n- Auto mode: when the classifier can't evaluate an action, the error now includes a hint (retry, `/compact`, or run with `--debug`)\n- Fixed focus mode briefly dimming the previous response when submitting a new prompt\n- Fixed stray \"4;0;\" desktop notification on every `/exit` in Kitty and other terminals that interpret OSC 9 as a notification\n- Fixed Remote Control showing an empty \"Opening your options…\" message on rate limit instead of actionable upsell options\n- Fixed drag-and-drop image upload hanging on \"Pasting text…\" when the image read fails\n- Fixed crash loop when piping very large input (>10 MB) to `claude -p` via stdin\n- Fixed long URLs not being individually clickable on every wrapped row in fullscreen mode\n- Fixed `/plugin` Components panel showing \"Marketplace 'inline' not found\" for plugins loaded via `--plugin-dir`\n- Fixed MCP tool results dropping images when the server returns both structured content and content blocks\n- Fixed fenced code blocks inside list items carrying leading whitespace into the clipboard on copy-paste\n- Fixed tab navigation in `/config` stranding focus — the tab header now stays focused so arrows and Esc keep working\n- Fixed markdown link labels being lost on terminals without OSC 8 hyperlink support — links now render as `label (url)` instead of just the URL\n- Fixed sessions on 1M-context models with a smaller autocompact window being falsely blocked with \"Prompt is too long\" before reaching the actual API limit\n- Fixed parallel shell tool calls: a failing read-only command (grep, git diff, ls) no longer cancels sibling calls\n- Fixed banner showing \"with X effort\" on models that don't support effort\n- Fixed `/fast` on 3P providers fuzzy-matching to an unrelated skill instead of showing \"not available\"\n- Fixed Bedrock default model resolving to `global.*` instead of the region-appropriate prefix\n- Fixed vim mode: `Space` in NORMAL mode now moves the cursor right, matching standard vi/vim behavior\n- Fixed terminal progress indicator (OSC 9;4) flickering off between tool calls — stays visible across the full turn\n- Fixed `/rename` without args failing on resumed sessions whose last entry is a compact boundary\n- Fixed stale \"remote-control is active\" status lines from prior sessions appearing after `--resume`/`--continue`\n- Fixed stale `installed_plugins.json` entries pointing at deleted cache directories polluting PATH\n- Fixed MCP stdio servers receiving corrupted arguments when `CLAUDE_CODE_SHELL_PREFIX` is set and an argument contains spaces or shell metacharacters\n- Fixed sub-agent progress summaries missing the prompt cache (~3× `cache_creation` reduction)\n- Fixed `/plugin update` never detecting new versions of npm-sourced plugins\n- Fixed sub-agent summaries firing repeatedly while a sub-agent's transcript is static, capping worst-case token cost on idle sub-agents\n- Headless `--output-format stream-json`: `init.plugin_errors` now includes `--plugin-dir` load failures in addition to dependency demotions\n",
+    "summary": {
+      "headline": "MCP `workspace` 예약·OTEL 격리·다수 안정성 수정",
+      "newFeatures": [
+        {
+          "text": "인자 없는 `/color` 호출 시 세션 색상이 무작위로 선택됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/mcp` 가 연결된 서버의 도구 수를 표시하고, 도구 0개로 연결된 서버를 플래그",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`--plugin-dir` 가 디렉터리 외에 `.zip` 플러그인 아카이브도 수용",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`--channels` 가 콘솔(API key) 인증에서도 동작 — managed settings 사용 콘솔 조직은 `channelsEnabled: true` 설정 필요",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "Auto 모드 분류기가 액션을 평가 못 할 때 재시도·`/compact`·`--debug` 힌트를 에러 메시지에 포함",
+          "originalRefs": [
+            10
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/model` 피커에서 중복 Opus 4.7 항목 통합, 현재 Opus 는 \"Opus 4.7\" 대신 \"Opus\" 로 표시",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Bash·hooks·MCP·LSP 서브프로세스가 더 이상 `OTEL_*` 환경변수를 상속하지 않음 — Bash 도구로 실행한 OTEL 계측 앱이 CLI 자체 OTLP 엔드포인트를 가져가지 않음",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "MCP `workspace` 가 예약 서버 이름으로 지정됨 — 같은 이름의 기존 서버는 경고와 함께 스킵",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "MCP 서버 재연결 시 도구 이름 전체 목록을 매번 쏟아내지 않고 서버 prefix 단위로 요약 재공지",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "SDK 호스트의 Bash 권한 프롬프트에 영구적 `localSettings` 제안이 전달되어, \"Always allow\" 가 `.claude/settings.local.json` 에 기록됨",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`EnterWorktree` 가 문서대로 로컬 HEAD 에서 새 브랜치를 생성 (이전엔 `origin/<default>` 기반이라 푸시 안 한 커밋 유실)",
+          "originalRefs": [
+            9
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "새 프롬프트 제출 시 직전 응답이 잠깐 흐려지던 focus 모드 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Kitty 등 OSC 9 을 알림으로 해석하는 터미널에서 `/exit` 마다 발생하던 \"4;0;\" 데스크톱 알림 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Remote Control 의 rate limit 시 빈 \"Opening your options…\" 대신 실행 가능한 업셀 옵션 표시",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "이미지 읽기 실패 시 드래그앤드롭 업로드가 \"Pasting text…\" 에 멈추던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "stdin 으로 `claude -p` 에 10MB 초과 입력을 파이프할 때 발생하던 크래시 루프 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "풀스크린 모드에서 줄바꿈된 긴 URL 의 각 행이 개별 클릭 불가능하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`--plugin-dir` 로 로드된 플러그인의 `/plugin` Components 패널에 \"Marketplace 'inline' not found\" 가 뜨던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "MCP 서버가 structured content 와 content blocks 를 함께 반환할 때 도구 결과의 이미지가 누락되던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "리스트 항목 안의 코드펜스가 클립보드 복사 시 선행 공백을 들고 가던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "`/config` 의 탭 네비게이션이 포커스를 잃던 문제 수정 — 화살표·Esc 가 계속 동작하도록 탭 헤더가 포커스 유지",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "OSC 8 하이퍼링크 미지원 터미널에서 마크다운 링크 레이블이 사라지던 문제 수정 — 이제 URL 만이 아니라 `label (url)` 형식으로 렌더",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "1M-context 모델 + 작은 autocompact 윈도 세션이 실제 API 한도 전에 \"Prompt is too long\" 으로 잘못 차단되던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "병렬 셸 도구 호출에서 read-only 명령(grep·git diff·ls) 하나가 실패해도 형제 호출이 더 이상 취소되지 않음",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "effort 미지원 모델에 \"with X effort\" 배너가 표시되던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "3P 프로바이더에서 `/fast` 가 무관한 스킬에 퍼지 매칭되던 문제 수정 — \"not available\" 표시",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "Bedrock 기본 모델이 리전 적합 prefix 대신 `global.*` 로 해석되던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "vim 모드 NORMAL 의 `Space` 가 표준 vi/vim 처럼 커서를 오른쪽으로 이동",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "터미널 진행 표시(OSC 9;4) 가 도구 호출 사이에 깜빡이며 꺼지던 문제 수정 — 턴 전체 동안 유지",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "마지막 항목이 compact 경계인 재개 세션에서 인자 없는 `/rename` 이 실패하던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "`--resume`/`--continue` 후 이전 세션의 \"remote-control is active\" stale 상태줄이 표시되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "삭제된 캐시 디렉터리를 가리키는 stale `installed_plugins.json` 항목이 PATH 를 오염시키던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_SHELL_PREFIX` 사용 중 인자에 공백·셸 메타문자가 있을 때 MCP stdio 서버가 손상된 인자를 받던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "서브에이전트 진행 요약이 prompt cache 를 놓치던 문제 수정 (`cache_creation` 약 3배 감소)",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "`/plugin update` 가 npm 소스 플러그인의 새 버전을 감지 못 하던 문제 수정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "서브에이전트 transcript 가 정적인 동안 요약이 반복 발생하던 문제 수정 — idle 서브에이전트의 최악 토큰 비용 cap",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "Headless `--output-format stream-json` 의 `init.plugin_errors` 가 의존성 demotion 외에 `--plugin-dir` 로드 실패도 포함",
+          "originalRefs": [
+            36
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Bash 도구로 실행되는 OTEL 계측 앱이 더 이상 CLI 자체의 OTLP 엔드포인트를 상속하지 않으므로, 자식 프로세스에서 `OTEL_*` 를 의존하던 워크플로는 명시적으로 환경변수를 다시 주입해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "MCP 서버 이름 `workspace` 가 예약어가 되어 같은 이름의 기존 서버는 경고와 함께 스킵됨 — 충돌하는 서버는 이름 변경 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`EnterWorktree` 가 로컬 HEAD 기반으로 브랜치를 생성하도록 변경되어 푸시 안 한 커밋이 유실되지 않음 — 기존에 `origin/<default>` 기점으로 가정한 자동화는 동작 변화 확인 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "`--channels` 를 콘솔(API key) 인증으로 쓰려면 managed settings 콘솔 조직이 `channelsEnabled: true` 를 명시 활성화해야 함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "SDK 호스트의 Bash \"Always allow\" 응답이 `.claude/settings.local.json` 에 기록되므로, 호스트별 권한 영구화가 사용자 로컬 파일에 누적됨을 인지할 것.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-05T00:06:47Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
     "version": "v2.1.126",
     "tagName": "v2.1.126",
     "publishedAt": "2026-05-01T02:05:23Z",

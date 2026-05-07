@@ -1,5 +1,477 @@
 [
   {
+    "version": "v2.1.132",
+    "tagName": "v2.1.132",
+    "publishedAt": "2026-05-06T22:08:13Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.132",
+    "originalBody": "## What's changed\n\n- Added `CLAUDE_CODE_SESSION_ID` environment variable to the Bash tool subprocess environment, matching the `session_id` passed to hooks\n- Added `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` env var to opt out of the fullscreen alternate-screen renderer and keep the conversation in the terminal's native scrollback\n- Added a \"Pasting…\" footer hint while a Ctrl+V image paste is being read from the clipboard\n- Fixed external SIGINT (e.g. IDE stop button, `kill -INT`) not running graceful shutdown — terminal modes are now restored and the `--resume` hint is printed instead of an abrupt exit\n- Fixed an uncaught exception when the terminal is closed or SSH disconnects mid-session under the native build\n- Fixed `--resume` failing with `no low surrogate in string` when a tool error truncation split an emoji; pre-corrupted sessions are sanitized on load\n- Fixed `--permission-mode` flag being ignored when resuming a plan-mode session with `-p --continue`/`--resume`, and plan mode not being re-applied after `ExitPlanMode` within the same session\n- Fixed fullscreen mode showing a blank screen after laptop sleep/wake or Ctrl+Z/`fg` until the next keystroke or stream output\n- Fixed cursor landing mid-grapheme on Ctrl+E/A/K/U/arrow keys when an Indic conjunct or ZWJ emoji wraps across lines\n- Fixed vim operators corrupting text containing decomposed (NFD) accented characters\n- Fixed pasting text starting with `/` silently swallowing the input or triggering an unknown-command reply\n- Fixed pasting dumping stray escape sequences into the prompt when focus events or mouse-tracking reports interleave with the bracketed paste\n- Fixed mouse wheel scrolling being too fast in Cursor and VS Code 1.92–1.104 due to an upstream xterm.js bug\n- Fixed scroll-wheel handling in JetBrains IDE 2025.2 terminals (spurious arrow keys, wrong-direction events, runaway acceleration)\n- Fixed `/usage` Ctrl+S hanging when copying the stats screenshot to the clipboard on Linux/X11\n- Fixed `/terminal-setup` showing a contradictory error in Windows Terminal — Shift+Enter is natively supported there\n- Fixed `/effort` picker not reflecting the `CLAUDE_CODE_EFFORT_LEVEL` env var override\n- Fixed `/status` showing the wrong default model for some users\n- Fixed slash command autocomplete popup being capped at ~3–5 visible commands instead of scaling with terminal height\n- Fixed statusline `context_window` token counts reflecting cumulative session totals instead of current context usage\n- Fixed Alt+T (thinking toggle) not working on macOS terminals without \"Option as Meta\" enabled (iTerm2, Terminal.app defaults)\n- Fixed dead keyboard input on Windows after re-opening a background session from `claude agents`\n- Fixed unbounded memory growth (10GB+ RSS) when a stdio MCP server writes non-protocol data to stdout\n- Fixed MCP servers that connect but fail `tools/list` silently showing 0 tools — they now retry once and show \"connected · tools fetch failed\" in `/mcp`\n- Fixed unauthorized claude.ai MCP connectors showing as \"failed\" instead of \"needs auth\", and headless `-p` mode retrying non-transient 4xx connection failures\n- Improved visual consistency in slash command dialogs and `/login`, `/upgrade`, `/extra-usage` dialog spacing\n- Updated the `/tui fullscreen` startup banner to describe additional renderer benefits (lower memory usage, mouse support, auto-copy on select)\n- Fixed Bedrock and Vertex 400 errors when `ENABLE_PROMPT_CACHING_1H` is set\n",
+    "summary": {
+      "headline": "SIGINT 정상 종료·MCP 메모리 누수·다수 터미널 입력 수정",
+      "newFeatures": [
+        {
+          "text": "Bash 도구 서브프로세스에 `CLAUDE_CODE_SESSION_ID` 환경변수 노출 (hook에 전달되는 `session_id` 와 동일)",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` 로 풀스크린 대체 스크린 렌더러 비활성화하고 터미널 네이티브 스크롤백 유지",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "Ctrl+V 이미지 붙여넣기 중 클립보드 읽는 동안 \"Pasting…\" 푸터 힌트 표시",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "슬래시 명령 다이얼로그 및 `/login`, `/upgrade`, `/extra-usage` 다이얼로그 간격 시각 일관성 개선",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "`/tui fullscreen` 시작 배너에 메모리 절감·마우스 지원·선택 시 자동 복사 등 렌더러 이점 설명 추가",
+          "originalRefs": [
+            26
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "외부 SIGINT (IDE stop 버튼, `kill -INT`) 시 graceful shutdown 동작 — 터미널 모드 복원 후 `--resume` 힌트 출력",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "네이티브 빌드에서 세션 도중 터미널 종료 또는 SSH 연결 끊김 시 발생하던 uncaught exception 제거",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "이모지 분할로 발생한 `no low surrogate in string` 오류로 `--resume` 실패하던 문제 해결, 손상된 세션은 로드 시 sanitize",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`-p --continue`/`--resume` 로 plan-mode 세션 재개 시 `--permission-mode` 무시되던 문제, `ExitPlanMode` 후 plan 모드 미재적용 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "노트북 sleep/wake 또는 Ctrl+Z/`fg` 이후 키 입력·스트림 출력 전까지 풀스크린이 빈 화면 표시되던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Indic conjunct 또는 ZWJ 이모지가 줄바꿈될 때 Ctrl+E/A/K/U·화살표가 grapheme 중간에 커서를 놓던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "vim operator 가 NFD 분해형 강세 문자 텍스트를 손상시키던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`/` 로 시작하는 텍스트 붙여넣기가 입력을 삼키거나 unknown-command 응답을 트리거하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "포커스 이벤트나 마우스 트래킹 리포트가 bracketed paste 와 섞일 때 이스케이프 시퀀스가 프롬프트로 흘러들어오던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Cursor 와 VS Code 1.92–1.104 의 마우스 휠 스크롤이 너무 빠르던 xterm.js 업스트림 버그 우회",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "JetBrains IDE 2025.2 터미널의 스크롤 휠 처리 (가짜 화살표 키, 방향 반전, 가속 폭주) 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "Linux/X11 에서 `/usage` Ctrl+S 통계 스크린샷 클립보드 복사 시 행업되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "Windows Terminal 에서 Shift+Enter 를 네이티브 지원하는데도 `/terminal-setup` 이 모순 오류를 표시하던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`/effort` picker 가 `CLAUDE_CODE_EFFORT_LEVEL` env 오버라이드를 반영하지 못하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "일부 사용자에게 `/status` 가 잘못된 기본 모델을 표시하던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "슬래시 명령 자동완성 팝업이 약 3–5개로 잘리던 문제 — 이제 터미널 높이에 맞게 확장",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "statusline `context_window` 토큰 수가 현재 컨텍스트가 아닌 세션 누적 합계를 반영하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "\"Option as Meta\" 미활성 macOS 터미널 (iTerm2, Terminal.app 기본값) 에서 Alt+T thinking 토글 동작하지 않던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "Windows 에서 `claude agents` 의 백그라운드 세션 재오픈 후 키보드 입력 먹통되던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "stdio MCP 서버가 stdout 으로 비-프로토콜 데이터 출력 시 메모리 무한 증가 (10GB+ RSS) 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "MCP 서버가 연결 후 `tools/list` 실패 시 조용히 0 도구 표시되던 문제 — 1회 재시도 후 `/mcp` 에 \"connected · tools fetch failed\" 표시",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "미인증 claude.ai MCP connector 가 \"failed\" 대신 \"needs auth\" 로 표시되도록 수정, headless `-p` 모드의 비-일시적 4xx 연결 실패 재시도 차단",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`ENABLE_PROMPT_CACHING_1H` 설정 시 Bedrock 및 Vertex 에서 발생하던 400 오류 수정",
+          "originalRefs": [
+            27
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Bash 도구 서브프로세스에서 `CLAUDE_CODE_SESSION_ID` 환경변수로 hook과 동일한 세션 ID 참조 가능 — 외부 스크립트의 세션별 로깅·라우팅 단순화.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` 로 스크롤백 보존이 필요한 워크플로 (로그 캡처, screen 사용자) 환경 분기 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "stdio MCP 서버를 운영 중이라면 stdout 비-프로토콜 출력으로 인한 OOM 위험이 제거됨 — 기존에 메모리 폭주를 회피하려 별도 wrapper 를 두었다면 정리 가능.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 21
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-07T00:07:00Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
+    "version": "v2.1.131",
+    "tagName": "v2.1.131",
+    "publishedAt": "2026-05-06T07:47:56Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.131",
+    "originalBody": "## What's changed\n\n- Fixed VS Code extension failing to activate on Windows due to a hardcoded build path in the bundled SDK (`createRequire` polyfill bug)\n- Fixed Mantle endpoint authentication failing with missing `x-api-key` header\n",
+    "summary": {
+      "headline": "Windows VS Code 확장 활성화·Mantle 인증 헤더 수정",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "번들 SDK 의 하드코딩 빌드 경로 (`createRequire` polyfill 버그) 로 Windows 에서 VS Code 확장 활성화 실패하던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "Mantle 엔드포인트 인증이 `x-api-key` 헤더 누락으로 실패하던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Windows + VS Code 확장 사용자라면 v2.1.131 이상으로 즉시 업데이트 권장 — 이전 버전은 확장 활성화 자체가 실패.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-07T00:07:00Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
+    "version": "v2.1.129",
+    "tagName": "v2.1.129",
+    "publishedAt": "2026-05-06T01:40:18Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.129",
+    "originalBody": "## What's changed\n\n- Added `--plugin-url <url>` flag to fetch a plugin `.zip` archive from a URL for the current session\n- Added `CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` env var to force-enable synchronized output on terminals that auto-detection misses (e.g. Emacs `eat`)\n- Added `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE`: when set on Homebrew or WinGet installations, Claude Code runs the upgrade command in the background and prompts to restart\n- Plugin manifests: `themes` and `monitors` should now be declared under `\"experimental\": { ... }`. Top-level declarations still work but `claude plugin validate` will warn\n- Gateway `/v1/models` discovery for the `/model` picker is now opt-in via `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` (was automatic in 2.1.126–2.1.128)\n- Ctrl+R history picker now defaults to searching all prompts across all projects, matching pre-2.1.124 behavior. Press Ctrl+S to narrow to the current project or session\n- Third-party deployments (Bedrock, Vertex, Foundry, or `ANTHROPIC_BASE_URL` gateway) no longer see spinner tips pointing at first-party Anthropic surfaces\n- `skillOverrides` setting now works: `off` hides from model and `/`, `user-invocable-only` hides from model only, `name-only` collapses description\n- The `claude_code.pull_request.count` OTel metric now counts PRs/MRs created via MCP tools, not just shell commands\n- Policy refusal error messages now include the API Request ID for easier support debugging\n- Fixed API errors with unrecognized 400 status codes showing raw JSON instead of the underlying error message\n- Fixed `/clear` not resetting the terminal tab title after a conversation\n- Fixed session title chip from `/rename` disappearing while a permission or other dialog is active\n- Fixed agent panel below the prompt being hidden when subagents are running (regression in 2.1.122)\n- Fixed external-editor handoff (Ctrl+G) blanking the conversation history above the prompt\n- Fixed `/context` dumping its rendered ASCII visualization grid into the conversation, wasting ~1.6k tokens per call\n- Fixed `/agents` Library list arrow-key navigation: the highlighted agent now stays visible when the list exceeds the viewport\n- Fixed `/branch` success message not including the new branch's session id for `/resume`\n- Fixed bold headers with keycap/ZWJ/skin-tone emoji losing trailing characters in fullscreen mode\n- Fixed server-managed settings policy not applying for enterprise/team users whose stored OAuth credentials lacked the `user:inference` scope\n- Fixed OAuth refresh race after wake-from-sleep that could log out all running sessions\n- Fixed 1-hour prompt cache TTL being silently downgraded to 5 minutes\n- Fixed cache-miss warning appearing spuriously after `/clear` or compaction when changing `/effort` or `/model`\n- Fixed `Bash(mkdir *)`, `Bash(touch *)` and similar allow rules not being honored for in-project paths\n- Fixed `deniedMcpServers` patterns with a `*://` scheme wildcard not matching mixed-case hostnames\n- Fixed harmless WebSocket warning being logged as an error in `--debug` during voice mode\n- [VSCode] Fixed `/clear` not clearing the conversation context and displayed transcript\n",
+    "summary": {
+      "headline": "`--plugin-url` 추가·1시간 캐시 TTL 다운그레이드·OAuth 회복 수정",
+      "newFeatures": [
+        {
+          "text": "`--plugin-url <url>` 플래그로 현재 세션에서 URL 의 플러그인 `.zip` 아카이브를 가져오기 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_FORCE_SYNC_OUTPUT=1` 로 자동 감지가 놓치는 터미널 (예: Emacs `eat`) 에서 동기화 출력 강제 활성화",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE` 설정 시 Homebrew/WinGet 설치본이 백그라운드 업그레이드 실행 후 재시작 안내",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "플러그인 매니페스트의 `themes`·`monitors` 선언 위치가 `\"experimental\": { ... }` 하위로 이동 — top-level 도 동작하지만 `claude plugin validate` 가 경고",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`/model` picker 의 Gateway `/v1/models` discovery 가 `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` opt-in 으로 전환 (2.1.126–2.1.128 에서는 자동)",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Ctrl+R history picker 가 기본적으로 모든 프로젝트의 프롬프트를 검색 (2.1.124 이전 동작 복원), Ctrl+S 로 현재 프로젝트·세션 한정 가능",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Foundry·`ANTHROPIC_BASE_URL` 게이트웨이 같은 서드파티 배포에서 first-party Anthropic 페이지를 가리키는 spinner 팁 노출 제거",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`skillOverrides` 설정 동작 정상화 — `off` 는 모델·`/` 양쪽에서 숨김, `user-invocable-only` 는 모델에서만 숨김, `name-only` 는 description 축약",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`claude_code.pull_request.count` OTel 메트릭이 shell 명령뿐 아니라 MCP 도구로 생성된 PR/MR 도 집계",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "정책 거부 오류 메시지에 API Request ID 포함되어 지원 디버깅 용이",
+          "originalRefs": [
+            9
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "인식되지 않은 400 상태 코드 API 오류가 원본 에러 메시지 대신 raw JSON 을 표시하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "대화 종료 후 `/clear` 가 터미널 탭 제목을 리셋하지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "권한 등 다이얼로그 활성 중 `/rename` 의 세션 제목 chip 이 사라지던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "subagent 실행 중 프롬프트 아래 agent 패널이 가려지던 문제 (2.1.122 회귀) 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "외부 에디터 핸드오프 (Ctrl+G) 시 프롬프트 위 대화 히스토리가 비워지던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`/context` 호출 시 렌더링된 ASCII 시각화 그리드가 대화에 덤프되어 호출당 약 1.6k 토큰이 낭비되던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`/agents` Library 리스트가 뷰포트를 초과할 때 화살표 키 네비게이션에서 하이라이트된 에이전트가 보이도록 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`/branch` 성공 메시지에 `/resume` 용 새 브랜치 세션 id 가 누락되던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "풀스크린 모드에서 keycap/ZWJ/skin-tone 이모지 포함 굵은 헤더의 끝 문자가 사라지던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "OAuth 자격 증명에 `user:inference` 스코프가 없던 엔터프라이즈/팀 사용자에게 server-managed settings 정책이 적용되지 않던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "wake-from-sleep 후 OAuth refresh race 로 모든 세션이 로그아웃되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "1시간 prompt cache TTL 이 조용히 5분으로 다운그레이드되던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "`/effort` 또는 `/model` 변경 시 `/clear`·압축 후 cache-miss 경고가 잘못 노출되던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "in-project 경로에서 `Bash(mkdir *)`, `Bash(touch *)` 등 allow 규칙이 적용되지 않던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "`*://` 스킴 와일드카드 사용 `deniedMcpServers` 패턴이 mixed-case 호스트명과 매칭되지 않던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "voice 모드 `--debug` 에서 무해한 WebSocket 경고가 error 로 로깅되던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "[VSCode] `/clear` 가 대화 컨텍스트와 표시된 transcript 를 비우지 않던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "기존 플러그인 매니페스트의 top-level `themes`·`monitors` 선언은 동작하지만 `claude plugin validate` 가 경고 — `experimental` 하위로 이동 권장.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "2.1.126–2.1.128 에서 자동이던 Gateway `/v1/models` 모델 디스커버리는 이제 `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1` 명시 필요 — 게이트웨이 사용자는 환경변수 설정 안 하면 picker 에 게이트웨이 모델이 안 뜸.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "1시간 prompt cache TTL 이 정상 적용되도록 수정됨 — 장기 캐시를 의도한 워크플로의 비용·지연이 실제로 개선됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 11
+            }
+          ]
+        },
+        {
+          "text": "in-project 경로 `Bash(mkdir *)`, `Bash(touch *)` allow 규칙이 정상 적용됨 — 기존에 회피용 광범위 권한을 부여했다면 좁혀도 됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 13
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-07T00:07:00Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
     "version": "v2.1.128",
     "tagName": "v2.1.128",
     "publishedAt": "2026-05-04T23:01:47Z",

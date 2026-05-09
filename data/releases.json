@@ -1,5 +1,395 @@
 [
   {
+    "version": "v2.1.136",
+    "tagName": "v2.1.136",
+    "publishedAt": "2026-05-08T18:39:08Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.136",
+    "originalBody": "## What's changed\n\n- Added `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` to re-enable the session quality survey for enterprises capturing responses through OpenTelemetry\n- Added `settings.autoMode.hard_deny` for auto mode classifier rules that block unconditionally regardless of user intent or allow exceptions\n- Fixed MCP servers configured in `.mcp.json`, plugins, and claude.ai connectors silently disappearing after `/clear` in the VS Code extension, JetBrains plugin, and Agent SDK\n- Fixed a rare login loop where a concurrent credential write could overwrite a freshly-rotated OAuth token and force re-login\n- Fixed MCP OAuth refresh tokens being lost when multiple servers refresh concurrently — users with several remote MCP servers should no longer need daily re-authentication\n- Fixed an API error (400) when extended thinking emitted a redacted thinking block after a tool call\n- Fixed `--resume` / `--continue` not finding sessions when the project path contains underscores\n- Fixed plan mode not blocking file writes when a matching `Edit(...)` allow rule exists\n- WSL2: image paste from Windows clipboard now works via a PowerShell fallback when xclip/wl-paste cannot read image data\n- Fixed plugin `Stop`/`UserPromptSubmit` hooks failing when cache cleanup deletes a version still in use by a running session\n- Improved visual consistency across slash command dialogs: standardized footer hints, dialog spacing, and arrow-key styling, and the dialog frame now appears immediately during loading instead of popping in after\n- Fixed colors appearing at wrong positions in bash command output and markdown code blocks\n- Fixed ReasonML diffs rendering corrupted \"undefined\" text artifacts at word-diff boundaries\n- Fixed worktree exit dialog warning about uncommitted files in the wrong directory after worktree removal\n- Fixed `@` file picker not matching files created mid-session in small non-git directories\n- Fixed `@`-mention file picker not finding files in directories with more than 100 entries\n- Fixed failed tool calls not being click-to-expand in fullscreen mode when their output was truncated\n- Fixed Backspace and Ctrl+Backspace getting swapped after using Ctrl+G to open an external editor on terminals with persistent extended-key modes\n- Fixed `/usage` weekly reset showing time of day instead of the calendar date\n- Fixed welcome banner ellipsis causing column overflow on CJK terminals\n- Fixed `/insights` crash when session history contains tool calls with malformed input fields\n- Fixed a renderer crash when a tool's collapsibility classification changes mid-session\n- Fixed a `skills` entry in `plugin.json` hiding the plugin's default `skills/` directory, and listing a file path now shows an error instead of failing silently\n- Fixed IDE shell-integration lock files not respecting `CLAUDE_CONFIG_DIR`\n- Fixed trailing whitespace in copied terminal output during streaming\n- Fixed plugin uninstall and enable/disable not matching slugs case-insensitively\n- Fixed tool error truncation marker showing a negative count for surrogate-pair strings\n- Fixed env vars from `CLAUDE_ENV_FILE` SessionStart hooks going stale after `/resume` or `/clear`\n- Fixed `/branch` saving a multi-line session title when given a pasted multi-line name\n- Fixed a stray leading space on the second line of wrapped text at the column boundary\n- Fixed Esc not dismissing dialogs in `/install-github-app`, `/desktop`, `/resume`, and `/web-setup`\n- Fixed `/doctor` MCP schema errors not naming the missing field or showing the source file path\n- Fixed Bash permission prompts showing an internal parser diagnostic instead of a user-readable explanation\n- Fixed plugin slash commands with spaces (e.g. `/myplugin review`) not resolving to their namespaced form\n- Fixed `AskUserQuestion` discarding multi-select answers when supplied as an array\n- Fixed `/clear <name>` not labeling the cleared session for `/resume`\n- Fixed `CronList` output missing qualifiers and the scheduled prompt\n- Fixed \"Jump to bottom\" overlay leaving color artifacts on CJK characters in fullscreen mode\n- Fixed wide markdown tables leaving a stale bordered render in terminal scrollback while streaming\n- Fixed pasted text being silently dropped when a long prompt with a pasted-text placeholder was auto-truncated\n- Fixed `/release-notes` getting stuck on an old version after a failed changelog refresh\n- Fixed `/mcp` server list not scrolling when there are more servers than fit in the terminal\n- Fixed mid-input slash command autocomplete not working after an initial slash command\n- Fixed scrolling to bottom re-engaging auto-follow with `autoScrollEnabled: false`\n- Fixed prompt suggestions being auto-submitted by Enter on an empty input instead of requiring Tab or arrow to accept\n- Fixed keyboard shortcut hints not reflecting rebound keys from `keybindings.json`\n- Fixed `/settings` language change being reverted on Escape after confirming\n- Fixed `/terminal-setup` only appearing in autocomplete on exact name match instead of partial prefixes\n- Fixed \"Chat about this\" on an `AskUserQuestion` dialog erasing the question text\n- Fixed MCP tool results being invisible when the server returns content blocks\n- Improved error message when `--worktree` collides with an existing or stale worktree\n- Changed plugin marketplace removal key to `d` (matching delete elsewhere) instead of `r` which collided with retry\n",
+    "summary": {
+      "headline": "auto mode hard_deny 추가, MCP·플러그인 다수 버그 수정",
+      "newFeatures": [
+        {
+          "text": "`CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` 환경변수 추가 — OpenTelemetry 로 응답 수집하는 엔터프라이즈에서 세션 품질 설문 재활성화 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`settings.autoMode.hard_deny` 추가 — auto mode 분류기 규칙이 사용자 의도·허용 예외와 무관하게 무조건 차단",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "WSL2 에서 Windows 클립보드 이미지 붙여넣기 가능 — xclip·wl-paste 가 이미지 데이터를 못 읽으면 PowerShell fallback 사용",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "슬래시 명령 다이얼로그 시각 일관성 개선 — footer 힌트·간격·화살표 키 스타일 표준화, 로딩 중에도 다이얼로그 프레임 즉시 표시",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`--worktree` 가 기존·잔존 worktree 와 충돌할 때 에러 메시지 개선",
+          "originalRefs": [
+            50
+          ]
+        },
+        {
+          "text": "플러그인 마켓플레이스 제거 키를 `r` 대신 `d` 로 변경 — 다른 곳의 delete 와 일치, 기존 retry 와 충돌 해소",
+          "originalRefs": [
+            51
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "VS Code 확장·JetBrains 플러그인·Agent SDK 에서 `/clear` 후 `.mcp.json`·플러그인·claude.ai 커넥터 MCP 서버가 조용히 사라지던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "동시 자격증명 쓰기로 갱신된 OAuth 토큰이 덮여 재로그인이 강제되던 드문 로그인 루프 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "여러 MCP 서버가 동시에 refresh 할 때 OAuth refresh 토큰 손실 — 원격 MCP 서버 다수 사용자도 매일 재인증 불필요",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "도구 호출 후 redacted thinking 블록이 emit 될 때 발생하던 extended thinking API 400 에러 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "프로젝트 경로에 언더스코어가 포함된 경우 `--resume`·`--continue` 가 세션을 못 찾던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "plan mode 가 일치하는 `Edit(...)` allow 규칙이 있을 때 파일 쓰기를 차단하지 못하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "캐시 정리가 실행 중 세션이 사용하는 버전을 삭제할 때 플러그인 `Stop`·`UserPromptSubmit` 훅 실패 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "bash 명령 출력·마크다운 코드 블록에서 색상이 잘못된 위치에 표시되던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "ReasonML diff 의 word-diff 경계에서 `undefined` 텍스트 깨짐 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "worktree 제거 후 종료 다이얼로그가 잘못된 디렉토리의 미커밋 파일을 경고하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "비-git 소형 디렉토리에서 세션 중 생성된 파일이 `@` 파일 픽커에 안 잡히던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "100 개 이상 항목이 있는 디렉토리에서 `@`-mention 파일 픽커가 파일을 못 찾던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "전체화면 모드에서 출력이 truncate 된 실패 도구 호출이 클릭 확장 안 되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "확장 키 모드 유지 터미널에서 `Ctrl+G` 외부 에디터 사용 후 Backspace·Ctrl+Backspace 가 뒤바뀌던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`/usage` 주간 리셋이 캘린더 날짜 대신 시각을 표시하던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "CJK 터미널에서 welcome 배너 ellipsis 가 컬럼 오버플로 일으키던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "도구 호출 input 필드가 잘못된 세션 히스토리 로드 시 `/insights` 크래시 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "도구 collapsibility 분류가 세션 중 바뀔 때 렌더러 크래시 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "`plugin.json` 의 `skills` 엔트리가 기본 `skills/` 디렉토리를 가리던 문제 수정 — 파일 경로 나열 시 조용히 실패 대신 에러 표시",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "IDE 셸 통합 lock 파일이 `CLAUDE_CONFIG_DIR` 무시하던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "스트리밍 중 복사한 터미널 출력의 후행 공백 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "플러그인 uninstall·enable/disable 이 슬러그 대소문자를 구분하던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "도구 에러 truncation 마커가 surrogate-pair 문자열에서 음수 카운트 표시하던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "`CLAUDE_ENV_FILE` SessionStart 훅의 환경변수가 `/resume`·`/clear` 후 stale 되던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "여러 줄 이름이 붙여넣어졌을 때 `/branch` 가 멀티라인 세션 제목을 저장하던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "컬럼 경계에서 줄바꿈된 텍스트의 둘째 줄에 stray leading space 가 붙던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "`/install-github-app`·`/desktop`·`/resume`·`/web-setup` 다이얼로그에서 Esc 가 닫히지 않던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "`/doctor` MCP 스키마 에러가 누락 필드명·소스 파일 경로 미표시하던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "Bash 권한 프롬프트가 사용자용 설명 대신 내부 파서 진단을 표시하던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "공백 포함 플러그인 슬래시 명령(예: `/myplugin review`) 이 namespaced 형태로 해석 안 되던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "`AskUserQuestion` 이 다중 선택 답변을 배열로 받을 때 폐기하던 문제 수정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "`/clear <name>` 이 정리된 세션을 `/resume` 용으로 라벨링하지 않던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "`CronList` 출력에서 qualifier 와 예약 프롬프트 누락 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "전체화면 모드의 \"Jump to bottom\" 오버레이가 CJK 문자에 색 잔상 남기던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "스트리밍 중 넓은 마크다운 테이블이 터미널 스크롤백에 stale 보더를 남기던 문제 수정",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "pasted-text 플레이스홀더 포함 긴 프롬프트가 auto-truncate 될 때 붙여넣은 텍스트가 조용히 사라지던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "changelog refresh 실패 후 `/release-notes` 가 옛 버전에 멈춰 있던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "터미널 화면을 넘는 서버 수일 때 `/mcp` 서버 목록 스크롤 안 되던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "초기 슬래시 명령 후 입력 중간 슬래시 명령 자동완성이 동작하지 않던 문제 수정",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "`autoScrollEnabled: false` 에서 바닥으로 스크롤 시 auto-follow 가 다시 켜지던 문제 수정",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "빈 입력에 Enter 만 눌러도 prompt suggestion 이 자동 제출되던 문제 수정 — Tab·화살표로 수락하도록 변경",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "`keybindings.json` 으로 재바인딩한 키가 단축키 힌트에 반영되지 않던 문제 수정",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "`/settings` 언어 변경이 확정 후 Escape 시 되돌려지던 문제 수정",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "`/terminal-setup` 이 정확한 이름 일치에서만 자동완성에 노출되던 문제 수정 — 부분 prefix 도 인식",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "`AskUserQuestion` 다이얼로그의 \"Chat about this\" 가 질문 텍스트를 지우던 문제 수정",
+          "originalRefs": [
+            48
+          ]
+        },
+        {
+          "text": "MCP 서버가 content block 반환할 때 도구 결과가 안 보이던 문제 수정",
+          "originalRefs": [
+            49
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "auto mode 사용 환경에서 `settings.autoMode.hard_deny` 로 어떤 허용 규칙도 우회하지 못하는 절대 차단 룰을 정의 가능 — 보안·정책 강제용으로 활용.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "OpenTelemetry 기반 텔레메트리 운영 조직은 `CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL` 로 세션 품질 설문을 재활성화해 응답 데이터 수집 재개 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "원격 MCP 서버를 여러 개 등록해 두고 매일 재인증 시달리던 사용자는 이번 릴리즈로 해소됨 — IDE 확장에서 `/clear` 후 MCP 사라지던 문제도 함께 수정.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            },
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "plan mode 의 `Edit(...)` allow 규칙이 우회되던 보안 이슈가 수정됨 — plan 모드 권한 정책 동작이 의도대로 회복.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "프로젝트 경로에 언더스코어가 있는 사용자는 `--resume`·`--continue` 가 정상 동작하므로 워크플로 복구 가능.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "플러그인 마켓플레이스 단축키가 `r` → `d` 로 변경되어 기존 근육 기억 사용자는 키 매핑 재학습 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-09T00:07:30Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.133",
     "tagName": "v2.1.133",
     "publishedAt": "2026-05-07T23:49:04Z",

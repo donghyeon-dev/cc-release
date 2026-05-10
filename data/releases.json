@@ -1,5 +1,61 @@
 [
   {
+    "version": "v2.1.138",
+    "tagName": "v2.1.138",
+    "publishedAt": "2026-05-09T06:33:25Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.138",
+    "originalBody": "## What's changed\n\n- Internal fixes\n",
+    "summary": {
+      "headline": "내부 수정 위주 패치",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "외부 노출되지 않는 내부 수정만 포함됨",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-05-10T00:10:38Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
+    "version": "v2.1.137",
+    "tagName": "v2.1.137",
+    "publishedAt": "2026-05-09T00:11:04Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.137",
+    "originalBody": "## What's changed\n\n- [VSCode] Fixed extension failing to activate on Windows\n",
+    "summary": {
+      "headline": "Windows VS Code 확장 활성화 실패 수정",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "Windows 환경에서 VS Code 확장이 활성화 단계에서 실패하던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Windows + VS Code 사용자는 확장 자동 활성화가 복구되어 추가 우회 작업 없이 IDE 통합 사용 가능.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-10T00:10:38Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
     "version": "v2.1.136",
     "tagName": "v2.1.136",
     "publishedAt": "2026-05-08T18:39:08Z",

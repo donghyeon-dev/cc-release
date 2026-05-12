@@ -1,5 +1,365 @@
 [
   {
+    "version": "v2.1.139",
+    "tagName": "v2.1.139",
+    "publishedAt": "2026-05-11T18:43:42Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.139",
+    "originalBody": "## What's changed\n\n- Added agent view (Research Preview): a single list of every Claude Code session — running, blocked on you, or done. Run `claude agents` to get started. See https://code.claude.com/docs/en/agent-view\n- Added `/goal` command: set a completion condition and Claude keeps working across turns until it's met. Works in interactive, `-p`, and Remote Control. Shows live elapsed/turns/tokens as an overlay panel\n- Added `/scroll-speed` command to tune mouse wheel scroll speed with a live preview\n- Added `claude plugin details <name>` to show a plugin's component inventory and projected per-session token cost\n- Added transcript view navigation: `?` for keyboard shortcuts, `{`/`}` to jump between user prompts, `v` to toggle shortcut panel\n- Added hook `args: string[]` field (exec form) that spawns the command directly without a shell, so path placeholders never need quoting\n- Added hook `continueOnBlock` config option for `PostToolUse` — set to `true` to feed the hook's rejection reason back to Claude and continue the turn\n- MCP stdio servers now receive `CLAUDE_PROJECT_DIR` in their environment, matching hooks. Plugin configs can reference `${CLAUDE_PROJECT_DIR}` in commands\n- Compaction prompt now asks the model to preserve sensitive user instructions\n- `/mcp` Reconnect now picks up `.mcp.json` edits without a restart, and shows the HTTP status and URL when reconnecting fails\n- `/context all` per-skill token estimates now account for the model's tokenizer and show rounded values\n- `claude plugin install <name>@<marketplace>` now auto-refreshes the marketplace and retries before reporting a plugin as not found\n- `/plugin` installed-plugin details now show hook event names and MCP server names cleanly\n- `/context` now shows the providing plugin's name for plugin-sourced skills\n- Remote MCP server reconnect retry on transient failures is now enabled for all users\n- API requests from subagents now carry `x-claude-code-agent-id` / `x-claude-code-parent-agent-id` headers, and `claude_code.llm_request` OTEL spans include `agent_id` / `parent_agent_id` attributes\n- Remote Control, `/schedule`, claude.ai MCP connectors, and notification preferences are now disabled when `ANTHROPIC_API_KEY` / `apiKeyHelper` / `ANTHROPIC_AUTH_TOKEN` is set, even if a Claude.ai login also exists. Unset the API key to use these features\n- Fixed a deadlock where expired credentials and the `forceRemoteSettingsRefresh` policy setting blocked `claude auth login`/`logout`/`status` with no way to recover\n- Fixed `autoAllowBashIfSandboxed` not auto-approving commands with shell expansions like `$VAR` and `$(cmd)`\n- Fixed a bug where a hook writing to the terminal could corrupt an on-screen interactive prompt; hooks now run without terminal access\n- Fixed unbounded memory growth when an HTTP/SSE MCP server streams non-protocol data — response bodies now capped at 16 MB per SSE frame\n- Fixed `Skill(name *)` permission rules — the wildcard form now works as a prefix match, matching `Bash(ls *)` behavior\n- Fixed settings hot-reload not detecting edits to symlinked `~/.claude/settings.json`\n- Fixed plugin details failing to load when the marketplace key differs from the manifest name\n- Fixed `/model` picker \"Default\" row not reflecting `ANTHROPIC_DEFAULT_OPUS_MODEL`/`ANTHROPIC_DEFAULT_SONNET_MODEL` overrides\n- Fixed spurious \"stream idle timeout\" 5 minutes after a response completed, caused by the watchdog timer not being cleared on stream cancellation\n- Fixed silent `exit 1` when 10+ MCP servers are configured and the cache directory is unwritable — the error message now includes the underlying cause\n- Fixed a typing cursor blinking on tab names, list pointers, and select rows in dialogs\n- Fixed transcript view letter shortcuts not working after mouse click\n- Fixed Bash-mode up-arrow history repeating the first entry and clobbering the in-progress draft\n- Fixed pasting or dropping multiple images only inserting the last one\n- Fixed hyperlinks using unreadable dark navy on dark themes — they now adapt to the active theme\n- Fixed model picker showing a redundant \"Current model\" row for third-party users whose model is set to the `opus` alias\n- Fixed legacy Opus picker entry on PAYG 3P providers resolving to the same model as the default entry\n- Fixed mouse wheel scrolling speed in Cursor and VS Code 1.92–1.104; the trackpad now scrolls at a steady rate and the mouse wheel keeps ~3 lines per notch\n- Fixed scroll behavior in Windows Terminal and VS Code when attached to background sessions\n- Fixed MCP resources from disconnected servers lingering in `@server:` autocomplete\n- Fixed two-file diff snippets over-reporting the number of truncated lines by one\n- Fixed Grep results not relativizing Windows drive-letter paths and count mode reporting wrong totals for single-file paths\n- Fixed border-embedded text overflowing on CJK/emoji due to visual cell width miscalculation\n- Fixed fuzzy-match highlighting splitting emoji and astral-plane characters mid-pair\n- Fixed skill argument names containing regex metacharacters breaking argument substitution\n- Fixed ProgressBar rendering a full block for an almost-full fractional cell\n- Fixed task polling and `fs.watch` being resurrected when the last subscriber leaves while a fetch is in flight\n- Fixed plugin dependency resolution leaving a stale count when the manifest name differs from the source identifier\n- Fixed Insights Time-of-Day chart skewing when a session has an unparseable timestamp\n- Fixed keybindings using only the cmd/super/win modifier being flagged as unparseable\n- Fixed `claude_code.active_time.total` OpenTelemetry metric not being emitted in `--print` mode\n- Fixed `claude plugin update` not preserving cross-plugin symlinks inside a marketplace\n- [VSCode] Press Cmd/Ctrl+Shift+T to reopen the most recently closed session tab, configurable via `claudeCode.enableReopenClosedSessionShortcut`",
+    "summary": {
+      "headline": "agent view·/goal 추가, API 키 시 원격기능 비활성화",
+      "newFeatures": [
+        {
+          "text": "`claude agents` 로 실행·대기·완료 세션을 한 화면에서 관리하는 agent view (Research Preview) 추가",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/goal` 명령 추가 — 완료 조건 설정 후 인터랙티브·`-p`·Remote Control 에서 턴을 넘기며 자동 진행, 경과/턴/토큰 오버레이 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/scroll-speed` 명령 추가 — 라이브 프리뷰로 마우스 휠 스크롤 속도 조정 가능",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`claude plugin details <name>` 추가 — 플러그인 구성요소 목록과 세션당 예상 토큰 비용 확인",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "트랜스크립트 뷰 네비게이션 추가 — `?` 단축키 표시, `{`/`}` 로 사용자 프롬프트 간 점프, `v` 로 단축키 패널 토글",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Hook 의 `args: string[]` (exec form) 필드 추가 — 셸을 거치지 않고 명령을 직접 spawn 하므로 경로 placeholder 따옴표 처리 불필요",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`PostToolUse` 훅용 `continueOnBlock` 설정 추가 — `true` 면 차단 사유를 Claude 에 전달하고 턴 계속 진행",
+          "originalRefs": [
+            6
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "MCP stdio 서버가 hook 과 동일하게 `CLAUDE_PROJECT_DIR` 환경변수를 받고, 플러그인 설정에서 `${CLAUDE_PROJECT_DIR}` 참조 가능",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Compaction 프롬프트가 모델에게 민감한 사용자 지시를 보존하도록 요청",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`/mcp` Reconnect 가 재시작 없이 `.mcp.json` 편집을 반영하고, 실패 시 HTTP 상태·URL 노출",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`/context all` 의 skill별 토큰 추정치가 모델 토크나이저를 반영하고 반올림 값으로 표시",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`claude plugin install <name>@<marketplace>` 가 not found 보고 전에 마켓플레이스를 자동 갱신·재시도",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`/plugin` 설치된 플러그인 상세에서 hook 이벤트명·MCP 서버명을 깔끔하게 표시",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`/context` 가 플러그인 제공 skill 에 대해 제공자 플러그인명을 표시",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "원격 MCP 서버 일시 장애 시 재연결 재시도가 전체 사용자 대상으로 활성화",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "서브에이전트 API 요청에 `x-claude-code-agent-id`/`x-claude-code-parent-agent-id` 헤더 추가, `claude_code.llm_request` OTEL span 에 `agent_id`/`parent_agent_id` 속성 포함",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_API_KEY`/`apiKeyHelper`/`ANTHROPIC_AUTH_TOKEN` 설정 시 Remote Control·`/schedule`·claude.ai MCP 커넥터·알림 설정 비활성화 (Claude.ai 로그인이 있어도 동일)",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "[VSCode] `claudeCode.enableReopenClosedSessionShortcut` 설정으로 Cmd/Ctrl+Shift+T 닫힌 세션 탭 재오픈",
+          "originalRefs": [
+            49
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "만료된 자격증명과 `forceRemoteSettingsRefresh` 정책이 겹쳐 `claude auth login`/`logout`/`status` 가 복구 불가 상태로 잠기던 데드락 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`autoAllowBashIfSandboxed` 가 `$VAR`·`$(cmd)` 같은 셸 확장 포함 명령을 자동 승인하지 못하던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "Hook 의 터미널 출력이 인터랙티브 프롬프트를 깨뜨리던 문제 수정 — hook 은 이제 터미널 접근 없이 실행",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "HTTP/SSE MCP 서버가 비프로토콜 데이터를 스트리밍할 때 메모리가 무한히 늘던 문제 수정 — SSE 프레임당 응답 본문 16MB 로 캡",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "`Skill(name *)` 권한 규칙의 와일드카드가 `Bash(ls *)` 처럼 prefix 매칭으로 동작하도록 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "심볼릭 링크된 `~/.claude/settings.json` 편집을 settings hot-reload 가 감지 못하던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "마켓플레이스 키와 매니페스트 이름이 다를 때 plugin details 로드 실패하던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "`/model` 피커 \"Default\" 행이 `ANTHROPIC_DEFAULT_OPUS_MODEL`·`ANTHROPIC_DEFAULT_SONNET_MODEL` 오버라이드를 반영하지 못하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "응답 종료 5분 뒤 발생하던 헛 \"stream idle timeout\" 수정 — 스트림 취소 시 watchdog 타이머 미해제가 원인",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "MCP 서버 10개 이상에서 캐시 디렉토리 쓰기 불가 시 `exit 1` 만 떨어지던 문제 수정 — 에러 메시지에 원인 포함",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "탭명·리스트 포인터·다이얼로그 select 행에 타이핑 커서가 깜빡이던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "마우스 클릭 후 트랜스크립트 뷰의 문자 단축키가 동작하지 않던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "Bash 모드 up-arrow 가 첫 항목만 반복하고 작성 중 초안을 덮어쓰던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "여러 이미지를 붙여넣기·드롭 시 마지막 1장만 삽입되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "다크 테마에서 가독성이 나쁘던 진한 네이비 하이퍼링크 색상을 테마에 맞게 적용",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "3P 사용자 모델이 `opus` 별칭일 때 모델 피커가 중복된 \"Current model\" 행을 보여주던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "PAYG 3P 제공자에서 legacy Opus 피커 항목이 default 와 동일 모델로 해석되던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "Cursor 및 VS Code 1.92–1.104 에서 마우스 휠 스크롤 속도 수정 — 트랙패드는 일정, 마우스 휠은 노치당 ~3줄 유지",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "백그라운드 세션 attach 시 Windows Terminal 과 VS Code 에서 스크롤 동작 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "연결 해제된 MCP 서버 리소스가 `@server:` 자동완성에 남아 있던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "두 파일 비교 diff 스니펫이 잘린 줄 수를 1줄씩 더 많이 보고하던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "Grep 결과가 Windows 드라이브 문자 경로를 상대 경로화하지 못하고, 단일 파일 경로의 count 모드 합계가 틀리던 문제 수정",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "CJK·이모지의 시각적 셀 너비 오산으로 테두리 내장 텍스트가 넘치던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "Fuzzy 매치 하이라이트가 이모지·astral plane 문자를 페어 중간에서 쪼개던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "정규식 메타문자가 포함된 skill 인자명이 인자 치환을 깨뜨리던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "ProgressBar 가 거의 가득 찬 fractional cell 을 full block 으로 렌더링하던 문제 수정",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "마지막 구독자 이탈 중 fetch 진행 시 task polling 과 `fs.watch` 가 부활하던 문제 수정",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "매니페스트 이름과 소스 식별자가 다를 때 플러그인 의존성 카운트가 stale 로 남던 문제 수정",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "파싱 불가 타임스탬프가 섞인 세션이 Insights Time-of-Day 차트를 왜곡하던 문제 수정",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "cmd/super/win 단일 modifier 만 사용하는 키바인딩이 파싱 불가로 표시되던 문제 수정",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "`--print` 모드에서 `claude_code.active_time.total` OTEL 메트릭이 방출되지 않던 문제 수정",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "`claude plugin update` 가 마켓플레이스 내 플러그인 간 심볼릭 링크를 보존하지 못하던 문제 수정",
+          "originalRefs": [
+            48
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`ANTHROPIC_API_KEY`·`apiKeyHelper`·`ANTHROPIC_AUTH_TOKEN` 중 하나라도 설정되어 있으면 Remote Control·`/schedule`·claude.ai MCP 커넥터·알림 설정이 일괄 비활성화되며, 해당 기능을 쓰려면 API 키 환경변수를 해제해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 9
+            }
+          ]
+        },
+        {
+          "text": "MCP stdio 서버 측 코드가 `CLAUDE_PROJECT_DIR` 을 활용할 수 있게 되어, 플러그인 설정에서 `${CLAUDE_PROJECT_DIR}` 로 워크스페이스 경로 주입 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Hook 작성 시 `args: string[]` 사용으로 셸 인용 처리 없이 직접 spawn 가능하며, `PostToolUse` 의 `continueOnBlock` 으로 차단 후 턴을 이어갈지 제어 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 5
+            },
+            {
+              "bucket": "newFeatures",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "서브에이전트 호출이 `x-claude-code-agent-id`/`x-claude-code-parent-agent-id` 헤더와 OTEL `agent_id` 속성을 실어 보내므로, 게이트웨이·관측 파이프라인에서 에이전트 계보 추적이 가능해짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 8
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-12T00:00:00Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.138",
     "tagName": "v2.1.138",
     "publishedAt": "2026-05-09T06:33:25Z",

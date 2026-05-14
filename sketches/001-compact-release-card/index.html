@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>cc-release sketch — Compact Release Card</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f6f5f1;
+      color: #18181b;
+      line-height: 1.5;
+      padding: 32px;
+    }
+    .shell { max-width: 1120px; margin: 0 auto; }
+    .top { display: flex; justify-content: space-between; gap: 20px; align-items: flex-end; margin-bottom: 22px; }
+    h1 { font-size: 28px; letter-spacing: -0.04em; }
+    .sub { color: #71717a; margin-top: 6px; font-size: 14px; }
+    .pill { border: 1px solid #d4d4d8; background: white; padding: 8px 12px; border-radius: 999px; font-size: 12px; color: #52525b; }
+    .card { background: rgba(255,255,255,.86); border: 1px solid #deded8; border-radius: 18px; box-shadow: 0 20px 80px rgba(24,24,27,.08); overflow: hidden; }
+    .release-head { padding: 22px 24px; border-bottom: 1px solid #ecece7; display: flex; gap: 14px; align-items: center; justify-content: space-between; }
+    .version { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; background: #18181b; color: #fff; border-radius: 8px; padding: 5px 9px; }
+    .headline { font-weight: 700; letter-spacing: -0.02em; }
+    .date { color: #71717a; font-size: 13px; }
+    .body { padding: 24px; display: grid; gap: 18px; }
+    .summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .mini { background: #fafafa; border: 1px solid #ececec; padding: 14px; border-radius: 14px; }
+    .mini b { display: block; font-size: 12px; color: #52525b; margin-bottom: 7px; }
+    .mini p { font-size: 13px; }
+    .preview { border: 1px solid #d7d7cf; border-radius: 16px; overflow: hidden; background: #0b0d12; }
+    .preview-title { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #f3f2ed; color: #27272a; border-bottom: 1px solid #deded8; }
+    .preview-title strong { font-size: 14px; }
+    .toggle { display: inline-flex; background: #e7e5df; border-radius: 999px; padding: 3px; gap: 2px; }
+    .toggle button { border: 0; background: transparent; padding: 6px 10px; border-radius: 999px; color: #52525b; font-weight: 650; cursor: pointer; }
+    .toggle button.active { background: #18181b; color: white; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; min-height: 350px; }
+    .editor, .tui { padding: 18px; }
+    .editor { background: #fbfbf9; color: #18181b; border-right: 1px solid #2b2f3a; }
+    .label { font: 700 12px ui-monospace, monospace; color: #71717a; margin-bottom: 12px; display: flex; justify-content: space-between; }
+    pre { white-space: pre-wrap; font: 13px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .editor pre { color: #27272a; }
+    .tui { background: radial-gradient(circle at 80% 0%, #20283a, #090b10 42%); color: #d4d4d8; }
+    .tui .prompt { color: #a7f3d0; }
+    .tui .warn { color: #facc15; }
+    .tui .ok { color: #86efac; }
+    .tui .dim { color: #71717a; }
+    .impact { display: flex; gap: 12px; align-items: flex-start; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; padding: 14px 16px; border-radius: 14px; font-size: 14px; }
+    .impact .badge { background: #2563eb; color: white; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; flex: none; }
+    @media (max-width: 800px) { body { padding: 18px; } .summary, .split { grid-template-columns: 1fr; } .editor { border-right: 0; border-bottom: 1px solid #2b2f3a; } .top, .release-head { flex-direction: column; align-items: flex-start; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="top">
+      <div>
+        <h1>Compact card 안에 “체감하기”를 접어 넣는 방향</h1>
+        <p class="sub">선정 피처: <code>/less-permission-prompts</code> — transcript 기반 allowlist 후보 생성</p>
+      </div>
+      <span class="pill">Variant A · 기존 릴리즈 목록과 가장 잘 붙음</span>
+    </div>
+
+    <article class="card">
+      <header class="release-head">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+          <span class="version">v2.1.122</span>
+          <span class="headline">반복 권한 요청을 줄이는 allowlist 제안 명령 추가</span>
+        </div>
+        <span class="date">2026.05.05</span>
+      </header>
+
+      <section class="body">
+        <div class="summary">
+          <div class="mini"><b>무엇이 생김</b><p><code>/less-permission-prompts</code>가 transcript를 훑어 read-only Bash/MCP 호출을 찾아줌.</p></div>
+          <div class="mini"><b>어디에 영향</b><p><code>.claude/settings.json</code>의 permission allowlist 관리가 쉬워짐.</p></div>
+          <div class="mini"><b>주의점</b><p>제안은 자동 적용이 아니라 검토 후 복사하는 흐름으로 두는 게 안전.</p></div>
+        </div>
+
+        <section class="preview">
+          <div class="preview-title">
+            <strong>릴리즈 체감하기</strong>
+            <div class="toggle"><button>Before</button><button class="active">After</button></div>
+          </div>
+          <div class="split">
+            <div class="editor">
+              <div class="label"><span>.claude/settings.json</span><span>proposed patch</span></div>
+<pre>{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "mcp__github__get_issue"
+    ]
+  }
+}</pre>
+            </div>
+            <div class="tui">
+              <div class="label"><span>Claude Code TUI preview</span><span>expected</span></div>
+<pre><span class="prompt">› /less-permission-prompts</span>
+
+Scanning recent transcripts...
+
+<span class="ok">✓ 28 repeated read-only calls found</span>
+
+Top suggestions
+  1. Bash(git status:*)  used 11 times
+  2. Bash(git diff:*)    used 8 times
+  3. mcp__github__get_issue used 5 times
+
+<span class="warn">Review before applying.</span>
+Press c to copy settings patch.</pre>
+            </div>
+          </div>
+        </section>
+
+        <div class="impact"><span class="badge">Impact</span><p>릴리즈 노트의 “새 명령 추가”를 실제 설정 변화와 TUI 흐름으로 연결한다. 기존 카드 UX를 거의 유지하면서도, 사용자가 새 기능의 효용을 즉시 체감할 수 있다.</p></div>
+      </section>
+    </article>
+  </main>
+</body>
+</html>

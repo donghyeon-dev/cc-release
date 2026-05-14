@@ -28,11 +28,19 @@ export default async function Home() {
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600 dark:text-zinc-400 sm:text-base">
                   개발자 관점에서 핵심만 정리한 Claude Code 릴리즈 소식. 평일 오전 9시 자동 업데이트.
                 </p>
-                {updatedAt && (
-                  <p className="mt-4 inline-flex rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
-                    마지막 업데이트: {formatDateTimeKorean(updatedAt)}
-                  </p>
-                )}
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  {updatedAt && (
+                    <p className="inline-flex rounded-md border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
+                      마지막 업데이트: {formatDateTimeKorean(updatedAt)}
+                    </p>
+                  )}
+                  <a
+                    href="/feature-lab"
+                    className="inline-flex rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-100 dark:border-indigo-900/70 dark:bg-indigo-950/40 dark:text-indigo-200 dark:hover:border-indigo-700"
+                  >
+                    Claude Code Feature Lab 열기
+                  </a>
+                </div>
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-2">

@@ -1,0 +1,431 @@
+export type ClaudeCodeFeatureCategory =
+  | "env"
+  | "settings"
+  | "slash-command"
+  | "permission"
+  | "mcp"
+  | "hooks"
+  | "plugin"
+  | "model"
+  | "tui";
+
+export type ActivationKind = "env" | "settings" | "command" | "config-file";
+
+export type TuiFrameKind =
+  | "type"
+  | "line"
+  | "spinner"
+  | "permission-prompt"
+  | "menu"
+  | "diff"
+  | "status-change"
+  | "toast";
+
+export interface TuiFrame {
+  id: string;
+  kind: TuiFrameKind;
+  at: string;
+  title?: string;
+  content: string;
+  tone?: "neutral" | "good" | "warn" | "info";
+}
+
+export interface TuiScene {
+  title: string;
+  statusBefore: string;
+  statusAfter: string;
+  frames: TuiFrame[];
+}
+
+export interface ClaudeCodeFeature {
+  id: string;
+  name: string;
+  shortName: string;
+  category: ClaudeCodeFeatureCategory;
+  introducedIn?: string;
+  description: string;
+  activation: {
+    type: ActivationKind;
+    file?: string;
+    label: string;
+    snippet: string;
+  };
+  beforeExperience: TuiScene;
+  afterExperience: TuiScene;
+  impact: {
+    summary: string;
+    goodFor: string[];
+    watchOut: string[];
+  };
+  source?: {
+    releaseVersion?: string;
+    quote?: string;
+    url?: string;
+  };
+}
+
+export const featureCategoryLabels: Record<ClaudeCodeFeatureCategory, string> = {
+  env: "Env",
+  settings: "Settings",
+  "slash-command": "Slash command",
+  permission: "Permission",
+  mcp: "MCP",
+  hooks: "Hooks",
+  plugin: "Plugin",
+  model: "Model",
+  tui: "TUI",
+};
+
+export const claudeCodeFeatures: ClaudeCodeFeature[] = [
+  {
+    id: "shell-override",
+    name: "CLAUDE_CODE_SHELL",
+    shortName: "Shell override",
+    category: "env",
+    introducedIn: "환경 설정",
+    description:
+      "Claude Code가 명령을 실행할 때 감지된 기본 shell 대신 지정한 shell을 사용하도록 고정합니다.",
+    activation: {
+      type: "env",
+      file: "~/.zshrc 또는 shell profile",
+      label: "Set environment variable",
+      snippet: "export CLAUDE_CODE_SHELL=/bin/zsh",
+    },
+    beforeExperience: {
+      title: "자동 shell 감지",
+      statusBefore: "Shell: auto",
+      statusAfter: "Shell: auto",
+      frames: [
+        {
+          id: "before-shell-1",
+          kind: "type",
+          at: "00:00",
+          content: "> echo $SHELL",
+        },
+        {
+          id: "before-shell-2",
+          kind: "spinner",
+          at: "00:01",
+          content: "detecting login shell from parent process",
+          tone: "info",
+        },
+        {
+          id: "before-shell-3",
+          kind: "line",
+          at: "00:02",
+          content: "/bin/bash",
+        },
+      ],
+    },
+    afterExperience: {
+      title: "zsh로 고정된 실행 환경",
+      statusBefore: "Shell: auto",
+      statusAfter: "Shell: /bin/zsh",
+      frames: [
+        {
+          id: "after-shell-1",
+          kind: "status-change",
+          at: "00:00",
+          title: "Session boot",
+          content: "CLAUDE_CODE_SHELL detected → /bin/zsh",
+          tone: "good",
+        },
+        {
+          id: "after-shell-2",
+          kind: "type",
+          at: "00:01",
+          content: "> echo $SHELL",
+        },
+        {
+          id: "after-shell-3",
+          kind: "line",
+          at: "00:02",
+          content: "/bin/zsh",
+          tone: "good",
+        },
+        {
+          id: "after-shell-4",
+          kind: "toast",
+          at: "00:03",
+          content: "All Bash tool calls now inherit the configured shell.",
+          tone: "info",
+        },
+      ],
+    },
+    impact: {
+      summary:
+        "팀/개인 dotfile에 맞춘 alias, PATH, shell option이 Claude Code 실행 환경에서도 예측 가능해집니다.",
+      goodFor: ["zsh/fish 기반 개발환경", "asdf/mise/nvm PATH 문제", "CI와 로컬 shell 차이 확인"],
+      watchOut: ["profile 로딩 순서 차이", "비표준 shell에서 script 호환성", "팀 공통 설정이면 README에 명시"],
+    },
+    source: {
+      quote: "환경 변수 기반으로 Claude Code shell behavior를 제어하는 설정 예시.",
+    },
+  },
+  {
+    id: "permission-allowlist",
+    name: "permissions.allow",
+    shortName: "Permission allowlist",
+    category: "permission",
+    introducedIn: "설정 파일",
+    description:
+      "반복 승인하던 read-only Bash/MCP 호출을 settings allowlist에 넣어 permission prompt 마찰을 줄입니다.",
+    activation: {
+      type: "settings",
+      file: ".claude/settings.json",
+      label: "Add allow rules",
+      snippet: `{
+  "permissions": {
+    "allow": ["Bash(git status:*)", "Bash(git diff --name-only:*)"]
+  }
+}`,
+    },
+    beforeExperience: {
+      title: "반복 permission prompt",
+      statusBefore: "Permissions: ask",
+      statusAfter: "Permissions: ask",
+      frames: [
+        {
+          id: "before-permission-1",
+          kind: "type",
+          at: "00:00",
+          content: "> git status",
+        },
+        {
+          id: "before-permission-2",
+          kind: "permission-prompt",
+          at: "00:01",
+          title: "Permission required",
+          content: "Allow Bash(git status)?\n[Allow once] [Deny]",
+          tone: "warn",
+        },
+        {
+          id: "before-permission-3",
+          kind: "type",
+          at: "00:04",
+          content: "> git diff --name-only",
+        },
+        {
+          id: "before-permission-4",
+          kind: "permission-prompt",
+          at: "00:05",
+          title: "Permission required again",
+          content: "Allow Bash(git diff --name-only)?\n[Allow once] [Deny]",
+          tone: "warn",
+        },
+      ],
+    },
+    afterExperience: {
+      title: "read-only 호출 자동 승인",
+      statusBefore: "Permissions: ask",
+      statusAfter: "Permissions: allowlist active",
+      frames: [
+        {
+          id: "after-permission-1",
+          kind: "diff",
+          at: "00:00",
+          title: ".claude/settings.json",
+          content: `+ "allow": [
++   "Bash(git status:*)",
++   "Bash(git diff --name-only:*)"
++ ]`,
+          tone: "good",
+        },
+        {
+          id: "after-permission-2",
+          kind: "type",
+          at: "00:02",
+          content: "> git status",
+        },
+        {
+          id: "after-permission-3",
+          kind: "toast",
+          at: "00:03",
+          content: "✓ auto-approved by permissions.allow",
+          tone: "good",
+        },
+        {
+          id: "after-permission-4",
+          kind: "line",
+          at: "00:04",
+          content: "On branch main · working tree clean",
+        },
+      ],
+    },
+    impact: {
+      summary:
+        "안전한 조회 명령은 끊김 없이 진행하고, write/delete/network side effect가 있는 명령은 계속 사람 검토 대상으로 남깁니다.",
+      goodFor: ["git 상태 확인이 많은 작업", "MCP read API 반복 호출", "긴 세션에서 승인 피로도 감소"],
+      watchOut: ["write 계열 명령 allow 금지", "glob이 너무 넓지 않은지 리뷰", "project/user settings 범위 구분"],
+    },
+    source: {
+      quote: "settings.permissions.allow로 tool permission behavior를 바꾸는 흐름.",
+    },
+  },
+  {
+    id: "model-picker",
+    name: "/model",
+    shortName: "Model picker",
+    category: "model",
+    introducedIn: "Slash command",
+    description:
+      "세션 중 모델 선택 UI를 열어 Sonnet/Opus/Auto 같은 실행 전략을 빠르게 바꿉니다.",
+    activation: {
+      type: "command",
+      label: "Open model selector",
+      snippet: "/model",
+    },
+    beforeExperience: {
+      title: "기본 모델 유지",
+      statusBefore: "Model: default",
+      statusAfter: "Model: default",
+      frames: [
+        {
+          id: "before-model-1",
+          kind: "line",
+          at: "00:00",
+          content: "Model is inherited from current config.",
+        },
+        {
+          id: "before-model-2",
+          kind: "type",
+          at: "00:01",
+          content: "> implement the refactor",
+        },
+        {
+          id: "before-model-3",
+          kind: "spinner",
+          at: "00:02",
+          content: "thinking with default model",
+          tone: "info",
+        },
+      ],
+    },
+    afterExperience: {
+      title: "interactive model selection",
+      statusBefore: "Model: Sonnet",
+      statusAfter: "Model: Opus",
+      frames: [
+        {
+          id: "after-model-1",
+          kind: "type",
+          at: "00:00",
+          content: "> /model",
+        },
+        {
+          id: "after-model-2",
+          kind: "menu",
+          at: "00:01",
+          title: "Select model",
+          content: "○ Sonnet\n● Opus\n○ Auto\n\n↑/↓ move · enter confirm · esc cancel",
+          tone: "info",
+        },
+        {
+          id: "after-model-3",
+          kind: "status-change",
+          at: "00:03",
+          content: "Model switched: Sonnet → Opus",
+          tone: "good",
+        },
+        {
+          id: "after-model-4",
+          kind: "toast",
+          at: "00:04",
+          content: "New messages use Opus. Current transcript is preserved.",
+          tone: "good",
+        },
+      ],
+    },
+    impact: {
+      summary:
+        "작업 난이도에 따라 모델을 세션 안에서 바꾸며 비용/품질/속도 균형을 직접 조절합니다.",
+      goodFor: ["큰 설계 검토만 고성능 모델 사용", "간단한 수정은 빠른 모델 유지", "세션 context 보존"],
+      watchOut: ["비용 변화", "조직 policy와 provider 제한", "모델별 tool behavior 차이"],
+    },
+    source: {
+      quote: "Slash command로 모델 선택 TUI를 여는 사용 경험.",
+    },
+  },
+  {
+    id: "mcp-server-toggle",
+    name: "mcpServers",
+    shortName: "MCP server enablement",
+    category: "mcp",
+    introducedIn: "설정 파일",
+    description:
+      "프로젝트별 MCP 서버를 켜서 Claude Code가 GitHub, DB, 문서 도구 등 외부 context를 직접 조회하게 합니다.",
+    activation: {
+      type: "settings",
+      file: ".claude/settings.json",
+      label: "Register MCP server",
+      snippet: `{
+  "mcpServers": {
+    "github": { "command": "github-mcp-server" }
+  }
+}`,
+    },
+    beforeExperience: {
+      title: "외부 context 수동 복사",
+      statusBefore: "MCP: off",
+      statusAfter: "MCP: off",
+      frames: [
+        {
+          id: "before-mcp-1",
+          kind: "type",
+          at: "00:00",
+          content: "> check issue #42",
+        },
+        {
+          id: "before-mcp-2",
+          kind: "line",
+          at: "00:01",
+          content: "I need the issue contents. Please paste them here.",
+          tone: "warn",
+        },
+      ],
+    },
+    afterExperience: {
+      title: "MCP tool discovery",
+      statusBefore: "MCP: off",
+      statusAfter: "MCP: github connected",
+      frames: [
+        {
+          id: "after-mcp-1",
+          kind: "spinner",
+          at: "00:00",
+          content: "starting github MCP server",
+          tone: "info",
+        },
+        {
+          id: "after-mcp-2",
+          kind: "toast",
+          at: "00:02",
+          content: "✓ tools discovered: get_issue, list_prs, search_code",
+          tone: "good",
+        },
+        {
+          id: "after-mcp-3",
+          kind: "type",
+          at: "00:03",
+          content: "> check issue #42",
+        },
+        {
+          id: "after-mcp-4",
+          kind: "line",
+          at: "00:04",
+          content: "Using mcp__github__get_issue…",
+          tone: "info",
+        },
+      ],
+    },
+    impact: {
+      summary:
+        "복붙 기반 context 전달이 줄고, Claude Code가 필요한 정보를 tool로 직접 조회하는 흐름이 됩니다.",
+      goodFor: ["GitHub/Jira/Notion context 조회", "프로젝트별 tool bundle", "반복 검색 자동화"],
+      watchOut: ["인증/secret 관리", "MCP 서버 startup 실패", "권한 범위 과다 설정"],
+    },
+    source: {
+      quote: "mcpServers 설정으로 Claude Code tool surface가 확장되는 경험.",
+    },
+  },
+];

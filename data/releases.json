@@ -1,5 +1,556 @@
 [
   {
+    "version": "v2.1.141",
+    "tagName": "v2.1.141",
+    "publishedAt": "2026-05-13T23:19:16Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.141",
+    "originalBody": "## What's changed\n\n- Added `terminalSequence` field to hook JSON output so hooks can emit desktop notifications, window titles, and bells without a controlling terminal\n- Added `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` to clone GitHub plugin sources over HTTPS instead of SSH, for environments without a GitHub SSH key\n- Added `ANTHROPIC_WORKSPACE_ID` environment variable for workload identity federation — scopes the minted token to a specific workspace when the federation rule covers more than one\n- Added `claude agents --cwd <path>` to scope the session list to a directory\n- `/feedback` can now include recent sessions (last 24 hours or 7 days) for issues spanning more than the current session\n- Rewind menu: added \"Summarize up to here\" to compress earlier context while keeping recent turns intact\n- Auto mode permission dialog now explains when a `permissions.ask` rule caused the prompt\n- Restored the \"view diff in your IDE\" option on file-edit permission prompts when an IDE is connected\n- Background agents launched via `/bg` or `←←` now preserve the current permission mode instead of reverting to default\n- `claude agents`: agents that finish work but leave a background shell running now move to Completed instead of staying under Working\n- Improved spinner feedback during long thinking periods — the spinner now warms to amber after 10 seconds to signal Claude is still working\n- Improved plugin menu navigation: `→`/Tab switch tabs, `↑` moves to the tab strip, and tab headers and search box are clickable in fullscreen mode\n- Fixed background side-queries sending an unavailable Haiku model ID on Bedrock/Vertex/Foundry/gateway when no `ANTHROPIC_SMALL_FAST_MODEL` override is set — now falls back to the main-loop model\n- Fixed `claude daemon status` and `/doctor` on Windows throwing when the daemon pipe key file is locked or unreadable — now shows the underlying error instead of an opaque failure\n- Fixed `claude agents` showing the agent-type list instead of the dashboard when launched through a wrapper that adds flags\n- Fixed `claude agents` opening a crashed session firing redundant dispatches when the working directory was deleted\n- Fixed background jobs on a custom `ANTHROPIC_BASE_URL` gateway not getting auto-named — the namer now uses the main model when no Haiku model is configured\n- Fixed `/model` in one session silently changing the autocompact threshold in other concurrent sessions\n- Fixed switching permission mode while a tool-permission prompt is open not auto-dismissing the prompt when the new setting permits the tool\n- Fixed pressing Enter while a permission/dialog prompt is open also submitting text in the input box\n- Fixed hooks receiving a non-existent `transcript_path` after `EnterWorktree` switches the working directory\n- Fixed markdown tables with cell wrapping falling back to the vertical key-value layout instead of rendering as a bordered grid (regression in 2.1.136)\n- Fixed cancelled prompts being removed from Up-arrow history when auto-restored into the input box, avoiding duplicate entries\n- Fixed prompts cancelled with Ctrl+C/Esc before any response being dropped from Up-arrow history\n- Fixed Ctrl+C not interrupting a running turn while in vim INSERT/VISUAL mode\n- Fixed alternative `chat:submit` keybindings (e.g. `meta+enter`, `ctrl+enter`) not working when `enter` is rebound to `chat:newline`\n- Fixed prompt suggestions being silently disabled when an output style was configured\n- Fixed `spinnerVerbs` setting not being honored in turn-completion messages\n- Fixed AskUserQuestion popup hiding the last line of preceding chat content\n- Fixed Web Search status showing \"Did 0 searches\" when searches returned errors\n- Fixed multi-line statusline output dropping or corrupting rows when any line exceeds terminal width\n- Fixed light-ansi theme using invisible white for diff context lines on light backgrounds — now uses black\n- Fixed error overlay dumping minified bundle source that hid the original error message\n- Fixed pressing Enter after typing a feedback survey rating digit submitting it as a chat message instead of the rating\n- Fixed pressing `x` on a selected subagent in the agent panel typing into the prompt instead of stopping the agent\n- Fixed session title being derived from plugin monitor notifications before the user's first prompt\n- Fixed \"Allowed by PermissionRequest hook\" repeating once per tool call under a collapsed read/search group\n- Fixed `/tui` silently dropping running background shells and subagents — now refuses and asks to wait for them to finish\n- Fixed welcome banner showing \"API Usage Billing\" on Bedrock, Vertex, Foundry, and other third-party providers — now shows the provider name\n- Fixed `/mcp` server list not keeping the focused server visible in short terminals in fullscreen mode\n- Fixed redaction in `/feedback` bundles producing invalid JSON for quoted values like session IDs\n- Fixed desktop and third-party provider sessions incorrectly inheriting `apiKeyHelper`/`ANTHROPIC_AUTH_TOKEN` from host managed-settings\n- Fixed early analytics events being silently dropped when fired before logger initialization\n- Fixed `claude plugin install` failing for plugins whose marketplace `ref` no longer exists upstream when a `sha` is also pinned\n- Fixed plugin details pane showing 0 MCP servers for plugins that declare them via `.mcp.json`\n- Fixed plugin MCP servers with unset config variables showing a generic connection failure instead of a \"config issue\" message with a fix-it hint; malformed `.mcp.json` entries no longer drop other MCP servers\n- Fixed MCP server configs using POSIX shell parameter expansions (e.g. `${var%pattern}`) being incorrectly flagged as missing environment variables\n- Fixed MCP HTTP/SSE servers returning 403 on connect showing as \"failed\" instead of \"needs auth\"\n- Fixed remote MCP servers disconnecting unnecessarily when the optional server-events stream failed to reconnect — tool calls continue over POST\n- Fixed Remote Control MCP connectors all failing with 401 when the worker session token rotated mid-session\n- Fixed Remote Control automatically re-enrolling a trusted device when the server rejects a stale token, instead of looping through `/login`\n- Fixed a race where early OTel spans could be silently dropped in SDK/headless mode with beta tracing enabled\n- Fixed custom `voice:pushToTalk` keybindings and `\"space\": null` unbinds being silently ignored\n- Fixed Windows Alt+V image paste reporting \"no image found\" when the clipboard contains a screenshot\n- Fixed SDK \"Claude Code native binary not found\" on Linux when both glibc and musl platform packages are installed\n- Bedrock: `awsCredentialExport` now always runs when configured instead of being skipped when ambient AWS credentials resolve, fixing auth for cross-account access\n- [VSCode] Fixed in-chat mic showing no feedback when the microphone produced only silence — now shows \"No audio detected\"\n- [VSCode] Voice mode: the WSL error now suggests installing `sox libsox-fmt-pulse` for WSLg users\n- `claude agents`: launching a session no longer fails when the pre-warmed background worker is unhealthy — now falls back to a fresh launch\n- `claude agents` no longer shows empty placeholder sessions left over from backgrounding a fresh REPL, and shows onboarding text when entered via ← with no other agents\n- Empty idle background sessions left over from `←` are now automatically retired by the daemon after 5 minutes\n",
+    "summary": {
+      "headline": "hook 알림·플러그인 HTTPS·workspace 토큰 등 대규모 개선",
+      "newFeatures": [
+        {
+          "text": "hook JSON 출력에 `terminalSequence` 필드 추가 — 컨트롤링 터미널 없이도 데스크톱 알림·창 제목·벨 송출 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PLUGIN_PREFER_HTTPS` 추가 — GitHub SSH 키가 없는 환경에서 플러그인 소스를 HTTPS 로 클론",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "workload identity federation 용 `ANTHROPIC_WORKSPACE_ID` 환경변수 추가 — 페더레이션 규칙이 다수 workspace 를 커버할 때 발급 토큰을 특정 workspace 로 한정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`claude agents --cwd <path>` 로 세션 목록을 특정 디렉토리로 한정 가능",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`/feedback` 이 현재 세션을 넘는 이슈에 대해 최근 24시간 또는 7일 세션을 포함 가능",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Rewind 메뉴에 \"Summarize up to here\" 추가 — 최근 턴은 유지하면서 이전 컨텍스트를 압축",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Auto 모드 권한 다이얼로그가 `permissions.ask` 규칙으로 프롬프트가 떴는지 명시",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "IDE 연결 상태에서 파일 편집 권한 프롬프트의 IDE 내 diff 보기 옵션 복원",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`/bg` 또는 `←←` 로 시작한 백그라운드 에이전트가 default 로 되돌아가지 않고 현재 권한 모드 유지",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`claude agents`: 작업은 끝났지만 백그라운드 셸이 남은 에이전트가 Working 에 머무르지 않고 Completed 로 이동",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "긴 사고 구간에서 스피너가 10초 후 amber 색으로 데워져 작업 중임을 알림",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "플러그인 메뉴 네비게이션 개선 — `→`/Tab 탭 전환, `↑` 탭 스트립 이동, 풀스크린에서 탭 헤더·검색박스 클릭 가능",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Bedrock `awsCredentialExport` 가 ambient AWS 자격증명이 잡혀도 항상 실행되도록 변경 — 크로스 어카운트 접근 인증 수정",
+          "originalRefs": [
+            55
+          ]
+        },
+        {
+          "text": "`claude agents`: pre-warmed 백그라운드 워커가 비정상일 때 신규 launch 로 폴백",
+          "originalRefs": [
+            58
+          ]
+        },
+        {
+          "text": "`claude agents` 가 fresh REPL 백그라운드화로 남은 빈 placeholder 세션을 숨기고, `←` 진입 시 다른 에이전트가 없으면 온보딩 텍스트 표시",
+          "originalRefs": [
+            59
+          ]
+        },
+        {
+          "text": "`←` 로 남은 빈 idle 백그라운드 세션을 데몬이 5분 후 자동 정리",
+          "originalRefs": [
+            60
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`ANTHROPIC_SMALL_FAST_MODEL` 오버라이드가 없을 때 Bedrock/Vertex/Foundry/게이트웨이의 백그라운드 side-query 가 사용 불가능한 Haiku 모델 ID 를 보내던 문제 — 이제 main-loop 모델로 폴백",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Windows 에서 데몬 파이프 키 파일이 잠기거나 읽을 수 없을 때 `claude daemon status` 와 `/doctor` 가 throw 하던 문제 — 불투명 실패 대신 원인 에러 표시",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "플래그를 추가하는 래퍼로 실행하면 `claude agents` 가 대시보드 대신 agent-type 목록을 띄우던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "작업 디렉토리가 삭제된 상태에서 `claude agents` 가 크래시된 세션을 열 때 중복 dispatch 가 발화되던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "커스텀 `ANTHROPIC_BASE_URL` 게이트웨이의 백그라운드 작업이 자동 명명되지 않던 문제 — Haiku 모델 미설정 시 main 모델로 명명",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "한 세션에서 `/model` 변경 시 다른 동시 세션의 autocompact 임계값이 조용히 바뀌던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "도구 권한 프롬프트가 열린 상태에서 권한 모드 전환 시 새 설정이 도구를 허용해도 프롬프트가 자동 닫히지 않던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "권한/다이얼로그 프롬프트 열림 상태에서 Enter 가 입력박스 텍스트도 함께 제출하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "`EnterWorktree` 가 작업 디렉토리를 전환한 뒤 hook 이 존재하지 않는 `transcript_path` 를 받던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "셀 래핑된 markdown 테이블이 bordered grid 대신 세로 key-value 레이아웃으로 폴백되던 2.1.136 리그레션 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "취소된 프롬프트가 입력박스에 자동 복원될 때 Up-arrow 히스토리에서 제거돼 중복이 사라지던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "응답 전 Ctrl+C/Esc 로 취소한 프롬프트가 Up-arrow 히스토리에서 누락되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "vim INSERT/VISUAL 모드에서 실행 중 turn 을 Ctrl+C 가 중단하지 못하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`enter` 를 `chat:newline` 으로 리바인드한 경우 `meta+enter`·`ctrl+enter` 같은 대체 `chat:submit` 키바인드가 동작하지 않던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "output style 설정 시 프롬프트 추천이 조용히 비활성화되던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "`spinnerVerbs` 설정이 턴 완료 메시지에 반영되지 않던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "AskUserQuestion 팝업이 이전 채팅 마지막 줄을 가리던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "검색이 오류를 반환할 때 Web Search 상태가 \"Did 0 searches\" 로 표시되던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "터미널 폭을 초과하는 줄이 있으면 multi-line statusline 이 행을 누락·손상시키던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "light-ansi 테마에서 diff context 줄이 흰색으로 안 보이던 문제 — 이제 검정 사용",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "에러 오버레이가 minified 번들 소스를 덤프해 원본 에러 메시지를 가리던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "피드백 설문 평점 숫자 입력 후 Enter 가 채팅 메시지로 제출되던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "에이전트 패널에서 선택된 서브에이전트에 `x` 를 누르면 중단 대신 프롬프트에 입력되던 문제 수정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "사용자 첫 프롬프트 전에 플러그인 모니터 알림이 세션 제목을 결정하던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "read/search 그룹이 접힌 상태에서 \"Allowed by PermissionRequest hook\" 이 도구 호출마다 반복 표시되던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "`/tui` 가 실행 중 백그라운드 셸·서브에이전트를 조용히 드롭하던 문제 — 이제 거부하며 완료 대기 요청",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Foundry 등 서드파티 프로바이더 환영 배너에 \"API Usage Billing\" 이 뜨던 문제 — 이제 프로바이더 이름 표시",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "풀스크린 짧은 터미널에서 `/mcp` 서버 목록이 포커스된 서버를 화면에 유지하지 못하던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "`/feedback` 번들의 세션 ID 같은 quoted 값 redaction 이 invalid JSON 을 생성하던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "데스크톱·서드파티 프로바이더 세션이 호스트 managed-settings 의 `apiKeyHelper`/`ANTHROPIC_AUTH_TOKEN` 을 잘못 상속받던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "로거 초기화 전에 발화된 초기 analytics 이벤트가 조용히 드롭되던 문제 수정",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "`sha` 가 핀 고정돼 있고 마켓플레이스 `ref` 가 업스트림에서 사라진 플러그인의 `claude plugin install` 실패 수정",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "`.mcp.json` 으로 MCP 서버를 선언한 플러그인의 상세 패널이 0 MCP servers 로 표시되던 문제 수정",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "config 변수 미설정 플러그인 MCP 서버가 일반 연결 실패로 표시되던 문제 — 이제 fix-it 힌트 포함 \"config issue\" 메시지 표시, 잘못된 `.mcp.json` 항목이 다른 MCP 서버를 떨어뜨리지 않음",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "POSIX 셸 파라미터 확장(예: `${var%pattern}`)을 사용한 MCP 서버 설정이 환경변수 누락으로 잘못 표시되던 문제 수정",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "MCP HTTP/SSE 서버가 connect 시 403 을 반환하면 \"failed\" 로 표시되던 문제 — 이제 \"needs auth\" 표시",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "선택적 server-events 스트림 재연결 실패 시 원격 MCP 서버가 불필요하게 끊기던 문제 수정 — 도구 호출은 POST 로 계속됨",
+          "originalRefs": [
+            48
+          ]
+        },
+        {
+          "text": "워커 세션 토큰이 도중에 회전될 때 Remote Control MCP 커넥터가 모두 401 로 실패하던 문제 수정",
+          "originalRefs": [
+            49
+          ]
+        },
+        {
+          "text": "서버가 stale 토큰을 거부하면 Remote Control 이 신뢰 기기를 자동 재등록해 `/login` 루프에 빠지던 문제 수정",
+          "originalRefs": [
+            50
+          ]
+        },
+        {
+          "text": "베타 트레이싱 활성화된 SDK/headless 모드에서 초기 OTel span 이 race 로 드롭되던 문제 수정",
+          "originalRefs": [
+            51
+          ]
+        },
+        {
+          "text": "커스텀 `voice:pushToTalk` 키바인드와 `\"space\": null` unbind 가 조용히 무시되던 문제 수정",
+          "originalRefs": [
+            52
+          ]
+        },
+        {
+          "text": "클립보드에 스크린샷이 있을 때 Windows Alt+V 이미지 붙여넣기가 \"no image found\" 로 보고되던 문제 수정",
+          "originalRefs": [
+            53
+          ]
+        },
+        {
+          "text": "Linux 에서 glibc·musl 플랫폼 패키지가 둘 다 설치된 경우 SDK 가 네이티브 바이너리를 찾지 못해 실패하던 문제 수정",
+          "originalRefs": [
+            54
+          ]
+        },
+        {
+          "text": "[VSCode] 마이크가 무음만 송출할 때 in-chat mic 피드백이 없던 문제 — 이제 \"No audio detected\" 표시",
+          "originalRefs": [
+            56
+          ]
+        },
+        {
+          "text": "[VSCode] 음성 모드 WSL 오류가 WSLg 사용자에게 `sox libsox-fmt-pulse` 설치를 안내",
+          "originalRefs": [
+            57
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "GitHub SSH 키가 없는 빌드 환경은 `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` 로 플러그인 클론 실패 회피 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "workload identity federation 사용 조직은 `ANTHROPIC_WORKSPACE_ID` 를 명시해 토큰 권한 범위를 정확히 묶을 것.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "hook 구현자는 `terminalSequence` 필드로 데스크톱 알림·창 제목을 송출할 수 있어 백그라운드 에이전트 알림 UX 강화 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Bedrock 크로스 어카운트 환경은 `awsCredentialExport` 동작 변경 영향 — ambient 자격증명이 잡혀도 export 가 실행되므로 인증 흐름 재검증 권장.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "Bedrock/Vertex/Foundry 게이트웨이 사용자는 사이드 쿼리·잡 명명이 main 모델로 자동 폴백되므로 토큰 사용량 모니터링 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            },
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-14T00:09:39Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.140",
+    "tagName": "v2.1.140",
+    "publishedAt": "2026-05-12T21:09:45Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.140",
+    "originalBody": "## What's changed\n\n- Improved Agent tool `subagent_type` matching to accept case- and separator-insensitive values (e.g. `\"Code Reviewer\"` resolves to `code-reviewer`)\n- Updated agent color palette\n- Fixed `/goal` silently hanging when `disableAllHooks` or `allowManagedHooksOnly` is set — now shows a clear message instead of an indicator that never resolves\n- Fixed a regression in settings hot-reload where symlinked settings files caused misattributed change events and spurious `ConfigChange` hooks\n- Fixed `claude --bg` failing with \"connection dropped mid-request\" when the background service was about to idle-exit\n- Fixed background service startup failing on machines with enterprise endpoint security by allowing more time\n- Fixed remote managed settings not retrying on 401 — now retries once with a force-refreshed token\n- Fixed managed `extraKnownMarketplaces` auto-update policy not being persisted to `known_marketplaces.json`\n- Fixed `/loop` scheduling redundant wakeups to poll for background tasks that already notify on completion\n- Fixed a recurring event-loop stall on Windows when a missing executable (e.g. `gh`) triggered synchronous `where.exe` re-spawns on every check\n- Fixed `Read` tool calls failing validation when `offset` is passed as a whitespace-padded or `+`-prefixed string\n- Fixed native terminal cursor not staying at the input caret when the terminal loses focus\n- Plugins now warn when a default component folder (e.g. `commands/`) is silently ignored because `plugin.json` sets the matching key. Shown in `/doctor`, `claude plugin list`, and `/plugin`.\n",
+    "summary": {
+      "headline": "subagent_type 유연 매칭과 핫리로드·백그라운드 안정화",
+      "newFeatures": [
+        {
+          "text": "Agent tool `subagent_type` 가 대소문자·구분자 무시 매칭을 지원 — `\"Code Reviewer\"` 입력 시 `code-reviewer` 로 해석됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`plugin.json` 키 설정으로 `commands/` 같은 기본 컴포넌트 폴더가 무시될 때 `/doctor`, `claude plugin list`, `/plugin` 에서 경고 표시",
+          "originalRefs": [
+            12
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "에이전트 색상 팔레트 갱신",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`disableAllHooks` 또는 `allowManagedHooksOnly` 설정 시 `/goal` 이 응답 없이 무한 대기하던 문제를 명확한 메시지 출력으로 변경",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "심볼릭 링크 설정 파일 핫리로드에서 변경 이벤트가 잘못 귀속돼 불필요한 `ConfigChange` 훅이 발화되던 리그레션 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "백그라운드 서비스가 idle-exit 직전일 때 `claude --bg` 가 \"connection dropped mid-request\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "엔터프라이즈 엔드포인트 보안이 적용된 머신에서 백그라운드 서비스 시작이 시간 부족으로 실패하던 문제를 허용 시간 확대로 해결",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "원격 managed settings 가 401 응답 시 재시도하지 않던 문제 — 이제 토큰을 강제 갱신해 1회 재시도",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "managed `extraKnownMarketplaces` 자동 업데이트 정책이 `known_marketplaces.json` 에 영속되지 않던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`/loop` 이 완료 알림을 보내는 백그라운드 작업을 폴링하려 중복 웨이크업을 예약하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Windows 에서 `gh` 등 누락 실행 파일이 매 체크마다 동기 `where.exe` 재실행을 유발해 이벤트 루프가 반복 정체되던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`Read` 도구의 `offset` 값이 공백 패딩 또는 `+` 접두사 문자열일 때 검증 실패하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "터미널 포커스가 해제되면 네이티브 터미널 커서가 입력 캐럿 위치에 머무르지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`subagent_type` 자동화 스크립트에서 표시명을 그대로 넘겨도 동작 — 별도 슬러그 변환 불필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "managed settings 운영 환경은 401 1회 자동 재시도가 들어가므로 토큰 갱신·만료 정책 점검 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-14T00:09:39Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.139",
     "tagName": "v2.1.139",
     "publishedAt": "2026-05-11T18:43:42Z",

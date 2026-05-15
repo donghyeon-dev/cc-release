@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FeatureLabPlayground } from "@/components/feature-lab/FeatureLabPlayground";
+import { withBasePath } from "@/lib/assets";
 
 export const metadata: Metadata = {
   title: "Claude Code Feature Lab · cc-release",
@@ -12,6 +13,12 @@ export default function FeatureLabPage() {
     <main className="min-h-screen bg-[#f7f7f4] text-zinc-950 dark:bg-[#090909] dark:text-zinc-50">
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <header className="mb-8 overflow-hidden rounded-[2rem] border border-zinc-200 bg-white/85 p-6 shadow-sm shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-none sm:p-8">
+          <a
+            href={withBasePath("/")}
+            className="mb-5 inline-flex rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-bold text-zinc-600 transition hover:border-indigo-300 hover:text-indigo-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-indigo-700 dark:hover:text-indigo-200"
+          >
+            ← 릴리즈 요약 메인으로 돌아가기
+          </a>
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <p className="text-xs font-black uppercase tracking-[0.24em] text-indigo-600 dark:text-indigo-300">

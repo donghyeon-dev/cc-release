@@ -35,7 +35,7 @@ export default async function Home() {
                     </p>
                   )}
                   <a
-                    href="/feature-lab"
+                    href={withBasePath("/feature-lab")}
                     className="inline-flex rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-100 dark:border-indigo-900/70 dark:bg-indigo-950/40 dark:text-indigo-200 dark:hover:border-indigo-700"
                   >
                     Claude Code Feature Lab 열기

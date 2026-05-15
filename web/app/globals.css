@@ -45,28 +45,6 @@ body {
     sans-serif;
 }
 
-@keyframes feature-lab-stream-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-    filter: blur(1px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-@keyframes feature-lab-type {
-  from {
-    width: 0;
-  }
-  to {
-    width: calc(var(--type-chars, 24) * 1ch);
-  }
-}
-
 @keyframes feature-lab-spin {
   to {
     transform: rotate(360deg);
@@ -84,38 +62,12 @@ body {
   }
 }
 
-.feature-lab-stream-entry {
-  opacity: 0;
-  animation: feature-lab-stream-in 0.32s ease-out forwards;
-  animation-delay: var(--frame-delay, 0ms);
-}
-
-.feature-lab-typewriter {
-  width: 0;
-  border-right: 1px solid rgba(103, 232, 249, 0.9);
-  animation:
-    feature-lab-type 0.9s steps(var(--type-chars, 24), end) forwards,
-    feature-lab-cursor-blink 1s steps(1, end) infinite;
-  animation-delay: var(--frame-delay, 0ms), var(--frame-delay, 0ms);
-}
-
 .feature-lab-spinner {
   animation: feature-lab-spin 1.1s linear infinite;
 }
 
 .feature-lab-cursor {
   animation: feature-lab-cursor-blink 1s steps(1, end) infinite;
-}
-
-.feature-lab-scanline {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.035),
-    transparent 1px,
-    transparent 6px
-  );
-  background-size: 100% 7px;
-  opacity: 0.45;
 }
 
 html,

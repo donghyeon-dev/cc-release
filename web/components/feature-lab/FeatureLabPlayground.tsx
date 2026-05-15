@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CSSProperties } from "react";
 import {
   claudeCodeFeatures,
   featureCategoryLabels,
@@ -169,51 +168,48 @@ function sceneToTerminalSteps(scene: ClaudeCodeFeature["afterExperience"]): Term
   );
 }
 
-function TerminalStreamEntry({ step }: { step: TerminalStep }) {
+function TerminalStreamEntry({
+  step,
+  isActiveCommand,
+  typedChars,
+}: {
+  step: TerminalStep;
+  isActiveCommand: boolean;
+  typedChars: number;
+}) {
   const { frame, content, lineIndex } = step;
   const tone = frameTone[frame.tone ?? "neutral"];
-  const style = {
-    "--frame-delay": "0ms",
-    "--type-chars": Math.max(content.length, 1),
-  } as CSSProperties;
   const iconClass = frame.kind === "spinner" ? "feature-lab-spinner inline-block" : "inline-block";
-  const timestamp = lineIndex === 0 ? frame.at : "";
   const icon = lineIndex === 0 ? frameIcon[frame.kind] : " ";
 
   if (frame.kind === "type") {
+    const command = content.replace(/^>\s?/, "");
+    const visibleCommand = isActiveCommand ? command.slice(0, typedChars) : command;
+
     return (
-      <div className="feature-lab-stream-entry flex gap-3" style={style}>
-        <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">
-          {timestamp}
-        </span>
-        <div className="min-w-0 flex-1">
-          <span className="mr-2 select-none text-cyan-300">{frameIcon[frame.kind]}</span>
-          <span className="feature-lab-typewriter inline-block max-w-full overflow-hidden whitespace-pre align-bottom text-cyan-100">
-            {content.replace(/^>\s?/, "")}
-          </span>
-        </div>
+      <div className="flex min-h-6 items-baseline gap-2 text-cyan-100">
+        <span className="select-none text-cyan-400">claude</span>
+        <span className="select-none text-zinc-600">$</span>
+        <span className="whitespace-pre-wrap break-words">{visibleCommand}</span>
+        {isActiveCommand && <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-cyan-300" />}
       </div>
     );
   }
 
   return (
-    <div className="feature-lab-stream-entry flex gap-3" style={style}>
-      <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">
-        {timestamp}
+    <div className={`flex min-h-6 items-start gap-2 ${tone}`}>
+      <span className="w-[6.5ch] shrink-0 select-none text-zinc-700">
+        {lineIndex === 0 ? frame.at : ""}
       </span>
+      <span className={`${iconClass} w-4 shrink-0 select-none text-zinc-500`}>{icon}</span>
       <div className="min-w-0 flex-1">
-        <div className={`flex items-start gap-2 ${tone}`}>
-          <span className={iconClass}>{icon}</span>
-          <div className="min-w-0 flex-1">
-            {frame.title && lineIndex === 0 && (
-              <div className="mb-1 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
-                {frame.title}
-              </div>
-            )}
-            <div className="whitespace-pre-wrap break-words">
-              {content}
-            </div>
+        {frame.title && lineIndex === 0 && (
+          <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-600">
+            [{frame.title}]
           </div>
+        )}
+        <div className="whitespace-pre-wrap break-words">
+          {content}
         </div>
       </div>
     </div>
@@ -230,33 +226,57 @@ function AnimatedTuiScene({
   variant: "before" | "after";
 }) {
   const steps = useMemo(() => sceneToTerminalSteps(scene), [scene]);
-  const [visibleCount, setVisibleCount] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [activeCommandIndex, setActiveCommandIndex] = useState<number | null>(null);
+  const [typedChars, setTypedChars] = useState(0);
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
     let cancelled = false;
-
-    const runReplay = () => {
-      if (cancelled) return;
-      setVisibleCount(1);
-
-      steps.slice(1).forEach((_, index) => {
-        const previous = steps[index];
-        const previousIsTypedCommand = previous?.frame.kind === "type";
-        const delay = 520 + index * 760 + (previousIsTypedCommand ? 560 : 0);
-        timers.push(
-          setTimeout(() => {
-            if (!cancelled) setVisibleCount(index + 2);
-          }, delay),
-        );
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        const timer = setTimeout(resolve, ms);
+        timers.push(timer);
       });
 
-      timers.push(
-        setTimeout(
-          runReplay,
-          Math.max(steps.length * 760 + 2600, 3600),
-        ),
-      );
+    const typeCommand = async (stepIndex: number, command: string) => {
+      setActiveCommandIndex(stepIndex);
+      setTypedChars(0);
+
+      for (let charIndex = 1; charIndex <= command.length; charIndex += 1) {
+        if (cancelled) return;
+        await wait(charIndex === 1 ? 120 : 26 + (charIndex % 5 === 0 ? 32 : 0));
+        if (!cancelled) setTypedChars(charIndex);
+      }
+
+      if (!cancelled) {
+        setActiveCommandIndex(null);
+        setTypedChars(command.length);
+      }
+    };
+
+    const runReplay = async () => {
+      while (!cancelled) {
+        setVisibleCount(0);
+        setActiveCommandIndex(null);
+        setTypedChars(0);
+        await wait(320);
+
+        for (let index = 0; index < steps.length; index += 1) {
+          if (cancelled) return;
+          const step = steps[index];
+          setVisibleCount(index + 1);
+
+          if (step.frame.kind === "type") {
+            await typeCommand(index, step.content.replace(/^>\s?/, ""));
+            await wait(240);
+          } else {
+            await wait(step.lineIndex === 0 ? 620 : 260);
+          }
+        }
+
+        await wait(1800);
+      }
     };
 
     runReplay();
@@ -271,7 +291,7 @@ function AnimatedTuiScene({
 
   return (
     <section className="overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-[#05070d] text-zinc-100 shadow-2xl shadow-cyan-950/20">
-      <div className="border-b border-zinc-800 bg-zinc-950 px-4 py-3">
+      <div className="border-b border-zinc-800 bg-[#080b12] px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.22em] text-cyan-300">
@@ -301,26 +321,27 @@ function AnimatedTuiScene({
       </div>
 
       <div className="relative min-h-[24rem] p-4">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.12),transparent_20rem)]" />
-        <div className="relative min-h-[21rem] rounded-2xl border border-zinc-800/80 bg-black/45 p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
-          <div className="feature-lab-scanline pointer-events-none absolute inset-0 rounded-2xl" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.08),transparent_20rem)]" />
+        <div className="relative min-h-[21rem] rounded-2xl border border-zinc-800/80 bg-[#020409] p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
           <div className="relative mb-3 flex items-center gap-2 border-b border-zinc-900 pb-3 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            Live CLI replay · lines append in real time
+            Live terminal session
           </div>
-          <div className="relative space-y-1.5">
-            {visibleSteps.map((step) => (
-              <TerminalStreamEntry key={`${scene.title}-${step.id}`} step={step} />
+          <div className="relative space-y-1">
+            {visibleSteps.map((step, index) => (
+              <TerminalStreamEntry
+                key={`${scene.title}-${step.id}`}
+                step={step}
+                isActiveCommand={activeCommandIndex === index}
+                typedChars={activeCommandIndex === index ? typedChars : step.content.length}
+              />
             ))}
-            <div
-              className="feature-lab-stream-entry flex gap-3"
-              style={{ "--frame-delay": "0ms" } as CSSProperties}
-            >
-              <span className="w-10 shrink-0" />
-              <div className="flex items-center gap-2 text-cyan-100">
-                <span className="select-none text-cyan-300">›</span>
-                <span className="feature-lab-cursor h-5 w-2 rounded-sm bg-cyan-300" />
-              </div>
+            <div className="flex min-h-6 items-baseline gap-2 text-cyan-100">
+              <span className="select-none text-cyan-400">claude</span>
+              <span className="select-none text-zinc-600">$</span>
+              {activeCommandIndex === null && (
+                <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-cyan-300" />
+              )}
             </div>
           </div>
         </div>

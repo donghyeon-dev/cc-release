@@ -40,10 +40,10 @@ const frameIcon: Record<TuiFrameKind, string> = {
 };
 
 const frameTone: Record<NonNullable<TuiFrame["tone"]>, string> = {
-  neutral: "border-zinc-800 bg-zinc-950/60 text-zinc-200",
-  info: "border-cyan-900/80 bg-cyan-950/20 text-cyan-100",
-  good: "border-emerald-900/80 bg-emerald-950/20 text-emerald-100",
-  warn: "border-amber-900/80 bg-amber-950/30 text-amber-100",
+  neutral: "text-zinc-200",
+  info: "text-cyan-200",
+  good: "text-emerald-200",
+  warn: "text-amber-200",
 };
 
 function CategoryPill({ category }: { category: ClaudeCodeFeature["category"] }) {
@@ -151,25 +151,51 @@ function ActivationEditor({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
-function FrameCard({ frame, index }: { frame: TuiFrame; index: number }) {
+function TerminalStreamEntry({ frame, index }: { frame: TuiFrame; index: number }) {
   const tone = frameTone[frame.tone ?? "neutral"];
-  const style = { "--frame-delay": `${index * 180}ms` } as CSSProperties;
+  const lines = frame.content.split("\n");
+  const style = {
+    "--frame-delay": `${index * 420}ms`,
+    "--type-chars": Math.max(frame.content.length, 1),
+  } as CSSProperties;
+  const iconClass = frame.kind === "spinner" ? "feature-lab-spinner inline-block" : "inline-block";
+
+  if (frame.kind === "type") {
+    return (
+      <div className="feature-lab-stream-entry flex gap-3" style={style}>
+        <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">{frame.at}</span>
+        <div className="min-w-0 flex-1">
+          <span className="mr-2 select-none text-cyan-300">{frameIcon[frame.kind]}</span>
+          <span className="feature-lab-typewriter inline-block max-w-full overflow-hidden whitespace-pre align-bottom text-cyan-100">
+            {frame.content.replace(/^>\s?/, "")}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={`feature-lab-frame rounded-2xl border px-3 py-2 font-mono text-[12px] leading-5 shadow-sm ${tone}`}
-      style={style}
-    >
-      <div className="mb-1 flex items-center justify-between gap-3 text-[10px] uppercase tracking-widest text-zinc-400">
-        <span className="flex items-center gap-2">
-          <span className={frame.kind === "spinner" ? "feature-lab-spinner inline-block" : "inline-block"}>
-            {frameIcon[frame.kind]}
-          </span>
-          {frame.title ?? frame.kind}
-        </span>
-        <span>{frame.at}</span>
+    <div className="feature-lab-stream-entry flex gap-3" style={style}>
+      <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">{frame.at}</span>
+      <div className="min-w-0 flex-1">
+        <div className={`flex items-start gap-2 ${tone}`}>
+          <span className={iconClass}>{frameIcon[frame.kind]}</span>
+          <div className="min-w-0 flex-1">
+            {frame.title && (
+              <div className="mb-1 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
+                {frame.title}
+              </div>
+            )}
+            <div className="space-y-0.5">
+              {lines.map((line, lineIndex) => (
+                <div key={`${frame.id}-${lineIndex}`} className="whitespace-pre-wrap break-words">
+                  {line}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      <pre className="whitespace-pre-wrap break-words">{frame.content}</pre>
     </div>
   );
 }
@@ -216,11 +242,23 @@ function AnimatedTuiScene({
 
       <div className="relative min-h-[24rem] p-4">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.12),transparent_20rem)]" />
-        <div className="relative space-y-2.5">
-          {scene.frames.map((frame, index) => (
-            <FrameCard key={frame.id} frame={frame} index={index} />
-          ))}
-          <div className="feature-lab-cursor mt-3 h-5 w-2 rounded-sm bg-cyan-300" />
+        <div className="relative min-h-[21rem] rounded-2xl border border-zinc-800/80 bg-black/45 p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
+          <div className="feature-lab-scanline pointer-events-none absolute inset-0 rounded-2xl" />
+          <div className="relative space-y-1.5">
+            {scene.frames.map((frame, index) => (
+              <TerminalStreamEntry key={frame.id} frame={frame} index={index} />
+            ))}
+            <div
+              className="feature-lab-stream-entry flex gap-3"
+              style={{ "--frame-delay": `${scene.frames.length * 420}ms` } as CSSProperties}
+            >
+              <span className="w-10 shrink-0" />
+              <div className="flex items-center gap-2 text-cyan-100">
+                <span className="select-none text-cyan-300">›</span>
+                <span className="feature-lab-cursor h-5 w-2 rounded-sm bg-cyan-300" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

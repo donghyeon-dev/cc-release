@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FeatureLabPlayground } from "@/components/feature-lab/FeatureLabPlayground";
 import { withBasePath } from "@/lib/assets";
+import { getFeatureLabFeatures } from "@/lib/feature-lab-data";
 
 export const metadata: Metadata = {
   title: "Claude Code Feature Lab · cc-release",
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     "Claude Code의 env, settings, slash command를 켜면 TUI 경험이 어떻게 달라지는지 체험하는 playground.",
 };
 
-export default function FeatureLabPage() {
+export default async function FeatureLabPage() {
+  const features = await getFeatureLabFeatures();
+
   return (
     <main className="min-h-screen bg-[#f7f7f4] text-zinc-950 dark:bg-[#090909] dark:text-zinc-50">
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -43,7 +46,7 @@ export default function FeatureLabPage() {
           </div>
         </header>
 
-        <FeatureLabPlayground />
+        <FeatureLabPlayground features={features} />
       </div>
     </main>
   );

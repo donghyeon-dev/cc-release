@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  claudeCodeFeatures,
   featureCategoryLabels,
   type ClaudeCodeFeature,
   type TuiFrame,
@@ -56,15 +55,17 @@ function CategoryPill({ category }: { category: ClaudeCodeFeature["category"] })
 }
 
 function FeatureCatalog({
+  features,
   selectedFeature,
   onSelect,
 }: {
+  features: ClaudeCodeFeature[];
   selectedFeature: ClaudeCodeFeature;
   onSelect: (feature: ClaudeCodeFeature) => void;
 }) {
   const categories = useMemo(
-    () => Array.from(new Set(claudeCodeFeatures.map((feature) => feature.category))),
-    [],
+    () => Array.from(new Set(features.map((feature) => feature.category))),
+    [features],
   );
 
   return (
@@ -88,7 +89,7 @@ function FeatureCatalog({
       </div>
 
       <div className="mt-5 space-y-2">
-        {claudeCodeFeatures.map((feature) => {
+        {features.map((feature) => {
           const selected = feature.id === selectedFeature.id;
           return (
             <button
@@ -388,12 +389,18 @@ function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
-export function FeatureLabPlayground() {
-  const [selectedFeature, setSelectedFeature] = useState(claudeCodeFeatures[0]);
+export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature[] }) {
+  const [selectedFeature, setSelectedFeature] = useState(features[0]);
+
+  useEffect(() => {
+    if (!features.some((feature) => feature.id === selectedFeature.id)) {
+      setSelectedFeature(features[0]);
+    }
+  }, [features, selectedFeature.id]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
-      <FeatureCatalog selectedFeature={selectedFeature} onSelect={setSelectedFeature} />
+      <FeatureCatalog features={features} selectedFeature={selectedFeature} onSelect={setSelectedFeature} />
 
       <div className="space-y-6">
         <section className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white/90 p-6 shadow-xl shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-black/25 sm:p-8">

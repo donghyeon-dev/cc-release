@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prebuild": "node ../scripts/validate-feature-lab.mjs",
+    "validate:feature-lab": "node ../scripts/validate-feature-lab.mjs"
   },
   "dependencies": {
     "next": "16.2.4",

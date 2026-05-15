@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import {
   claudeCodeFeatures,
@@ -151,23 +151,45 @@ function ActivationEditor({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
-function TerminalStreamEntry({ frame, index }: { frame: TuiFrame; index: number }) {
+interface TerminalStep {
+  id: string;
+  frame: TuiFrame;
+  content: string;
+  lineIndex: number;
+}
+
+function sceneToTerminalSteps(scene: ClaudeCodeFeature["afterExperience"]): TerminalStep[] {
+  return scene.frames.flatMap((frame) =>
+    frame.content.split("\n").map((content, lineIndex) => ({
+      id: `${frame.id}-${lineIndex}`,
+      frame,
+      content,
+      lineIndex,
+    })),
+  );
+}
+
+function TerminalStreamEntry({ step }: { step: TerminalStep }) {
+  const { frame, content, lineIndex } = step;
   const tone = frameTone[frame.tone ?? "neutral"];
-  const lines = frame.content.split("\n");
   const style = {
-    "--frame-delay": `${index * 420}ms`,
-    "--type-chars": Math.max(frame.content.length, 1),
+    "--frame-delay": "0ms",
+    "--type-chars": Math.max(content.length, 1),
   } as CSSProperties;
   const iconClass = frame.kind === "spinner" ? "feature-lab-spinner inline-block" : "inline-block";
+  const timestamp = lineIndex === 0 ? frame.at : "";
+  const icon = lineIndex === 0 ? frameIcon[frame.kind] : " ";
 
   if (frame.kind === "type") {
     return (
       <div className="feature-lab-stream-entry flex gap-3" style={style}>
-        <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">{frame.at}</span>
+        <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">
+          {timestamp}
+        </span>
         <div className="min-w-0 flex-1">
           <span className="mr-2 select-none text-cyan-300">{frameIcon[frame.kind]}</span>
           <span className="feature-lab-typewriter inline-block max-w-full overflow-hidden whitespace-pre align-bottom text-cyan-100">
-            {frame.content.replace(/^>\s?/, "")}
+            {content.replace(/^>\s?/, "")}
           </span>
         </div>
       </div>
@@ -176,22 +198,20 @@ function TerminalStreamEntry({ frame, index }: { frame: TuiFrame; index: number 
 
   return (
     <div className="feature-lab-stream-entry flex gap-3" style={style}>
-      <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">{frame.at}</span>
+      <span className="w-10 shrink-0 select-none text-right text-[10px] text-zinc-600">
+        {timestamp}
+      </span>
       <div className="min-w-0 flex-1">
         <div className={`flex items-start gap-2 ${tone}`}>
-          <span className={iconClass}>{frameIcon[frame.kind]}</span>
+          <span className={iconClass}>{icon}</span>
           <div className="min-w-0 flex-1">
-            {frame.title && (
+            {frame.title && lineIndex === 0 && (
               <div className="mb-1 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
                 {frame.title}
               </div>
             )}
-            <div className="space-y-0.5">
-              {lines.map((line, lineIndex) => (
-                <div key={`${frame.id}-${lineIndex}`} className="whitespace-pre-wrap break-words">
-                  {line}
-                </div>
-              ))}
+            <div className="whitespace-pre-wrap break-words">
+              {content}
             </div>
           </div>
         </div>
@@ -209,6 +229,46 @@ function AnimatedTuiScene({
   scene: ClaudeCodeFeature["afterExperience"];
   variant: "before" | "after";
 }) {
+  const steps = useMemo(() => sceneToTerminalSteps(scene), [scene]);
+  const [visibleCount, setVisibleCount] = useState(1);
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    let cancelled = false;
+
+    const runReplay = () => {
+      if (cancelled) return;
+      setVisibleCount(1);
+
+      steps.slice(1).forEach((_, index) => {
+        const previous = steps[index];
+        const previousIsTypedCommand = previous?.frame.kind === "type";
+        const delay = 520 + index * 760 + (previousIsTypedCommand ? 560 : 0);
+        timers.push(
+          setTimeout(() => {
+            if (!cancelled) setVisibleCount(index + 2);
+          }, delay),
+        );
+      });
+
+      timers.push(
+        setTimeout(
+          runReplay,
+          Math.max(steps.length * 760 + 2600, 3600),
+        ),
+      );
+    };
+
+    runReplay();
+
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, [steps]);
+
+  const visibleSteps = steps.slice(0, visibleCount);
+
   return (
     <section className="overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-[#05070d] text-zinc-100 shadow-2xl shadow-cyan-950/20">
       <div className="border-b border-zinc-800 bg-zinc-950 px-4 py-3">
@@ -244,13 +304,17 @@ function AnimatedTuiScene({
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.12),transparent_20rem)]" />
         <div className="relative min-h-[21rem] rounded-2xl border border-zinc-800/80 bg-black/45 p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
           <div className="feature-lab-scanline pointer-events-none absolute inset-0 rounded-2xl" />
+          <div className="relative mb-3 flex items-center gap-2 border-b border-zinc-900 pb-3 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            Live CLI replay · lines append in real time
+          </div>
           <div className="relative space-y-1.5">
-            {scene.frames.map((frame, index) => (
-              <TerminalStreamEntry key={frame.id} frame={frame} index={index} />
+            {visibleSteps.map((step) => (
+              <TerminalStreamEntry key={`${scene.title}-${step.id}`} step={step} />
             ))}
             <div
               className="feature-lab-stream-entry flex gap-3"
-              style={{ "--frame-delay": `${scene.frames.length * 420}ms` } as CSSProperties}
+              style={{ "--frame-delay": "0ms" } as CSSProperties}
             >
               <span className="w-10 shrink-0" />
               <div className="flex items-center gap-2 text-cyan-100">

@@ -198,9 +198,6 @@ function TerminalStreamEntry({
 
   return (
     <div className={`flex min-h-6 items-start gap-2 ${tone}`}>
-      <span className="w-[6.5ch] shrink-0 select-none text-zinc-700">
-        {lineIndex === 0 ? frame.at : ""}
-      </span>
       <span className={`${iconClass} w-4 shrink-0 select-none text-zinc-500`}>{icon}</span>
       <div className="min-w-0 flex-1">
         {frame.title && lineIndex === 0 && (

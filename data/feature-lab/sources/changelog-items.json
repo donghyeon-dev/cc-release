@@ -1,0 +1,46 @@
+[
+  {
+    "id": "shell-override",
+    "name": "CLAUDE_CODE_SHELL",
+    "category": "env",
+    "introducedIn": "환경 설정",
+    "sourceUrl": null,
+    "quote": "환경 변수 기반으로 Claude Code shell behavior를 제어하는 설정 예시.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-15",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "permission-allowlist",
+    "name": "permissions.allow",
+    "category": "permission",
+    "introducedIn": "설정 파일",
+    "sourceUrl": null,
+    "quote": "settings.permissions.allow로 tool permission behavior를 바꾸는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-15",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "model-picker",
+    "name": "/model",
+    "category": "model",
+    "introducedIn": "Slash command",
+    "sourceUrl": null,
+    "quote": "Slash command로 모델 선택 TUI를 여는 사용 경험.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-15",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "mcp-server-toggle",
+    "name": "mcpServers",
+    "category": "mcp",
+    "introducedIn": "설정 파일",
+    "sourceUrl": null,
+    "quote": "mcpServers 설정으로 Claude Code tool surface가 확장되는 경험.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-15",
+    "curationStatus": "curated"
+  }
+]

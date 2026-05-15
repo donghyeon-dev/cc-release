@@ -35,7 +35,7 @@ export default async function Home() {
                     </p>
                   )}
                   <a
-                    href={withBasePath("/feature-lab")}
+                    href={withBasePath("/feature-lab/")}
                     className="inline-flex rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-100 dark:border-indigo-900/70 dark:bg-indigo-950/40 dark:text-indigo-200 dark:hover:border-indigo-700"
                   >
                     Claude Code Feature Lab 열기
@@ -49,6 +49,29 @@ export default async function Home() {
             </div>
           </div>
         </header>
+
+        <section className="mb-7 overflow-hidden rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-sky-50 p-5 shadow-sm shadow-indigo-100/60 dark:border-indigo-900/70 dark:from-indigo-950/35 dark:via-zinc-950 dark:to-sky-950/25 dark:shadow-none sm:p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+                Interactive playground
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-3xl">
+                릴리즈 요약에서 바로 기능 체험으로 이어집니다
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300 sm:text-base">
+                env, settings, slash command 항목이 Claude Code TUI 안에서 어떻게 반영되는지 하나의 terminal stream으로 확인하세요.
+                요약을 읽다가 궁금한 기능은 이 실험실에서 바로 눌러보는 흐름입니다.
+              </p>
+            </div>
+            <a
+              href={withBasePath("/feature-lab/")}
+              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-zinc-950 px-5 py-3 text-sm font-black text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700 dark:bg-white dark:text-zinc-950 dark:shadow-none dark:hover:bg-indigo-100"
+            >
+              Feature Lab에서 TUI 미리보기 →
+            </a>
+          </div>
+        </section>
 
         {releases.length === 0 ? (
           <div className="rounded-lg border border-zinc-200 bg-white p-8 text-center text-zinc-500 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">

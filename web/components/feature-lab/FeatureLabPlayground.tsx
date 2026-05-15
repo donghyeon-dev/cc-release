@@ -1,9 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { CSSProperties } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  claudeCodeFeatures,
   featureCategoryLabels,
   type ClaudeCodeFeature,
   type TuiFrame,
@@ -40,10 +38,10 @@ const frameIcon: Record<TuiFrameKind, string> = {
 };
 
 const frameTone: Record<NonNullable<TuiFrame["tone"]>, string> = {
-  neutral: "border-zinc-800 bg-zinc-950/60 text-zinc-200",
-  info: "border-cyan-900/80 bg-cyan-950/20 text-cyan-100",
-  good: "border-emerald-900/80 bg-emerald-950/20 text-emerald-100",
-  warn: "border-amber-900/80 bg-amber-950/30 text-amber-100",
+  neutral: "text-zinc-200",
+  info: "text-cyan-200",
+  good: "text-emerald-200",
+  warn: "text-amber-200",
 };
 
 function CategoryPill({ category }: { category: ClaudeCodeFeature["category"] }) {
@@ -57,15 +55,17 @@ function CategoryPill({ category }: { category: ClaudeCodeFeature["category"] })
 }
 
 function FeatureCatalog({
+  features,
   selectedFeature,
   onSelect,
 }: {
+  features: ClaudeCodeFeature[];
   selectedFeature: ClaudeCodeFeature;
   onSelect: (feature: ClaudeCodeFeature) => void;
 }) {
   const categories = useMemo(
-    () => Array.from(new Set(claudeCodeFeatures.map((feature) => feature.category))),
-    [],
+    () => Array.from(new Set(features.map((feature) => feature.category))),
+    [features],
   );
 
   return (
@@ -89,7 +89,7 @@ function FeatureCatalog({
       </div>
 
       <div className="mt-5 space-y-2">
-        {claudeCodeFeatures.map((feature) => {
+        {features.map((feature) => {
           const selected = feature.id === selectedFeature.id;
           return (
             <button
@@ -151,25 +151,65 @@ function ActivationEditor({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
-function FrameCard({ frame, index }: { frame: TuiFrame; index: number }) {
+interface TerminalStep {
+  id: string;
+  frame: TuiFrame;
+  content: string;
+  lineIndex: number;
+}
+
+function sceneToTerminalSteps(scene: ClaudeCodeFeature["afterExperience"]): TerminalStep[] {
+  return scene.frames.flatMap((frame) =>
+    frame.content.split("\n").map((content, lineIndex) => ({
+      id: `${frame.id}-${lineIndex}`,
+      frame,
+      content,
+      lineIndex,
+    })),
+  );
+}
+
+function TerminalStreamEntry({
+  step,
+  isActiveCommand,
+  typedChars,
+}: {
+  step: TerminalStep;
+  isActiveCommand: boolean;
+  typedChars: number;
+}) {
+  const { frame, content, lineIndex } = step;
   const tone = frameTone[frame.tone ?? "neutral"];
-  const style = { "--frame-delay": `${index * 180}ms` } as CSSProperties;
+  const iconClass = frame.kind === "spinner" ? "feature-lab-spinner inline-block" : "inline-block";
+  const icon = lineIndex === 0 ? frameIcon[frame.kind] : " ";
+
+  if (frame.kind === "type") {
+    const command = content.replace(/^>\s?/, "");
+    const visibleCommand = isActiveCommand ? command.slice(0, typedChars) : command;
+
+    return (
+      <div className="flex min-h-6 items-baseline gap-2 text-cyan-100">
+        <span className="select-none text-cyan-400">claude</span>
+        <span className="select-none text-zinc-600">$</span>
+        <span className="whitespace-pre-wrap break-words">{visibleCommand}</span>
+        {isActiveCommand && <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-cyan-300" />}
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={`feature-lab-frame rounded-2xl border px-3 py-2 font-mono text-[12px] leading-5 shadow-sm ${tone}`}
-      style={style}
-    >
-      <div className="mb-1 flex items-center justify-between gap-3 text-[10px] uppercase tracking-widest text-zinc-400">
-        <span className="flex items-center gap-2">
-          <span className={frame.kind === "spinner" ? "feature-lab-spinner inline-block" : "inline-block"}>
-            {frameIcon[frame.kind]}
-          </span>
-          {frame.title ?? frame.kind}
-        </span>
-        <span>{frame.at}</span>
+    <div className={`flex min-h-6 items-start gap-2 ${tone}`}>
+      <span className={`${iconClass} w-4 shrink-0 select-none text-zinc-500`}>{icon}</span>
+      <div className="min-w-0 flex-1">
+        {frame.title && lineIndex === 0 && (
+          <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-600">
+            [{frame.title}]
+          </div>
+        )}
+        <div className="whitespace-pre-wrap break-words">
+          {content}
+        </div>
       </div>
-      <pre className="whitespace-pre-wrap break-words">{frame.content}</pre>
     </div>
   );
 }
@@ -183,9 +223,73 @@ function AnimatedTuiScene({
   scene: ClaudeCodeFeature["afterExperience"];
   variant: "before" | "after";
 }) {
+  const steps = useMemo(() => sceneToTerminalSteps(scene), [scene]);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [activeCommandIndex, setActiveCommandIndex] = useState<number | null>(null);
+  const [typedChars, setTypedChars] = useState(0);
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    let cancelled = false;
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        const timer = setTimeout(resolve, ms);
+        timers.push(timer);
+      });
+
+    const typeCommand = async (stepIndex: number, command: string) => {
+      setActiveCommandIndex(stepIndex);
+      setTypedChars(0);
+
+      for (let charIndex = 1; charIndex <= command.length; charIndex += 1) {
+        if (cancelled) return;
+        await wait(charIndex === 1 ? 120 : 26 + (charIndex % 5 === 0 ? 32 : 0));
+        if (!cancelled) setTypedChars(charIndex);
+      }
+
+      if (!cancelled) {
+        setActiveCommandIndex(null);
+        setTypedChars(command.length);
+      }
+    };
+
+    const runReplay = async () => {
+      while (!cancelled) {
+        setVisibleCount(0);
+        setActiveCommandIndex(null);
+        setTypedChars(0);
+        await wait(320);
+
+        for (let index = 0; index < steps.length; index += 1) {
+          if (cancelled) return;
+          const step = steps[index];
+          setVisibleCount(index + 1);
+
+          if (step.frame.kind === "type") {
+            await typeCommand(index, step.content.replace(/^>\s?/, ""));
+            await wait(240);
+          } else {
+            await wait(step.lineIndex === 0 ? 620 : 260);
+          }
+        }
+
+        await wait(1800);
+      }
+    };
+
+    runReplay();
+
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, [steps]);
+
+  const visibleSteps = steps.slice(0, visibleCount);
+
   return (
     <section className="overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-[#05070d] text-zinc-100 shadow-2xl shadow-cyan-950/20">
-      <div className="border-b border-zinc-800 bg-zinc-950 px-4 py-3">
+      <div className="border-b border-zinc-800 bg-[#080b12] px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.22em] text-cyan-300">
@@ -215,12 +319,29 @@ function AnimatedTuiScene({
       </div>
 
       <div className="relative min-h-[24rem] p-4">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.12),transparent_20rem)]" />
-        <div className="relative space-y-2.5">
-          {scene.frames.map((frame, index) => (
-            <FrameCard key={frame.id} frame={frame} index={index} />
-          ))}
-          <div className="feature-lab-cursor mt-3 h-5 w-2 rounded-sm bg-cyan-300" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.08),transparent_20rem)]" />
+        <div className="relative min-h-[21rem] rounded-2xl border border-zinc-800/80 bg-[#020409] p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
+          <div className="relative mb-3 flex items-center gap-2 border-b border-zinc-900 pb-3 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            Live terminal session
+          </div>
+          <div className="relative space-y-1">
+            {visibleSteps.map((step, index) => (
+              <TerminalStreamEntry
+                key={`${scene.title}-${step.id}`}
+                step={step}
+                isActiveCommand={activeCommandIndex === index}
+                typedChars={activeCommandIndex === index ? typedChars : step.content.length}
+              />
+            ))}
+            <div className="flex min-h-6 items-baseline gap-2 text-cyan-100">
+              <span className="select-none text-cyan-400">claude</span>
+              <span className="select-none text-zinc-600">$</span>
+              {activeCommandIndex === null && (
+                <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-cyan-300" />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -268,12 +389,18 @@ function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
-export function FeatureLabPlayground() {
-  const [selectedFeature, setSelectedFeature] = useState(claudeCodeFeatures[0]);
+export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature[] }) {
+  const [selectedFeature, setSelectedFeature] = useState(features[0]);
+
+  useEffect(() => {
+    if (!features.some((feature) => feature.id === selectedFeature.id)) {
+      setSelectedFeature(features[0]);
+    }
+  }, [features, selectedFeature.id]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
-      <FeatureCatalog selectedFeature={selectedFeature} onSelect={setSelectedFeature} />
+      <FeatureCatalog features={features} selectedFeature={selectedFeature} onSelect={setSelectedFeature} />
 
       <div className="space-y-6">
         <section className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white/90 p-6 shadow-xl shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-black/25 sm:p-8">

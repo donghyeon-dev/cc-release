@@ -1,5 +1,222 @@
 [
   {
+    "version": "v2.1.142",
+    "tagName": "v2.1.142",
+    "publishedAt": "2026-05-14T22:55:10Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.142",
+    "originalBody": "## What's changed\n\n- Added new `claude agents` flags: `--add-dir`, `--settings`, `--mcp-config`, `--plugin-dir`, `--permission-mode`, `--model`, `--effort`, and `--dangerously-skip-permissions` to configure dispatched background sessions\n- Fast mode now uses Opus 4.7 by default (previously Opus 4.6). Set `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1` to pin fast mode to Opus 4.6\n- Plugins with a root-level `SKILL.md` and no `skills/` subdirectory are now surfaced as a skill\n- The `/plugin` details pane and `claude plugin details` now show LSP servers a plugin provides\n- `/web-setup` warns before replacing an existing GitHub App connection\n- Fixed `MCP_TOOL_TIMEOUT` not raising the per-request fetch timeout for remote HTTP and SSE MCP servers, which capped tool calls at 60 seconds regardless of the configured value\n- Fixed background sessions not recognizing pre-existing git worktrees, blocking Edit while EnterWorktree refused to create a duplicate\n- Fixed background sessions disappearing and daemon reconnect failing after macOS sleep/wake — the daemon now detects clock jumps instead of treating them as elapsed idle time\n- Fixed daemon not exiting cleanly after the binary is upgraded (e.g. `brew upgrade`), causing dispatched agents to crash-loop on the deleted path\n- Fixed background agents crash-looping when the Claude-in-Chrome extension is connected without a shared tab\n- Fixed clicking links in an attached `claude agents` session — the background worker's headless browser shim no longer applies while attached\n- Fixed `claude agents` \"v to open in editor\" using the daemon's default editor instead of your shell's `$EDITOR`/`$VISUAL`\n- Fixed `claude agents` deadlocking on Windows with network-drive working directories; Ctrl+C now works during startup\n- Fixed background-color bleed when attaching to a `claude agents` session from Apple Terminal or other 256-color-only terminals\n- Fixed `claude --bg --dangerously-skip-permissions` not persisting across retire/wake\n- Fixed session titles being derived from the URL when the first message is a link\n- Fixed redundant `set_model` requests from remote clients injecting duplicate `/model` breadcrumbs into the transcript\n- Fixed plugins using `skills: [\"./\"]` showing a false \"path escapes plugin directory\" error\n- Fixed plugin cache cleanup deleting the active plugin version directory when no installation metadata is present\n- Fixed `/plugin` browse pane showing \"0 installs\" for newly published plugins\n- Fixed plugin advisories not naming every `plugin.json` key that shadows a default folder\n- Improved reactive compaction: the first summarize attempt now seeds from the original request's overflow size, avoiding a wasted near-full-context retry\n- Improved hook configuration error: configuring a prompt- or agent-type hook for `SessionStart`/`Setup`/`SubagentStart` now shows a clear \"use a command-type hook instead\" error\n- Removed stale `/model claude-sonnet-4-20250514` suggestion from Usage Policy refusal messages\n",
+    "summary": {
+      "headline": "claude agents 플래그 8종·fast mode Opus 4.7 기본화·daemon 안정성 강화",
+      "newFeatures": [
+        {
+          "text": "`claude agents` 에 디스패치된 백그라운드 세션 설정용 플래그 8종 추가 — `--add-dir`, `--settings`, `--mcp-config`, `--plugin-dir`, `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions`",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "루트 레벨 `SKILL.md` 만 있고 `skills/` 하위 디렉토리가 없는 플러그인도 스킬로 노출됨",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`/plugin` 상세 패널과 `claude plugin details` 에 플러그인이 제공하는 LSP 서버 정보 표시",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`/web-setup` 이 기존 GitHub App 연결을 덮어쓰기 전에 경고 표시",
+          "originalRefs": [
+            4
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "fast mode 기본 모델이 Opus 4.6 → Opus 4.7 로 상향 — `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1` 로 4.6 고정 가능",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "reactive compaction 의 첫 요약 시도가 원 요청의 오버플로우 크기를 기준으로 시작 — 거의 가득 찬 컨텍스트로 재시도하는 낭비 제거",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "`SessionStart`/`Setup`/`SubagentStart` 에 prompt 또는 agent 타입 hook 설정 시 \"command 타입 hook 을 사용하라\" 는 명확한 에러 표시",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "Usage Policy 거부 메시지에서 더 이상 유효하지 않은 `/model claude-sonnet-4-20250514` 제안 문구 제거",
+          "originalRefs": [
+            23
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "원격 HTTP·SSE MCP 서버의 per-request fetch 타임아웃에 `MCP_TOOL_TIMEOUT` 이 반영되지 않아 설정값과 무관하게 60초로 고정되던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 기존 git worktree 를 인식하지 못해 EnterWorktree 가 중복 생성 거부하고 Edit 도 막히던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "macOS sleep/wake 후 daemon 이 시간 점프를 idle 누적으로 오인해 백그라운드 세션이 사라지고 재연결 실패하던 문제 수정 — 이제 clock jump 감지",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`brew upgrade` 등으로 바이너리 교체 후 daemon 이 깔끔하게 종료되지 않아 디스패치된 에이전트가 삭제된 경로에서 크래시 루프 돌던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "공유 탭 없이 Claude-in-Chrome 확장 연결된 상태에서 백그라운드 에이전트가 크래시 루프 돌던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "attached `claude agents` 세션에서 링크 클릭 시 백그라운드 워커의 headless 브라우저 shim 이 적용되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`claude agents` 에서 `v` 키로 에디터 열 때 셸의 `$EDITOR`/`$VISUAL` 대신 daemon 기본 에디터를 사용하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Windows 네트워크 드라이브 작업 디렉토리에서 `claude agents` 가 데드락 걸리던 문제 수정 — 시작 중에도 Ctrl+C 동작",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Apple Terminal 등 256색 전용 터미널에서 `claude agents` 세션 attach 시 배경색이 번지던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`claude --bg --dangerously-skip-permissions` 가 retire/wake 사이클을 거치며 유지되지 않던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "첫 메시지가 링크일 때 세션 제목이 URL 에서 추출되던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "원격 클라이언트의 중복 `set_model` 요청이 transcript 에 `/model` breadcrumb 을 중복 주입하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`skills: [\"./\"]` 설정 플러그인에 \"path escapes plugin directory\" 거짓 에러 뜨던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "설치 메타데이터가 없을 때 플러그인 캐시 정리가 활성 버전 디렉토리까지 삭제하던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "신규 발행 플러그인이 `/plugin` browse 패널에서 \"0 installs\" 로 표시되던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "기본 폴더를 가리는 `plugin.json` 키를 advisory 가 모두 명시하지 않던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "fast mode 기본이 Opus 4.6 → Opus 4.7 로 변경됨. 비용·응답 특성 회귀가 우려되면 `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1` 로 고정.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "원격 MCP 서버를 60초 이상으로 운영하던 사용자는 이제 `MCP_TOOL_TIMEOUT` 설정값이 실제로 적용되니 타임아웃 정책 재확인 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "기존 git worktree 환경에서 백그라운드 세션을 띄우던 워크플로가 정상화됨 — Windows 네트워크 드라이브 환경의 데드락도 해소.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            },
+            {
+              "bucket": "fixes",
+              "index": 7
+            }
+          ]
+        },
+        {
+          "text": "macOS 절전/복귀 후 daemon 재연결 실패와 `brew upgrade` 후 크래시 루프가 해결되어 장시간 운영 시 daemon 안정성이 크게 향상됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            },
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "`SessionStart`/`Setup`/`SubagentStart` hook 은 반드시 command 타입으로만 설정해야 함 — prompt/agent 타입은 명시적으로 거부됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-16T00:03:00Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
     "version": "v2.1.141",
     "tagName": "v2.1.141",
     "publishedAt": "2026-05-13T23:19:16Z",

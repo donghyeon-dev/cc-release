@@ -88,7 +88,18 @@
     },
     "source": {
       "quote": "환경 변수 기반으로 Claude Code shell behavior를 제어하는 설정 예시."
-    }
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "ux",
+      "quality"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
   },
   {
     "id": "permission-allowlist",
@@ -187,7 +198,20 @@
     },
     "source": {
       "quote": "settings.permissions.allow로 tool permission behavior를 바꾸는 흐름."
-    }
+    },
+    "difficulty": "medium",
+    "impactTags": [
+      "speed",
+      "safety",
+      "automation"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "ci",
+      "power-user"
+    ],
+    "relatedReleases": []
   },
   {
     "id": "model-picker",
@@ -277,7 +301,19 @@
     },
     "source": {
       "quote": "Slash command로 모델 선택 TUI를 여는 사용 경험."
-    }
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "quality",
+      "cost",
+      "ux"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
   },
   {
     "id": "mcp-server-toggle",
@@ -361,6 +397,18 @@
     },
     "source": {
       "quote": "mcpServers 설정으로 Claude Code tool surface가 확장되는 경험."
-    }
+    },
+    "difficulty": "advanced",
+    "impactTags": [
+      "context",
+      "automation",
+      "quality"
+    ],
+    "audience": [
+      "team",
+      "mcp-user",
+      "power-user"
+    ],
+    "relatedReleases": []
   }
 ]

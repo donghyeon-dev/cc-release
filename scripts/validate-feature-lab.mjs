@@ -23,6 +23,9 @@ const categories = new Set([
   "tui",
 ]);
 const activationKinds = new Set(["env", "settings", "command", "config-file"]);
+const difficulties = new Set(["easy", "medium", "advanced"]);
+const impactTags = new Set(["speed", "safety", "automation", "context", "ux", "quality", "cost"]);
+const audiences = new Set(["solo-dev", "team", "ci", "mcp-user", "power-user"]);
 const frameKinds = new Set([
   "type",
   "line",
@@ -57,6 +60,21 @@ function assertStringArray(value, label) {
   if (!Array.isArray(value) || value.length === 0) {
     fail(`${label} must be a non-empty array`);
   }
+  value.forEach((item, index) => assertNonEmptyString(item, `${label}[${index}]`));
+}
+
+function assertEnumArray(value, allowed, label) {
+  assertStringArray(value, label);
+  value.forEach((item, index) => {
+    if (!allowed.has(item)) {
+      fail(`${label}[${index}] must be one of: ${Array.from(allowed).join(", ")}`);
+    }
+  });
+}
+
+function assertOptionalStringArray(value, label) {
+  if (value === undefined) return;
+  if (!Array.isArray(value)) fail(`${label} must be an array when present`);
   value.forEach((item, index) => assertNonEmptyString(item, `${label}[${index}]`));
 }
 
@@ -108,6 +126,12 @@ function validateFeature(feature, index, ids) {
     fail(`${label}.category must be one of: ${Array.from(categories).join(", ")}`);
   }
   assertNonEmptyString(feature.description, `${label}.description`);
+  if (!difficulties.has(feature.difficulty)) {
+    fail(`${label}.difficulty must be one of: ${Array.from(difficulties).join(", ")}`);
+  }
+  assertEnumArray(feature.impactTags, impactTags, `${label}.impactTags`);
+  assertEnumArray(feature.audience, audiences, `${label}.audience`);
+  assertOptionalStringArray(feature.relatedReleases, `${label}.relatedReleases`);
 
   if (!feature.activation || typeof feature.activation !== "object") {
     fail(`${label}.activation must be an object`);

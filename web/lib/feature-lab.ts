@@ -11,6 +11,24 @@ export type ClaudeCodeFeatureCategory =
 
 export type ActivationKind = "env" | "settings" | "command" | "config-file";
 
+export type FeatureDifficulty = "easy" | "medium" | "advanced";
+
+export type FeatureImpactTag =
+  | "speed"
+  | "safety"
+  | "automation"
+  | "context"
+  | "ux"
+  | "quality"
+  | "cost";
+
+export type FeatureAudience =
+  | "solo-dev"
+  | "team"
+  | "ci"
+  | "mcp-user"
+  | "power-user";
+
 export type TuiFrameKind =
   | "type"
   | "line"
@@ -44,6 +62,10 @@ export interface ClaudeCodeFeature {
   category: ClaudeCodeFeatureCategory;
   introducedIn?: string;
   description: string;
+  difficulty: FeatureDifficulty;
+  impactTags: FeatureImpactTag[];
+  audience: FeatureAudience[];
+  relatedReleases?: string[];
   activation: {
     type: ActivationKind;
     file?: string;
@@ -74,4 +96,28 @@ export const featureCategoryLabels: Record<ClaudeCodeFeatureCategory, string> = 
   plugin: "Plugin",
   model: "Model",
   tui: "TUI",
+};
+
+export const featureDifficultyLabels: Record<FeatureDifficulty, string> = {
+  easy: "Easy",
+  medium: "Medium",
+  advanced: "Advanced",
+};
+
+export const featureImpactTagLabels: Record<FeatureImpactTag, string> = {
+  speed: "Speed",
+  safety: "Safety",
+  automation: "Automation",
+  context: "Context",
+  ux: "UX",
+  quality: "Quality",
+  cost: "Cost",
+};
+
+export const featureAudienceLabels: Record<FeatureAudience, string> = {
+  "solo-dev": "Solo dev",
+  team: "Team",
+  ci: "CI",
+  "mcp-user": "MCP user",
+  "power-user": "Power user",
 };

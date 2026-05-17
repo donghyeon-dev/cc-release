@@ -2,8 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  featureAudienceLabels,
   featureCategoryLabels,
+  featureDifficultyLabels,
+  featureImpactTagLabels,
   type ClaudeCodeFeature,
+  type FeatureDifficulty,
+  type FeatureImpactTag,
   type TuiFrame,
   type TuiFrameKind,
 } from "@/lib/feature-lab";
@@ -54,18 +59,54 @@ function CategoryPill({ category }: { category: ClaudeCodeFeature["category"] })
   );
 }
 
+function MetadataPill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
+      {children}
+    </span>
+  );
+}
+
 function FeatureCatalog({
   features,
+  allFeatures,
   selectedFeature,
+  query,
+  activeCategory,
+  activeDifficulty,
+  activeImpactTag,
+  onQueryChange,
+  onCategoryChange,
+  onDifficultyChange,
+  onImpactTagChange,
   onSelect,
+  onReset,
 }: {
   features: ClaudeCodeFeature[];
+  allFeatures: ClaudeCodeFeature[];
   selectedFeature: ClaudeCodeFeature;
+  query: string;
+  activeCategory: ClaudeCodeFeature["category"] | "all";
+  activeDifficulty: FeatureDifficulty | "all";
+  activeImpactTag: FeatureImpactTag | "all";
+  onQueryChange: (query: string) => void;
+  onCategoryChange: (category: ClaudeCodeFeature["category"] | "all") => void;
+  onDifficultyChange: (difficulty: FeatureDifficulty | "all") => void;
+  onImpactTagChange: (tag: FeatureImpactTag | "all") => void;
   onSelect: (feature: ClaudeCodeFeature) => void;
+  onReset: () => void;
 }) {
   const categories = useMemo(
-    () => Array.from(new Set(features.map((feature) => feature.category))),
-    [features],
+    () => Array.from(new Set(allFeatures.map((feature) => feature.category))),
+    [allFeatures],
+  );
+  const difficulties = useMemo(
+    () => Array.from(new Set(allFeatures.map((feature) => feature.difficulty))),
+    [allFeatures],
+  );
+  const impactTags = useMemo(
+    () => Array.from(new Set(allFeatures.flatMap((feature) => feature.impactTags))),
+    [allFeatures],
   );
 
   return (
@@ -78,17 +119,102 @@ function FeatureCatalog({
           설정을 켜면 무엇이 바뀌나요?
         </h2>
         <p className="mt-2 text-xs leading-5 text-zinc-400">
-          env, settings, slash command를 기능 단위로 고르고 오른쪽에서 실제 TUI 변화를 봅니다.
+          검색, category, impact 기준으로 기능을 좁히고 feature별 URL로 바로 공유합니다.
         </p>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {categories.map((category) => (
-          <CategoryPill key={category} category={category} />
-        ))}
+      <div className="mt-4 space-y-3">
+        <label className="block">
+          <span className="sr-only">Search features</span>
+          <input
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+            placeholder="Search feature, use case, snippet…"
+            className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-3 py-2.5 text-sm font-semibold text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-indigo-400 focus:bg-white dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-indigo-500"
+          />
+        </label>
+
+        <div>
+          <p className="mb-2 text-[11px] font-black uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+            Category
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => onCategoryChange("all")}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-black uppercase tracking-wider ring-1 ${
+                activeCategory === "all"
+                  ? "bg-zinc-950 text-white ring-zinc-950 dark:bg-white dark:text-zinc-950 dark:ring-white"
+                  : "bg-zinc-50 text-zinc-600 ring-zinc-200 dark:bg-zinc-900 dark:text-zinc-300 dark:ring-zinc-800"
+              }`}
+            >
+              All
+            </button>
+            {categories.map((category) => (
+              <button key={category} type="button" onClick={() => onCategoryChange(category)}>
+                <CategoryPill category={category} />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <label className="block">
+            <span className="mb-1 block text-[11px] font-black uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+              Difficulty
+            </span>
+            <select
+              value={activeDifficulty}
+              onChange={(event) => onDifficultyChange(event.target.value as FeatureDifficulty | "all")}
+              className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-bold text-zinc-700 outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+            >
+              <option value="all">All</option>
+              {difficulties.map((difficulty) => (
+                <option key={difficulty} value={difficulty}>
+                  {featureDifficultyLabels[difficulty]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-[11px] font-black uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+              Impact
+            </span>
+            <select
+              value={activeImpactTag}
+              onChange={(event) => onImpactTagChange(event.target.value as FeatureImpactTag | "all")}
+              className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-bold text-zinc-700 outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+            >
+              <option value="all">All</option>
+              {impactTags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {featureImpactTagLabels[tag]}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <button
+          type="button"
+          onClick={onReset}
+          className="text-xs font-black text-indigo-600 underline-offset-4 hover:underline dark:text-indigo-300"
+        >
+          Reset filters
+        </button>
       </div>
 
-      <div className="mt-5 space-y-2">
+      <div className="mt-5 flex items-center justify-between text-xs font-bold text-zinc-500 dark:text-zinc-400">
+        <span>{features.length} matching features</span>
+        <span>{allFeatures.length} total</span>
+      </div>
+
+      <div className="mt-3 space-y-2">
+        {features.length === 0 && (
+          <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-400">
+            조건에 맞는 기능이 없습니다. 검색어를 줄이거나 필터를 초기화하세요.
+          </div>
+        )}
         {features.map((feature) => {
           const selected = feature.id === selectedFeature.id;
           return (
@@ -114,6 +240,12 @@ function FeatureCatalog({
                 <span className="text-lg" aria-hidden>
                   {selected ? "●" : "○"}
                 </span>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                <MetadataPill>{featureDifficultyLabels[feature.difficulty]}</MetadataPill>
+                {feature.impactTags.slice(0, 2).map((tag) => (
+                  <MetadataPill key={tag}>{featureImpactTagLabels[tag]}</MetadataPill>
+                ))}
               </div>
               <p className="mt-3 line-clamp-2 text-xs leading-5 text-zinc-600 dark:text-zinc-300">
                 {feature.description}
@@ -358,6 +490,11 @@ function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
         <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
           {feature.impact.summary}
         </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {feature.impactTags.map((tag) => (
+            <MetadataPill key={tag}>{featureImpactTagLabels[tag]}</MetadataPill>
+          ))}
+        </div>
       </div>
       <div className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50/60 p-5 dark:border-emerald-900/70 dark:bg-emerald-950/20">
         <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
@@ -389,8 +526,28 @@ function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
+function updateFeatureQueryParam(featureId: string) {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("feature", featureId);
+  window.history.replaceState(null, "", url);
+}
+
 export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature[] }) {
   const [selectedFeature, setSelectedFeature] = useState(features[0]);
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<ClaudeCodeFeature["category"] | "all">("all");
+  const [activeDifficulty, setActiveDifficulty] = useState<FeatureDifficulty | "all">("all");
+  const [activeImpactTag, setActiveImpactTag] = useState<FeatureImpactTag | "all">("all");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const featureId = params.get("feature");
+    const linkedFeature = features.find((feature) => feature.id === featureId);
+    if (linkedFeature) {
+      setSelectedFeature(linkedFeature);
+    }
+  }, [features]);
 
   useEffect(() => {
     if (!features.some((feature) => feature.id === selectedFeature.id)) {
@@ -398,9 +555,62 @@ export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature
     }
   }, [features, selectedFeature.id]);
 
+  const filteredFeatures = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return features.filter((feature) => {
+      const matchesQuery =
+        normalizedQuery.length === 0 ||
+        [
+          feature.id,
+          feature.name,
+          feature.shortName,
+          feature.description,
+          feature.activation.snippet,
+          feature.impact.summary,
+          ...feature.impact.goodFor,
+          ...feature.impact.watchOut,
+          ...feature.impactTags,
+          ...feature.audience,
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(normalizedQuery);
+      const matchesCategory = activeCategory === "all" || feature.category === activeCategory;
+      const matchesDifficulty = activeDifficulty === "all" || feature.difficulty === activeDifficulty;
+      const matchesImpactTag = activeImpactTag === "all" || feature.impactTags.includes(activeImpactTag);
+      return matchesQuery && matchesCategory && matchesDifficulty && matchesImpactTag;
+    });
+  }, [activeCategory, activeDifficulty, activeImpactTag, features, query]);
+
+  const handleSelect = (feature: ClaudeCodeFeature) => {
+    setSelectedFeature(feature);
+    updateFeatureQueryParam(feature.id);
+  };
+
+  const resetFilters = () => {
+    setQuery("");
+    setActiveCategory("all");
+    setActiveDifficulty("all");
+    setActiveImpactTag("all");
+  };
+
   return (
-    <div className="grid gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
-      <FeatureCatalog features={features} selectedFeature={selectedFeature} onSelect={setSelectedFeature} />
+    <div className="grid gap-6 lg:grid-cols-[24rem_minmax(0,1fr)]">
+      <FeatureCatalog
+        features={filteredFeatures}
+        allFeatures={features}
+        selectedFeature={selectedFeature}
+        query={query}
+        activeCategory={activeCategory}
+        activeDifficulty={activeDifficulty}
+        activeImpactTag={activeImpactTag}
+        onQueryChange={setQuery}
+        onCategoryChange={setActiveCategory}
+        onDifficultyChange={setActiveDifficulty}
+        onImpactTagChange={setActiveImpactTag}
+        onSelect={handleSelect}
+        onReset={resetFilters}
+      />
 
       <div className="space-y-6">
         <section className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white/90 p-6 shadow-xl shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-black/25 sm:p-8">
@@ -408,11 +618,11 @@ export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature
             <div className="max-w-3xl">
               <div className="flex flex-wrap items-center gap-2">
                 <CategoryPill category={selectedFeature.category} />
-                {selectedFeature.introducedIn && (
-                  <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
-                    {selectedFeature.introducedIn}
-                  </span>
-                )}
+                <MetadataPill>{featureDifficultyLabels[selectedFeature.difficulty]}</MetadataPill>
+                {selectedFeature.introducedIn && <MetadataPill>{selectedFeature.introducedIn}</MetadataPill>}
+                {selectedFeature.audience.map((audience) => (
+                  <MetadataPill key={audience}>{featureAudienceLabels[audience]}</MetadataPill>
+                ))}
               </div>
               <h1 className="mt-4 font-mono text-3xl font-black tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
                 {selectedFeature.name}
@@ -421,13 +631,16 @@ export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature
                 {selectedFeature.description}
               </p>
             </div>
-            <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/70 lg:w-72">
+            <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/70 lg:w-80">
               <p className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                Activation
+                Shareable feature URL
               </p>
-              <code className="mt-3 block break-words rounded-2xl bg-zinc-950 px-4 py-3 font-mono text-sm font-bold text-cyan-200 dark:bg-black">
-                {selectedFeature.activation.type}
+              <code className="mt-3 block break-words rounded-2xl bg-zinc-950 px-4 py-3 font-mono text-xs font-bold text-cyan-200 dark:bg-black">
+                ?feature={selectedFeature.id}
               </code>
+              <p className="mt-3 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+                feature id가 URL에 남아 리뷰/문서에서 특정 기능으로 바로 연결할 수 있습니다.
+              </p>
             </div>
           </div>
         </section>

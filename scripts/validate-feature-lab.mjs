@@ -78,6 +78,16 @@ function assertOptionalStringArray(value, label) {
   value.forEach((item, index) => assertNonEmptyString(item, `${label}[${index}]`));
 }
 
+function assertOptionalReleaseArray(value, label) {
+  assertOptionalStringArray(value, label);
+  if (value === undefined) return;
+  value.forEach((item, index) => {
+    if (!/^v?\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$/.test(item)) {
+      fail(`${label}[${index}] must look like a release version, for example v2.1.143`);
+    }
+  });
+}
+
 function validateFrame(frame, label) {
   if (!frame || typeof frame !== "object" || Array.isArray(frame)) {
     fail(`${label} must be an object`);
@@ -131,7 +141,7 @@ function validateFeature(feature, index, ids) {
   }
   assertEnumArray(feature.impactTags, impactTags, `${label}.impactTags`);
   assertEnumArray(feature.audience, audiences, `${label}.audience`);
-  assertOptionalStringArray(feature.relatedReleases, `${label}.relatedReleases`);
+  assertOptionalReleaseArray(feature.relatedReleases, `${label}.relatedReleases`);
 
   if (!feature.activation || typeof feature.activation !== "object") {
     fail(`${label}.activation must be an object`);
@@ -175,7 +185,24 @@ const sourceItems = readJson(sourcesPath);
 if (!Array.isArray(sourceItems)) {
   fail(`${sourcesPath} must be an array`);
 }
-const sourceIds = new Set(sourceItems.map((item) => item?.id));
+const sourceIds = new Set();
+sourceItems.forEach((item, index) => {
+  const label = `sources[${index}]`;
+  if (!item || typeof item !== "object" || Array.isArray(item)) fail(`${label} must be an object`);
+  assertNonEmptyString(item.id, `${label}.id`);
+  if (sourceIds.has(item.id)) fail(`${label}.id is duplicated: ${item.id}`);
+  sourceIds.add(item.id);
+  assertNonEmptyString(item.name, `${label}.name`);
+  if (!categories.has(item.category)) {
+    fail(`${label}.category must be one of: ${Array.from(categories).join(", ")}`);
+  }
+  if (item.sourceUrl !== null && item.sourceUrl !== undefined) assertNonEmptyString(item.sourceUrl, `${label}.sourceUrl`);
+  if (item.quote !== null && item.quote !== undefined) assertNonEmptyString(item.quote, `${label}.quote`);
+  if (!item.sourceUrl && !item.quote) fail(`${label} must include sourceUrl or quote`);
+  if (item.releaseVersion !== null && item.releaseVersion !== undefined) {
+    assertOptionalReleaseArray([item.releaseVersion], `${label}.releaseVersion`);
+  }
+});
 for (const id of ids) {
   if (!sourceIds.has(id)) fail(`sources/changelog-items.json is missing source item for feature id: ${id}`);
 }

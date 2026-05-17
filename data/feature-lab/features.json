@@ -410,5 +410,1435 @@
       "power-user"
     ],
     "relatedReleases": []
+  },
+  {
+    "id": "permissions-command",
+    "name": "/permissions",
+    "shortName": "Permissions dashboard",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "description": "현재 세션과 프로젝트의 tool permission 상태를 TUI에서 점검하고 허용/거부 규칙을 조정합니다.",
+    "activation": {
+      "type": "command",
+      "label": "Open permissions manager",
+      "snippet": "/permissions"
+    },
+    "beforeExperience": {
+      "title": "권한 상태를 기억으로 추적",
+      "statusBefore": "Permissions: scattered",
+      "statusAfter": "Permissions: scattered",
+      "frames": [
+        {
+          "id": "before-permissions-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /permissions"
+        },
+        {
+          "id": "before-permissions-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-permissions-command-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "권한 규칙을 TUI에서 점검",
+      "statusBefore": "Permissions: scattered",
+      "statusAfter": "Permissions: reviewed",
+      "frames": [
+        {
+          "id": "after-permissions-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /permissions"
+        },
+        {
+          "id": "after-permissions-command-2",
+          "kind": "menu",
+          "at": "00:01",
+          "title": "Permission rules",
+          "content": "Allowed tools\n● Bash(git status:*)\n○ Bash(rm:*)\n\n↑/↓ move · enter edit · esc close",
+          "tone": "info"
+        },
+        {
+          "id": "after-permissions-command-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Permissions: reviewed",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "승인 프롬프트가 왜 뜨는지 한 화면에서 설명되고, 위험한 tool은 계속 명시적으로 막을 수 있습니다.",
+      "goodFor": [
+        "권한 prompt가 잦은 프로젝트",
+        "팀 공통 tool policy 리뷰",
+        "allow/deny 규칙 점검"
+      ],
+      "watchOut": [
+        "너무 넓은 Bash glob",
+        "프로젝트 설정과 사용자 설정 충돌",
+        "민감 작업 자동 승인"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/iam",
+      "quote": "Slash command로 permission 상태와 규칙을 확인하는 흐름."
+    },
+    "difficulty": "medium",
+    "impactTags": [
+      "safety",
+      "ux",
+      "speed"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "memory-command",
+    "name": "/memory",
+    "shortName": "Memory editor",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "description": "Claude Code가 장기 기억으로 참조하는 CLAUDE.md/메모리 파일을 열고 프로젝트 지식을 정리합니다.",
+    "activation": {
+      "type": "command",
+      "label": "Open memory files",
+      "snippet": "/memory"
+    },
+    "beforeExperience": {
+      "title": "암묵적 지식을 매번 설명",
+      "statusBefore": "Memory: ad hoc",
+      "statusAfter": "Memory: ad hoc",
+      "frames": [
+        {
+          "id": "before-memory-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /memory"
+        },
+        {
+          "id": "before-memory-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-memory-command-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "프로젝트 메모리를 명시적으로 편집",
+      "statusBefore": "Memory: ad hoc",
+      "statusAfter": "Memory: documented",
+      "frames": [
+        {
+          "id": "after-memory-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /memory"
+        },
+        {
+          "id": "after-memory-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "Opening memory files…\n- ~/.claude/CLAUDE.md\n- ./CLAUDE.md",
+          "tone": "info"
+        },
+        {
+          "id": "after-memory-command-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Memory: documented",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "반복 설명하던 빌드 명령, 아키텍처 규칙, 선호 리뷰 기준을 저장해 다음 세션 품질을 올립니다.",
+      "goodFor": [
+        "프로젝트 convention 저장",
+        "온보딩 지식 축적",
+        "긴 리팩터링 세션"
+      ],
+      "watchOut": [
+        "비밀/토큰 저장 금지",
+        "오래된 지식 정리 필요",
+        "개인 메모리와 프로젝트 메모리 범위"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/memory",
+      "quote": "/memory로 Claude Code memory 파일을 관리하는 사용 경험."
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "context",
+      "quality"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "compact-command",
+    "name": "/compact",
+    "shortName": "Context compaction",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "description": "긴 대화의 핵심 상태를 압축해 context window를 회수하면서 작업 연속성을 유지합니다.",
+    "activation": {
+      "type": "command",
+      "label": "Compact current conversation",
+      "snippet": "/compact"
+    },
+    "beforeExperience": {
+      "title": "Context: nearly full",
+      "statusBefore": "Context: 92%",
+      "statusAfter": "Context: 92%",
+      "frames": [
+        {
+          "id": "before-compact-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /compact"
+        },
+        {
+          "id": "before-compact-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-compact-command-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "Context를 압축해 계속 진행",
+      "statusBefore": "Context: 92%",
+      "statusAfter": "Context: compacted",
+      "frames": [
+        {
+          "id": "after-compact-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /compact"
+        },
+        {
+          "id": "after-compact-command-2",
+          "kind": "spinner",
+          "at": "00:01",
+          "content": "Compacting conversation…\nsummary retained · obsolete logs removed",
+          "tone": "info"
+        },
+        {
+          "id": "after-compact-command-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Context: compacted",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "대형 작업에서 이전 결정과 TODO는 남기고 상세 로그를 줄여 후속 구현을 계속할 수 있습니다.",
+      "goodFor": [
+        "장시간 코딩 세션",
+        "대형 로그/빌드 출력 이후",
+        "handoff 전 정리"
+      ],
+      "watchOut": [
+        "압축 전 중요한 파일 경로 확인",
+        "세부 근거 손실 가능성",
+        "압축 후 상태 재검증"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/slash-commands",
+      "quote": "/compact로 긴 대화 context를 압축하는 흐름."
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "context",
+      "speed",
+      "quality"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "cost-command",
+    "name": "/cost",
+    "shortName": "Cost monitor",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "description": "현재 세션의 사용량과 비용 감각을 빠르게 확인해 모델/작업 범위를 조정합니다.",
+    "activation": {
+      "type": "command",
+      "label": "Show usage and cost",
+      "snippet": "/cost"
+    },
+    "beforeExperience": {
+      "title": "비용 감각 없이 진행",
+      "statusBefore": "Cost: unknown",
+      "statusAfter": "Cost: unknown",
+      "frames": [
+        {
+          "id": "before-cost-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /cost"
+        },
+        {
+          "id": "before-cost-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-cost-command-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "세션 비용 확인",
+      "statusBefore": "Cost: unknown",
+      "statusAfter": "Cost: visible",
+      "frames": [
+        {
+          "id": "after-cost-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /cost"
+        },
+        {
+          "id": "after-cost-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "Session usage\ninput/output tokens: summarized\nestimated cost: visible",
+          "tone": "info"
+        },
+        {
+          "id": "after-cost-command-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Cost: visible",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "긴 탐색 작업에서 고성능 모델 사용 시점을 조절하고 예상치 못한 비용 증가를 조기에 발견합니다.",
+      "goodFor": [
+        "모델 전환 판단",
+        "장기 세션 비용 확인",
+        "팀 budget awareness"
+      ],
+      "watchOut": [
+        "표시 단위/plan별 차이",
+        "정확 과금과 추정치 차이",
+        "비용만 보고 품질 저하 선택"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/costs",
+      "quote": "/cost와 비용 추적 문서 기반 세션 비용 확인 흐름."
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "cost",
+      "ux"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "status-command",
+    "name": "/status",
+    "shortName": "Session status",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "description": "현재 모델, 작업 디렉터리, 계정/권한 같은 세션 상태를 한 번에 확인합니다.",
+    "activation": {
+      "type": "command",
+      "label": "Show session status",
+      "snippet": "/status"
+    },
+    "beforeExperience": {
+      "title": "세션 상태를 추측",
+      "statusBefore": "Status: implicit",
+      "statusAfter": "Status: implicit",
+      "frames": [
+        {
+          "id": "before-status-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /status"
+        },
+        {
+          "id": "before-status-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-status-command-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "세션 상태를 즉시 확인",
+      "statusBefore": "Status: implicit",
+      "statusAfter": "Status: visible",
+      "frames": [
+        {
+          "id": "after-status-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /status"
+        },
+        {
+          "id": "after-status-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "Model: Sonnet\nWorking dir: ~/repo\nPermissions: project settings active",
+          "tone": "info"
+        },
+        {
+          "id": "after-status-command-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Status: visible",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "잘못된 디렉터리/모델/권한 상태에서 작업하는 실수를 줄이고 리뷰 가능한 실행 맥락을 남깁니다.",
+      "goodFor": [
+        "작업 시작 전 sanity check",
+        "pairing/handoff",
+        "권한 설정 확인"
+      ],
+      "watchOut": [
+        "출력에 민감 경로 노출",
+        "상태 확인 후 실제 git status도 별도 확인",
+        "remote 환경 혼동"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/slash-commands",
+      "quote": "/status로 현재 Claude Code session 상태를 확인하는 흐름."
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "safety",
+      "ux"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "doctor-command",
+    "name": "/doctor",
+    "shortName": "Environment doctor",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "description": "Claude Code 설치, 인증, shell/tool 환경의 문제를 진단하는 점검 명령입니다.",
+    "activation": {
+      "type": "command",
+      "label": "Run diagnostic checks",
+      "snippet": "/doctor"
+    },
+    "beforeExperience": {
+      "title": "환경 문제를 수동 추적",
+      "statusBefore": "Health: unknown",
+      "statusAfter": "Health: unknown",
+      "frames": [
+        {
+          "id": "before-doctor-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /doctor"
+        },
+        {
+          "id": "before-doctor-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-doctor-command-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "진단 결과로 원인 좁히기",
+      "statusBefore": "Health: unknown",
+      "statusAfter": "Health: checked",
+      "frames": [
+        {
+          "id": "after-doctor-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /doctor"
+        },
+        {
+          "id": "after-doctor-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "Checking install… ok\nChecking auth… ok\nChecking shell… warning: PATH differs",
+          "tone": "warn"
+        },
+        {
+          "id": "after-doctor-command-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Health: checked",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "실행 실패가 Claude Code 자체, shell PATH, 인증 중 어디서 생기는지 빠르게 분리합니다.",
+      "goodFor": [
+        "설치 직후 점검",
+        "PATH/asdf/nvm 문제",
+        "팀원 환경 지원"
+      ],
+      "watchOut": [
+        "경고를 무시하지 않기",
+        "tool별 추가 진단 필요",
+        "CI와 로컬 차이"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/troubleshooting",
+      "quote": "/doctor 진단 명령으로 환경 문제를 점검하는 흐름."
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "quality",
+      "speed"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "help-command",
+    "name": "/help",
+    "shortName": "Command help",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "description": "사용 가능한 slash command와 현재 세션에서 쓸 수 있는 조작 힌트를 확인합니다.",
+    "activation": {
+      "type": "command",
+      "label": "List available commands",
+      "snippet": "/help"
+    },
+    "beforeExperience": {
+      "title": "명령을 외워서 사용",
+      "statusBefore": "Help: external docs",
+      "statusAfter": "Help: external docs",
+      "frames": [
+        {
+          "id": "before-help-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /help"
+        },
+        {
+          "id": "before-help-command-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-help-command-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "명령 팔레트 확인",
+      "statusBefore": "Help: external docs",
+      "statusAfter": "Help: in-session",
+      "frames": [
+        {
+          "id": "after-help-command-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /help"
+        },
+        {
+          "id": "after-help-command-2",
+          "kind": "menu",
+          "at": "00:01",
+          "title": "Commands",
+          "content": "Available commands\n/model  /permissions  /memory\n/compact  /cost  /status",
+          "tone": "info"
+        },
+        {
+          "id": "after-help-command-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Help: in-session",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "문서로 빠져나가지 않고 현재 CLI 안에서 가능한 조작을 발견해 초보자 진입 장벽을 낮춥니다.",
+      "goodFor": [
+        "온보딩",
+        "명령 이름 기억 안 날 때",
+        "새 기능 탐색"
+      ],
+      "watchOut": [
+        "버전별 command 차이",
+        "실험 기능 노출 여부",
+        "문서의 상세 설명도 함께 확인"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/slash-commands",
+      "quote": "/help로 사용 가능한 slash command를 탐색하는 흐름."
+    },
+    "difficulty": "easy",
+    "impactTags": [
+      "ux",
+      "speed"
+    ],
+    "audience": [
+      "solo-dev",
+      "team"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "permission-denylist",
+    "name": "permissions.deny",
+    "shortName": "Permission denylist",
+    "category": "permission",
+    "introducedIn": "설정 파일",
+    "description": "위험한 Bash 패턴이나 MCP tool을 명시적으로 거부해 allow 규칙보다 강한 안전 레일을 둡니다.",
+    "activation": {
+      "type": "settings",
+      "file": ".claude/settings.json",
+      "label": "Add deny rules",
+      "snippet": "{\n  \"permissions\": {\n    \"deny\": [\"Bash(rm -rf:*)\", \"Bash(curl *|sh:*)\"]\n  }\n}"
+    },
+    "beforeExperience": {
+      "title": "실수 방지 규칙 없음",
+      "statusBefore": "Deny: off",
+      "statusAfter": "Deny: off",
+      "frames": [
+        {
+          "id": "before-permission-denylist-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> rm -rf ./dist"
+        },
+        {
+          "id": "before-permission-denylist-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-permission-denylist-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "위험 명령 차단",
+      "statusBefore": "Deny: off",
+      "statusAfter": "Deny: active",
+      "frames": [
+        {
+          "id": "after-permission-denylist-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> rm -rf ./dist"
+        },
+        {
+          "id": "after-permission-denylist-2",
+          "kind": "permission-prompt",
+          "at": "00:01",
+          "title": "Denied",
+          "content": "Blocked by permissions.deny\nRule: Bash(rm -rf:*)",
+          "tone": "warn"
+        },
+        {
+          "id": "after-permission-denylist-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Deny: active",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "팀 repository에서 반복적으로 위험한 작업을 정책으로 막아 사고를 줄입니다.",
+      "goodFor": [
+        "파괴적 명령 방지",
+        "팀 공통 safety policy",
+        "CI/운영 repo 보호"
+      ],
+      "watchOut": [
+        "정상 cleanup 명령까지 막지 않기",
+        "패턴 구체화",
+        "예외 프로세스 마련"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/settings",
+      "quote": "settings.permissions.deny로 위험 tool 호출을 차단하는 흐름."
+    },
+    "difficulty": "medium",
+    "impactTags": [
+      "safety",
+      "quality"
+    ],
+    "audience": [
+      "team",
+      "ci",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "settings-scope",
+    "name": "user-project-settings",
+    "shortName": "User vs project settings",
+    "category": "settings",
+    "introducedIn": "설정 파일",
+    "description": "사용자 전역 설정과 프로젝트 로컬 설정의 책임을 나눠 개인 선호와 팀 policy를 분리합니다.",
+    "activation": {
+      "type": "settings",
+      "file": "~/.claude/settings.json + .claude/settings.json",
+      "label": "Split settings by scope",
+      "snippet": "// ~/.claude/settings.json: personal defaults\n// .claude/settings.json: project policy"
+    },
+    "beforeExperience": {
+      "title": "설정 범위 혼재",
+      "statusBefore": "Settings: mixed",
+      "statusAfter": "Settings: mixed",
+      "frames": [
+        {
+          "id": "before-settings-scope-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /status"
+        },
+        {
+          "id": "before-settings-scope-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-settings-scope-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "설정 scope 분리",
+      "statusBefore": "Settings: mixed",
+      "statusAfter": "Settings: scoped",
+      "frames": [
+        {
+          "id": "after-settings-scope-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> /status"
+        },
+        {
+          "id": "after-settings-scope-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "User settings loaded\nProject settings loaded\nProject policy overrides personal defaults",
+          "tone": "info"
+        },
+        {
+          "id": "after-settings-scope-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Settings: scoped",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "개인 편의 설정은 유지하면서 repository에 공유해야 할 permission/hook만 코드 리뷰 대상으로 만들 수 있습니다.",
+      "goodFor": [
+        "팀 repo 표준화",
+        "개인 dotfile 유지",
+        "설정 충돌 디버깅"
+      ],
+      "watchOut": [
+        "비밀을 project settings에 커밋 금지",
+        "우선순위 문서화",
+        "로컬 override 확인"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/settings",
+      "quote": "Claude Code settings scope를 user/project로 분리하는 흐름."
+    },
+    "difficulty": "medium",
+    "impactTags": [
+      "safety",
+      "quality",
+      "context"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "allowed-tools-patterns",
+    "name": "allowed-tools-patterns",
+    "shortName": "Tool pattern design",
+    "category": "permission",
+    "introducedIn": "설정 파일",
+    "description": "Bash/MCP tool allow 패턴을 좁고 읽기 쉬운 단위로 설계해 자동 승인과 안전성을 함께 맞춥니다.",
+    "activation": {
+      "type": "settings",
+      "file": ".claude/settings.json",
+      "label": "Design narrow allow patterns",
+      "snippet": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(git status:*)\",\n      \"Bash(git diff --name-only:*)\",\n      \"mcp__github__get_issue\"\n    ]\n  }\n}"
+    },
+    "beforeExperience": {
+      "title": "넓은 자동 승인",
+      "statusBefore": "Allow: broad",
+      "statusAfter": "Allow: broad",
+      "frames": [
+        {
+          "id": "before-allowed-tools-patterns-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> git diff --name-only"
+        },
+        {
+          "id": "before-allowed-tools-patterns-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-allowed-tools-patterns-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "좁은 자동 승인 규칙",
+      "statusBefore": "Allow: broad",
+      "statusAfter": "Allow: narrow",
+      "frames": [
+        {
+          "id": "after-allowed-tools-patterns-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> git diff --name-only"
+        },
+        {
+          "id": "after-allowed-tools-patterns-2",
+          "kind": "permission-prompt",
+          "at": "00:01",
+          "title": "Pattern matched",
+          "content": "✓ auto-approved\n> git push\nPermission required",
+          "tone": "good"
+        },
+        {
+          "id": "after-allowed-tools-patterns-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Allow: narrow",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "조회성 반복 작업은 빠르게 통과시키고 write/network side effect는 사람 확인 대상으로 남깁니다.",
+      "goodFor": [
+        "반복 read-only 명령",
+        "MCP 조회 tool",
+        "코드리뷰 전 상태 확인"
+      ],
+      "watchOut": [
+        "Bash(*) 같은 광범위 패턴 금지",
+        "명령 인자 변형 검토",
+        "deny 규칙과 함께 리뷰"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/settings",
+      "quote": "allow tool pattern을 좁게 설계해 자동 승인 범위를 제한하는 흐름."
+    },
+    "difficulty": "advanced",
+    "impactTags": [
+      "safety",
+      "speed",
+      "automation"
+    ],
+    "audience": [
+      "team",
+      "ci",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "hooks-notifications",
+    "name": "hooks-notifications",
+    "shortName": "Hook notifications",
+    "category": "hooks",
+    "introducedIn": "설정 파일",
+    "description": "Stop/SubagentStop 같은 hook으로 작업 종료, 승인 대기, 후처리 알림을 자동화합니다.",
+    "activation": {
+      "type": "config-file",
+      "file": ".claude/settings.json",
+      "label": "Register hook command",
+      "snippet": "{\n  \"hooks\": {\n    \"Stop\": [{ \"hooks\": [{ \"type\": \"command\", \"command\": \"notify-send Claude done\" }] }]\n  }\n}"
+    },
+    "beforeExperience": {
+      "title": "작업 종료를 계속 지켜봄",
+      "statusBefore": "Hooks: off",
+      "statusAfter": "Hooks: off",
+      "frames": [
+        {
+          "id": "before-hooks-notifications-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> run tests and fix failures"
+        },
+        {
+          "id": "before-hooks-notifications-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-hooks-notifications-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "hook 기반 알림",
+      "statusBefore": "Hooks: off",
+      "statusAfter": "Hooks: notifying",
+      "frames": [
+        {
+          "id": "after-hooks-notifications-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> run tests and fix failures"
+        },
+        {
+          "id": "after-hooks-notifications-2",
+          "kind": "toast",
+          "at": "00:01",
+          "content": "Stop hook fired\nnotify-send Claude done",
+          "tone": "good"
+        },
+        {
+          "id": "after-hooks-notifications-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Hooks: notifying",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "긴 테스트/빌드가 끝날 때 사람에게 알리고, 팀별 후처리 스크립트를 일관되게 실행합니다.",
+      "goodFor": [
+        "긴 빌드/테스트",
+        "승인 대기 알림",
+        "작업 로그 후처리"
+      ],
+      "watchOut": [
+        "hook command의 side effect",
+        "무한 루프 방지",
+        "팀 환경별 명령 호환성"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "quote": "Claude Code hooks로 lifecycle 이벤트에 command를 연결하는 흐름."
+    },
+    "difficulty": "advanced",
+    "impactTags": [
+      "automation",
+      "ux"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "ci",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "statusline-config",
+    "name": "statusline-config",
+    "shortName": "Custom statusline",
+    "category": "tui",
+    "introducedIn": "설정 파일",
+    "description": "statusline script로 현재 repo, branch, model, 비용 힌트를 TUI 하단에 표시합니다.",
+    "activation": {
+      "type": "config-file",
+      "file": ".claude/settings.json",
+      "label": "Configure statusline command",
+      "snippet": "{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"~/.claude/statusline.sh\"\n  }\n}"
+    },
+    "beforeExperience": {
+      "title": "상태를 명령으로 확인",
+      "statusBefore": "Statusline: default",
+      "statusAfter": "Statusline: default",
+      "frames": [
+        {
+          "id": "before-statusline-config-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> edit files"
+        },
+        {
+          "id": "before-statusline-config-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-statusline-config-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "하단 상태줄 상시 표시",
+      "statusBefore": "Statusline: default",
+      "statusAfter": "Statusline: custom",
+      "frames": [
+        {
+          "id": "after-statusline-config-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> edit files"
+        },
+        {
+          "id": "after-statusline-config-2",
+          "kind": "status-change",
+          "at": "00:01",
+          "title": "Statusline",
+          "content": "cc-release · feat/catalog · Sonnet · $0.42",
+          "tone": "good"
+        },
+        {
+          "id": "after-statusline-config-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ Statusline: custom",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "작업 중인 repo/branch/model을 계속 보여줘 잘못된 브랜치에서 수정하는 실수를 줄입니다.",
+      "goodFor": [
+        "멀티 repo 작업",
+        "브랜치 착각 방지",
+        "비용/모델 awareness"
+      ],
+      "watchOut": [
+        "느린 statusline script 금지",
+        "민감 정보 출력 주의",
+        "터미널 폭 대응"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/statusline",
+      "quote": "statusline 설정으로 TUI 하단 정보를 커스터마이즈하는 흐름."
+    },
+    "difficulty": "medium",
+    "impactTags": [
+      "ux",
+      "safety",
+      "cost"
+    ],
+    "audience": [
+      "solo-dev",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "local-mcp-server",
+    "name": "local-mcp-server",
+    "shortName": "Local MCP server",
+    "category": "mcp",
+    "introducedIn": "설정 파일",
+    "description": "로컬 stdio MCP 서버를 등록해 filesystem, DB, 사내 CLI 같은 context를 Claude Code tool로 노출합니다.",
+    "activation": {
+      "type": "settings",
+      "file": ".claude/settings.json",
+      "label": "Register local stdio MCP",
+      "snippet": "{\n  \"mcpServers\": {\n    \"local-db\": {\n      \"command\": \"node\",\n      \"args\": [\"./mcp/local-db.js\"]\n    }\n  }\n}"
+    },
+    "beforeExperience": {
+      "title": "로컬 정보를 복붙",
+      "statusBefore": "MCP: off",
+      "statusAfter": "MCP: off",
+      "frames": [
+        {
+          "id": "before-local-mcp-server-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> inspect latest migration"
+        },
+        {
+          "id": "before-local-mcp-server-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-local-mcp-server-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "로컬 MCP tool 사용",
+      "statusBefore": "MCP: off",
+      "statusAfter": "MCP: local-db connected",
+      "frames": [
+        {
+          "id": "after-local-mcp-server-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> inspect latest migration"
+        },
+        {
+          "id": "after-local-mcp-server-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "Using mcp__local-db__list_migrations…\n3 pending migrations found",
+          "tone": "info"
+        },
+        {
+          "id": "after-local-mcp-server-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ MCP: local-db connected",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "개발 환경에 있는 정보를 안전한 tool 인터페이스로 조회해 복붙/수동 검색을 줄입니다.",
+      "goodFor": [
+        "DB/schema 조회",
+        "사내 CLI wrapping",
+        "로컬 문서 검색"
+      ],
+      "watchOut": [
+        "서버 startup 안정성",
+        "권한/secret 범위",
+        "tool 이름 충돌"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+      "quote": "로컬 stdio MCP 서버를 Claude Code에 등록하는 흐름."
+    },
+    "difficulty": "advanced",
+    "impactTags": [
+      "context",
+      "automation",
+      "quality"
+    ],
+    "audience": [
+      "mcp-user",
+      "team",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "remote-mcp-server",
+    "name": "remote-mcp-server",
+    "shortName": "Remote MCP server",
+    "category": "mcp",
+    "introducedIn": "설정 파일",
+    "description": "HTTP/SSE 기반 원격 MCP 서버를 연결해 조직 서비스나 hosted tool을 Claude Code에서 사용합니다.",
+    "activation": {
+      "type": "settings",
+      "file": ".claude/settings.json",
+      "label": "Register remote MCP",
+      "snippet": "{\n  \"mcpServers\": {\n    \"docs\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.example.com\"\n    }\n  }\n}"
+    },
+    "beforeExperience": {
+      "title": "외부 SaaS context 수동 조회",
+      "statusBefore": "MCP: local only",
+      "statusAfter": "MCP: local only",
+      "frames": [
+        {
+          "id": "before-remote-mcp-server-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> find onboarding guide"
+        },
+        {
+          "id": "before-remote-mcp-server-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-remote-mcp-server-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "원격 MCP 연결",
+      "statusBefore": "MCP: local only",
+      "statusAfter": "MCP: remote docs connected",
+      "frames": [
+        {
+          "id": "after-remote-mcp-server-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> find onboarding guide"
+        },
+        {
+          "id": "after-remote-mcp-server-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "Using mcp__docs__search…\nResult: Engineering onboarding / Claude Code setup",
+          "tone": "info"
+        },
+        {
+          "id": "after-remote-mcp-server-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ MCP: remote docs connected",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "팀 지식베이스나 hosted integration을 표준 MCP surface로 연결해 context retrieval을 자동화합니다.",
+      "goodFor": [
+        "사내 문서 검색",
+        "hosted integration",
+        "팀 공통 tool 배포"
+      ],
+      "watchOut": [
+        "네트워크/인증 실패 처리",
+        "데이터 반출 정책",
+        "서버 availability"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+      "quote": "원격 MCP 서버를 Claude Code에 연결하는 흐름."
+    },
+    "difficulty": "advanced",
+    "impactTags": [
+      "context",
+      "automation"
+    ],
+    "audience": [
+      "team",
+      "mcp-user",
+      "power-user"
+    ],
+    "relatedReleases": []
+  },
+  {
+    "id": "mcp-oauth-auth",
+    "name": "mcp-oauth-auth",
+    "shortName": "MCP OAuth auth",
+    "category": "mcp",
+    "introducedIn": "인증 흐름",
+    "description": "인증이 필요한 MCP 서버에 OAuth/browser flow로 로그인해 개인/조직 권한 범위로 tool을 사용합니다.",
+    "activation": {
+      "type": "command",
+      "label": "Authenticate MCP server",
+      "snippet": "claude mcp login docs"
+    },
+    "beforeExperience": {
+      "title": "MCP 인증 실패",
+      "statusBefore": "MCP auth: missing",
+      "statusAfter": "MCP auth: missing",
+      "frames": [
+        {
+          "id": "before-mcp-oauth-auth-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> claude mcp login docs"
+        },
+        {
+          "id": "before-mcp-oauth-auth-2",
+          "kind": "line",
+          "at": "00:01",
+          "content": "설정/명령을 찾지 못해 수동 확인이나 반복 입력이 필요합니다.",
+          "tone": "warn"
+        },
+        {
+          "id": "before-mcp-oauth-auth-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "작업 흐름이 잠시 멈추고 context가 흩어집니다."
+        }
+      ]
+    },
+    "afterExperience": {
+      "title": "OAuth로 MCP 인증 완료",
+      "statusBefore": "MCP auth: missing",
+      "statusAfter": "MCP auth: connected",
+      "frames": [
+        {
+          "id": "after-mcp-oauth-auth-1",
+          "kind": "type",
+          "at": "00:00",
+          "content": "> claude mcp login docs"
+        },
+        {
+          "id": "after-mcp-oauth-auth-2",
+          "kind": "status-change",
+          "at": "00:01",
+          "title": "OAuth",
+          "content": "Opening browser for OAuth…\n✓ authenticated as user@example.com",
+          "tone": "good"
+        },
+        {
+          "id": "after-mcp-oauth-auth-3",
+          "kind": "toast",
+          "at": "00:03",
+          "content": "✓ MCP auth: connected",
+          "tone": "good"
+        }
+      ]
+    },
+    "impact": {
+      "summary": "토큰을 설정 파일에 직접 넣지 않고 provider가 요구하는 권한 부여 흐름으로 tool 접근을 관리합니다.",
+      "goodFor": [
+        "개인 계정 기반 SaaS",
+        "조직 SSO 환경",
+        "권한 만료 갱신"
+      ],
+      "watchOut": [
+        "브라우저 없는 환경 대응",
+        "scope 최소화",
+        "토큰 저장 위치 확인"
+      ]
+    },
+    "source": {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+      "quote": "MCP 서버 인증/OAuth flow로 권한 있는 tool을 연결하는 흐름."
+    },
+    "difficulty": "advanced",
+    "impactTags": [
+      "safety",
+      "context",
+      "automation"
+    ],
+    "audience": [
+      "team",
+      "mcp-user",
+      "power-user"
+    ],
+    "relatedReleases": []
   }
 ]

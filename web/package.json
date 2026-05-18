@@ -6,9 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "prebuild": "node ../scripts/validate-feature-lab.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-url-state.mjs",
+    "prebuild": "node ../scripts/validate-feature-lab.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-url-state.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-source-card.mjs",
     "validate:feature-lab": "node ../scripts/validate-feature-lab.mjs",
-    "validate:feature-lab-url-state": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-url-state.mjs"
+    "validate:feature-lab-url-state": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-url-state.mjs",
+    "validate:feature-lab-source-card": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-source-card.mjs"
   },
   "dependencies": {
     "next": "16.2.4",

@@ -51,6 +51,23 @@ const frameTone: Record<NonNullable<TuiFrame["tone"]>, string> = {
   warn: "text-amber-200",
 };
 
+async function copyTextToClipboard(text: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.left = "-9999px";
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textArea);
+}
+
 function CategoryPill({ category }: { category: ClaudeCodeFeature["category"] }) {
   return (
     <span
@@ -66,6 +83,36 @@ function MetadataPill({ children }: { children: React.ReactNode }) {
     <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
       {children}
     </span>
+  );
+}
+
+function CopyActionButton({
+  copied,
+  idleLabel,
+  copiedLabel = "Copied",
+  onClick,
+  tone = "zinc",
+}: {
+  copied: boolean;
+  idleLabel: string;
+  copiedLabel?: string;
+  onClick: () => void;
+  tone?: "zinc" | "cyan";
+}) {
+  const toneClass =
+    tone === "cyan"
+      ? "border-cyan-800 bg-cyan-950/40 text-cyan-100 hover:border-cyan-500 hover:bg-cyan-900/60"
+      : "border-zinc-200 bg-white text-zinc-700 hover:border-indigo-300 hover:text-indigo-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:border-indigo-500 dark:hover:text-indigo-200";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-xs font-black transition ${toneClass}`}
+      aria-live="polite"
+    >
+      {copied ? `✓ ${copiedLabel}` : idleLabel}
+    </button>
   );
 }
 
@@ -261,9 +308,17 @@ function FeatureCatalog({
 }
 
 function ActivationEditor({ feature }: { feature: ClaudeCodeFeature }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await copyTextToClipboard(feature.activation.snippet);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  };
+
   return (
     <section className="overflow-hidden rounded-[1.75rem] border border-zinc-200 bg-white shadow-xl shadow-zinc-200/60 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-black/20">
-      <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/70">
+      <div className="flex flex-col gap-3 border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/70 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
             Activation snippet
@@ -272,11 +327,19 @@ function ActivationEditor({ feature }: { feature: ClaudeCodeFeature }) {
             {feature.activation.label}
           </h3>
         </div>
-        {feature.activation.file && (
-          <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 font-mono text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
-            {feature.activation.file}
-          </span>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          {feature.activation.file && (
+            <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 font-mono text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
+              {feature.activation.file}
+            </span>
+          )}
+          <CopyActionButton
+            copied={copied}
+            idleLabel="Copy snippet"
+            copiedLabel="Snippet copied"
+            onClick={handleCopy}
+          />
+        </div>
       </div>
       <pre className="max-h-[24rem] overflow-auto bg-[#0b1020] p-5 font-mono text-[12px] leading-6 text-cyan-100 sm:text-[13px]">
         {feature.activation.snippet}
@@ -595,6 +658,7 @@ export function FeatureLabPlayground({
   const [activeCategory, setActiveCategory] = useState<ClaudeCodeFeature["category"] | "all">("all");
   const [activeDifficulty, setActiveDifficulty] = useState<FeatureDifficulty | "all">("all");
   const [activeImpactTag, setActiveImpactTag] = useState<FeatureImpactTag | "all">("all");
+  const [copiedShareUrl, setCopiedShareUrl] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -641,6 +705,15 @@ export function FeatureLabPlayground({
   const handleSelect = (feature: ClaudeCodeFeature) => {
     setSelectedFeature(feature);
     updateFeatureQueryParam(feature.id);
+    setCopiedShareUrl(false);
+  };
+
+  const handleCopyShareUrl = async () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("feature", selectedFeature.id);
+    await copyTextToClipboard(url.toString());
+    setCopiedShareUrl(true);
+    window.setTimeout(() => setCopiedShareUrl(false), 1600);
   };
 
   const resetFilters = () => {
@@ -688,14 +761,22 @@ export function FeatureLabPlayground({
               </p>
             </div>
             <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/70 lg:w-80">
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                Shareable feature URL
-              </p>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                  Shareable feature URL
+                </p>
+                <CopyActionButton
+                  copied={copiedShareUrl}
+                  idleLabel="Copy link"
+                  copiedLabel="Link copied"
+                  onClick={handleCopyShareUrl}
+                />
+              </div>
               <code className="mt-3 block break-words rounded-2xl bg-zinc-950 px-4 py-3 font-mono text-xs font-bold text-cyan-200 dark:bg-black">
                 ?feature={selectedFeature.id}
               </code>
               <p className="mt-3 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-                feature id가 URL에 남아 리뷰/문서에서 특정 기능으로 바로 연결할 수 있습니다.
+                버튼은 현재 preview/production base path를 포함한 전체 URL을 복사합니다. 리뷰/문서에서 바로 붙여넣을 수 있습니다.
               </p>
             </div>
           </div>

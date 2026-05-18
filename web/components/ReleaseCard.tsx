@@ -2,11 +2,31 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { DevImpactRef, Release } from "@/lib/types";
-import type { ClaudeCodeFeature } from "@/lib/feature-lab";
-import { withBasePath } from "@/lib/assets";
+import {
+  featureCategoryLabels,
+  featureDifficultyLabels,
+  type ClaudeCodeFeature,
+} from "@/lib/feature-lab";
+import { buildFeatureLabHref } from "@/lib/feature-lab-url";
 import { formatDateKorean } from "@/lib/format";
 import { SummarySection } from "./SummarySection";
 import { OriginalMarkdown } from "./OriginalMarkdown";
+
+const categoryAccent: Record<ClaudeCodeFeature["category"], string> = {
+  env: "border-cyan-200 text-cyan-700 dark:border-cyan-900/70 dark:text-cyan-200",
+  settings:
+    "border-violet-200 text-violet-700 dark:border-violet-900/70 dark:text-violet-200",
+  "slash-command":
+    "border-indigo-200 text-indigo-700 dark:border-indigo-900/70 dark:text-indigo-200",
+  permission:
+    "border-emerald-200 text-emerald-700 dark:border-emerald-900/70 dark:text-emerald-200",
+  mcp: "border-amber-200 text-amber-700 dark:border-amber-900/70 dark:text-amber-200",
+  hooks: "border-rose-200 text-rose-700 dark:border-rose-900/70 dark:text-rose-200",
+  plugin: "border-sky-200 text-sky-700 dark:border-sky-900/70 dark:text-sky-200",
+  model:
+    "border-fuchsia-200 text-fuchsia-700 dark:border-fuchsia-900/70 dark:text-fuchsia-200",
+  tui: "border-zinc-200 text-zinc-700 dark:border-zinc-800 dark:text-zinc-200",
+};
 
 interface Props {
   release: Release;
@@ -31,17 +51,41 @@ function RelatedFeatureLinks({ features }: { features: ClaudeCodeFeature[] }) {
           {features.length} features
         </span>
       </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {features.map((feature) => (
-          <a
-            key={feature.id}
-            href={withBasePath(`/feature-lab/?feature=${encodeURIComponent(feature.id)}`)}
-            className="rounded-full border border-indigo-200 bg-white px-3 py-1.5 font-mono text-xs font-bold text-indigo-700 transition hover:border-indigo-400 hover:bg-indigo-100 dark:border-indigo-900/80 dark:bg-zinc-950 dark:text-indigo-200 dark:hover:border-indigo-600 dark:hover:bg-indigo-950/60"
-          >
-            {feature.name} →
-          </a>
-        ))}
-      </div>
+      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+        {features.map((feature) => {
+          const href = buildFeatureLabHref(feature);
+          const accent = categoryAccent[feature.category];
+          return (
+            <li key={feature.id}>
+              <a
+                href={href}
+                aria-label={`Feature Lab에서 ${feature.shortName} 열기 (${featureCategoryLabels[feature.category]} · ${featureDifficultyLabels[feature.difficulty]})`}
+                className={`group flex h-full flex-col gap-2 rounded-xl border bg-white px-3 py-2.5 transition hover:-translate-y-0.5 hover:shadow-sm dark:bg-zinc-950 ${accent}`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs font-black uppercase tracking-wider">
+                    {featureCategoryLabels[feature.category]}
+                  </span>
+                  <span className="rounded-full border border-current px-2 py-0.5 text-[10px] font-black uppercase tracking-wider opacity-80">
+                    {featureDifficultyLabels[feature.difficulty]}
+                  </span>
+                </div>
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="font-mono text-sm font-black text-zinc-950 dark:text-zinc-50">
+                    {feature.shortName}
+                  </span>
+                  <span className="text-xs font-black opacity-70 transition group-hover:opacity-100">
+                    Lab 열기 →
+                  </span>
+                </div>
+                <span className="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
+                  {feature.name}
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }

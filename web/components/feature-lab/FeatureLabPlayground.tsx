@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   featureAudienceLabels,
   featureCategoryLabels,
@@ -10,8 +10,12 @@ import {
   type FeatureDifficulty,
   type FeatureImpactTag,
   type TuiFrame,
-  type TuiFrameKind,
 } from "@/lib/feature-lab";
+import {
+  applyFilterParams,
+  parseFeatureLabParams,
+  type FeatureLabFilterState,
+} from "@/lib/feature-lab-url";
 import { withBasePath } from "@/lib/assets";
 import type { Release } from "@/lib/types";
 
@@ -33,23 +37,29 @@ const categoryTone: Record<ClaudeCodeFeature["category"], string> = {
   tui: "bg-zinc-100 text-zinc-700 ring-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700",
 };
 
-const frameIcon: Record<TuiFrameKind, string> = {
-  type: "›",
-  line: "│",
-  spinner: "◐",
-  "permission-prompt": "◆",
-  menu: "▣",
-  diff: "±",
-  "status-change": "↻",
-  toast: "✓",
-};
-
 const frameTone: Record<NonNullable<TuiFrame["tone"]>, string> = {
   neutral: "text-zinc-200",
-  info: "text-cyan-200",
+  info: "text-sky-200",
   good: "text-emerald-200",
   warn: "text-amber-200",
 };
+
+async function copyTextToClipboard(text: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.left = "-9999px";
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textArea);
+}
 
 function CategoryPill({ category }: { category: ClaudeCodeFeature["category"] }) {
   return (
@@ -66,6 +76,36 @@ function MetadataPill({ children }: { children: React.ReactNode }) {
     <span className="rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
       {children}
     </span>
+  );
+}
+
+function CopyActionButton({
+  copied,
+  idleLabel,
+  copiedLabel = "Copied",
+  onClick,
+  tone = "zinc",
+}: {
+  copied: boolean;
+  idleLabel: string;
+  copiedLabel?: string;
+  onClick: () => void;
+  tone?: "zinc" | "cyan";
+}) {
+  const toneClass =
+    tone === "cyan"
+      ? "border-cyan-800 bg-cyan-950/40 text-cyan-100 hover:border-cyan-500 hover:bg-cyan-900/60"
+      : "border-zinc-200 bg-white text-zinc-700 hover:border-indigo-300 hover:text-indigo-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200 dark:hover:border-indigo-500 dark:hover:text-indigo-200";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-xs font-black transition ${toneClass}`}
+      aria-live="polite"
+    >
+      {copied ? `✓ ${copiedLabel}` : idleLabel}
+    </button>
   );
 }
 
@@ -261,9 +301,17 @@ function FeatureCatalog({
 }
 
 function ActivationEditor({ feature }: { feature: ClaudeCodeFeature }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await copyTextToClipboard(feature.activation.snippet);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  };
+
   return (
     <section className="overflow-hidden rounded-[1.75rem] border border-zinc-200 bg-white shadow-xl shadow-zinc-200/60 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-black/20">
-      <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/70">
+      <div className="flex flex-col gap-3 border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/70 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
             Activation snippet
@@ -272,11 +320,19 @@ function ActivationEditor({ feature }: { feature: ClaudeCodeFeature }) {
             {feature.activation.label}
           </h3>
         </div>
-        {feature.activation.file && (
-          <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 font-mono text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
-            {feature.activation.file}
-          </span>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          {feature.activation.file && (
+            <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 font-mono text-[11px] font-bold text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
+              {feature.activation.file}
+            </span>
+          )}
+          <CopyActionButton
+            copied={copied}
+            idleLabel="Copy snippet"
+            copiedLabel="Snippet copied"
+            onClick={handleCopy}
+          />
+        </div>
       </div>
       <pre className="max-h-[24rem] overflow-auto bg-[#0b1020] p-5 font-mono text-[12px] leading-6 text-cyan-100 sm:text-[13px]">
         {feature.activation.snippet}
@@ -314,35 +370,45 @@ function TerminalStreamEntry({
 }) {
   const { frame, content, lineIndex } = step;
   const tone = frameTone[frame.tone ?? "neutral"];
-  const iconClass = frame.kind === "spinner" ? "feature-lab-spinner inline-block" : "inline-block";
-  const icon = lineIndex === 0 ? frameIcon[frame.kind] : " ";
 
   if (frame.kind === "type") {
     const command = content.replace(/^>\s?/, "");
     const visibleCommand = isActiveCommand ? command.slice(0, typedChars) : command;
 
     return (
-      <div className="flex min-h-6 items-baseline gap-2 text-cyan-100">
-        <span className="select-none text-cyan-400">claude</span>
-        <span className="select-none text-zinc-600">$</span>
+      <div className="flex min-h-6 items-baseline gap-2 text-zinc-100">
+        <span className="select-none text-zinc-500">&gt;</span>
         <span className="whitespace-pre-wrap break-words">{visibleCommand}</span>
-        {isActiveCommand && <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-cyan-300" />}
+        {isActiveCommand && <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-zinc-200" />}
+      </div>
+    );
+  }
+
+  if (frame.kind === "permission-prompt") {
+    return (
+      <div className="min-h-6 rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-2 text-amber-100">
+        {frame.title && lineIndex === 0 && <div className="mb-1 font-semibold text-amber-200">{frame.title}</div>}
+        <div className="whitespace-pre-wrap break-words">{content}</div>
+      </div>
+    );
+  }
+
+  if (frame.kind === "diff") {
+    return (
+      <div className="min-h-6 text-emerald-200">
+        {frame.title && lineIndex === 0 && <div className="mb-1 text-zinc-500">{frame.title}</div>}
+        <div className="whitespace-pre-wrap break-words rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2">
+          {content}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={`flex min-h-6 items-start gap-2 ${tone}`}>
-      <span className={`${iconClass} w-4 shrink-0 select-none text-zinc-500`}>{icon}</span>
-      <div className="min-w-0 flex-1">
-        {frame.title && lineIndex === 0 && (
-          <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-600">
-            [{frame.title}]
-          </div>
-        )}
-        <div className="whitespace-pre-wrap break-words">
-          {content}
-        </div>
+    <div className={`min-h-6 ${tone}`}>
+      {frame.title && lineIndex === 0 && <div className="mb-1 text-zinc-500">{frame.title}</div>}
+      <div className="whitespace-pre-wrap break-words">
+        {frame.kind === "spinner" && lineIndex === 0 ? `⏺ ${content}` : content}
       </div>
     </div>
   );
@@ -422,29 +488,29 @@ function AnimatedTuiScene({
   const visibleSteps = steps.slice(0, visibleCount);
 
   return (
-    <section className="overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-[#05070d] text-zinc-100 shadow-2xl shadow-cyan-950/20">
-      <div className="border-b border-zinc-800 bg-[#080b12] px-4 py-3">
+    <section className="overflow-hidden rounded-2xl border border-zinc-800 bg-[#101010] text-zinc-100 shadow-2xl shadow-black/35">
+      <div className="border-b border-zinc-800 bg-[#181818] px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.22em] text-cyan-300">
-              Claude Code TUI · {label}
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+              Claude Code · {label}
             </p>
-            <h3 className="mt-1 font-semibold tracking-tight text-zinc-50">{scene.title}</h3>
+            <h3 className="mt-1 font-mono text-sm font-semibold tracking-tight text-zinc-50">
+              ✻ {scene.title}
+            </h3>
           </div>
-          <div className="flex items-center gap-1.5" aria-hidden>
-            <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-            <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          </div>
+          <span className="hidden rounded-md border border-zinc-700 px-2 py-1 font-mono text-[11px] text-zinc-400 sm:inline-flex">
+            esc to interrupt
+          </span>
         </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] font-bold text-zinc-400">
-          <span className="rounded-full border border-zinc-800 bg-black px-2.5 py-1">
+        <div className="mt-3 flex flex-wrap items-center gap-2 font-mono text-[11px] text-zinc-500">
+          <span className="rounded-md border border-zinc-800 bg-[#101010] px-2 py-1">
             {scene.statusBefore}
           </span>
           {variant === "after" && (
             <>
               <span>→</span>
-              <span className="rounded-full border border-emerald-800 bg-emerald-950/40 px-2.5 py-1 text-emerald-200">
+              <span className="rounded-md border border-emerald-800/70 bg-emerald-950/30 px-2 py-1 text-emerald-200">
                 {scene.statusAfter}
               </span>
             </>
@@ -452,14 +518,13 @@ function AnimatedTuiScene({
         </div>
       </div>
 
-      <div className="relative min-h-[24rem] p-4">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.08),transparent_20rem)]" />
-        <div className="relative min-h-[21rem] rounded-2xl border border-zinc-800/80 bg-[#020409] p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
-          <div className="relative mb-3 flex items-center gap-2 border-b border-zinc-900 pb-3 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            Live terminal session
+      <div className="min-h-[24rem] bg-[#0c0c0c] p-4">
+        <div className="min-h-[21rem] rounded-xl border border-zinc-800 bg-[#060606] p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
+          <div className="mb-4 space-y-1 border-b border-zinc-900 pb-3 text-zinc-500">
+            <div>✻ Welcome to Claude Code</div>
+            <div>/cwd ~/cc-release · model sonnet · ? for shortcuts</div>
           </div>
-          <div className="relative space-y-1">
+          <div className="space-y-2">
             {visibleSteps.map((step, index) => (
               <TerminalStreamEntry
                 key={`${scene.title}-${step.id}`}
@@ -468,11 +533,10 @@ function AnimatedTuiScene({
                 typedChars={activeCommandIndex === index ? typedChars : step.content.length}
               />
             ))}
-            <div className="flex min-h-6 items-baseline gap-2 text-cyan-100">
-              <span className="select-none text-cyan-400">claude</span>
-              <span className="select-none text-zinc-600">$</span>
+            <div className="flex min-h-6 items-baseline gap-2 text-zinc-100">
+              <span className="select-none text-zinc-500">&gt;</span>
               {activeCommandIndex === null && (
-                <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-cyan-300" />
+                <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-zinc-200" />
               )}
             </div>
           </div>
@@ -576,10 +640,14 @@ function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
-function updateFeatureQueryParam(featureId: string) {
+function syncFilterParamsToUrl(state: FeatureLabFilterState) {
   if (typeof window === "undefined") return;
   const url = new URL(window.location.href);
-  url.searchParams.set("feature", featureId);
+  const next = applyFilterParams(url.searchParams, state);
+  const serialized = next.toString();
+  const nextSearch = serialized.length === 0 ? "" : `?${serialized}`;
+  if (nextSearch === url.search) return;
+  url.search = nextSearch;
   window.history.replaceState(null, "", url);
 }
 
@@ -595,15 +663,35 @@ export function FeatureLabPlayground({
   const [activeCategory, setActiveCategory] = useState<ClaudeCodeFeature["category"] | "all">("all");
   const [activeDifficulty, setActiveDifficulty] = useState<FeatureDifficulty | "all">("all");
   const [activeImpactTag, setActiveImpactTag] = useState<FeatureImpactTag | "all">("all");
+  const [copiedShareUrl, setCopiedShareUrl] = useState(false);
+  const hydratedRef = useRef(false);
+  const [urlSyncReady, setUrlSyncReady] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const featureId = params.get("feature");
-    const linkedFeature = features.find((feature) => feature.id === featureId);
-    if (linkedFeature) {
-      setSelectedFeature(linkedFeature);
-    }
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+    const initial = parseFeatureLabParams(window.location.search);
+    const linkedFeature = initial.featureId
+      ? features.find((feature) => feature.id === initial.featureId)
+      : undefined;
+    if (linkedFeature) setSelectedFeature(linkedFeature);
+    if (initial.query) setQuery(initial.query);
+    if (initial.category !== "all") setActiveCategory(initial.category);
+    if (initial.difficulty !== "all") setActiveDifficulty(initial.difficulty);
+    if (initial.impact !== "all") setActiveImpactTag(initial.impact);
+    setUrlSyncReady(true);
   }, [features]);
+
+  useEffect(() => {
+    if (!urlSyncReady) return;
+    syncFilterParamsToUrl({
+      featureId: selectedFeature.id,
+      query,
+      category: activeCategory,
+      difficulty: activeDifficulty,
+      impact: activeImpactTag,
+    });
+  }, [urlSyncReady, selectedFeature.id, query, activeCategory, activeDifficulty, activeImpactTag]);
 
   useEffect(() => {
     if (!features.some((feature) => feature.id === selectedFeature.id)) {
@@ -640,7 +728,23 @@ export function FeatureLabPlayground({
 
   const handleSelect = (feature: ClaudeCodeFeature) => {
     setSelectedFeature(feature);
-    updateFeatureQueryParam(feature.id);
+    setCopiedShareUrl(false);
+  };
+
+  const handleCopyShareUrl = async () => {
+    const url = new URL(window.location.href);
+    const next = applyFilterParams(url.searchParams, {
+      featureId: selectedFeature.id,
+      query,
+      category: activeCategory,
+      difficulty: activeDifficulty,
+      impact: activeImpactTag,
+    });
+    const serialized = next.toString();
+    url.search = serialized.length === 0 ? "" : `?${serialized}`;
+    await copyTextToClipboard(url.toString());
+    setCopiedShareUrl(true);
+    window.setTimeout(() => setCopiedShareUrl(false), 1600);
   };
 
   const resetFilters = () => {
@@ -688,14 +792,22 @@ export function FeatureLabPlayground({
               </p>
             </div>
             <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/70 lg:w-80">
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-                Shareable feature URL
-              </p>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                  Shareable feature URL
+                </p>
+                <CopyActionButton
+                  copied={copiedShareUrl}
+                  idleLabel="Copy link"
+                  copiedLabel="Link copied"
+                  onClick={handleCopyShareUrl}
+                />
+              </div>
               <code className="mt-3 block break-words rounded-2xl bg-zinc-950 px-4 py-3 font-mono text-xs font-bold text-cyan-200 dark:bg-black">
                 ?feature={selectedFeature.id}
               </code>
               <p className="mt-3 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-                feature id가 URL에 남아 리뷰/문서에서 특정 기능으로 바로 연결할 수 있습니다.
+                버튼은 현재 preview/production base path를 포함한 전체 URL을 복사합니다. 리뷰/문서에서 바로 붙여넣을 수 있습니다.
               </p>
             </div>
           </div>

@@ -45,12 +45,6 @@ body {
     sans-serif;
 }
 
-@keyframes feature-lab-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes feature-lab-cursor-blink {
   0%,
   45% {
@@ -60,10 +54,6 @@ body {
   100% {
     opacity: 0.15;
   }
-}
-
-.feature-lab-spinner {
-  animation: feature-lab-spin 1.1s linear infinite;
 }
 
 .feature-lab-cursor {

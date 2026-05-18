@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   featureAudienceLabels,
   featureCategoryLabels,
@@ -11,6 +11,11 @@ import {
   type FeatureImpactTag,
   type TuiFrame,
 } from "@/lib/feature-lab";
+import {
+  applyFilterParams,
+  parseFeatureLabParams,
+  type FeatureLabFilterState,
+} from "@/lib/feature-lab-url";
 import { withBasePath } from "@/lib/assets";
 import type { Release } from "@/lib/types";
 
@@ -635,10 +640,14 @@ function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
   );
 }
 
-function updateFeatureQueryParam(featureId: string) {
+function syncFilterParamsToUrl(state: FeatureLabFilterState) {
   if (typeof window === "undefined") return;
   const url = new URL(window.location.href);
-  url.searchParams.set("feature", featureId);
+  const next = applyFilterParams(url.searchParams, state);
+  const serialized = next.toString();
+  const nextSearch = serialized.length === 0 ? "" : `?${serialized}`;
+  if (nextSearch === url.search) return;
+  url.search = nextSearch;
   window.history.replaceState(null, "", url);
 }
 
@@ -655,15 +664,34 @@ export function FeatureLabPlayground({
   const [activeDifficulty, setActiveDifficulty] = useState<FeatureDifficulty | "all">("all");
   const [activeImpactTag, setActiveImpactTag] = useState<FeatureImpactTag | "all">("all");
   const [copiedShareUrl, setCopiedShareUrl] = useState(false);
+  const hydratedRef = useRef(false);
+  const [urlSyncReady, setUrlSyncReady] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const featureId = params.get("feature");
-    const linkedFeature = features.find((feature) => feature.id === featureId);
-    if (linkedFeature) {
-      setSelectedFeature(linkedFeature);
-    }
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+    const initial = parseFeatureLabParams(window.location.search);
+    const linkedFeature = initial.featureId
+      ? features.find((feature) => feature.id === initial.featureId)
+      : undefined;
+    if (linkedFeature) setSelectedFeature(linkedFeature);
+    if (initial.query) setQuery(initial.query);
+    if (initial.category !== "all") setActiveCategory(initial.category);
+    if (initial.difficulty !== "all") setActiveDifficulty(initial.difficulty);
+    if (initial.impact !== "all") setActiveImpactTag(initial.impact);
+    setUrlSyncReady(true);
   }, [features]);
+
+  useEffect(() => {
+    if (!urlSyncReady) return;
+    syncFilterParamsToUrl({
+      featureId: selectedFeature.id,
+      query,
+      category: activeCategory,
+      difficulty: activeDifficulty,
+      impact: activeImpactTag,
+    });
+  }, [urlSyncReady, selectedFeature.id, query, activeCategory, activeDifficulty, activeImpactTag]);
 
   useEffect(() => {
     if (!features.some((feature) => feature.id === selectedFeature.id)) {
@@ -700,13 +728,20 @@ export function FeatureLabPlayground({
 
   const handleSelect = (feature: ClaudeCodeFeature) => {
     setSelectedFeature(feature);
-    updateFeatureQueryParam(feature.id);
     setCopiedShareUrl(false);
   };
 
   const handleCopyShareUrl = async () => {
     const url = new URL(window.location.href);
-    url.searchParams.set("feature", selectedFeature.id);
+    const next = applyFilterParams(url.searchParams, {
+      featureId: selectedFeature.id,
+      query,
+      category: activeCategory,
+      difficulty: activeDifficulty,
+      impact: activeImpactTag,
+    });
+    const serialized = next.toString();
+    url.search = serialized.length === 0 ? "" : `?${serialized}`;
     await copyTextToClipboard(url.toString());
     setCopiedShareUrl(true);
     window.setTimeout(() => setCopiedShareUrl(false), 1600);

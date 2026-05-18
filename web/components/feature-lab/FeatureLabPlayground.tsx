@@ -7,12 +7,14 @@ import {
   featureDifficultyLabels,
   featureImpactTagLabels,
   type ClaudeCodeFeature,
+  type FeatureAudience,
   type FeatureDifficulty,
   type FeatureImpactTag,
   type TuiFrame,
 } from "@/lib/feature-lab";
 import {
   applyFilterParams,
+  buildFeatureLabSearch,
   parseFeatureLabParams,
   type FeatureLabFilterState,
 } from "@/lib/feature-lab-url";
@@ -118,10 +120,12 @@ function FeatureCatalog({
   activeCategory,
   activeDifficulty,
   activeImpactTag,
+  activeAudience,
   onQueryChange,
   onCategoryChange,
   onDifficultyChange,
   onImpactTagChange,
+  onAudienceChange,
   onSelect,
   onReset,
 }: {
@@ -132,10 +136,12 @@ function FeatureCatalog({
   activeCategory: ClaudeCodeFeature["category"] | "all";
   activeDifficulty: FeatureDifficulty | "all";
   activeImpactTag: FeatureImpactTag | "all";
+  activeAudience: FeatureAudience | "all";
   onQueryChange: (query: string) => void;
   onCategoryChange: (category: ClaudeCodeFeature["category"] | "all") => void;
   onDifficultyChange: (difficulty: FeatureDifficulty | "all") => void;
   onImpactTagChange: (tag: FeatureImpactTag | "all") => void;
+  onAudienceChange: (audience: FeatureAudience | "all") => void;
   onSelect: (feature: ClaudeCodeFeature) => void;
   onReset: () => void;
 }) {
@@ -151,6 +157,10 @@ function FeatureCatalog({
     () => Array.from(new Set(allFeatures.flatMap((feature) => feature.impactTags))),
     [allFeatures],
   );
+  const audiences = useMemo(
+    () => Array.from(new Set(allFeatures.flatMap((feature) => feature.audience))),
+    [allFeatures],
+  );
 
   return (
     <aside className="rounded-[1.75rem] border border-zinc-200 bg-white/85 p-4 shadow-xl shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-black/30 lg:sticky lg:top-6">
@@ -162,7 +172,7 @@ function FeatureCatalog({
           설정을 켜면 무엇이 바뀌나요?
         </h2>
         <p className="mt-2 text-xs leading-5 text-zinc-400">
-          검색, category, impact 기준으로 기능을 좁히고 feature별 URL로 바로 공유합니다.
+          검색, category, impact, audience 기준으로 기능을 좁히고 feature별 URL로 바로 공유합니다.
         </p>
       </div>
 
@@ -237,6 +247,24 @@ function FeatureCatalog({
             </select>
           </label>
         </div>
+
+        <label className="block">
+          <span className="mb-1 block text-[11px] font-black uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+            Audience
+          </span>
+          <select
+            value={activeAudience}
+            onChange={(event) => onAudienceChange(event.target.value as FeatureAudience | "all")}
+            className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-bold text-zinc-700 outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+          >
+            <option value="all">All</option>
+            {audiences.map((audience) => (
+              <option key={audience} value={audience}>
+                {featureAudienceLabels[audience]}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <button
           type="button"
@@ -715,6 +743,7 @@ export function FeatureLabPlayground({
   const [activeCategory, setActiveCategory] = useState<ClaudeCodeFeature["category"] | "all">("all");
   const [activeDifficulty, setActiveDifficulty] = useState<FeatureDifficulty | "all">("all");
   const [activeImpactTag, setActiveImpactTag] = useState<FeatureImpactTag | "all">("all");
+  const [activeAudience, setActiveAudience] = useState<FeatureAudience | "all">("all");
   const [copiedShareUrl, setCopiedShareUrl] = useState(false);
   const hydratedRef = useRef(false);
   const [urlSyncReady, setUrlSyncReady] = useState(false);
@@ -731,6 +760,7 @@ export function FeatureLabPlayground({
     if (initial.category !== "all") setActiveCategory(initial.category);
     if (initial.difficulty !== "all") setActiveDifficulty(initial.difficulty);
     if (initial.impact !== "all") setActiveImpactTag(initial.impact);
+    if (initial.audience !== "all") setActiveAudience(initial.audience);
     setUrlSyncReady(true);
   }, [features]);
 
@@ -742,8 +772,9 @@ export function FeatureLabPlayground({
       category: activeCategory,
       difficulty: activeDifficulty,
       impact: activeImpactTag,
+      audience: activeAudience,
     });
-  }, [urlSyncReady, selectedFeature.id, query, activeCategory, activeDifficulty, activeImpactTag]);
+  }, [urlSyncReady, selectedFeature.id, query, activeCategory, activeDifficulty, activeImpactTag, activeAudience]);
 
   useEffect(() => {
     if (!features.some((feature) => feature.id === selectedFeature.id)) {
@@ -774,14 +805,24 @@ export function FeatureLabPlayground({
       const matchesCategory = activeCategory === "all" || feature.category === activeCategory;
       const matchesDifficulty = activeDifficulty === "all" || feature.difficulty === activeDifficulty;
       const matchesImpactTag = activeImpactTag === "all" || feature.impactTags.includes(activeImpactTag);
-      return matchesQuery && matchesCategory && matchesDifficulty && matchesImpactTag;
+      const matchesAudience = activeAudience === "all" || feature.audience.includes(activeAudience);
+      return matchesQuery && matchesCategory && matchesDifficulty && matchesImpactTag && matchesAudience;
     });
-  }, [activeCategory, activeDifficulty, activeImpactTag, features, query]);
+  }, [activeAudience, activeCategory, activeDifficulty, activeImpactTag, features, query]);
 
   const handleSelect = (feature: ClaudeCodeFeature) => {
     setSelectedFeature(feature);
     setCopiedShareUrl(false);
   };
+
+  const shareableSearch = buildFeatureLabSearch("", {
+    featureId: selectedFeature.id,
+    query,
+    category: activeCategory,
+    difficulty: activeDifficulty,
+    impact: activeImpactTag,
+    audience: activeAudience,
+  });
 
   const handleCopyShareUrl = async () => {
     const url = new URL(window.location.href);
@@ -791,6 +832,7 @@ export function FeatureLabPlayground({
       category: activeCategory,
       difficulty: activeDifficulty,
       impact: activeImpactTag,
+      audience: activeAudience,
     });
     const serialized = next.toString();
     url.search = serialized.length === 0 ? "" : `?${serialized}`;
@@ -804,6 +846,7 @@ export function FeatureLabPlayground({
     setActiveCategory("all");
     setActiveDifficulty("all");
     setActiveImpactTag("all");
+    setActiveAudience("all");
   };
 
   return (
@@ -816,10 +859,12 @@ export function FeatureLabPlayground({
         activeCategory={activeCategory}
         activeDifficulty={activeDifficulty}
         activeImpactTag={activeImpactTag}
+        activeAudience={activeAudience}
         onQueryChange={setQuery}
         onCategoryChange={setActiveCategory}
         onDifficultyChange={setActiveDifficulty}
         onImpactTagChange={setActiveImpactTag}
+        onAudienceChange={setActiveAudience}
         onSelect={handleSelect}
         onReset={resetFilters}
       />
@@ -856,7 +901,7 @@ export function FeatureLabPlayground({
                 />
               </div>
               <code className="mt-3 block break-words rounded-2xl bg-zinc-950 px-4 py-3 font-mono text-xs font-bold text-cyan-200 dark:bg-black">
-                ?feature={selectedFeature.id}
+                {shareableSearch}
               </code>
               <p className="mt-3 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
                 버튼은 현재 preview/production base path를 포함한 전체 URL을 복사합니다. 리뷰/문서에서 바로 붙여넣을 수 있습니다.

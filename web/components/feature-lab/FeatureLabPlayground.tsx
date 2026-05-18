@@ -12,6 +12,8 @@ import {
   type TuiFrame,
   type TuiFrameKind,
 } from "@/lib/feature-lab";
+import { withBasePath } from "@/lib/assets";
+import type { Release } from "@/lib/types";
 
 const categoryTone: Record<ClaudeCodeFeature["category"], string> = {
   env: "bg-cyan-50 text-cyan-700 ring-cyan-200 dark:bg-cyan-950/40 dark:text-cyan-200 dark:ring-cyan-900",
@@ -480,6 +482,54 @@ function AnimatedTuiScene({
   );
 }
 
+function RelatedReleasesPanel({
+  feature,
+  releases,
+}: {
+  feature: ClaudeCodeFeature;
+  releases: Release[];
+}) {
+  const related = releases.filter((release) => feature.relatedReleases?.includes(release.version));
+  if (related.length === 0) return null;
+
+  return (
+    <section className="rounded-[1.75rem] border border-indigo-200 bg-indigo-50/70 p-5 dark:border-indigo-900/70 dark:bg-indigo-950/25">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-700 dark:text-indigo-300">
+            Related releases
+          </p>
+          <h3 className="mt-2 text-lg font-black tracking-tight text-indigo-950 dark:text-indigo-50">
+            이 기능이 등장하거나 함께 바뀐 릴리즈
+          </h3>
+        </div>
+        <span className="shrink-0 rounded-full border border-indigo-200 bg-white px-3 py-1 text-xs font-black text-indigo-700 dark:border-indigo-900 dark:bg-zinc-950 dark:text-indigo-200">
+          {related.length} releases
+        </span>
+      </div>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {related.map((release) => (
+          <a
+            key={release.version}
+            href={withBasePath(`/#release-${release.version}`)}
+            className="rounded-2xl border border-indigo-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-indigo-400 hover:shadow-md hover:shadow-indigo-100 dark:border-indigo-900/80 dark:bg-zinc-950 dark:hover:border-indigo-600 dark:hover:shadow-none"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-mono text-sm font-black text-indigo-700 dark:text-indigo-200">
+                {release.version}
+              </span>
+              <span className="text-xs font-black text-indigo-500 dark:text-indigo-300">메인에서 보기 →</span>
+            </div>
+            <p className="mt-2 line-clamp-2 text-sm leading-6 text-zinc-700 dark:text-zinc-300">
+              {release.summary.headline}
+            </p>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
   return (
     <section className="grid gap-4 lg:grid-cols-3">
@@ -533,7 +583,13 @@ function updateFeatureQueryParam(featureId: string) {
   window.history.replaceState(null, "", url);
 }
 
-export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature[] }) {
+export function FeatureLabPlayground({
+  features,
+  releases,
+}: {
+  features: ClaudeCodeFeature[];
+  releases: Release[];
+}) {
   const [selectedFeature, setSelectedFeature] = useState(features[0]);
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<ClaudeCodeFeature["category"] | "all">("all");
@@ -660,6 +716,7 @@ export function FeatureLabPlayground({ features }: { features: ClaudeCodeFeature
         </details>
 
         <ImpactPanel feature={selectedFeature} />
+        <RelatedReleasesPanel feature={selectedFeature} releases={releases} />
       </div>
     </div>
   );

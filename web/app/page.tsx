@@ -1,5 +1,6 @@
 import { withBasePath } from "@/lib/assets";
 import { getLatestUpdatedAt, getReleases } from "@/lib/data";
+import { getFeatureLabFeatures } from "@/lib/feature-lab-data";
 import { formatDateTimeKorean } from "@/lib/format";
 import { ReleaseList } from "@/components/ReleaseList";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -7,6 +8,7 @@ import { TourController } from "@/components/TourController";
 
 export default async function Home() {
   const releases = await getReleases();
+  const features = await getFeatureLabFeatures();
   const updatedAt = await getLatestUpdatedAt();
 
   return (
@@ -78,7 +80,7 @@ export default async function Home() {
             아직 수집된 릴리즈가 없습니다.
           </div>
         ) : (
-          <ReleaseList releases={releases} />
+          <ReleaseList releases={releases} features={features} />
         )}
 
         <footer className="mt-16 border-t border-zinc-200 pt-8 text-center text-xs text-zinc-500 dark:border-zinc-800">

@@ -10,6 +10,7 @@ const featuresPath = process.argv[2]
   ? path.resolve(process.argv[2])
   : path.join(root, "data", "feature-lab", "features.json");
 const sourcesPath = path.join(root, "data", "feature-lab", "sources", "changelog-items.json");
+const releasesPath = path.join(root, "data", "releases.json");
 
 const categories = new Set([
   "env",
@@ -178,8 +179,25 @@ if (!Array.isArray(features) || features.length === 0) {
   fail(`${featuresPath} must be a non-empty array`);
 }
 
+const releases = readJson(releasesPath);
+if (!Array.isArray(releases)) {
+  fail(`${releasesPath} must be an array`);
+}
+const releaseVersions = new Set();
+releases.forEach((release, index) => {
+  assertNonEmptyString(release?.version, `releases[${index}].version`);
+  releaseVersions.add(release.version);
+});
+
 const ids = new Set();
 features.forEach((feature, index) => validateFeature(feature, index, ids));
+features.forEach((feature, index) => {
+  feature.relatedReleases?.forEach((version, relIndex) => {
+    if (!releaseVersions.has(version)) {
+      fail(`features[${index}].relatedReleases[${relIndex}] references missing release: ${version}`);
+    }
+  });
+});
 
 const sourceItems = readJson(sourcesPath);
 if (!Array.isArray(sourceItems)) {

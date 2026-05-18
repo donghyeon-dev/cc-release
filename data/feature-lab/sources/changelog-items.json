@@ -42,5 +42,170 @@
     "releaseVersion": null,
     "collectedAt": "2026-05-15",
     "curationStatus": "curated"
+  },
+  {
+    "id": "permissions-command",
+    "name": "/permissions",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/iam",
+    "quote": "Slash command로 permission 상태와 규칙을 확인하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "memory-command",
+    "name": "/memory",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/memory",
+    "quote": "/memory로 Claude Code memory 파일을 관리하는 사용 경험.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "compact-command",
+    "name": "/compact",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/slash-commands",
+    "quote": "/compact로 긴 대화 context를 압축하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "cost-command",
+    "name": "/cost",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/costs",
+    "quote": "/cost와 비용 추적 문서 기반 세션 비용 확인 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "status-command",
+    "name": "/status",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/slash-commands",
+    "quote": "/status로 현재 Claude Code session 상태를 확인하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "doctor-command",
+    "name": "/doctor",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/troubleshooting",
+    "quote": "/doctor 진단 명령으로 환경 문제를 점검하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "help-command",
+    "name": "/help",
+    "category": "slash-command",
+    "introducedIn": "Slash command",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/slash-commands",
+    "quote": "/help로 사용 가능한 slash command를 탐색하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "permission-denylist",
+    "name": "permissions.deny",
+    "category": "permission",
+    "introducedIn": "설정 파일",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/settings",
+    "quote": "settings.permissions.deny로 위험 tool 호출을 차단하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "settings-scope",
+    "name": "user-project-settings",
+    "category": "settings",
+    "introducedIn": "설정 파일",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/settings",
+    "quote": "Claude Code settings scope를 user/project로 분리하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "allowed-tools-patterns",
+    "name": "allowed-tools-patterns",
+    "category": "permission",
+    "introducedIn": "설정 파일",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/settings",
+    "quote": "allow tool pattern을 좁게 설계해 자동 승인 범위를 제한하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "hooks-notifications",
+    "name": "hooks-notifications",
+    "category": "hooks",
+    "introducedIn": "설정 파일",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+    "quote": "Claude Code hooks로 lifecycle 이벤트에 command를 연결하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "statusline-config",
+    "name": "statusline-config",
+    "category": "tui",
+    "introducedIn": "설정 파일",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/statusline",
+    "quote": "statusline 설정으로 TUI 하단 정보를 커스터마이즈하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "local-mcp-server",
+    "name": "local-mcp-server",
+    "category": "mcp",
+    "introducedIn": "설정 파일",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+    "quote": "로컬 stdio MCP 서버를 Claude Code에 등록하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "remote-mcp-server",
+    "name": "remote-mcp-server",
+    "category": "mcp",
+    "introducedIn": "설정 파일",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+    "quote": "원격 MCP 서버를 Claude Code에 연결하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
+  },
+  {
+    "id": "mcp-oauth-auth",
+    "name": "mcp-oauth-auth",
+    "category": "mcp",
+    "introducedIn": "인증 흐름",
+    "sourceUrl": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+    "quote": "MCP 서버 인증/OAuth flow로 권한 있는 tool을 연결하는 흐름.",
+    "releaseVersion": null,
+    "collectedAt": "2026-05-17",
+    "curationStatus": "curated"
   }
 ]

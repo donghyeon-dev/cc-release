@@ -16,6 +16,7 @@ import {
   parseFeatureLabParams,
   type FeatureLabFilterState,
 } from "@/lib/feature-lab-url";
+import { formatFeatureSourceEvidence } from "@/lib/feature-lab-source";
 import { withBasePath } from "@/lib/assets";
 import type { Release } from "@/lib/types";
 
@@ -594,6 +595,57 @@ function RelatedReleasesPanel({
   );
 }
 
+function SourceEvidencePanel({ feature }: { feature: ClaudeCodeFeature }) {
+  const evidence = formatFeatureSourceEvidence(feature);
+  if (!evidence.hasEvidence) return null;
+
+  const href = evidence.href?.startsWith("/") ? withBasePath(evidence.href) : evidence.href;
+  const isExternal = Boolean(href?.startsWith("http"));
+
+  return (
+    <section className="rounded-[1.75rem] border border-sky-200 bg-sky-50/70 p-5 dark:border-sky-900/70 dark:bg-sky-950/25">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-sky-700 dark:text-sky-300">
+            Source evidence
+          </p>
+          <h3 className="mt-2 text-lg font-black tracking-tight text-sky-950 dark:text-sky-50">
+            어디에서 나온 기능인지 바로 확인
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="rounded-full border border-sky-200 bg-white px-3 py-1 text-xs font-black text-sky-700 dark:border-sky-900 dark:bg-zinc-950 dark:text-sky-200">
+              {evidence.hostLabel}
+            </span>
+            {evidence.releaseLabel && (
+              <span className="rounded-full border border-sky-200 bg-white px-3 py-1 font-mono text-xs font-black text-sky-700 dark:border-sky-900 dark:bg-zinc-950 dark:text-sky-200">
+                {evidence.releaseLabel}
+              </span>
+            )}
+          </div>
+        </div>
+        {href && evidence.linkLabel && (
+          <a
+            href={href}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noreferrer" : undefined}
+            className="inline-flex shrink-0 rounded-full border border-sky-300 bg-white px-4 py-2 text-xs font-black text-sky-700 transition hover:border-sky-500 hover:text-sky-900 dark:border-sky-900 dark:bg-zinc-950 dark:text-sky-200 dark:hover:border-sky-500 dark:hover:text-sky-100"
+          >
+            {evidence.linkLabel} →
+          </a>
+        )}
+      </div>
+      {evidence.quote && (
+        <blockquote className="mt-4 rounded-2xl border-l-4 border-sky-400 bg-white/80 px-4 py-3 text-sm leading-6 text-sky-950 dark:bg-zinc-950/70 dark:text-sky-100">
+          “{evidence.quote}”
+        </blockquote>
+      )}
+      <p className="mt-3 text-xs leading-5 text-sky-800/80 dark:text-sky-200/80">
+        Feature Lab의 설명·스니펫·TUI 예시는 이 evidence를 기준으로 큐레이션됩니다.
+      </p>
+    </section>
+  );
+}
+
 function ImpactPanel({ feature }: { feature: ClaudeCodeFeature }) {
   return (
     <section className="grid gap-4 lg:grid-cols-3">
@@ -828,6 +880,7 @@ export function FeatureLabPlayground({
         </details>
 
         <ImpactPanel feature={selectedFeature} />
+        <SourceEvidencePanel feature={selectedFeature} />
         <RelatedReleasesPanel feature={selectedFeature} releases={releases} />
       </div>
     </div>

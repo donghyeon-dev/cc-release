@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FeatureLabPlayground } from "@/components/feature-lab/FeatureLabPlayground";
 import { withBasePath } from "@/lib/assets";
 import { getFeatureLabFeatures } from "@/lib/feature-lab-data";
+import { getReleases } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Claude Code Feature Lab · cc-release",
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 
 export default async function FeatureLabPage() {
   const features = await getFeatureLabFeatures();
+  const releases = await getReleases();
 
   return (
     <main className="min-h-screen bg-[#f7f7f4] text-zinc-950 dark:bg-[#090909] dark:text-zinc-50">
@@ -46,7 +48,7 @@ export default async function FeatureLabPage() {
           </div>
         </header>
 
-        <FeatureLabPlayground features={features} />
+        <FeatureLabPlayground features={features} releases={releases} />
       </div>
     </main>
   );

@@ -99,7 +99,10 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.126",
+      "v2.1.119"
+    ]
   },
   {
     "id": "permission-allowlist",
@@ -211,7 +214,11 @@
       "ci",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.141",
+      "v2.1.136",
+      "v2.1.116"
+    ]
   },
   {
     "id": "model-picker",
@@ -313,7 +320,11 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.143",
+      "v2.1.142",
+      "v2.1.111"
+    ]
   },
   {
     "id": "mcp-server-toggle",
@@ -409,7 +420,11 @@
       "mcp-user",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.142",
+      "v2.1.141",
+      "v2.1.136"
+    ]
   },
   {
     "id": "permissions-command",
@@ -505,7 +520,11 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.141",
+      "v2.1.136",
+      "v2.1.116"
+    ]
   },
   {
     "id": "memory-command",
@@ -599,7 +618,10 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.121",
+      "v2.1.108"
+    ]
   },
   {
     "id": "compact-command",
@@ -694,7 +716,10 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.142",
+      "v2.1.141"
+    ]
   },
   {
     "id": "cost-command",
@@ -788,7 +813,10 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.143",
+      "v2.1.139"
+    ]
   },
   {
     "id": "status-command",
@@ -882,7 +910,10 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.141",
+      "v2.1.140"
+    ]
   },
   {
     "id": "doctor-command",
@@ -976,7 +1007,11 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.141",
+      "v2.1.140",
+      "v2.1.119"
+    ]
   },
   {
     "id": "help-command",
@@ -1070,7 +1105,10 @@
       "solo-dev",
       "team"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.141",
+      "v2.1.139"
+    ]
   },
   {
     "id": "permission-denylist",
@@ -1166,7 +1204,10 @@
       "ci",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.136",
+      "v2.1.141"
+    ]
   },
   {
     "id": "settings-scope",
@@ -1262,7 +1303,11 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.142",
+      "v2.1.143",
+      "v2.1.119"
+    ]
   },
   {
     "id": "allowed-tools-patterns",
@@ -1359,7 +1404,10 @@
       "ci",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.141",
+      "v2.1.136"
+    ]
   },
   {
     "id": "hooks-notifications",
@@ -1455,7 +1503,10 @@
       "ci",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.143",
+      "v2.1.141"
+    ]
   },
   {
     "id": "statusline-config",
@@ -1552,7 +1603,10 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.141",
+      "v2.1.132"
+    ]
   },
   {
     "id": "local-mcp-server",
@@ -1648,7 +1702,11 @@
       "team",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.142",
+      "v2.1.141",
+      "v2.1.136"
+    ]
   },
   {
     "id": "remote-mcp-server",
@@ -1743,7 +1801,11 @@
       "mcp-user",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.142",
+      "v2.1.136",
+      "v2.1.118"
+    ]
   },
   {
     "id": "mcp-oauth-auth",
@@ -1839,6 +1901,9 @@
       "mcp-user",
       "power-user"
     ],
-    "relatedReleases": []
+    "relatedReleases": [
+      "v2.1.129",
+      "v2.1.118"
+    ]
   }
 ]

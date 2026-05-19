@@ -1,6 +1,7 @@
 import type {
   ClaudeCodeFeature,
   ClaudeCodeFeatureCategory,
+  FeatureAudience,
   FeatureDifficulty,
   FeatureImpactTag,
 } from "./feature-lab";
@@ -9,7 +10,7 @@ export const FEATURE_LAB_PATH = "/feature-lab/";
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-export const FEATURE_LAB_PARAMS = ["feature", "q", "category", "difficulty", "impact"] as const;
+export const FEATURE_LAB_PARAMS = ["feature", "q", "category", "difficulty", "impact", "audience"] as const;
 export type FeatureLabParam = (typeof FEATURE_LAB_PARAMS)[number];
 
 const CATEGORY_VALUES = new Set<ClaudeCodeFeatureCategory>([
@@ -36,12 +37,15 @@ const IMPACT_VALUES = new Set<FeatureImpactTag>([
   "cost",
 ]);
 
+const AUDIENCE_VALUES = new Set<FeatureAudience>(["solo-dev", "team", "ci", "mcp-user", "power-user"]);
+
 export interface FeatureLabFilterState {
   featureId: string | null;
   query: string;
   category: ClaudeCodeFeatureCategory | "all";
   difficulty: FeatureDifficulty | "all";
   impact: FeatureImpactTag | "all";
+  audience: FeatureAudience | "all";
 }
 
 export const DEFAULT_FILTER_STATE: FeatureLabFilterState = {
@@ -50,6 +54,7 @@ export const DEFAULT_FILTER_STATE: FeatureLabFilterState = {
   category: "all",
   difficulty: "all",
   impact: "all",
+  audience: "all",
 };
 
 function pickString(params: URLSearchParams, key: FeatureLabParam): string | null {
@@ -66,6 +71,7 @@ export function parseFeatureLabParams(search: string | URLSearchParams): Feature
   const rawCategory = pickString(params, "category");
   const rawDifficulty = pickString(params, "difficulty");
   const rawImpact = pickString(params, "impact");
+  const rawAudience = pickString(params, "audience");
 
   return {
     featureId,
@@ -81,6 +87,10 @@ export function parseFeatureLabParams(search: string | URLSearchParams): Feature
     impact:
       rawImpact && IMPACT_VALUES.has(rawImpact as FeatureImpactTag)
         ? (rawImpact as FeatureImpactTag)
+        : "all",
+    audience:
+      rawAudience && AUDIENCE_VALUES.has(rawAudience as FeatureAudience)
+        ? (rawAudience as FeatureAudience)
         : "all",
   };
 }
@@ -109,6 +119,7 @@ export function applyFilterParams(
   setOrDelete("category", state.category);
   setOrDelete("difficulty", state.difficulty);
   setOrDelete("impact", state.impact);
+  setOrDelete("audience", state.audience);
 
   return next;
 }

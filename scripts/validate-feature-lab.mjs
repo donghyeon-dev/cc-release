@@ -6,8 +6,24 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
-const featuresPath = process.argv[2]
-  ? path.resolve(process.argv[2])
+const args = process.argv.slice(2);
+const requireV2Fields = args.includes("--require-v2-fields");
+const minV2FeaturesArg = args.find((arg) => arg.startsWith("--min-v2-features="));
+const minV2Features = minV2FeaturesArg ? Number(minV2FeaturesArg.split("=")[1]) : 0;
+if (!Number.isInteger(minV2Features) || minV2Features < 0) {
+  throw new Error("--min-v2-features must be a non-negative integer");
+}
+const knownFlagPrefixes = ["--require-v2-fields", "--min-v2-features="];
+args
+  .filter((arg) => arg.startsWith("--"))
+  .forEach((arg) => {
+    if (!knownFlagPrefixes.some((flag) => arg === flag || (flag.endsWith("=") && arg.startsWith(flag)))) {
+      throw new Error(`Unknown option: ${arg}`);
+    }
+  });
+const featuresPathArg = args.find((arg) => !arg.startsWith("--"));
+const featuresPath = featuresPathArg
+  ? path.resolve(featuresPathArg)
   : path.join(root, "data", "feature-lab", "features.json");
 const sourcesPath = path.join(root, "data", "feature-lab", "sources", "changelog-items.json");
 const releasesPath = path.join(root, "data", "releases.json");
@@ -38,6 +54,8 @@ const frameKinds = new Set([
   "toast",
 ]);
 const tones = new Set(["neutral", "good", "warn", "info"]);
+const configExampleLanguages = new Set(["json", "bash", "markdown", "text"]);
+const riskLevels = new Set(["low", "medium", "high"]);
 
 function fail(message) {
   throw new Error(message);
@@ -86,6 +104,44 @@ function assertOptionalReleaseArray(value, label) {
     if (!/^v?\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$/.test(item)) {
       fail(`${label}[${index}] must look like a release version, for example v2.1.143`);
     }
+  });
+}
+
+
+function assertOptionalConfigExamples(value, label) {
+  if (value === undefined) return;
+  if (!Array.isArray(value) || value.length === 0) {
+    fail(`${label} must be a non-empty array when present`);
+  }
+  value.forEach((example, index) => {
+    const itemLabel = `${label}[${index}]`;
+    if (!example || typeof example !== "object" || Array.isArray(example)) {
+      fail(`${itemLabel} must be an object`);
+    }
+    assertNonEmptyString(example.label, `${itemLabel}.label`);
+    if (example.file !== undefined) assertNonEmptyString(example.file, `${itemLabel}.file`);
+    if (!configExampleLanguages.has(example.language)) {
+      fail(`${itemLabel}.language must be one of: ${Array.from(configExampleLanguages).join(", ")}`);
+    }
+    assertNonEmptyString(example.code, `${itemLabel}.code`);
+  });
+}
+
+function assertOptionalRisks(value, label) {
+  if (value === undefined) return;
+  if (!Array.isArray(value) || value.length === 0) {
+    fail(`${label} must be a non-empty array when present`);
+  }
+  value.forEach((risk, index) => {
+    const itemLabel = `${label}[${index}]`;
+    if (!risk || typeof risk !== "object" || Array.isArray(risk)) {
+      fail(`${itemLabel} must be an object`);
+    }
+    if (!riskLevels.has(risk.level)) {
+      fail(`${itemLabel}.level must be one of: ${Array.from(riskLevels).join(", ")}`);
+    }
+    assertNonEmptyString(risk.text, `${itemLabel}.text`);
+    if (risk.mitigation !== undefined) assertNonEmptyString(risk.mitigation, `${itemLabel}.mitigation`);
   });
 }
 
@@ -143,6 +199,28 @@ function validateFeature(feature, index, ids) {
   assertEnumArray(feature.impactTags, impactTags, `${label}.impactTags`);
   assertEnumArray(feature.audience, audiences, `${label}.audience`);
   assertOptionalReleaseArray(feature.relatedReleases, `${label}.relatedReleases`);
+  assertOptionalStringArray(feature.useCases, `${label}.useCases`);
+  assertOptionalStringArray(feature.setupSteps, `${label}.setupSteps`);
+  assertOptionalConfigExamples(feature.configExamples, `${label}.configExamples`);
+  assertOptionalRisks(feature.risks, `${label}.risks`);
+  if (feature.relatedFeatureIds !== undefined) {
+    assertStringArray(feature.relatedFeatureIds, `${label}.relatedFeatureIds`);
+    const relatedIds = new Set();
+    feature.relatedFeatureIds.forEach((featureId, relatedIndex) => {
+      if (relatedIds.has(featureId)) {
+        fail(`${label}.relatedFeatureIds[${relatedIndex}] is duplicated: ${featureId}`);
+      }
+      relatedIds.add(featureId);
+    });
+  }
+  if (requireV2Fields) {
+    assertStringArray(feature.useCases, `${label}.useCases`);
+    assertStringArray(feature.setupSteps, `${label}.setupSteps`);
+    assertOptionalConfigExamples(feature.configExamples, `${label}.configExamples`);
+    if (feature.configExamples === undefined) fail(`${label}.configExamples must be present in --require-v2-fields mode`);
+    assertOptionalRisks(feature.risks, `${label}.risks`);
+    if (feature.risks === undefined) fail(`${label}.risks must be present in --require-v2-fields mode`);
+  }
 
   if (!feature.activation || typeof feature.activation !== "object") {
     fail(`${label}.activation must be an object`);
@@ -191,7 +269,33 @@ releases.forEach((release, index) => {
 
 const ids = new Set();
 features.forEach((feature, index) => validateFeature(feature, index, ids));
+if (minV2Features > 0) {
+  const v2Features = features.filter(
+    (feature) =>
+      Array.isArray(feature.useCases) &&
+      feature.useCases.length > 0 &&
+      Array.isArray(feature.setupSteps) &&
+      feature.setupSteps.length > 0 &&
+      Array.isArray(feature.configExamples) &&
+      feature.configExamples.length > 0 &&
+      Array.isArray(feature.risks) &&
+      feature.risks.length > 0 &&
+      Array.isArray(feature.relatedFeatureIds) &&
+      feature.relatedFeatureIds.length > 0,
+  );
+  if (v2Features.length < minV2Features) {
+    fail(`feature-lab catalog must include at least ${minV2Features} v2-enriched features, found ${v2Features.length}`);
+  }
+}
 features.forEach((feature, index) => {
+  feature.relatedFeatureIds?.forEach((featureId, relIndex) => {
+    if (!ids.has(featureId)) {
+      fail(`features[${index}].relatedFeatureIds[${relIndex}] references missing feature: ${featureId}`);
+    }
+    if (featureId === feature.id) {
+      fail(`features[${index}].relatedFeatureIds[${relIndex}] must not reference itself: ${featureId}`);
+    }
+  });
   feature.relatedReleases?.forEach((version, relIndex) => {
     if (!releaseVersions.has(version)) {
       fail(`features[${index}].relatedReleases[${relIndex}] references missing release: ${version}`);

@@ -423,27 +423,26 @@ curl -L 'https://donghyeon-dev.github.io/cc-release/preview/feature-lab/?feature
 - Whether all existing 19 features should get v2 fields before merge, or only high-value subset plus graceful fallback.
 - Whether Config Simulator should remain inside Feature Lab detail sections or become a separate milestone route.
 
-## Next goal
+## Current goal status
 
-Goal 3 is **Empty and Invalid State Hardening**. See `docs/plans/2026-05-19-feature-lab-v2-goal-3-empty-invalid-states.md`.
+Goal 4 is **Deep-Link and Static Export QA**. See `docs/plans/2026-05-19-feature-lab-v2-goal-4-deeplink-qa.md`.
 
-Implement it in the next Feature Lab PR:
+This PR adds:
 
-1. Empty result state with active filters and one-click reset.
-2. Invalid `feature=<id>` recovery notice.
-3. Hidden selected-feature notice when filters exclude the current feature.
-4. Stable pagination for zero-result and filter-change states.
-5. URL/deep-link non-regression validation.
-6. GitHub Pages preview verification.
+1. Dedicated deep-link validator for every feature id.
+2. Round-trip checks for representative query/filter combinations.
+3. `--require-export` mode that checks `web/out/index.html` and `web/out/feature-lab/index.html` after build.
+4. `web/package.json` script/prebuild/postbuild integration so broken deep links fail before or immediately after static export.
+5. GitHub Pages preview and production verification for representative deep links.
 
 ## Definition of Done
 
-- [ ] `docs/roadmap.md` and this plan exist.
-- [ ] Long-running draft PR exists for Feature Lab v2.
-- [ ] Content model v2 fields are typed and validated.
-- [ ] At least 5 high-value features include v2 fields.
-- [ ] Feature detail UI renders use cases, setup steps, config examples, risks, related features.
-- [ ] Empty/invalid URL states are friendly and tested.
-- [ ] Feature deep-link/URL validators pass.
-- [ ] Next static build passes with `NEXT_PUBLIC_BASE_PATH=/cc-release`.
+- [x] `docs/roadmap.md` and this plan exist.
+- [x] Long-running draft PR exists for Feature Lab v2.
+- [x] Content model v2 fields are typed and validated.
+- [x] At least 5 high-value features include v2 fields.
+- [x] Feature detail UI renders use cases, setup steps, config examples, risks, related features.
+- [x] Empty/invalid URL states are friendly and tested.
+- [x] Feature deep-link/URL validators pass.
+- [x] Next static build passes with `NEXT_PUBLIC_BASE_PATH=/cc-release`.
 - [ ] GitHub Pages preview is deployed and verified.

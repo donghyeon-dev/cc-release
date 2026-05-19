@@ -29,6 +29,23 @@ export type FeatureAudience =
   | "mcp-user"
   | "power-user";
 
+export type FeatureConfigExampleLanguage = "json" | "bash" | "markdown" | "text";
+
+export type FeatureRiskLevel = "low" | "medium" | "high";
+
+export interface FeatureConfigExample {
+  label: string;
+  file?: string;
+  language: FeatureConfigExampleLanguage;
+  code: string;
+}
+
+export interface FeatureRisk {
+  level: FeatureRiskLevel;
+  text: string;
+  mitigation?: string;
+}
+
 export type TuiFrameKind =
   | "type"
   | "line"
@@ -65,6 +82,11 @@ export interface ClaudeCodeFeature {
   difficulty: FeatureDifficulty;
   impactTags: FeatureImpactTag[];
   audience: FeatureAudience[];
+  useCases?: string[];
+  setupSteps?: string[];
+  configExamples?: FeatureConfigExample[];
+  risks?: FeatureRisk[];
+  relatedFeatureIds?: string[];
   relatedReleases?: string[];
   activation: {
     type: ActivationKind;

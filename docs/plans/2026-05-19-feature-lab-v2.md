@@ -425,14 +425,14 @@ curl -L 'https://donghyeon-dev.github.io/cc-release/preview/feature-lab/?feature
 
 ## Next goal
 
-Goal 2 is **Selected Stack & Comparison MVP**. See `docs/plans/2026-05-19-feature-lab-v2-goal-2-selected-stack.md`.
+Goal 3 is **Empty and Invalid State Hardening**. See `docs/plans/2026-05-19-feature-lab-v2-goal-3-empty-invalid-states.md`.
 
-Implement it in the current draft PR before merging Feature Lab v2:
+Implement it in the next Feature Lab PR:
 
-1. Local selected stack of up to 3 features.
-2. Add/remove/clear stack actions.
-3. Suggested starter stacks.
-4. Comparison matrix for two or more selected features.
+1. Empty result state with active filters and one-click reset.
+2. Invalid `feature=<id>` recovery notice.
+3. Hidden selected-feature notice when filters exclude the current feature.
+4. Stable pagination for zero-result and filter-change states.
 5. URL/deep-link non-regression validation.
 6. GitHub Pages preview verification.
 

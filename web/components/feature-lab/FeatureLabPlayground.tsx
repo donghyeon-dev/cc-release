@@ -217,6 +217,14 @@ function FeatureCatalog({
     if (currentPage > totalPages) setCurrentPage(totalPages);
   }, [currentPage, totalPages]);
 
+  const activeFilterLabels = [
+    query.trim() ? `Search: ${query.trim()}` : null,
+    activeCategory !== "all" ? `Category: ${featureCategoryLabels[activeCategory]}` : null,
+    activeDifficulty !== "all" ? `Difficulty: ${featureDifficultyLabels[activeDifficulty]}` : null,
+    activeImpactTag !== "all" ? `Impact: ${featureImpactTagLabels[activeImpactTag]}` : null,
+    activeAudience !== "all" ? `Audience: ${featureAudienceLabels[activeAudience]}` : null,
+  ].filter((label): label is string => Boolean(label));
+
   return (
     <aside className="rounded-[1.75rem] border border-zinc-200 bg-white/85 p-4 shadow-xl shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-black/30 lg:sticky lg:top-6">
       <div className="rounded-3xl bg-zinc-950 p-4 text-white dark:bg-black">
@@ -365,8 +373,39 @@ function FeatureCatalog({
 
       <div className="mt-3 space-y-2">
         {features.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-400">
-            조건에 맞는 기능이 없습니다. 검색어를 줄이거나 필터를 초기화하세요.
+          <div
+            role="status"
+            aria-live="polite"
+            className="rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/70 p-4 text-sm text-zinc-700 dark:border-indigo-900/70 dark:bg-indigo-950/20 dark:text-zinc-200"
+          >
+            <p className="font-black text-zinc-950 dark:text-zinc-50">No matching features</p>
+            <p className="mt-2 text-xs leading-5 text-zinc-600 dark:text-zinc-300">
+              조건에 맞는 기능이 없습니다. Active filters를 확인하거나 Clear filters로 전체 catalog로 돌아가세요.
+            </p>
+            {activeFilterLabels.length > 0 && (
+              <div className="mt-3">
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-indigo-700 dark:text-indigo-300">
+                  Active filters
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {activeFilterLabels.map((label) => (
+                    <span
+                      key={label}
+                      className="rounded-full border border-indigo-200 bg-white px-2.5 py-1 text-[11px] font-bold text-indigo-800 dark:border-indigo-900 dark:bg-zinc-950 dark:text-indigo-200"
+                    >
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={onReset}
+              className="mt-4 rounded-full bg-indigo-600 px-3 py-2 text-[11px] font-black uppercase tracking-wider text-white transition hover:bg-indigo-500"
+            >
+              Clear filters
+            </button>
           </div>
         )}
         {paginatedFeatures.map((feature) => {
@@ -1277,6 +1316,36 @@ function syncFilterParamsToUrl(state: FeatureLabFilterState) {
   window.history.replaceState(null, "", url);
 }
 
+function featureMatchesFilterState(feature: ClaudeCodeFeature, state: Omit<FeatureLabFilterState, "featureId">) {
+  const normalizedQuery = state.query.trim().toLowerCase();
+  const matchesQuery =
+    normalizedQuery.length === 0 ||
+    [
+      feature.id,
+      feature.name,
+      feature.shortName,
+      feature.description,
+      feature.activation.snippet,
+      feature.impact.summary,
+      ...feature.impact.goodFor,
+      ...feature.impact.watchOut,
+      ...feature.impactTags,
+      ...feature.audience,
+      ...(feature.useCases ?? []),
+      ...(feature.setupSteps ?? []),
+      ...(feature.configExamples?.flatMap((example) => [example.label, example.file ?? "", example.code]) ?? []),
+      ...(feature.risks?.flatMap((risk) => [risk.level, risk.text, risk.mitigation ?? ""]) ?? []),
+    ]
+      .join(" ")
+      .toLowerCase()
+      .includes(normalizedQuery);
+  const matchesCategory = state.category === "all" || feature.category === state.category;
+  const matchesDifficulty = state.difficulty === "all" || feature.difficulty === state.difficulty;
+  const matchesImpactTag = state.impact === "all" || feature.impactTags.includes(state.impact);
+  const matchesAudience = state.audience === "all" || feature.audience.includes(state.audience);
+  return matchesQuery && matchesCategory && matchesDifficulty && matchesImpactTag && matchesAudience;
+}
+
 export function FeatureLabPlayground({
   features,
   releases,
@@ -1293,6 +1362,7 @@ export function FeatureLabPlayground({
   const [copiedShareUrl, setCopiedShareUrl] = useState(false);
   const [selectedStackIds, setSelectedStackIds] = useState<string[]>([]);
   const [stackLimitMessage, setStackLimitMessage] = useState("");
+  const [unknownFeatureId, setUnknownFeatureId] = useState<string | null>(null);
   const hydratedRef = useRef(false);
   const [urlSyncReady, setUrlSyncReady] = useState(false);
 
@@ -1303,7 +1373,13 @@ export function FeatureLabPlayground({
     const linkedFeature = initial.featureId
       ? features.find((feature) => feature.id === initial.featureId)
       : undefined;
-    if (linkedFeature) setSelectedFeature(linkedFeature);
+    if (linkedFeature) {
+      setSelectedFeature(linkedFeature);
+    } else if (initial.featureId) {
+      const firstVisibleFeature = features.find((feature) => featureMatchesFilterState(feature, initial));
+      setSelectedFeature(firstVisibleFeature ?? features[0]);
+      setUnknownFeatureId(initial.featureId);
+    }
     if (initial.query) setQuery(initial.query);
     if (initial.category !== "all") setActiveCategory(initial.category);
     if (initial.difficulty !== "all") setActiveDifficulty(initial.difficulty);
@@ -1330,37 +1406,25 @@ export function FeatureLabPlayground({
     }
   }, [features, selectedFeature.id]);
 
-  const filteredFeatures = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-    return features.filter((feature) => {
-      const matchesQuery =
-        normalizedQuery.length === 0 ||
-        [
-          feature.id,
-          feature.name,
-          feature.shortName,
-          feature.description,
-          feature.activation.snippet,
-          feature.impact.summary,
-          ...feature.impact.goodFor,
-          ...feature.impact.watchOut,
-          ...feature.impactTags,
-          ...feature.audience,
-          ...(feature.useCases ?? []),
-          ...(feature.setupSteps ?? []),
-          ...(feature.configExamples?.flatMap((example) => [example.label, example.file ?? "", example.code]) ?? []),
-          ...(feature.risks?.flatMap((risk) => [risk.level, risk.text, risk.mitigation ?? ""]) ?? []),
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(normalizedQuery);
-      const matchesCategory = activeCategory === "all" || feature.category === activeCategory;
-      const matchesDifficulty = activeDifficulty === "all" || feature.difficulty === activeDifficulty;
-      const matchesImpactTag = activeImpactTag === "all" || feature.impactTags.includes(activeImpactTag);
-      const matchesAudience = activeAudience === "all" || feature.audience.includes(activeAudience);
-      return matchesQuery && matchesCategory && matchesDifficulty && matchesImpactTag && matchesAudience;
-    });
-  }, [activeAudience, activeCategory, activeDifficulty, activeImpactTag, features, query]);
+  const filteredFeatures = useMemo(
+    () => features.filter((feature) => featureMatchesFilterState(feature, {
+      query,
+      category: activeCategory,
+      difficulty: activeDifficulty,
+      impact: activeImpactTag,
+      audience: activeAudience,
+    })),
+    [activeAudience, activeCategory, activeDifficulty, activeImpactTag, features, query],
+  );
+
+  const hasActiveFilters =
+    query.trim().length > 0 ||
+    activeCategory !== "all" ||
+    activeDifficulty !== "all" ||
+    activeImpactTag !== "all" ||
+    activeAudience !== "all";
+  const selectedFeatureHidden =
+    hasActiveFilters && filteredFeatures.length > 0 && !filteredFeatures.some((feature) => feature.id === selectedFeature.id);
 
   const selectedStackFeatures = useMemo(
     () => selectedStackIds
@@ -1410,6 +1474,7 @@ export function FeatureLabPlayground({
 
   const handleSelect = (feature: ClaudeCodeFeature) => {
     setSelectedFeature(feature);
+    setUnknownFeatureId(null);
     setCopiedShareUrl(false);
   };
 
@@ -1460,6 +1525,17 @@ export function FeatureLabPlayground({
     setActiveAudience("all");
   };
 
+  const clearFiltersForSelectedFeature = () => {
+    resetFilters();
+    setUnknownFeatureId(null);
+  };
+
+  const showFirstMatchingFeature = () => {
+    const firstVisible = filteredFeatures[0];
+    if (!firstVisible) return;
+    handleSelect(firstVisible);
+  };
+
   return (
     <div className="grid gap-6 lg:grid-cols-[24rem_minmax(0,1fr)]">
       <FeatureCatalog
@@ -1484,6 +1560,67 @@ export function FeatureLabPlayground({
       />
 
       <div className="space-y-6">
+        {unknownFeatureId && (
+          <section
+            role="status"
+            aria-live="polite"
+            className="rounded-[1.5rem] border border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-950 dark:border-amber-900/70 dark:bg-amber-950/25 dark:text-amber-100"
+          >
+            <p className="font-black">Unknown feature id</p>
+            <p className="mt-1 leading-6">
+              <code className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-xs dark:bg-black/30">
+                {unknownFeatureId}
+              </code>{" "}
+              는 현재 catalog에 없습니다. 기본 feature로 복구했으며, 필터를 지우면 전체 목록을 다시 볼 수 있습니다.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={clearFiltersForSelectedFeature}
+                className="rounded-full bg-amber-600 px-3 py-2 text-[11px] font-black uppercase tracking-wider text-white transition hover:bg-amber-500"
+              >
+                Clear filters
+              </button>
+              <button
+                type="button"
+                onClick={() => setUnknownFeatureId(null)}
+                className="rounded-full border border-amber-300 bg-white px-3 py-2 text-[11px] font-black uppercase tracking-wider text-amber-800 transition hover:border-amber-500 dark:border-amber-900 dark:bg-zinc-950 dark:text-amber-200"
+              >
+                Dismiss
+              </button>
+            </div>
+          </section>
+        )}
+
+        {selectedFeatureHidden && (
+          <section
+            role="status"
+            aria-live="polite"
+            className="rounded-[1.5rem] border border-sky-200 bg-sky-50/80 p-4 text-sm text-sky-950 dark:border-sky-900/70 dark:bg-sky-950/25 dark:text-sky-100"
+          >
+            <p className="font-black">Selected feature is outside current filters</p>
+            <p className="mt-1 leading-6">
+              선택한 feature는 detail pane에 유지했지만 현재 catalog 필터 결과에는 숨겨져 있습니다. 필터를 지우거나 첫 번째 matching feature로 이동할 수 있습니다.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={clearFiltersForSelectedFeature}
+                className="rounded-full bg-sky-700 px-3 py-2 text-[11px] font-black uppercase tracking-wider text-white transition hover:bg-sky-600"
+              >
+                Clear filters
+              </button>
+              <button
+                type="button"
+                onClick={showFirstMatchingFeature}
+                className="rounded-full border border-sky-300 bg-white px-3 py-2 text-[11px] font-black uppercase tracking-wider text-sky-800 transition hover:border-sky-500 dark:border-sky-900 dark:bg-zinc-950 dark:text-sky-200"
+              >
+                Show first matching feature
+              </button>
+            </div>
+          </section>
+        )}
+
         <section className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white/90 p-6 shadow-xl shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-black/25 sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl">

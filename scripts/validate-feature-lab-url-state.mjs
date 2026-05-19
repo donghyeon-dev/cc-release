@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const componentPath = path.join(root, "web", "components", "feature-lab", "FeatureLabPlayground.tsx");
+const component = fs.readFileSync(componentPath, "utf8");
 const moduleUrl = pathToFileURL(path.join(root, "web", "lib", "feature-lab-url.ts")).href;
 const {
   applyFilterParams,
@@ -69,5 +72,29 @@ assert.equal(
   buildFeatureLabHref({ id: "mcp-oauth-auth" }),
   `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/feature-lab/?feature=mcp-oauth-auth`,
 );
+
+assert.deepEqual(parseFeatureLabParams("?feature=not-a-real-feature&category=env"), {
+  featureId: "not-a-real-feature",
+  query: "",
+  category: "env",
+  difficulty: "all",
+  impact: "all",
+  audience: "all",
+});
+
+for (const snippet of [
+  "No matching features",
+  "Active filters",
+  "Clear filters",
+  "Selected feature is outside current filters",
+  "Unknown feature id",
+  "Show first matching feature",
+  "Dismiss",
+  "role=\"status\"",
+  "aria-live=\"polite\"",
+  "featureMatchesFilterState",
+]) {
+  assert.ok(component.includes(snippet), `Missing Goal 3 UI snippet: ${snippet}`);
+}
 
 console.log("✓ feature-lab URL state helpers valid");

@@ -425,16 +425,15 @@ curl -L 'https://donghyeon-dev.github.io/cc-release/preview/feature-lab/?feature
 
 ## Next goal
 
-Goal 3 is **Empty and Invalid State Hardening**. See `docs/plans/2026-05-19-feature-lab-v2-goal-3-empty-invalid-states.md`.
+Goal 4 is **Deep-Link and Static Export QA**. See `docs/plans/2026-05-19-feature-lab-v2-goal-4-deeplink-qa.md`.
 
 Implement it in the next Feature Lab PR:
 
-1. Empty result state with active filters and one-click reset.
-2. Invalid `feature=<id>` recovery notice.
-3. Hidden selected-feature notice when filters exclude the current feature.
-4. Stable pagination for zero-result and filter-change states.
-5. URL/deep-link non-regression validation.
-6. GitHub Pages preview verification.
+1. Dedicated deep-link validator for every feature id.
+2. Round-trip checks for representative query/filter combinations.
+3. Optional `--require-export` mode that checks `web/out/index.html` and `web/out/feature-lab/index.html` after build.
+4. `web/package.json` script/prebuild integration so broken deep links fail CI/build early.
+5. GitHub Pages preview and production verification for representative deep links.
 
 ## Definition of Done
 

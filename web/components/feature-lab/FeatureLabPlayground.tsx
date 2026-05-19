@@ -61,6 +61,26 @@ const riskTone = {
   high: "border-rose-200 bg-rose-50 text-rose-950 dark:border-rose-900/70 dark:bg-rose-950/20 dark:text-rose-100",
 } as const;
 
+const selectedStackLimit = 3;
+
+const starterStacks = [
+  {
+    label: "Safe automation starter",
+    description: "Permissions, allowed tool patterns, and hooks for safer team automation.",
+    ids: ["permission-allowlist", "allowed-tools-patterns", "hooks-notifications"],
+  },
+  {
+    label: "MCP local workflow",
+    description: "Local MCP plus permission boundaries for connected workflows.",
+    ids: ["local-mcp-server", "permission-allowlist", "allowed-tools-patterns"],
+  },
+  {
+    label: "Model/context control",
+    description: "Model choice with safety rails and notification hooks for power users.",
+    ids: ["model-picker", "permission-allowlist", "hooks-notifications"],
+  },
+] as const;
+
 async function copyTextToClipboard(text: string) {
   if (navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(text);
@@ -130,6 +150,8 @@ function FeatureCatalog({
   features,
   allFeatures,
   selectedFeature,
+  selectedStackIds,
+  stackLimitMessage,
   query,
   activeCategory,
   activeDifficulty,
@@ -141,11 +163,14 @@ function FeatureCatalog({
   onImpactTagChange,
   onAudienceChange,
   onSelect,
+  onToggleStack,
   onReset,
 }: {
   features: ClaudeCodeFeature[];
   allFeatures: ClaudeCodeFeature[];
   selectedFeature: ClaudeCodeFeature;
+  selectedStackIds: string[];
+  stackLimitMessage: string;
   query: string;
   activeCategory: ClaudeCodeFeature["category"] | "all";
   activeDifficulty: FeatureDifficulty | "all";
@@ -157,6 +182,7 @@ function FeatureCatalog({
   onImpactTagChange: (tag: FeatureImpactTag | "all") => void;
   onAudienceChange: (audience: FeatureAudience | "all") => void;
   onSelect: (feature: ClaudeCodeFeature) => void;
+  onToggleStack: (feature: ClaudeCodeFeature) => void;
   onReset: () => void;
 }) {
   const categories = useMemo(
@@ -293,6 +319,11 @@ function FeatureCatalog({
         <span>{features.length} matching features</span>
         <span>{allFeatures.length} total</span>
       </div>
+      {stackLimitMessage && (
+        <p className="mt-2 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800 dark:border-amber-900/70 dark:bg-amber-950/30 dark:text-amber-100">
+          Stack limit: {stackLimitMessage}
+        </p>
+      )}
 
       <div className="mt-3 space-y-2">
         {features.length === 0 && (
@@ -302,12 +333,12 @@ function FeatureCatalog({
         )}
         {features.map((feature) => {
           const selected = feature.id === selectedFeature.id;
+          const inStack = selectedStackIds.includes(feature.id);
           return (
-            <button
+            <div
               key={feature.id}
-              type="button"
               onClick={() => onSelect(feature)}
-              className={`w-full rounded-2xl border p-3 text-left transition ${
+              className={`w-full cursor-pointer rounded-2xl border p-3 text-left transition ${
                 selected
                   ? "border-indigo-400 bg-indigo-50 shadow-sm shadow-indigo-200/70 dark:border-indigo-500 dark:bg-indigo-950/35 dark:shadow-none"
                   : "border-zinc-200 bg-zinc-50 hover:border-zinc-300 hover:bg-white dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700 dark:hover:bg-zinc-900"
@@ -335,7 +366,33 @@ function FeatureCatalog({
               <p className="mt-3 line-clamp-2 text-xs leading-5 text-zinc-600 dark:text-zinc-300">
                 {feature.description}
               </p>
-            </button>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onSelect(feature);
+                  }}
+                  className="rounded-full border border-indigo-200 bg-white px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-indigo-700 transition hover:border-indigo-400 dark:border-indigo-900 dark:bg-zinc-950 dark:text-indigo-200"
+                >
+                  Open details
+                </button>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onToggleStack(feature);
+                  }}
+                  className={`rounded-full border px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition ${
+                    inStack
+                      ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/35 dark:text-emerald-200"
+                      : "border-zinc-300 bg-white text-zinc-600 hover:border-indigo-400 hover:text-indigo-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-indigo-500 dark:hover:text-indigo-200"
+                  }`}
+                >
+                  {inStack ? "In stack · remove" : "Add to stack"}
+                </button>
+              </div>
+            </div>
           );
         })}
       </div>
@@ -466,10 +523,14 @@ function FeatureGuidancePanel({ feature }: { feature: ClaudeCodeFeature }) {
 
 function RelatedFeaturesPanel({
   relatedFeatures,
+  selectedStackIds,
   onSelect,
+  onAddToStack,
 }: {
   relatedFeatures: ClaudeCodeFeature[];
+  selectedStackIds: string[];
   onSelect: (feature: ClaudeCodeFeature) => void;
+  onAddToStack: (feature: ClaudeCodeFeature) => void;
 }) {
   if (relatedFeatures.length === 0) return null;
 
@@ -482,24 +543,277 @@ function RelatedFeaturesPanel({
         같이 보면 좋은 설정과 명령
       </h3>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
-        {relatedFeatures.map((feature) => (
-          <button
+        {relatedFeatures.map((feature) => {
+          const inStack = selectedStackIds.includes(feature.id);
+          return (
+          <div
             key={feature.id}
-            type="button"
-            onClick={() => onSelect(feature)}
             className="rounded-2xl border border-violet-200 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:border-violet-400 hover:shadow-md hover:shadow-violet-100 dark:border-violet-900/80 dark:bg-zinc-950 dark:hover:border-violet-600 dark:hover:shadow-none"
           >
             <div className="flex items-center justify-between gap-3">
               <span className="font-mono text-sm font-black text-violet-700 dark:text-violet-200">
                 {feature.name}
               </span>
-              <span className="text-xs font-black text-violet-500 dark:text-violet-300">열기 →</span>
+              <button
+                type="button"
+                onClick={() => onSelect(feature)}
+                className="text-xs font-black text-violet-500 underline-offset-4 hover:underline dark:text-violet-300"
+              >
+                열기 →
+              </button>
             </div>
             <p className="mt-2 line-clamp-2 text-sm leading-6 text-zinc-700 dark:text-zinc-300">
               {feature.description}
             </p>
+            <button
+              type="button"
+              onClick={() => onAddToStack(feature)}
+              className={`mt-3 rounded-full border px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition ${
+                inStack
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:border-rose-300 hover:text-rose-600 dark:border-emerald-800 dark:bg-emerald-950/35 dark:text-emerald-200"
+                  : "border-violet-200 bg-violet-50 text-violet-700 hover:border-violet-400 dark:border-violet-900 dark:bg-violet-950/30 dark:text-violet-200"
+              }`}
+            >
+              {inStack ? "In stack · remove" : "Add to stack"}
+            </button>
+          </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function getPrimaryRisk(feature: ClaudeCodeFeature) {
+  const risk = feature.risks?.[0];
+  if (!risk) return "Not documented yet";
+  return risk.mitigation ? `${risk.text} Mitigation: ${risk.mitigation}` : risk.text;
+}
+
+function sourceEvidenceLink(feature: ClaudeCodeFeature) {
+  const evidence = formatFeatureSourceEvidence(feature);
+  const href = evidence.href?.startsWith("/") ? withBasePath(evidence.href) : evidence.href;
+  return { ...evidence, href };
+}
+
+function SelectedFeatureStack({
+  selectedStackFeatures,
+  allFeatures,
+  stackLimitMessage,
+  onUseStarterStack,
+  onRemove,
+  onClear,
+  onSelect,
+}: {
+  selectedStackFeatures: ClaudeCodeFeature[];
+  allFeatures: ClaudeCodeFeature[];
+  stackLimitMessage: string;
+  onUseStarterStack: (ids: readonly string[]) => void;
+  onRemove: (featureId: string) => void;
+  onClear: () => void;
+  onSelect: (feature: ClaudeCodeFeature) => void;
+}) {
+  return (
+    <section className="space-y-5 rounded-[1.75rem] border border-emerald-200 bg-emerald-50/60 p-5 shadow-xl shadow-emerald-100/60 dark:border-emerald-900/70 dark:bg-emerald-950/20 dark:shadow-black/20">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
+            Selected stack
+          </p>
+          <h3 className="mt-2 text-xl font-black tracking-tight text-emerald-950 dark:text-emerald-50">
+            내 워크플로우에 맞는 기능 조합 만들기
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-emerald-900/80 dark:text-emerald-100/80">
+            최대 {selectedStackLimit}개까지 담아 “왜 같이 쓰는지”, “켜면 무엇이 바뀌는지”, “무엇을 조심할지”를 비교합니다.
+          </p>
+        </div>
+        {selectedStackFeatures.length > 0 && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="shrink-0 rounded-full border border-emerald-300 bg-white px-4 py-2 text-xs font-black text-emerald-700 transition hover:border-emerald-500 dark:border-emerald-900 dark:bg-zinc-950 dark:text-emerald-200"
+          >
+            Clear stack
           </button>
-        ))}
+        )}
+      </div>
+
+      {stackLimitMessage && (
+        <p role="status" aria-live="polite" className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800 dark:border-amber-900/70 dark:bg-amber-950/30 dark:text-amber-100">
+          Stack limit: {stackLimitMessage}
+        </p>
+      )}
+
+      {selectedStackFeatures.length === 0 ? (
+        <div className="grid gap-3 md:grid-cols-3">
+          {starterStacks.map((stack) => {
+            const available = stack.ids.every((id) => allFeatures.some((feature) => feature.id === id));
+            return (
+              <button
+                key={stack.label}
+                type="button"
+                disabled={!available}
+                onClick={() => onUseStarterStack(stack.ids)}
+                className="rounded-2xl border border-emerald-200 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-emerald-900/80 dark:bg-zinc-950 dark:hover:border-emerald-600 dark:hover:shadow-none"
+              >
+                <p className="font-black text-emerald-950 dark:text-emerald-50">{stack.label}</p>
+                <p className="mt-2 text-xs leading-5 text-zinc-600 dark:text-zinc-300">{stack.description}</p>
+                <p className="mt-3 font-mono text-[11px] leading-5 text-emerald-700 dark:text-emerald-200">
+                  {stack.ids.join(" + ")}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="grid gap-3 md:grid-cols-3">
+          {selectedStackFeatures.map((feature) => (
+            <div key={feature.id} className="rounded-2xl border border-emerald-200 bg-white p-4 dark:border-emerald-900/80 dark:bg-zinc-950">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-mono text-sm font-black text-emerald-800 dark:text-emerald-200">{feature.name}</p>
+                  <p className="mt-1 text-xs font-bold text-zinc-500 dark:text-zinc-400">{feature.shortName}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onRemove(feature.id)}
+                  className="rounded-full border border-zinc-200 px-2 py-1 text-[11px] font-black text-zinc-500 hover:border-rose-300 hover:text-rose-600 dark:border-zinc-800 dark:text-zinc-400"
+                >
+                  Remove
+                </button>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                <CategoryPill category={feature.category} />
+                <MetadataPill>{featureDifficultyLabels[feature.difficulty]}</MetadataPill>
+              </div>
+              <p className="mt-3 line-clamp-2 text-xs leading-5 text-zinc-600 dark:text-zinc-300">
+                {feature.impact.goodFor[0] ?? "Not documented yet"}
+              </p>
+              <button
+                type="button"
+                onClick={() => onSelect(feature)}
+                className="mt-3 text-xs font-black text-emerald-700 underline-offset-4 hover:underline dark:text-emerald-200"
+              >
+                Open details →
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function FeatureComparisonMatrix({ features }: { features: ClaudeCodeFeature[] }) {
+  if (features.length < 2) return null;
+
+  const rows = [
+    {
+      label: "Audience",
+      render: (feature: ClaudeCodeFeature) => feature.audience.map((audience) => featureAudienceLabels[audience]).join(", "),
+    },
+    {
+      label: "Difficulty",
+      render: (feature: ClaudeCodeFeature) => featureDifficultyLabels[feature.difficulty],
+    },
+    {
+      label: "Activation",
+      render: (feature: ClaudeCodeFeature) => `${feature.activation.label}${feature.activation.file ? ` · ${feature.activation.file}` : ""}`,
+    },
+    {
+      label: "Good for",
+      render: (feature: ClaudeCodeFeature) => feature.impact.goodFor[0] ?? "Not documented yet",
+    },
+    {
+      label: "Watch out",
+      render: (feature: ClaudeCodeFeature) => feature.impact.watchOut[0] ?? "Not documented yet",
+    },
+    {
+      label: "Strongest use case",
+      render: (feature: ClaudeCodeFeature) => feature.useCases?.[0] ?? "Not documented yet",
+    },
+    {
+      label: "Risk / mitigation",
+      render: getPrimaryRisk,
+    },
+  ];
+
+  return (
+    <section className="overflow-hidden rounded-[1.75rem] border border-cyan-200 bg-cyan-50/60 shadow-xl shadow-cyan-100/60 dark:border-cyan-900/70 dark:bg-cyan-950/20 dark:shadow-black/20">
+      <div className="border-b border-cyan-200 bg-white/75 p-5 dark:border-cyan-900/70 dark:bg-zinc-950/70">
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">
+          Compare selected features
+        </p>
+        <h3 className="mt-2 text-xl font-black tracking-tight text-cyan-950 dark:text-cyan-50">
+          선택한 기능들의 역할과 리스크 비교
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-cyan-900/80 dark:text-cyan-100/80">
+          설정 조합을 만들기 전에 activation, 좋은 사용처, watch-out, source evidence를 한 번에 확인합니다.
+        </p>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse text-left text-sm">
+          <thead>
+            <tr className="border-b border-cyan-200 dark:border-cyan-900/70">
+              <th className="w-40 bg-cyan-100/70 px-4 py-3 text-xs font-black uppercase tracking-wider text-cyan-800 dark:bg-cyan-950/40 dark:text-cyan-200">
+                Field
+              </th>
+              {features.map((feature) => (
+                <th key={feature.id} className="min-w-56 px-4 py-3 align-top">
+                  <div className="font-mono text-sm font-black text-cyan-950 dark:text-cyan-50">{feature.name}</div>
+                  <div className="mt-1 text-xs font-bold text-zinc-500 dark:text-zinc-400">{feature.shortName}</div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-cyan-100 dark:border-cyan-900/50">
+              <th className="bg-cyan-100/50 px-4 py-3 text-xs font-black uppercase tracking-wider text-cyan-800 dark:bg-cyan-950/30 dark:text-cyan-200">
+                Category
+              </th>
+              {features.map((feature) => (
+                <td key={feature.id} className="px-4 py-3 align-top"><CategoryPill category={feature.category} /></td>
+              ))}
+            </tr>
+            {rows.map((row) => (
+              <tr key={row.label} className="border-b border-cyan-100 last:border-b-0 dark:border-cyan-900/50">
+                <th className="bg-cyan-100/50 px-4 py-3 text-xs font-black uppercase tracking-wider text-cyan-800 dark:bg-cyan-950/30 dark:text-cyan-200">
+                  {row.label}
+                </th>
+                {features.map((feature) => (
+                  <td key={feature.id} className="px-4 py-3 align-top leading-6 text-zinc-700 dark:text-zinc-200">
+                    {row.render(feature)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+            <tr>
+              <th className="bg-cyan-100/50 px-4 py-3 text-xs font-black uppercase tracking-wider text-cyan-800 dark:bg-cyan-950/30 dark:text-cyan-200">
+                Source
+              </th>
+              {features.map((feature) => {
+                const evidence = sourceEvidenceLink(feature);
+                const isExternal = Boolean(evidence.href?.startsWith("http"));
+                return (
+                  <td key={feature.id} className="px-4 py-3 align-top text-sm leading-6 text-zinc-700 dark:text-zinc-200">
+                    {evidence.href && evidence.linkLabel ? (
+                      <a
+                        href={evidence.href}
+                        target={isExternal ? "_blank" : undefined}
+                        rel={isExternal ? "noreferrer" : undefined}
+                        className="font-black text-cyan-700 underline-offset-4 hover:underline dark:text-cyan-200"
+                      >
+                        {evidence.linkLabel} →
+                      </a>
+                    ) : (
+                      "Use source evidence for details"
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
   );
@@ -921,6 +1235,8 @@ export function FeatureLabPlayground({
   const [activeImpactTag, setActiveImpactTag] = useState<FeatureImpactTag | "all">("all");
   const [activeAudience, setActiveAudience] = useState<FeatureAudience | "all">("all");
   const [copiedShareUrl, setCopiedShareUrl] = useState(false);
+  const [selectedStackIds, setSelectedStackIds] = useState<string[]>([]);
+  const [stackLimitMessage, setStackLimitMessage] = useState("");
   const hydratedRef = useRef(false);
   const [urlSyncReady, setUrlSyncReady] = useState(false);
 
@@ -990,6 +1306,52 @@ export function FeatureLabPlayground({
     });
   }, [activeAudience, activeCategory, activeDifficulty, activeImpactTag, features, query]);
 
+  const selectedStackFeatures = useMemo(
+    () => selectedStackIds
+      .map((id) => features.find((feature) => feature.id === id))
+      .filter((feature): feature is ClaudeCodeFeature => Boolean(feature)),
+    [features, selectedStackIds],
+  );
+
+  const isInSelectedStack = (featureId: string) => selectedStackIds.includes(featureId);
+
+  const addToSelectedStack = (featureId: string) => {
+    if (selectedStackIds.includes(featureId)) {
+      setStackLimitMessage("");
+      return;
+    }
+    if (selectedStackIds.length >= selectedStackLimit) {
+      setStackLimitMessage(`최대 ${selectedStackLimit}개까지만 비교할 수 있습니다. 먼저 하나를 제거하세요.`);
+      return;
+    }
+    setSelectedStackIds([...selectedStackIds, featureId]);
+    setStackLimitMessage("");
+  };
+
+  const removeFromSelectedStack = (featureId: string) => {
+    setSelectedStackIds((current) => current.filter((id) => id !== featureId));
+    setStackLimitMessage("");
+  };
+
+  const clearSelectedStack = () => {
+    setSelectedStackIds([]);
+    setStackLimitMessage("");
+  };
+
+  const handleToggleStack = (feature: ClaudeCodeFeature) => {
+    if (isInSelectedStack(feature.id)) {
+      removeFromSelectedStack(feature.id);
+      return;
+    }
+    addToSelectedStack(feature.id);
+  };
+
+  const useStarterStack = (ids: readonly string[]) => {
+    const availableIds = ids.filter((id) => features.some((feature) => feature.id === id));
+    setSelectedStackIds(availableIds.slice(0, selectedStackLimit));
+    setStackLimitMessage("");
+  };
+
   const handleSelect = (feature: ClaudeCodeFeature) => {
     setSelectedFeature(feature);
     setCopiedShareUrl(false);
@@ -1048,6 +1410,8 @@ export function FeatureLabPlayground({
         features={filteredFeatures}
         allFeatures={features}
         selectedFeature={selectedFeature}
+        selectedStackIds={selectedStackIds}
+        stackLimitMessage={stackLimitMessage}
         query={query}
         activeCategory={activeCategory}
         activeDifficulty={activeDifficulty}
@@ -1059,6 +1423,7 @@ export function FeatureLabPlayground({
         onImpactTagChange={setActiveImpactTag}
         onAudienceChange={setActiveAudience}
         onSelect={handleSelect}
+        onToggleStack={handleToggleStack}
         onReset={resetFilters}
       />
 
@@ -1103,6 +1468,17 @@ export function FeatureLabPlayground({
           </div>
         </section>
 
+        <SelectedFeatureStack
+          selectedStackFeatures={selectedStackFeatures}
+          allFeatures={features}
+          stackLimitMessage={stackLimitMessage}
+          onUseStarterStack={useStarterStack}
+          onRemove={removeFromSelectedStack}
+          onClear={clearSelectedStack}
+          onSelect={handleSelect}
+        />
+        <FeatureComparisonMatrix features={selectedStackFeatures} />
+
         <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <ActivationEditor feature={selectedFeature} />
           <AnimatedTuiScene label="After" scene={selectedFeature.afterExperience} variant="after" />
@@ -1119,7 +1495,12 @@ export function FeatureLabPlayground({
 
         <FeatureGuidancePanel feature={selectedFeature} />
         <ImpactPanel feature={selectedFeature} />
-        <RelatedFeaturesPanel relatedFeatures={relatedFeatures} onSelect={handleSelectRelated} />
+        <RelatedFeaturesPanel
+          relatedFeatures={relatedFeatures}
+          selectedStackIds={selectedStackIds}
+          onSelect={handleSelectRelated}
+          onAddToStack={handleToggleStack}
+        />
         <SourceEvidencePanel feature={selectedFeature} />
         <RelatedReleasesPanel feature={selectedFeature} releases={releases} />
       </div>

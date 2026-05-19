@@ -62,6 +62,7 @@ const riskTone = {
 } as const;
 
 const selectedStackLimit = 3;
+const featurePageSize = 6;
 
 const starterStacks = [
   {
@@ -201,6 +202,20 @@ function FeatureCatalog({
     () => Array.from(new Set(allFeatures.flatMap((feature) => feature.audience))),
     [allFeatures],
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(features.length / featurePageSize));
+  const paginatedFeatures = useMemo(
+    () => features.slice((currentPage - 1) * featurePageSize, currentPage * featurePageSize),
+    [currentPage, features],
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeAudience, activeCategory, activeDifficulty, activeImpactTag, query]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
 
   return (
     <aside className="rounded-[1.75rem] border border-zinc-200 bg-white/85 p-4 shadow-xl shadow-zinc-200/70 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/75 dark:shadow-black/30 lg:sticky lg:top-6">
@@ -317,7 +332,30 @@ function FeatureCatalog({
 
       <div className="mt-5 flex items-center justify-between text-xs font-bold text-zinc-500 dark:text-zinc-400">
         <span>{features.length} matching features</span>
-        <span>{allFeatures.length} total</span>
+        <span>
+          Page {currentPage} / {totalPages}
+        </span>
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <button
+          type="button"
+          onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+          disabled={currentPage === 1}
+          className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-600 transition hover:border-indigo-300 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-45 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-indigo-700 dark:hover:text-indigo-200"
+        >
+          Previous page
+        </button>
+        <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400">
+          {allFeatures.length} total · {featurePageSize} per page
+        </span>
+        <button
+          type="button"
+          onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+          disabled={currentPage === totalPages}
+          className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-600 transition hover:border-indigo-300 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-45 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-indigo-700 dark:hover:text-indigo-200"
+        >
+          Next page
+        </button>
       </div>
       {stackLimitMessage && (
         <p className="mt-2 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800 dark:border-amber-900/70 dark:bg-amber-950/30 dark:text-amber-100">
@@ -331,7 +369,7 @@ function FeatureCatalog({
             조건에 맞는 기능이 없습니다. 검색어를 줄이거나 필터를 초기화하세요.
           </div>
         )}
-        {features.map((feature) => {
+        {paginatedFeatures.map((feature) => {
           const selected = feature.id === selectedFeature.id;
           const inStack = selectedStackIds.includes(feature.id);
           return (
@@ -1005,6 +1043,12 @@ function AnimatedTuiScene({
   }, [steps]);
 
   const visibleSteps = steps.slice(0, visibleCount);
+  const terminalScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!terminalScrollRef.current) return;
+    terminalScrollRef.current.scrollTop = terminalScrollRef.current.scrollHeight;
+  }, [activeCommandIndex, typedChars, visibleCount]);
 
   return (
     <section className="overflow-hidden rounded-2xl border border-zinc-800 bg-[#101010] text-zinc-100 shadow-2xl shadow-black/35">
@@ -1037,26 +1081,38 @@ function AnimatedTuiScene({
         </div>
       </div>
 
-      <div className="min-h-[24rem] bg-[#0c0c0c] p-4">
-        <div className="min-h-[21rem] rounded-xl border border-zinc-800 bg-[#060606] p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]">
-          <div className="mb-4 space-y-1 border-b border-zinc-900 pb-3 text-zinc-500">
+      <div className="h-[25rem] overflow-hidden bg-[#0c0c0c] p-4">
+        <div
+          aria-label="Claude Code terminal output"
+          className="flex h-full flex-col rounded-xl border border-zinc-800 bg-[#060606] p-4 font-mono text-[12px] leading-6 shadow-inner shadow-black sm:text-[13px]"
+        >
+          <div className="mb-4 shrink-0 space-y-1 border-b border-zinc-900 pb-3 text-zinc-500">
             <div>✻ Welcome to Claude Code</div>
             <div>/cwd ~/cc-release · model sonnet · ? for shortcuts</div>
           </div>
-          <div className="space-y-2">
-            {visibleSteps.map((step, index) => (
-              <TerminalStreamEntry
-                key={`${scene.title}-${step.id}`}
-                step={step}
-                isActiveCommand={activeCommandIndex === index}
-                typedChars={activeCommandIndex === index ? typedChars : step.content.length}
-              />
-            ))}
-            <div className="flex min-h-6 items-baseline gap-2 text-zinc-100">
-              <span className="select-none text-zinc-500">&gt;</span>
-              {activeCommandIndex === null && (
-                <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-zinc-200" />
-              )}
+          <div
+            ref={terminalScrollRef}
+            role="log"
+            aria-label="Claude Code terminal output"
+            aria-live="polite"
+            tabIndex={0}
+            className="min-h-0 flex-1 overflow-y-auto pr-2"
+          >
+            <div className="space-y-2">
+              {visibleSteps.map((step, index) => (
+                <TerminalStreamEntry
+                  key={`${scene.title}-${step.id}`}
+                  step={step}
+                  isActiveCommand={activeCommandIndex === index}
+                  typedChars={activeCommandIndex === index ? typedChars : step.content.length}
+                />
+              ))}
+              <div className="flex min-h-6 items-baseline gap-2 text-zinc-100">
+                <span className="select-none text-zinc-500">&gt;</span>
+                {activeCommandIndex === null && (
+                  <span className="feature-lab-cursor inline-block h-4 w-2 translate-y-0.5 bg-zinc-200" />
+                )}
+              </div>
             </div>
           </div>
         </div>

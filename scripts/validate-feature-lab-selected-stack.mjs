@@ -23,6 +23,17 @@ const requiredSnippets = [
   "Stack limit",
   "Not documented yet",
   "Use source evidence for details",
+  "const featurePageSize = 6",
+  "paginatedFeatures",
+  "Page {currentPage} / {totalPages}",
+  "Previous page",
+  "Next page",
+  "h-[25rem] overflow-hidden",
+  "min-h-0 flex-1 overflow-y-auto",
+  "role=\"log\"",
+  "tabIndex={0}",
+  "terminalScrollRef.current.scrollTop",
+  "aria-label=\"Claude Code terminal output\"",
 ];
 
 const missing = requiredSnippets.filter((snippet) => !component.includes(snippet));

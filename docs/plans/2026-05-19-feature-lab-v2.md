@@ -419,9 +419,22 @@ curl -L 'https://donghyeon-dev.github.io/cc-release/preview/feature-lab/?feature
 
 ## Open decisions
 
-- Whether comparison state should be encoded into URL in v2 or remain local-only for MVP.
+- Whether comparison state should be encoded into URL in v2 or remain local-only for MVP. Decision for Goal 2: keep it local-only; revisit URL encoding after preview feedback.
 - Whether all existing 19 features should get v2 fields before merge, or only high-value subset plus graceful fallback.
 - Whether Config Simulator should remain inside Feature Lab detail sections or become a separate milestone route.
+
+## Next goal
+
+Goal 2 is **Selected Stack & Comparison MVP**. See `docs/plans/2026-05-19-feature-lab-v2-goal-2-selected-stack.md`.
+
+Implement it in the current draft PR before merging Feature Lab v2:
+
+1. Local selected stack of up to 3 features.
+2. Add/remove/clear stack actions.
+3. Suggested starter stacks.
+4. Comparison matrix for two or more selected features.
+5. URL/deep-link non-regression validation.
+6. GitHub Pages preview verification.
 
 ## Definition of Done
 

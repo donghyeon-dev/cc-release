@@ -1010,6 +1010,40 @@ function TerminalStreamEntry({
   );
 }
 
+function formatSceneEvidence(scene: ClaudeCodeFeature["afterExperience"]) {
+  const evidence = scene.evidence;
+  if (!evidence) {
+    return {
+      label: "Scenario transcript",
+      detail: "Illustrative flow; not yet backed by a captured Claude Code run.",
+    };
+  }
+
+  if (evidence.kind === "captured") {
+    const parts = [
+      evidence.claudeCodeVersion ? `Claude Code ${evidence.claudeCodeVersion}` : "Claude Code capture",
+      evidence.mode,
+      evidence.capturedAt,
+    ].filter(Boolean);
+    return {
+      label: "Captured run",
+      detail: parts.join(" · "),
+    };
+  }
+
+  if (evidence.kind === "documented") {
+    return {
+      label: "Documented behavior",
+      detail: evidence.notes ?? evidence.command ?? "Backed by official documentation or release notes.",
+    };
+  }
+
+  return {
+    label: "Scenario transcript",
+    detail: evidence.notes ?? "Illustrative flow derived from feature documentation.",
+  };
+}
+
 function AnimatedTuiScene({
   label,
   scene,
@@ -1020,6 +1054,7 @@ function AnimatedTuiScene({
   variant: "before" | "after";
 }) {
   const steps = useMemo(() => sceneToTerminalSteps(scene), [scene]);
+  const evidenceSummary = useMemo(() => formatSceneEvidence(scene), [scene]);
   const [visibleCount, setVisibleCount] = useState(0);
   const [activeCommandIndex, setActiveCommandIndex] = useState<number | null>(null);
   const [typedChars, setTypedChars] = useState(0);
@@ -1104,6 +1139,11 @@ function AnimatedTuiScene({
           <span className="hidden rounded-md border border-zinc-700 px-2 py-1 font-mono text-[11px] text-zinc-400 sm:inline-flex">
             esc to interrupt
           </span>
+        </div>
+        <div className="mt-3 rounded-lg border border-zinc-800 bg-[#101010] px-3 py-2 font-mono text-[11px] text-zinc-400">
+          <span className="text-zinc-200">{evidenceSummary.label}</span>
+          <span className="mx-2 text-zinc-600">·</span>
+          <span>{evidenceSummary.detail}</span>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2 font-mono text-[11px] text-zinc-500">
           <span className="rounded-md border border-zinc-800 bg-[#101010] px-2 py-1">

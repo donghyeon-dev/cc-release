@@ -65,11 +65,24 @@ export interface TuiFrame {
   tone?: "neutral" | "good" | "warn" | "info";
 }
 
+export type TuiSceneEvidenceKind = "captured" | "documented" | "scenario";
+
+export interface TuiSceneEvidence {
+  kind: TuiSceneEvidenceKind;
+  captureId?: string;
+  mode?: string;
+  claudeCodeVersion?: string;
+  capturedAt?: string;
+  command?: string;
+  notes?: string;
+}
+
 export interface TuiScene {
   title: string;
   statusBefore: string;
   statusAfter: string;
   frames: TuiFrame[];
+  evidence?: TuiSceneEvidence;
 }
 
 export interface ClaudeCodeFeature {

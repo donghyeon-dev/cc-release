@@ -1,5 +1,545 @@
 [
   {
+    "version": "v2.1.145",
+    "tagName": "v2.1.145",
+    "publishedAt": "2026-05-19T21:31:07Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.145",
+    "originalBody": "## What's changed\n\n- Added `claude agents --json` to list live Claude sessions as JSON for scripting (tmux-resurrect, status bars, session pickers)\n- Added `agent_id` and `parent_agent_id` attributes to `claude_code.tool` OTEL spans, and fixed trace parenting so background subagent spans nest under the dispatching Agent tool span\n- Status line JSON input now includes GitHub repo and PR information when detected\n- `/plugin` Discover and Browse screens now show a plugin's commands, agents, skills, hooks, and MCP/LSP servers before installation\n- `claude agents` terminal tab title now shows the awaiting-input count so an alt-tabbed window tells you when an agent needs attention\n- Slash command and @-mention suggestion list now supports mouse hover and click in fullscreen mode\n- Stop and SubagentStop hook input now includes `background_tasks` and `session_crons` fields\n- Fixed a permission-prompt bypass where bare variable assignments to non-allowlisted environment variables in Bash commands were auto-approved\n- Fixed MCP prompt slash commands showing raw server validation errors when a required argument is omitted — the error now names the missing argument and shows expected usage\n- Fixed the spinner and elapsed-time display freezing until a keypress after the terminal was resized or refocused\n- Fixed the cross-project resume hint failing in default Windows PowerShell 5.1 — Windows now uses `;` as the command separator\n- Fixed voice push-to-talk not working in the agent view's reply pane\n- Fixed task lists rendering in random order when several tasks are created at once\n- Fixed stale \"Failed to install Anthropic marketplace\" banner showing when the marketplace is already installed\n- Fixed the PR badge in the footer not updating immediately after `gh pr create` and other PR-state-changing commands run in-session\n- Fixed Agent Teams teammates with non-ASCII names failing every API call due to invalid header encoding\n- Fixed `/review` using a deprecated `projectCards` GraphQL query that errored on repos with Classic Projects\n- Fixed `claude plugin validate` not flagging `skills:` entries that point at a file instead of a directory — the error now suggests the parent directory\n- Fixed an infinite loop where a skill using `context: fork` could repeatedly re-invoke itself instead of running\n- Improved the Read tool to return a truncated first page with a \"PARTIAL view\" notice instead of a hard error when a whole-file read exceeds the token limit",
+    "summary": {
+      "headline": "claude agents --json 추가, OTEL trace parenting 수정",
+      "newFeatures": [
+        {
+          "text": "`claude agents --json` 으로 활성 세션을 JSON 으로 나열 가능 — tmux-resurrect·상태바·세션 피커 스크립팅 지원",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`claude_code.tool` OTEL 스팬에 `agent_id`·`parent_agent_id` 속성 추가, 백그라운드 서브에이전트 스팬이 디스패치한 Agent 도구 스팬 아래로 정상 중첩됨",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "Status line JSON 입력에 GitHub 레포·PR 정보 포함 (감지 시)",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`/plugin` Discover·Browse 화면에서 설치 전에 commands·agents·skills·hooks·MCP/LSP 서버 목록 표시",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`claude agents` 터미널 탭 타이틀에 입력 대기 카운트 표시 — alt-tab 상태에서도 응답 필요 여부 즉시 확인 가능",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "fullscreen 모드에서 슬래시 명령·@멘션 추천 목록이 마우스 hover/click 지원",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "Stop·SubagentStop hook 입력에 `background_tasks`·`session_crons` 필드 추가",
+          "originalRefs": [
+            6
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Read 도구가 토큰 한계를 넘는 전체 파일 읽기 시 하드 에러 대신 \"PARTIAL view\" 안내와 함께 첫 페이지 잘라서 반환",
+          "originalRefs": [
+            19
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "Bash 명령에서 비허용 환경변수에 대한 단순 변수 할당이 자동 승인되던 권한 프롬프트 우회 보안 결함 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "MCP prompt 슬래시 명령에서 필수 인자 누락 시 원시 서버 검증 에러 대신 누락된 인자명·예상 사용법 안내",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "터미널 리사이즈·포커스 복귀 후 키 입력 전까지 spinner·경과시간 표시가 멈추던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "Windows PowerShell 5.1 기본 환경에서 cross-project resume 힌트 실패 수정 — Windows 에서는 `;` 를 명령 구분자로 사용",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "agent 뷰 답변 페인에서 음성 push-to-talk 동작 안 하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "여러 task 동시 생성 시 task 리스트가 무작위 순서로 렌더링되던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Anthropic marketplace 가 이미 설치되어 있어도 \"Failed to install\" 배너가 잔존하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`gh pr create` 등 세션 내 PR 상태 변경 명령 직후 푸터 PR 배지가 즉시 갱신되지 않던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "Agent Teams 의 비-ASCII 이름 teammate 가 잘못된 헤더 인코딩으로 모든 API 호출 실패하던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`/review` 가 deprecated `projectCards` GraphQL 쿼리를 사용해 Classic Projects 레포에서 에러나던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`claude plugin validate` 가 `skills:` 항목이 파일을 가리킬 때 플래그하지 못하던 문제 수정 — 이제 상위 디렉토리 제안",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`context: fork` 사용 skill 이 실행 대신 자기 자신을 반복 재호출하던 무한 루프 수정",
+          "originalRefs": [
+            18
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Bash 환경변수 할당 자동 승인 우회 결함이 패치됨 — `2.1.145` 미만 사용 중이면 즉시 업데이트 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`claude agents --json` 으로 세션 목록을 스크립트에서 직접 파싱 가능 — psmux-resurrect·상태바 연동 자동화 작성 시 활용.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "OTEL trace 의 서브에이전트 스팬 부모-자식 관계가 정상화되어 관측 도구에서 호출 그래프 재해석 필요 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-20T00:01:00Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
+    "version": "v2.1.144",
+    "tagName": "v2.1.144",
+    "publishedAt": "2026-05-19T00:48:51Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.144",
+    "originalBody": "## What's changed\n\n- Added `/resume` support for background sessions — sessions started via `claude --bg` or agent view now appear alongside interactive ones, marked with `bg`\n- Added elapsed duration to background subagent completion notifications (e.g. \"Agent completed · 3h 2m 5s\")\n- The `/plugin` browse and discover panes now show when a plugin was last updated\n- `/model` now changes the model for the current session only; press `d` in the model picker to set a default for new sessions\n- Renamed \"extra usage\" to \"usage credits\" across CLI copy; `/extra-usage` is now `/usage-credits` (old name still works)\n- Fixed startup hanging up to 75s when `api.anthropic.com` is unreachable (captive portal, firewall, VPN issues) — side-channel API calls now time out after 15s\n- Fixed garbled terminal output after a missed window-resize event (e.g. dragging a VS Code split-pane divider) — now self-heals on the next frame instead of requiring Ctrl+L\n- Fixed progressive terminal display corruption (stale/garbled glyphs) that could appear in very long sessions and only cleared on terminal resize or restart\n- Reduced terminal rendering glitches in VS Code by reducing spinner animation color count\n- Fixed macOS background sessions crashing with \"exit 1 before init\" when the project lives under a Full Disk Access-protected folder (regression in 2.1.143)\n- Fixed an unrecoverable conversation when reading a file whose image extension doesn't match its contents (e.g. HTML saved as .png) — now falls back to text\n- Fewer spurious tool errors during search: `head`/`tail` file views now satisfy the read-before-edit check, and a \"no matches\" result (exit code 1) from `egrep`, `fgrep`, `git grep`, or `git diff` is no longer reported as a command failure\n- Fixed `/branch` failing with \"No conversation to branch\" after entering a worktree or in some background sessions\n- Fixed pressing Escape in the AskUserQuestion notes field aborting the turn instead of returning to answer selection\n- Fixed model selection not applying when changed via the IDE model picker or `applyFlagSettings` after startup\n- Resumed sessions now keep the model they were using instead of picking up another session's `/model` choice\n- Fixed Bedrock and Vertex users unable to select \"Opus (1M context)\" from the `/model` picker (regression in v2.1.129)\n- Fixed remote-session login failing with \"Can't access this organization\" for users with `forceLoginMethod` and `forceLoginOrgUUID` set\n- Fixed MCP servers with paginated `tools/list` responses only returning the first page, silently dropping tools\n- Fixed MCP images with unsupported MIME types (e.g. SVG) breaking the conversation — now saved to disk and referenced in the tool result\n- Fixed file descriptor exhaustion when a build runs inside a skill directory — non-`.md` files no longer trigger skill reloads\n- Fixed session title being generated from plugin monitor output instead of the user's first prompt\n- Fixed Skill tool failing with permission error in headless mode (regression in v2.1.141)\n- Fixed plugins enabled in your own settings showing \"not cached\" errors after first load on a fresh machine; plugins enabled only by a project's `.claude/settings.json` now show an actionable `claude plugin install` hint\n- Fixed `claude mcp list` silently reporting no servers when `.mcp.json` can't be parsed (e.g. using VS Code's `\"servers\"` key instead of `\"mcpServers\"`) — now shows configuration errors\n- Fixed background side-queries on custom `ANTHROPIC_BASE_URL` setups and Bedrock Mantle not using Haiku — now falls back correctly when a first-party API key is configured or no Haiku model is set\n- Fixed scrolling in attached background sessions on Windows — PgUp/PgDn, mouse wheel, and Ctrl+O transcript navigation now work\n- Fixed a crash when closing the terminal while attached to a background session\n- Fixed on Windows, pressing ← in `claude agents` leaving the list unresponsive to keyboard input\n- Fixed ghost characters at the left edge when switching panes in Agent View on Windows Terminal with CJK content\n- `/bg` and `←`-detach now preserve directories added via `/add-dir`\n- Fixed Edit/Write refusing with \"background session hasn't isolated its changes yet\" right after detaching a session that was already editing in place\n- Fixed `claude respawn <id>` on a stopped background session showing \"stopped\" instead of running\n- Fixed `/resume` picker not showing sessions forked from a background session\n- Fixed opening a session from `claude agents` or running `claude logs <id>` hanging when the background service is unresponsive — now times out after 10s with a recovery hint\n- Fixed background Bash tasks spawned by subagents staying \"Running\" in SDK task panels after the process exits\n- Fixed completed or stopped background sessions briefly failing to wake being permanently marked as a startup crash\n- Fixed markdown links in `claude agents` attached sessions rendering as plain text instead of clickable hyperlinks\n- Fixed custom `spinnerVerbs` applying to the post-turn duration message — past-tense built-ins like \"Worked for 5s\" are restored there\n- `claude agents` / `--bg` rejection messages now name the specific gate (non-TTY, env var, or setting) instead of a generic message\n- `claude --bg --name <label>` now echoes the name in the post-spawn confirmation\n- `claude agents`: renaming a background session with Ctrl+R now updates the attached session's banner immediately\n- Background session worktree isolation guard now applies for non-git VCS users with `WorktreeCreate` hooks configured\n- Plugin marketplace add/update now respects `CLAUDE_CODE_PLUGIN_PREFER_HTTPS`\n- `/plugin` now returns to the Installed list after enabling, disabling, or uninstalling a plugin\n- `/doctor` now shows an exec-form example when a command hook is missing the `command` field\n- Skill-listing truncation is no longer shown as a startup notification — run `/doctor` for the full breakdown\n- Improved recovery from rare pre-response stream stalls — now retries streaming once instead of falling back to a slower non-streaming request\n- Improved SDK/headless MCP startup: pre-wait now overlaps startup instead of blocking before the first turn (up to 2s faster with slow MCP servers)\n- The post-survey follow-up hint now appears after every non-dismiss survey response with context-aware copy, making it easier to share more detail via /feedback.",
+    "summary": {
+      "headline": "백그라운드 세션 /resume 지원, /model 동작 변경",
+      "newFeatures": [
+        {
+          "text": "`claude --bg` 나 agent 뷰로 시작한 백그라운드 세션도 `/resume` 목록에 `bg` 표시와 함께 노출됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "백그라운드 서브에이전트 완료 알림에 경과 시간 표시 (예: \"Agent completed · 3h 2m 5s\")",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/plugin` browse·discover 화면에서 플러그인 최종 업데이트 시각 표시",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/model` 이 현재 세션만 변경하도록 동작 변경 — 새 세션 기본값은 모델 피커에서 `d` 키로 별도 지정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "CLI 전반에서 \"extra usage\" 명칭이 \"usage credits\" 로 변경, `/extra-usage` 는 `/usage-credits` 로 개명 (구명령도 유지)",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "검색 도구 오류 완화 — `head`/`tail` 파일 뷰가 read-before-edit 체크를 만족, `egrep`/`fgrep`/`git grep`/`git diff` 의 매치 없음(exit 1) 결과는 더 이상 명령 실패로 보고 안 함",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "재개된 세션이 다른 세션의 `/model` 선택을 가져오지 않고 자기 모델을 유지",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`/bg` 와 ←-detach 가 `/add-dir` 로 추가한 디렉토리를 보존",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "플러그인 마켓플레이스 add/update 가 `CLAUDE_CODE_PLUGIN_PREFER_HTTPS` 환경변수를 존중",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "`/plugin` 이 enable/disable/uninstall 후 Installed 목록으로 복귀",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "`/doctor` 가 command hook 에 `command` 필드 누락 시 exec-form 예시 표시",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "skill 목록 truncation 이 시작 시 알림에서 제거됨 — 전체 내역은 `/doctor` 로 확인",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "드물게 발생하던 응답 전 스트림 stall 시 비스트리밍 폴백 대신 스트리밍 재시도",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "SDK/headless MCP 시작 시 pre-wait 가 첫 턴 차단 대신 시작과 중첩 실행 — 느린 MCP 서버에서 최대 2초 단축",
+          "originalRefs": [
+            48
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`api.anthropic.com` 도달 불가(captive portal·방화벽·VPN) 시 시작이 최대 75초 행되던 문제 수정 — 부가 API 호출에 15초 타임아웃 적용",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "VS Code split-pane 분할선 드래그 등 윈도우 리사이즈 이벤트 누락 후 터미널 출력이 깨지던 문제 수정 — `Ctrl+L` 없이 다음 프레임에서 자동 복구",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "매우 긴 세션에서 점진적으로 누적되어 터미널 리사이즈/재시작 전까지 풀리지 않던 표시 손상 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "VS Code 에서 spinner 애니메이션 색상 수 감소로 렌더링 글리치 완화",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Full Disk Access 보호 폴더 하위 프로젝트에서 macOS 백그라운드 세션이 \"exit 1 before init\" 로 크래시되던 회귀(`2.1.143`) 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "이미지 확장자와 실제 내용이 다른 파일(예: `.png` 로 저장된 HTML) 읽기 시 대화가 복구 불능이던 문제 수정 — 이제 텍스트 폴백",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "worktree 진입 후 또는 일부 백그라운드 세션에서 `/branch` 가 \"No conversation to branch\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "AskUserQuestion notes 필드에서 Escape 누르면 답변 선택 복귀 대신 턴 중단되던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "IDE 모델 피커나 시작 후 `applyFlagSettings` 로 변경한 모델 선택이 적용 안 되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex 사용자가 `/model` 피커에서 \"Opus (1M context)\" 선택 불가하던 회귀(`v2.1.129`) 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`forceLoginMethod`·`forceLoginOrgUUID` 설정 사용자의 원격 세션 로그인이 \"Can't access this organization\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "페이지네이션된 `tools/list` 응답을 사용하는 MCP 서버가 첫 페이지만 반환해 도구가 조용히 누락되던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "SVG 등 비지원 MIME 타입의 MCP 이미지가 대화를 깨뜨리던 문제 수정 — 이제 디스크에 저장 후 도구 결과에서 참조",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "skill 디렉토리 안에서 빌드 실행 시 file descriptor 고갈되던 문제 수정 — `.md` 외 파일은 skill 재로드를 트리거하지 않음",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "세션 제목이 사용자 첫 프롬프트 대신 플러그인 monitor 출력에서 생성되던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "headless 모드에서 Skill 도구가 권한 오류로 실패하던 회귀(`v2.1.141`) 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "신규 머신에서 자기 설정으로 활성화한 플러그인이 첫 로드 후 \"not cached\" 에러 표시되던 문제 수정 — 프로젝트 `.claude/settings.json` 로만 활성화된 플러그인은 `claude plugin install` 힌트 노출",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "VS Code 의 `\"servers\"` 키 등 `.mcp.json` 파싱 실패 시 `claude mcp list` 가 서버 없음으로 조용히 보고하던 문제 수정 — 이제 설정 오류 표시",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "커스텀 `ANTHROPIC_BASE_URL` 환경·Bedrock Mantle 의 백그라운드 부가 쿼리가 Haiku 미사용하던 문제 수정 — first-party API key 또는 Haiku 모델 미설정 시 적절히 폴백",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "Windows 에서 attach 된 백그라운드 세션의 PgUp/PgDn·휠·`Ctrl+O` 스크롤이 동작하지 않던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "백그라운드 세션 attach 중 터미널 닫을 때 크래시되던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "Windows 에서 `claude agents` 의 ← 키 입력 후 키보드 미반응 상태가 되던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "Windows Terminal 에서 CJK 콘텐츠와 함께 Agent View 페인 전환 시 좌측 ghost 문자 발생 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "in-place 편집 중 세션 detach 직후 Edit/Write 가 \"hasn't isolated its changes\" 메시지로 거부되던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "정지된 백그라운드 세션의 `claude respawn <id>` 가 running 대신 stopped 로 표시되던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "백그라운드 세션에서 fork 된 세션이 `/resume` 피커에 표시되지 않던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "백그라운드 서비스 무응답 시 `claude agents` 세션 열기·`claude logs <id>` 가 행되던 문제 수정 — 10초 타임아웃과 복구 힌트 표시",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "서브에이전트가 띄운 백그라운드 Bash 태스크가 종료 후에도 SDK 태스크 패널에서 \"Running\" 으로 남던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "완료·정지 백그라운드 세션이 깨어나기 잠시 실패한 경우 영구적으로 startup crash 마킹되던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "`claude agents` attach 세션의 markdown 링크가 클릭 가능한 하이퍼링크 대신 일반 텍스트로 렌더링되던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "커스텀 `spinnerVerbs` 가 post-turn 경과 메시지에도 적용되던 문제 수정 — \"Worked for 5s\" 등 과거형 빌트인 복구",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "`claude agents`/`--bg` 거부 메시지가 non-TTY·env·setting 중 어느 gate 인지 구체적으로 명시",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "`claude --bg --name <label>` 의 spawn 확인 메시지에 이름이 포함됨",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "`claude agents` 에서 `Ctrl+R` 로 백그라운드 세션 이름 변경 시 attach 세션 배너가 즉시 갱신",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "`WorktreeCreate` hook 설정된 비-git VCS 사용자에게도 백그라운드 세션 worktree isolation 가드 적용",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "non-dismiss 설문 응답 후 컨텍스트별 문구로 follow-up 힌트 표시되어 `/feedback` 추가 공유 유도",
+          "originalRefs": [
+            49
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`/model` 이 더 이상 모든 세션 기본값을 바꾸지 않음 — 기본값 변경은 모델 피커에서 `d` 키로 명시해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`/extra-usage` 슬래시 명령이 `/usage-credits` 로 개명됨 — 자동화·docs 의 명령어 참조 갱신 필요 (구명령도 호환).",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "MCP 서버에서 페이지네이션된 `tools/list` 사용 시 모든 도구가 정상 로드되도록 수정 — 이전 버전에서 도구 누락을 겪었다면 이번 업데이트로 해소.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 11
+            }
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex 사용자의 Opus 1M context 선택 회귀(`v2.1.129`)가 해소되어 긴 컨텍스트 작업이 다시 가능.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 9
+            }
+          ]
+        },
+        {
+          "text": "Windows 환경의 백그라운드 세션 스크롤·키 입력·CJK 렌더링 다수 수정 — Windows 사용자는 백그라운드 워크플로 안정성 큰 폭 개선.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 19
+            },
+            {
+              "bucket": "fixes",
+              "index": 21
+            },
+            {
+              "bucket": "fixes",
+              "index": 22
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-20T00:01:00Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
     "version": "v2.1.143",
     "tagName": "v2.1.143",
     "publishedAt": "2026-05-15T22:28:22Z",

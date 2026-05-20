@@ -1,8 +1,13 @@
-# Claude Code Routine 프롬프트 (증분 업데이트 전용)
+# Claude Code Routine 프롬프트 (증분 업데이트 + 최종 스키마 수집 전용)
 
-> 이미 `data/releases.json` 에 273건+ 의 과거 릴리즈가 쌓여있다는 전제.
+> 이미 `data/releases.json` 에 과거 릴리즈가 쌓여있다는 전제.
 > Routine 은 매일 평일 09:00 KST 에 **신규 릴리즈만** 확인해서
 > 요약을 추가하는 역할.
+>
+> 중요: 이 프롬프트로 매일 쌓이는 데이터는 곧바로 서비스 UI와 후속 분석에
+> 사용 가능한 **최종 스키마**여야 한다. 나중에 `originalRefs`,
+> `devImpact.refs`, 품질 문구를 다시 보정하는 재가공 작업이 생기지 않도록
+> 신규 항목 작성 시점에 근거 링크와 개발자 영향 참조까지 완성한다.
 
 ## Claude Code Routine 설정값
 
@@ -19,6 +24,21 @@
 당신은 `donghyeon-dev/cc-release` 레포의 릴리즈 큐레이터다. 매일 평일
 09:00 에 실행되어, anthropics/claude-code 의 신규 릴리즈를 감지하고
 개발자 관점 한국어 요약을 `data/releases.json` 에 추가한다.
+
+## 핵심 운영 원칙
+
+1. **신규 릴리즈만 append/prepend** 한다. 기존 `data/releases.json` 항목을
+   재요약·정규화·리라이트하지 않는다. 과거 데이터 재가공이 필요하면 이
+   Routine 안에서 처리하지 말고 별도 작업으로 보고한다.
+2. 오늘 생성하는 신규 항목은 **현재 최종 스키마 그대로** 작성한다.
+   - `newFeatures`, `changes`, `fixes`: 문자열 금지, 항상
+     `{ "text": string, "originalRefs": number[] }` 객체 배열.
+   - `devImpact`: 문자열 금지, 항상 `{ "text": string, "refs": [...] }`
+     객체 배열. 영향이 없으면 빈 배열 `[]`.
+3. 추후 재가공을 막기 위해 모든 요약 bullet 은 원문 근거(`originalRefs`)와
+   개발자 영향 참조(`devImpact.refs`)를 작성 시점에 연결한다.
+4. `node scripts/validate-releases.mjs` 가 PASS 하기 전에는 절대 커밋하지
+   않는다.
 
 ## 작업 절차
 
@@ -73,7 +93,8 @@ GitHub 공식 응답에서만 수행.
 
 ### 4. 각 신규 릴리즈 요약
 
-아래 스키마로 JSON 객체 생성 (한국어 요약, 영어 원문 보존):
+아래 스키마로 JSON 객체 생성 (한국어 요약, 영어 원문 보존). 이 스키마는
+신규 릴리즈에 대해 **legacy 문자열 형식을 허용하지 않는다**:
 
 {
   "version": "<tag_name>",
@@ -107,16 +128,17 @@ GitHub 공식 응답에서만 수행.
 
 ### originalRefs 작성 기준
 
-각 bullet 은 문자열 또는 `{ text, originalRefs }` 객체로 작성할 수 있다.
-신규 릴리즈 요약에서는 **가능하면 객체 형식 + originalRefs 채우기** 를 우선한다.
+신규 릴리즈의 각 bullet 은 반드시 `{ text, originalRefs }` 객체로 작성한다.
+문자열 bullet 은 과거 호환용일 뿐이며, 새로 생성하면 안 된다.
 
 - `text`: 한국어 불릿 문장 (기존 규칙 그대로)
 - `originalRefs`: 이 불릿의 근거가 된 **원문 body 의 최상위 리스트 아이템 0-based index** 배열
   - 원문을 Markdown 리스트로 파싱했을 때 `<li>` 가 나타나는 순서대로 0, 1, 2, ...
   - 중첩된 리스트는 같은 부모 아이템으로 묶지 말고 개별 index 로 센다 (전체 DFS 순서)
   - 근거 원문이 여러 줄이면 전부 나열
-  - 매칭이 애매하면 빈 배열 `[]` 또는 그냥 문자열로 두기 (억지 매핑 금지)
-- 원문이 Markdown 리스트 구조가 아니거나 불릿 매칭이 불가능하면 기존처럼 문자열로만 작성해도 된다.
+  - 매칭이 애매하면 빈 배열 `[]` 로 둔다. 억지 매핑 금지.
+- 원문이 Markdown 리스트 구조가 아니거나 불릿 매칭이 불가능해도 문자열로
+  되돌리지 말고 `{ "text": "...", "originalRefs": [] }` 로 작성한다.
 
 ### 요약 품질 원칙 (반드시 준수)
 
@@ -145,6 +167,7 @@ GitHub 공식 응답에서만 수행.
 ### devImpact 작성 기준
 
 `devImpact` 는 `DevImpactItem` 배열. 각 원소는 `{ text, refs }` 구조.
+문자열 `devImpact` 는 과거 데이터 호환용일 뿐이며, 신규 릴리즈에서는 금지.
 
 - `text`: 개발자 관점 영향 문장 (한국어). 한 문장 단위로 분리.
 - `refs`: 해당 문장의 근거가 되는 bullet 을 가리키는 참조 배열.
@@ -152,7 +175,7 @@ GitHub 공식 응답에서만 수행.
   - `index`: 해당 bucket 배열의 0-based 인덱스
   - 근거 bullet 이 여러 개면 모두 나열
   - 직접 대응되는 bullet 이 없으면 `refs: []` (주석 번호 미표시)
-- 해당 내용이 아예 없으면 **빈 배열 `[]`** (억지로 채우지 말 것).
+- 해당 내용이 아예 없으면 **빈 배열 `[]`** (억지로 채우지 말 것). 빈 문자열 금지.
 
 다음 중 하나 **실제로 있을 때만** text 항목으로 작성:
 - breaking change / 마이그레이션 필요
@@ -185,6 +208,10 @@ GitHub 공식 응답에서만 수행.
 `data/releases.json` 의 배열 최상단에 `new_releases` 를 **publishedAt
 내림차순** 으로 prepend. JSON 들여쓰기 2칸, 끝에 개행 1개.
 
+기존 릴리즈 항목은 순서 변경, 요약 재작성, 필드 정규화, 공백 포맷 변경을
+하지 않는다. 이번 실행에서 새로 추가한 릴리즈 객체와 `data/site-meta.json`
+만 변경되어야 한다.
+
 그 다음 `node scripts/mark-routine-run.mjs` 를 실행해서
 `data/site-meta.json` 의 `lastRoutineRunAt` 을 현재 UTC ISO8601 값으로
 갱신한다. 이 값은 웹페이지 상단의 "마지막 업데이트" 기준이며,
@@ -195,6 +222,18 @@ GitHub 공식 응답에서만 수행.
 다음 명령으로 검증 스크립트 실행:
 
 node scripts/validate-releases.mjs
+
+추가로 이번 실행에서 새로 추가한 항목을 눈으로 확인한다:
+
+- `summary.newFeatures`, `summary.changes`, `summary.fixes` 의 모든 항목이
+  `{ text, originalRefs }` 객체인지
+- `summary.devImpact` 가 배열인지 (`[]` 허용, 문자열 금지)
+- 각 `devImpact.refs[].bucket/index` 가 실제 bullet 을 가리키는지
+- 각 bullet 에 원문 고유 토큰(명령어, 플래그, 환경변수, 도구명, 플랫폼,
+  숫자) 중 최소 1개가 들어갔는지
+- 빈 템플릿 문구나 라벨 접두사가 없는지
+
+`git diff -- data/releases.json` 로 기존 릴리즈가 재작성되지 않았는지 확인한다.
 
 **`PASS` 확인 전까지 절대 커밋하지 말 것.** 에러 있으면 해당 항목
 요약을 재작성해서 재검증. 3회 실패 시 해당 버전은 skip 하고 보고에 명시.
@@ -263,8 +302,8 @@ git push origin main
 
 ### 기대 결과
 
-"신규 없음" 보고 + `data/releases.json` 무변경 + 커밋 없음. 현재 최신
-v2.1.117 이 이미 수록되어 있기 때문.
+"신규 없음" 보고 + `data/releases.json` 무변경 + `data/site-meta.json`만
+갱신하는 메타 커밋. 최신 태그가 이미 수록되어 있기 때문.
 
 ## Cowork Scheduled Task 정리
 

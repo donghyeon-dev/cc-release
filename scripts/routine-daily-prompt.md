@@ -17,6 +17,7 @@
 - Time: 09:00
 - Timezone: Asia/Seoul
 - 작업 디렉토리: `C:\Users\user\Documents\Personal\cc-release`
+- Git commit author: `donghyeon-dev <53686581+donghyeon-dev@users.noreply.github.com>`
 
 ## 프롬프트 본문 (여기부터 복사)
 
@@ -53,7 +54,15 @@
 WORKTREE="$REPO/.worktrees/digest-run"
 git -C "$REPO" fetch origin main
 git -C "$REPO" worktree add "$WORKTREE" origin/main
+
+git -C "$WORKTREE" config user.name "donghyeon-dev"
+git -C "$WORKTREE" config user.email "53686581+donghyeon-dev@users.noreply.github.com"
+git -C "$WORKTREE" config --get user.name
+git -C "$WORKTREE" config --get user.email
 ```
+
+커밋 author 는 실행 세션의 global git config 에 의존하지 않고 반드시
+`donghyeon-dev <53686581+donghyeon-dev@users.noreply.github.com>` 로 고정한다.
 
 이후 모든 파일 작업 및 커밋은 `$WORKTREE` 경로에서 수행.
 검증 스크립트도 `node $WORKTREE/scripts/validate-releases.mjs` 로 실행.

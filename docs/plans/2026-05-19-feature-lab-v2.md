@@ -425,9 +425,19 @@ curl -L 'https://donghyeon-dev.github.io/cc-release/preview/feature-lab/?feature
 
 ## Current goal status
 
-Goal 4 is **Deep-Link and Static Export QA**. See `docs/plans/2026-05-19-feature-lab-v2-goal-4-deeplink-qa.md`.
+Feature Lab v2 foundation is complete through Goal 4.
 
-This PR adds:
+Completed goal plans:
+
+1. `docs/plans/2026-05-19-feature-lab-v2-goal-2-selected-stack.md`
+2. `docs/plans/2026-05-19-feature-lab-v2-goal-3-empty-invalid-states.md`
+3. `docs/plans/2026-05-19-feature-lab-v2-goal-4-deeplink-qa.md`
+
+Next roadmap goal:
+
+- `docs/plans/2026-05-20-release-intelligence-goal-1-impact-summary.md`
+
+Goal 4 added:
 
 1. Dedicated deep-link validator for every feature id.
 2. Round-trip checks for representative query/filter combinations.
@@ -445,4 +455,4 @@ This PR adds:
 - [x] Empty/invalid URL states are friendly and tested.
 - [x] Feature deep-link/URL validators pass.
 - [x] Next static build passes with `NEXT_PUBLIC_BASE_PATH=/cc-release`.
-- [ ] GitHub Pages preview is deployed and verified.
+- [x] GitHub Pages preview is deployed and verified.

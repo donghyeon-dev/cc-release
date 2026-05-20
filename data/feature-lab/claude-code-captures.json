@@ -1,0 +1,59 @@
+[
+  {
+    "id": "cc-2.1.143-print-git-status-allowlist",
+    "capturedAt": "2026-05-20T09:43:59Z",
+    "claudeCodeVersion": "2.1.143",
+    "mode": "print-stream-json",
+    "scenario": "permissions.allow permits a read-only Bash(git status) tool call without an interactive approval prompt",
+    "command": "claude -p 'Run git status and summarize whether the working tree is clean. Do not change files.' --output-format stream-json --verbose --max-turns 3 --allowedTools 'Bash(git status:*)' --settings /tmp/claude-allow-settings.json --no-session-persistence",
+    "settings": {
+      "permissions": {
+        "allow": ["Bash(git status:*)"]
+      }
+    },
+    "transcript": [
+      {
+        "role": "system",
+        "text": "Claude Code 2.1.143 initialized in /home/ubuntu/cc-release with permissionMode=default."
+      },
+      {
+        "role": "assistant_tool",
+        "text": "Bash(command=\"git status\", description=\"Show working tree status\")"
+      },
+      {
+        "role": "tool_result",
+        "text": "On branch feat/claude-code-captured-tui-evidence\nnothing to commit, working tree clean"
+      },
+      {
+        "role": "assistant",
+        "text": "Working tree is clean on branch `feat/claude-code-captured-tui-evidence` — no staged, unstaged, or untracked changes."
+      }
+    ]
+  },
+  {
+    "id": "cc-2.1.143-interactive-onboarding-theme",
+    "capturedAt": "2026-05-20T09:40:00Z",
+    "claudeCodeVersion": "2.1.143",
+    "mode": "interactive-tmux-capture",
+    "scenario": "first-run interactive Claude Code TUI theme picker chrome",
+    "command": "tmux new-session -d -s cc-capture -x 140 -y 40 'cd /home/ubuntu/cc-release && claude --permission-mode default'; tmux capture-pane -t cc-capture -p -S -100",
+    "transcript": [
+      {
+        "role": "tui",
+        "text": "Welcome to Claude Code v2.1.143"
+      },
+      {
+        "role": "tui",
+        "text": "Let's get started.\n\nChoose the text style that looks best with your terminal\nTo change this later, run /theme"
+      },
+      {
+        "role": "tui_menu",
+        "text": "1. Auto (match terminal)\n❯ 2. Dark mode ✔\n3. Light mode\n4. Dark mode (colorblind-friendly)\n5. Light mode (colorblind-friendly)"
+      },
+      {
+        "role": "tui",
+        "text": "Syntax theme: Monokai Extended (ctrl+t to disable)"
+      }
+    ]
+  }
+]

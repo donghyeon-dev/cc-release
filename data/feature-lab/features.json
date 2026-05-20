@@ -153,38 +153,57 @@
       ]
     },
     "afterExperience": {
-      "title": "read-only 호출 자동 승인",
-      "statusBefore": "Permissions: ask",
-      "statusAfter": "Permissions: allowlist active",
+      "title": "captured: permissions.allow로 git status 실행",
+      "statusBefore": "Permissions: prompt required",
+      "statusAfter": "Permissions: allowlist permits Bash(git status:*)",
       "frames": [
         {
-          "id": "after-permission-1",
+          "id": "after-permission-captured-1",
           "kind": "diff",
           "at": "00:00",
-          "title": ".claude/settings.json",
-          "content": "+ \"allow\": [\n+   \"Bash(git status:*)\",\n+   \"Bash(git diff --name-only:*)\"\n+ ]",
-          "tone": "good"
+          "title": ".claude/settings.json equivalent used for capture",
+          "content": "+ \"permissions\": {\n+   \"allow\": [\"Bash(git status:*)\"]\n+ }",
+          "tone": "info"
         },
         {
-          "id": "after-permission-2",
+          "id": "after-permission-captured-2",
           "kind": "type",
-          "at": "00:02",
-          "content": "> git status"
+          "at": "00:01",
+          "content": "> Run git status and summarize whether the working tree is clean.",
+          "tone": "neutral"
         },
         {
-          "id": "after-permission-3",
-          "kind": "toast",
+          "id": "after-permission-captured-3",
+          "kind": "spinner",
+          "at": "00:02",
+          "title": "Actual Claude Code tool event",
+          "content": "Bash(command=\"git status\", description=\"Show working tree status\")",
+          "tone": "info"
+        },
+        {
+          "id": "after-permission-captured-4",
+          "kind": "line",
           "at": "00:03",
-          "content": "✓ auto-approved by permissions.allow",
+          "title": "Actual tool_result stdout",
+          "content": "On branch feat/claude-code-captured-tui-evidence\nnothing to commit, working tree clean",
           "tone": "good"
         },
         {
-          "id": "after-permission-4",
+          "id": "after-permission-captured-5",
           "kind": "line",
           "at": "00:04",
-          "content": "On branch main · working tree clean"
+          "title": "Actual assistant result",
+          "content": "Working tree is clean on branch `feat/claude-code-captured-tui-evidence` — no staged, unstaged, or untracked changes.",
+          "tone": "good"
         }
-      ]
+      ],
+      "evidence": {
+        "kind": "captured",
+        "captureId": "cc-2.1.143-print-git-status-allowlist",
+        "mode": "print-stream-json",
+        "claudeCodeVersion": "2.1.143",
+        "capturedAt": "2026-05-20T09:43:59Z"
+      }
     },
     "impact": {
       "summary": "안전한 조회 명령은 끊김 없이 진행하고, write/delete/network side effect가 있는 명령은 계속 사람 검토 대상으로 남깁니다.",

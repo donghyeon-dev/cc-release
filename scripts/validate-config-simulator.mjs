@@ -11,6 +11,7 @@ const scenariosPath = path.join(root, "data", "config-simulator", "scenarios.jso
 const featuresPath = path.join(root, "data", "feature-lab", "features.json");
 const releasesPath = path.join(root, "data", "releases.json");
 const capturesPath = path.join(root, "data", "feature-lab", "claude-code-captures.json");
+const requireExport = process.argv.includes("--require-export");
 
 const errors = [];
 
@@ -42,6 +43,20 @@ function assertStringArray(value, label) {
     }
   });
   return value;
+}
+
+function assertFileContains(filePath, expectedStrings, label) {
+  if (!fs.existsSync(filePath)) {
+    addError(`${label} export is missing: ${path.relative(root, filePath)}`);
+    return;
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  expectedStrings.forEach((expected) => {
+    if (!html.includes(expected)) {
+      addError(`${label} export must contain ${JSON.stringify(expected)}`);
+    }
+  });
 }
 
 function collectIds(records, fileLabel) {
@@ -176,10 +191,22 @@ if (!Array.isArray(scenarios)) {
   });
 }
 
+if (requireExport) {
+  const outRoot = path.join(root, "web", "out");
+  assertFileContains(
+    path.join(outRoot, "config-simulator", "index.html"),
+    ["Config Simulator", "Safe automation allowlist", ".claude/settings.json", "Feature Lab"],
+    "config simulator",
+  );
+  assertFileContains(path.join(outRoot, "index.html"), ["config-simulator"], "home");
+}
+
 if (errors.length > 0) {
   console.error(`Config simulator validation failed with ${errors.length} error${errors.length === 1 ? "" : "s"}:`);
   errors.forEach((error) => console.error(`- ${error}`));
   process.exit(1);
 }
 
-console.log(`Config simulator validation passed: ${scenarios.length} scenarios checked.`);
+console.log(
+  `Config simulator validation passed: ${scenarios.length} scenarios checked${requireExport ? ", export checked" : ""}.`,
+);

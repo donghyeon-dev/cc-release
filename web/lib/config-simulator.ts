@@ -1,4 +1,5 @@
-import scenarios from "../../data/config-simulator/scenarios.json";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
 export type ConfigSimulatorScenarioId =
   | "safe-automation-allowlist"
@@ -30,10 +31,22 @@ export interface ConfigSimulatorScenario {
   };
 }
 
-export const configSimulatorScenarios = scenarios as ConfigSimulatorScenario[];
+const SCENARIOS_PATH = path.join(
+  process.cwd(),
+  "..",
+  "data",
+  "config-simulator",
+  "scenarios.json",
+);
 
-export function getConfigSimulatorScenario(
+export async function getConfigSimulatorScenarios(): Promise<ConfigSimulatorScenario[]> {
+  const raw = await fs.readFile(SCENARIOS_PATH, "utf-8");
+  return JSON.parse(raw) as ConfigSimulatorScenario[];
+}
+
+export async function getConfigSimulatorScenario(
   id: ConfigSimulatorScenarioId,
-): ConfigSimulatorScenario | undefined {
-  return configSimulatorScenarios.find((scenario) => scenario.id === id);
+): Promise<ConfigSimulatorScenario | undefined> {
+  const scenarios = await getConfigSimulatorScenarios();
+  return scenarios.find((scenario) => scenario.id === id);
 }

@@ -9,7 +9,7 @@ const releasesPath = path.join(root, "data", "releases.json");
 const featuresPath = path.join(root, "data", "feature-lab", "features.json");
 const moduleUrl = pathToFileURL(path.join(root, "web", "lib", "release-intelligence.ts")).href;
 
-const { buildRelatedReleaseVersions, buildReleaseIntelligence } = await import(moduleUrl);
+const { buildRelatedReleaseVersions, buildReleaseIntelligence, buildReleaseIntelligenceHighlights } = await import(moduleUrl);
 
 const GENERIC_REASON_RE = /^(changes?|fixes?|bugfixes?|improvements?|updates?|misc|n\/a|none)$/i;
 
@@ -30,6 +30,10 @@ const buckets = buildReleaseIntelligence(releases, {
   relatedReleaseVersions: buildRelatedReleaseVersions(features),
 });
 
+const highlightsByRelease = buildReleaseIntelligenceHighlights(buckets);
+assert.ok(highlightsByRelease instanceof Map, "buildReleaseIntelligenceHighlights must return a Map");
+assert.ok(highlightsByRelease.size > 0, "release intelligence highlights must not be empty");
+
 assert.ok(buckets.length >= 3, `expected at least 3 release intelligence buckets, got ${buckets.length}`);
 
 const seenBucketIds = new Set();
@@ -45,6 +49,12 @@ for (const bucket of buckets) {
 
   const seenItemVersions = new Set();
   for (const item of bucket.items) {
+    const highlights = highlightsByRelease.get(item.version) ?? [];
+    const matchingHighlight = highlights.find(
+      (highlight) => highlight.bucketId === bucket.id && highlight.reason === item.reason,
+    );
+    assert.ok(matchingHighlight, `${bucket.id}.${item.version} missing release-card highlight`);
+    assert.equal(matchingHighlight.bucketTitle, bucket.title, `${bucket.id}.${item.version} highlight title mismatch`);
     assert.ok(releaseVersions.has(item.version), `${bucket.id} item references unknown release ${item.version}`);
     assert.equal(item.href, `#release-${item.version}`, `${bucket.id}.${item.version} href must target release anchor`);
     assert.equal(typeof item.headline, "string", `${bucket.id}.${item.version} headline must be a string`);

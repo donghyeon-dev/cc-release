@@ -16,6 +16,13 @@ export interface ReleaseIntelligenceItem {
   href: string;
 }
 
+export interface ReleaseIntelligenceHighlight {
+  bucketId: ReleaseIntelligenceBucketId;
+  bucketTitle: string;
+  reason: string;
+  href: string;
+}
+
 export interface ReleaseIntelligenceBucket {
   id: ReleaseIntelligenceBucketId;
   title: string;
@@ -135,6 +142,25 @@ export function buildRelatedReleaseVersions(
     if (feature.source?.releaseVersion) versions.add(feature.source.releaseVersion);
   }
   return versions;
+}
+
+export function buildReleaseIntelligenceHighlights(
+  buckets: ReleaseIntelligenceBucket[],
+): Map<string, ReleaseIntelligenceHighlight[]> {
+  const highlights = new Map<string, ReleaseIntelligenceHighlight[]>();
+  for (const bucket of buckets) {
+    for (const item of bucket.items) {
+      const releaseHighlights = highlights.get(item.version) ?? [];
+      releaseHighlights.push({
+        bucketId: bucket.id,
+        bucketTitle: bucket.title,
+        reason: item.reason,
+        href: item.href,
+      });
+      highlights.set(item.version, releaseHighlights);
+    }
+  }
+  return highlights;
 }
 
 export function buildReleaseIntelligence(

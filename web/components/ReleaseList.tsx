@@ -3,6 +3,7 @@
 import { useDeferredValue, useMemo, useState } from "react";
 import type { Release } from "@/lib/types";
 import type { ClaudeCodeFeature } from "@/lib/feature-lab";
+import type { ReleaseIntelligenceHighlight } from "@/lib/release-intelligence";
 import { filterReleases } from "@/lib/filter";
 import { ReleaseCard } from "./ReleaseCard";
 import { SearchBar } from "./SearchBar";
@@ -10,11 +11,12 @@ import { SearchBar } from "./SearchBar";
 interface Props {
   releases: Release[];
   features: ClaudeCodeFeature[];
+  releaseIntelligenceHighlights: Record<string, ReleaseIntelligenceHighlight[]>;
 }
 
 const PAGE_SIZE = 20;
 
-export function ReleaseList({ releases, features }: Props) {
+export function ReleaseList({ releases, features, releaseIntelligenceHighlights }: Props) {
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const deferredQuery = useDeferredValue(query);
@@ -57,6 +59,7 @@ export function ReleaseList({ releases, features }: Props) {
                 relatedFeatures={features.filter((feature) =>
                   feature.relatedReleases?.includes(r.version),
                 )}
+                releaseIntelligenceHighlights={releaseIntelligenceHighlights[r.version] ?? []}
               />
             ))}
           </div>

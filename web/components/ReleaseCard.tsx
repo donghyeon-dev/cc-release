@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { DevImpactRef, Release } from "@/lib/types";
+import type { ReleaseIntelligenceHighlight } from "@/lib/release-intelligence";
 import {
   featureCategoryLabels,
   featureDifficultyLabels,
   type ClaudeCodeFeature,
 } from "@/lib/feature-lab";
+import { withBasePath } from "@/lib/assets";
 import { buildFeatureLabHref } from "@/lib/feature-lab-url";
 import { formatDateKorean } from "@/lib/format";
 import { SummarySection } from "./SummarySection";
@@ -31,6 +33,7 @@ const categoryAccent: Record<ClaudeCodeFeature["category"], string> = {
 interface Props {
   release: Release;
   relatedFeatures: ClaudeCodeFeature[];
+  releaseIntelligenceHighlights: ReleaseIntelligenceHighlight[];
 }
 
 function RelatedFeatureLinks({ features }: { features: ClaudeCodeFeature[] }) {
@@ -90,7 +93,79 @@ function RelatedFeatureLinks({ features }: { features: ClaudeCodeFeature[] }) {
   );
 }
 
-export function ReleaseCard({ release, relatedFeatures }: Props) {
+function FeatureLabFallbackLink({ show }: { show: boolean }) {
+  if (!show) return null;
+
+  return (
+    <section className="mb-5 rounded-xl border border-indigo-200 bg-indigo-50/50 p-4 dark:border-indigo-900/70 dark:bg-indigo-950/20">
+      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-700 dark:text-indigo-300">
+        Feature Lab affordance
+      </p>
+      <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm leading-6 text-indigo-950 dark:text-indigo-100">
+          이 릴리즈에 직접 매핑된 실험 항목은 아직 없지만, 관련 Claude Code 설정·권한·자동화 기능은 Feature Lab에서 계속 확장 중입니다.
+        </p>
+        <a
+          href={withBasePath("/feature-lab/")}
+          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-indigo-700 px-3 py-2 text-xs font-black text-white transition hover:bg-indigo-800 dark:bg-indigo-200 dark:text-indigo-950 dark:hover:bg-white"
+        >
+          Feature Lab 열기 →
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function ReleaseIntelligenceHighlights({
+  highlights,
+}: {
+  highlights: ReleaseIntelligenceHighlight[];
+}) {
+  if (highlights.length === 0) return null;
+
+  return (
+    <section className="mb-5 rounded-xl border border-amber-200 bg-amber-50/70 p-4 dark:border-amber-900/70 dark:bg-amber-950/20">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-700 dark:text-amber-300">
+            Release Intelligence
+          </p>
+          <p className="mt-1 text-sm leading-5 text-amber-950 dark:text-amber-100">
+            위 요약 rail에서 이 릴리즈가 중요하게 분류된 이유입니다.
+          </p>
+        </div>
+        <span className="shrink-0 rounded-full border border-amber-200 bg-white px-2.5 py-1 text-xs font-black text-amber-800 dark:border-amber-900 dark:bg-zinc-950 dark:text-amber-200">
+          {highlights.length} signals
+        </span>
+      </div>
+      <ul className="mt-3 space-y-2">
+        {highlights.map((highlight) => (
+          <li
+            key={`${highlight.bucketId}-${highlight.reason}`}
+            className="rounded-lg border border-amber-200/80 bg-white/80 p-3 dark:border-amber-900/70 dark:bg-zinc-950/70"
+          >
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-black text-amber-800 dark:bg-amber-950 dark:text-amber-200">
+                {highlight.bucketTitle}
+              </span>
+              <a
+                href={highlight.href}
+                className="text-[11px] font-black uppercase tracking-wider text-amber-700 underline-offset-2 hover:underline dark:text-amber-300"
+              >
+                현재 릴리즈 위치
+              </a>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-zinc-700 dark:text-zinc-200">
+              {highlight.reason}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export function ReleaseCard({ release, relatedFeatures, releaseIntelligenceHighlights }: Props) {
   const cardRef = useRef<HTMLElement>(null);
   const [originalOpen, setOriginalOpen] = useState(false);
   const [highlightToken, setHighlightToken] = useState<string | null>(null);
@@ -221,6 +296,10 @@ export function ReleaseCard({ release, relatedFeatures }: Props) {
       </header>
 
       <div className="px-5 py-5 sm:px-6 sm:py-6">
+        <ReleaseIntelligenceHighlights highlights={releaseIntelligenceHighlights} />
+        <FeatureLabFallbackLink
+          show={releaseIntelligenceHighlights.length > 0 && relatedFeatures.length === 0}
+        />
         <RelatedFeatureLinks features={relatedFeatures} />
         <SummarySection
           summary={release.summary}

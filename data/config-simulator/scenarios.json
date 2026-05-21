@@ -46,7 +46,7 @@
     "summary": "공유 프로젝트 설정에는 보수적인 기본 권한과 명시적 차단 규칙을 두고, 개인 실험은 로컬 설정으로 분리하는 팀 운영 패턴입니다.",
     "audience": ["team", "power-user"],
     "settingsFile": ".claude/settings.json",
-    "settingsSnippet": "{\n  \"permissions\": {\n    \"defaultMode\": \"ask\",\n    \"allow\": [\n      \"Bash(npm test:*)\",\n      \"Bash(pnpm test:*)\",\n      \"Bash(git status:*)\"\n    ],\n    \"deny\": [\n      \"Bash(git push:*)\",\n      \"Bash(rm -rf:*)\",\n      \"Bash(npm publish:*)\",\n      \"Bash(pnpm publish:*)\"\n    ]\n  }\n}",
+    "settingsSnippet": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(npm test:*)\",\n      \"Bash(pnpm test:*)\",\n      \"Bash(git status:*)\"\n    ],\n    \"deny\": [\n      \"Bash(git push:*)\",\n      \"Bash(rm -rf:*)\",\n      \"Bash(npm publish:*)\",\n      \"Bash(pnpm publish:*)\"\n    ]\n  }\n}",
     "before": {
       "title": "프로젝트마다 권한 기대치가 암묵적임",
       "bullets": [

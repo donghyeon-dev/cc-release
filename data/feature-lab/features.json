@@ -751,31 +751,45 @@
       ]
     },
     "afterExperience": {
-      "title": "Context를 압축해 계속 진행",
-      "statusBefore": "Context: 92%",
-      "statusAfter": "Context: compacted",
+      "title": "실제 /compact 빈 세션 guardrail",
+      "statusBefore": "Context: fresh session",
+      "statusAfter": "Context: nothing to compact",
       "frames": [
         {
-          "id": "after-compact-command-1",
+          "id": "after-compact-command-captured-1",
           "kind": "type",
           "at": "00:00",
-          "content": "> /compact"
+          "content": "/compact"
         },
         {
-          "id": "after-compact-command-2",
-          "kind": "spinner",
+          "id": "after-compact-command-captured-2",
+          "kind": "line",
           "at": "00:01",
-          "content": "Compacting conversation…\nsummary retained · obsolete logs removed",
+          "content": "Error: No messages to compact",
+          "tone": "warn"
+        },
+        {
+          "id": "after-compact-command-captured-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "result: success · empty result field · total_cost_usd=0",
           "tone": "info"
         },
         {
-          "id": "after-compact-command-3",
+          "id": "after-compact-command-captured-4",
           "kind": "toast",
           "at": "00:03",
-          "content": "✓ Context: compacted",
-          "tone": "good"
+          "content": "Captured from Claude Code 2.1.143 print-stream-json",
+          "tone": "info"
         }
-      ]
+      ],
+      "evidence": {
+        "kind": "captured",
+        "captureId": "cc-2.1.143-print-slash-compact-empty-session",
+        "mode": "print-stream-json",
+        "claudeCodeVersion": "2.1.143",
+        "capturedAt": "2026-05-21T01:52:40Z"
+      }
     },
     "impact": {
       "summary": "대형 작업에서 이전 결정과 TODO는 남기고 상세 로그를 줄여 후속 구현을 계속할 수 있습니다.",
@@ -849,31 +863,45 @@
       ]
     },
     "afterExperience": {
-      "title": "세션 비용 확인",
+      "title": "실제 /cost 응답 확인",
       "statusBefore": "Cost: unknown",
-      "statusAfter": "Cost: visible",
+      "statusAfter": "Cost: subscription-backed",
       "frames": [
         {
-          "id": "after-cost-command-1",
+          "id": "after-cost-command-captured-1",
           "kind": "type",
           "at": "00:00",
-          "content": "> /cost"
+          "content": "/cost"
         },
         {
-          "id": "after-cost-command-2",
+          "id": "after-cost-command-captured-2",
           "kind": "line",
           "at": "00:01",
-          "content": "Session usage\ninput/output tokens: summarized\nestimated cost: visible",
+          "content": "You are currently using your subscription to power your Claude Code usage",
           "tone": "info"
         },
         {
-          "id": "after-cost-command-3",
+          "id": "after-cost-command-captured-3",
+          "kind": "line",
+          "at": "00:02",
+          "content": "total_cost_usd=0 · input_tokens=0 · output_tokens=0",
+          "tone": "good"
+        },
+        {
+          "id": "after-cost-command-captured-4",
           "kind": "toast",
           "at": "00:03",
-          "content": "✓ Cost: visible",
-          "tone": "good"
+          "content": "Captured from Claude Code 2.1.143 print-stream-json",
+          "tone": "info"
         }
-      ]
+      ],
+      "evidence": {
+        "kind": "captured",
+        "captureId": "cc-2.1.143-print-slash-cost-subscription",
+        "mode": "print-stream-json",
+        "claudeCodeVersion": "2.1.143",
+        "capturedAt": "2026-05-21T01:52:40Z"
+      }
     },
     "impact": {
       "summary": "긴 탐색 작업에서 고성능 모델 사용 시점을 조절하고 예상치 못한 비용 증가를 조기에 발견합니다.",

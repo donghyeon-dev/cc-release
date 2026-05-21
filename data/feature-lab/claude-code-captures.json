@@ -8,7 +8,9 @@
     "command": "claude -p 'Run git status and summarize whether the working tree is clean. Do not change files.' --output-format stream-json --verbose --max-turns 3 --allowedTools 'Bash(git status:*)' --settings /tmp/claude-allow-settings.json --no-session-persistence",
     "settings": {
       "permissions": {
-        "allow": ["Bash(git status:*)"]
+        "allow": [
+          "Bash(git status:*)"
+        ]
       }
     },
     "transcript": [
@@ -53,6 +55,50 @@
       {
         "role": "tui",
         "text": "Syntax theme: Monokai Extended (ctrl+t to disable)"
+      }
+    ]
+  },
+  {
+    "id": "cc-2.1.143-print-slash-cost-subscription",
+    "capturedAt": "2026-05-21T01:52:40Z",
+    "claudeCodeVersion": "2.1.143",
+    "mode": "print-stream-json",
+    "scenario": "/cost slash command reports subscription-backed Claude Code usage in print mode",
+    "command": "claude -p '/cost' --output-format stream-json --verbose --max-turns 2 --no-session-persistence",
+    "transcript": [
+      {
+        "role": "system",
+        "text": "Claude Code 2.1.143 initialized in /home/ubuntu/cc-release with permissionMode=default and model=claude-opus-4-7[1m]."
+      },
+      {
+        "role": "assistant",
+        "text": "You are currently using your subscription to power your Claude Code usage"
+      },
+      {
+        "role": "result",
+        "text": "total_cost_usd=0; usage input_tokens=0 output_tokens=0; fast_mode_state=off"
+      }
+    ]
+  },
+  {
+    "id": "cc-2.1.143-print-slash-compact-empty-session",
+    "capturedAt": "2026-05-21T01:52:40Z",
+    "claudeCodeVersion": "2.1.143",
+    "mode": "print-stream-json",
+    "scenario": "/compact slash command in a fresh print-mode session returns the real empty-session guardrail",
+    "command": "claude -p '/compact' --output-format stream-json --verbose --max-turns 2 --no-session-persistence",
+    "transcript": [
+      {
+        "role": "system",
+        "text": "Claude Code 2.1.143 initialized in /home/ubuntu/cc-release with slash command compact available."
+      },
+      {
+        "role": "assistant",
+        "text": "Error: No messages to compact"
+      },
+      {
+        "role": "result",
+        "text": "success result with empty result field; total_cost_usd=0; fast_mode_state=off"
       }
     ]
   }

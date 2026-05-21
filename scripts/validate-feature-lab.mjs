@@ -13,7 +13,12 @@ const minV2Features = minV2FeaturesArg ? Number(minV2FeaturesArg.split("=")[1]) 
 if (!Number.isInteger(minV2Features) || minV2Features < 0) {
   throw new Error("--min-v2-features must be a non-negative integer");
 }
-const knownFlagPrefixes = ["--require-v2-fields", "--min-v2-features="];
+const minCapturedScenesArg = args.find((arg) => arg.startsWith("--min-captured-scenes="));
+const minCapturedScenes = minCapturedScenesArg ? Number(minCapturedScenesArg.split("=")[1]) : 0;
+if (!Number.isInteger(minCapturedScenes) || minCapturedScenes < 0) {
+  throw new Error("--min-captured-scenes must be a non-negative integer");
+}
+const knownFlagPrefixes = ["--require-v2-fields", "--min-v2-features=", "--min-captured-scenes="];
 args
   .filter((arg) => arg.startsWith("--"))
   .forEach((arg) => {
@@ -164,6 +169,7 @@ function validateFrame(frame, label) {
   }
 }
 
+let capturedSceneCount = 0;
 function validateSceneEvidence(evidence, label, captureRecords) {
   if (evidence === undefined) return;
   if (!evidence || typeof evidence !== "object" || Array.isArray(evidence)) {
@@ -192,6 +198,7 @@ function validateSceneEvidence(evidence, label, captureRecords) {
   if (evidence.kind === "captured" && evidence.captureId === undefined) {
     fail(`${label}.captureId is required when kind is captured`);
   }
+  if (evidence.kind === "captured") capturedSceneCount += 1;
   if (evidence.mode !== undefined) {
     assertNonEmptyString(evidence.mode, `${label}.mode`);
     if (!captureModes.has(evidence.mode)) {
@@ -373,6 +380,10 @@ if (minV2Features > 0) {
     fail(`feature-lab catalog must include at least ${minV2Features} v2-enriched features, found ${v2Features.length}`);
   }
 }
+if (minCapturedScenes > 0 && capturedSceneCount < minCapturedScenes) {
+  fail(`feature-lab catalog must include at least ${minCapturedScenes} captured scenes, found ${capturedSceneCount}`);
+}
+
 features.forEach((feature, index) => {
   feature.relatedFeatureIds?.forEach((featureId, relIndex) => {
     if (!ids.has(featureId)) {

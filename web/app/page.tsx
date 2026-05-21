@@ -6,7 +6,7 @@ import { ReleaseIntelligenceRail } from "@/components/ReleaseIntelligenceRail";
 import { ReleaseList } from "@/components/ReleaseList";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TourController } from "@/components/TourController";
-import { buildRelatedReleaseVersions, buildReleaseIntelligence } from "@/lib/release-intelligence";
+import { buildRelatedReleaseVersions, buildReleaseIntelligence, buildReleaseIntelligenceHighlights } from "@/lib/release-intelligence";
 
 export default async function Home() {
   const releases = await getReleases();
@@ -15,6 +15,9 @@ export default async function Home() {
   const releaseIntelligence = buildReleaseIntelligence(releases, {
     relatedReleaseVersions: buildRelatedReleaseVersions(features),
   });
+  const releaseIntelligenceHighlights = Object.fromEntries(
+    buildReleaseIntelligenceHighlights(releaseIntelligence),
+  );
 
   return (
     <div className="min-h-screen bg-[#f7f7f4] text-zinc-950 dark:bg-[#090909] dark:text-zinc-50">
@@ -87,7 +90,11 @@ export default async function Home() {
             아직 수집된 릴리즈가 없습니다.
           </div>
         ) : (
-          <ReleaseList releases={releases} features={features} />
+          <ReleaseList
+            releases={releases}
+            features={features}
+            releaseIntelligenceHighlights={releaseIntelligenceHighlights}
+          />
         )}
 
         <footer className="mt-16 border-t border-zinc-200 pt-8 text-center text-xs text-zinc-500 dark:border-zinc-800">

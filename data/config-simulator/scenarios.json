@@ -1,0 +1,123 @@
+[
+  {
+    "id": "safe-automation-allowlist",
+    "title": "Safe automation allowlist",
+    "summary": "반복되는 read-only Git 확인은 자동 승인하고, 수정·삭제·네트워크 작업은 계속 사람 검토를 거치게 하는 기본 자동화 패턴입니다.",
+    "audience": ["solo-dev", "team", "ci", "power-user"],
+    "settingsFile": ".claude/settings.json",
+    "settingsSnippet": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(git status:*)\",\n      \"Bash(git diff --name-only:*)\",\n      \"Bash(git log --oneline:*)\"\n    ],\n    \"deny\": [\n      \"Bash(rm:*)\",\n      \"Bash(git push:*)\",\n      \"Bash(curl:*)\"\n    ]\n  }\n}",
+    "before": {
+      "title": "승인 프롬프트가 조회 작업마다 반복됨",
+      "bullets": [
+        "git status, git diff 같은 안전한 조회 명령도 매번 멈춰서 승인을 요청합니다.",
+        "긴 세션이나 CI 보조 작업에서 승인 피로가 쌓입니다.",
+        "위험 명령과 안전 명령의 차이가 설정으로 문서화되지 않습니다."
+      ]
+    },
+    "after": {
+      "title": "좁은 allowlist로 조회 자동화만 통과",
+      "bullets": [
+        "합의된 read-only Git 명령은 중단 없이 실행됩니다.",
+        "rm, git push, curl처럼 영향 범위가 큰 명령은 deny 규칙으로 명시 차단됩니다.",
+        "팀이 리뷰할 수 있는 프로젝트 설정 파일에 자동화 경계가 남습니다."
+      ]
+    },
+    "risks": [
+      {
+        "text": "allow 패턴이 너무 넓으면 쓰기 작업까지 자동 승인될 수 있습니다.",
+        "mitigation": "subcommand와 인자를 포함한 좁은 glob만 허용하고 deny 규칙으로 위험 명령을 별도 고정합니다."
+      },
+      {
+        "text": "팀원이 allowlist의 의도를 모르면 안전하지 않은 항목을 추가할 수 있습니다.",
+        "mitigation": "settings 변경 PR에는 자동 승인 이유와 read-only 근거를 함께 요구합니다."
+      }
+    ],
+    "relatedFeatureIds": ["permission-allowlist", "allowed-tools-patterns", "permission-denylist", "permissions-command"],
+    "relatedReleaseVersions": ["v2.1.145", "v2.1.143", "v2.1.141"],
+    "evidence": {
+      "kind": "captured",
+      "captureId": "cc-2.1.143-print-git-status-allowlist",
+      "notes": "Feature Lab의 permission-allowlist 캡처에서 permissions.allow가 git status 프롬프트를 줄이는 흐름을 확인했습니다. deny 항목은 이 시나리오의 안전 경계를 설명하기 위한 예시입니다."
+    }
+  },
+  {
+    "id": "team-permission-guardrails",
+    "title": "Team permission guardrails",
+    "summary": "공유 프로젝트 설정에는 보수적인 기본 권한과 명시적 차단 규칙을 두고, 개인 실험은 로컬 설정으로 분리하는 팀 운영 패턴입니다.",
+    "audience": ["team", "power-user"],
+    "settingsFile": ".claude/settings.json",
+    "settingsSnippet": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(npm test:*)\",\n      \"Bash(pnpm test:*)\",\n      \"Bash(git status:*)\"\n    ],\n    \"deny\": [\n      \"Bash(git push:*)\",\n      \"Bash(rm -rf:*)\",\n      \"Bash(npm publish:*)\",\n      \"Bash(pnpm publish:*)\"\n    ]\n  }\n}",
+    "before": {
+      "title": "프로젝트마다 권한 기대치가 암묵적임",
+      "bullets": [
+        "새 팀원이 어떤 명령을 자동화해도 되는지 세션 중 프롬프트로만 학습합니다.",
+        "배포, 삭제, 원격 push 같은 작업의 차단 기준이 개인 설정에 흩어질 수 있습니다.",
+        "권한 문제가 생겨도 재현 가능한 프로젝트 정책 파일이 부족합니다."
+      ]
+    },
+    "after": {
+      "title": "팀 공통 guardrail이 설정으로 고정됨",
+      "bullets": [
+        "기본 모드는 ask로 유지해 예상 밖 도구 호출을 사람이 확인합니다.",
+        "테스트와 상태 조회처럼 합의된 명령만 자동 승인 후보가 됩니다.",
+        "publish, push, destructive delete는 명시적으로 막아 실수 비용을 줄입니다."
+      ]
+    },
+    "risks": [
+      {
+        "text": "공유 설정에 개인 워크플로 전용 allow 항목이 섞이면 팀 전체 권한 표면이 커집니다.",
+        "mitigation": "개인 편의 규칙은 .claude/settings.local.json에 두고 공유 설정에는 팀 합의 항목만 유지합니다."
+      },
+      {
+        "text": "deny 규칙만 믿고 실제 배포 권한이나 토큰 권한을 과도하게 열어둘 수 있습니다.",
+        "mitigation": "Claude Code 설정은 보조 guardrail로 보고, npm/GitHub 권한과 CI approval도 최소 권한으로 맞춥니다."
+      }
+    ],
+    "relatedFeatureIds": ["permissions-command", "permission-denylist", "settings-scope", "allowed-tools-patterns"],
+    "relatedReleaseVersions": ["v2.1.145", "v2.1.141", "v2.1.136"],
+    "evidence": {
+      "kind": "scenario",
+      "notes": "팀 설정과 로컬 설정의 범위 구분, permissions allow/deny 기능을 조합한 illustrative scenario입니다."
+    }
+  },
+  {
+    "id": "mcp-local-boundary",
+    "title": "MCP local workflow boundary",
+    "summary": "개인 머신에서만 필요한 local MCP 서버와 read-only MCP 호출을 로컬 설정에 분리해 프로젝트 공유 설정을 깨끗하게 유지합니다.",
+    "audience": ["mcp-user", "team", "power-user"],
+    "settingsFile": ".claude/settings.local.json",
+    "settingsSnippet": "{\n  \"mcpServers\": {\n    \"local-docs\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@example/local-docs-mcp\", \"./docs\"]\n    }\n  },\n  \"permissions\": {\n    \"allow\": [\n      \"mcp__local-docs__search\",\n      \"mcp__local-docs__read\"\n    ],\n    \"deny\": [\n      \"mcp__local-docs__write\",\n      \"mcp__local-docs__delete\"\n    ]\n  }\n}",
+    "before": {
+      "title": "로컬 MCP 실험이 공유 설정과 섞임",
+      "bullets": [
+        "개인 문서 경로나 로컬 서버 명령이 프로젝트 설정에 들어갈 위험이 있습니다.",
+        "MCP read/write 도구의 허용 범위가 세션마다 즉흥적으로 결정됩니다.",
+        "다른 팀원 환경에서는 존재하지 않는 서버 때문에 설정 로딩이 혼란스러울 수 있습니다."
+      ]
+    },
+    "after": {
+      "title": "로컬 경계 안에서 MCP 조회만 자동화",
+      "bullets": [
+        "개인 머신 전용 MCP 서버는 settings.local.json에만 남아 공유되지 않습니다.",
+        "문서 검색·읽기 도구만 allow하고 write/delete 도구는 deny로 분리합니다.",
+        "프로젝트 공통 설정과 개인 생산성 실험의 책임 경계가 명확해집니다."
+      ]
+    },
+    "risks": [
+      {
+        "text": "로컬 MCP 서버가 민감 파일을 읽을 수 있으면 allow된 read 도구도 데이터 노출 경로가 될 수 있습니다.",
+        "mitigation": "MCP 서버 시작 인자를 프로젝트 docs처럼 필요한 디렉터리로 제한하고 토큰·홈 디렉터리 접근은 피합니다."
+      },
+      {
+        "text": "예시 패키지나 서버 이름을 그대로 복사하면 실제 환경에서 존재하지 않아 실패할 수 있습니다.",
+        "mitigation": "조직에서 승인한 MCP 서버 command/args로 바꾸고, 연결 확인 후 read-only 도구만 allow에 추가합니다."
+      }
+    ],
+    "relatedFeatureIds": ["mcp-server-toggle", "local-mcp-server", "settings-scope", "remote-mcp-server"],
+    "relatedReleaseVersions": ["v2.1.146", "v2.1.144", "v2.1.142"],
+    "evidence": {
+      "kind": "documented",
+      "notes": "Feature Lab의 MCP 설정 항목과 릴리스의 MCP 도구 로딩/페이지네이션 수정 이력을 바탕으로 한 documented workflow입니다."
+    }
+  }
+]

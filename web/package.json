@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "prebuild": "node ../scripts/validate-config-simulator.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-release-intelligence.mjs && node ../scripts/validate-feature-lab.mjs --min-v2-features=5 --min-captured-scenes=3 && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-url-state.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-source-card.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-deeplinks.mjs && node ../scripts/validate-feature-lab-selected-stack.mjs",
-    "postbuild": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-deeplinks.mjs --require-export",
+    "postbuild": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-deeplinks.mjs --require-export && node ../scripts/validate-config-simulator.mjs --require-export",
     "validate:feature-lab": "node ../scripts/validate-feature-lab.mjs --min-v2-features=5 --min-captured-scenes=3",
     "validate:feature-lab-url-state": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-url-state.mjs",
     "validate:feature-lab-source-card": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types ../scripts/validate-feature-lab-source-card.mjs",

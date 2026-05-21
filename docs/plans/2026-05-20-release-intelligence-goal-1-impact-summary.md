@@ -259,5 +259,5 @@ git diff --check
 - [x] Home page renders Release Intelligence rail above the release list.
 - [x] Rail item anchors link to existing release cards.
 - [ ] Existing release list/search behavior still works.
-- [ ] GitHub Pages preview is deployed and verified.
-- [ ] Production deploy is verified after merge.
+- [x] GitHub Pages preview is deployed and verified.
+- [x] Production deploy is verified after merge.

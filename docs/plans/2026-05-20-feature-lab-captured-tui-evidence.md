@@ -44,8 +44,9 @@ This capture now backs the `permission-allowlist.afterExperience` scene.
 - [x] Validator fails on missing capture references.
 - [x] The TUI panel displays whether it is a captured run or scenario transcript.
 - [x] At least one high-value feature uses a captured Claude Code run.
-- [ ] Future passes replace or downgrade remaining synthetic `/permissions`, `/memory`, `/cost`, and other slash-command scenes after running those commands in real Claude Code.
+- [x] `/cost` and `/compact` slash-command scenes use captured Claude Code evidence.
+- [ ] Future passes replace or downgrade any newly added synthetic `/permissions`, `/memory`, and other slash-command scenes after running those commands in real Claude Code.
 
 ## Follow-up
 
-The next implementation goal can still be Release Intelligence Goal 1, but future Feature Lab scene updates must not invent exact Claude Code CLI output. If no capture exists, the UI should keep the `Scenario transcript` label or use less exact language.
+Release Intelligence Goal 1 and its follow-up have shipped. Future Feature Lab scene updates must not invent exact Claude Code CLI output. If no capture exists, the UI should keep the `Scenario transcript` label or use less exact language.

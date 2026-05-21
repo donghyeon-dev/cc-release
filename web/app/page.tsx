@@ -60,28 +60,48 @@ export default async function Home() {
           </div>
         </header>
 
-        <section className="mb-7 overflow-hidden rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-sky-50 p-5 shadow-sm shadow-indigo-100/60 dark:border-indigo-900/70 dark:from-indigo-950/35 dark:via-zinc-950 dark:to-sky-950/25 dark:shadow-none sm:p-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
-                Interactive playground
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-3xl">
-                릴리즈 요약에서 바로 기능 체험으로 이어집니다
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300 sm:text-base">
-                env, settings, slash command 항목이 Claude Code TUI 안에서 어떻게 반영되는지 하나의 terminal stream으로 확인하세요.
-                요약을 읽다가 궁금한 기능은 이 실험실에서 바로 눌러보는 흐름입니다.
-              </p>
+        <div className="mb-7 grid gap-4 lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <section className="overflow-hidden rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-sky-50 p-5 shadow-sm shadow-indigo-100/60 dark:border-indigo-900/70 dark:from-indigo-950/35 dark:via-zinc-950 dark:to-sky-950/25 dark:shadow-none sm:p-6">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">
+                  Interactive playground
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-3xl">
+                  릴리즈 요약에서 바로 기능 체험으로 이어집니다
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300 sm:text-base">
+                  env, settings, slash command 항목이 Claude Code TUI 안에서 어떻게 반영되는지 하나의 terminal stream으로 확인하세요.
+                  요약을 읽다가 궁금한 기능은 이 실험실에서 바로 눌러보는 흐름입니다.
+                </p>
+              </div>
+              <a
+                href={withBasePath("/feature-lab/")}
+                className="inline-flex shrink-0 items-center justify-center rounded-xl bg-zinc-950 px-5 py-3 text-sm font-black text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700 dark:bg-white dark:text-zinc-950 dark:shadow-none dark:hover:bg-indigo-100"
+              >
+                Feature Lab에서 TUI 미리보기 →
+              </a>
             </div>
+          </section>
+
+          <aside className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-5 shadow-sm shadow-emerald-100/70 dark:border-emerald-900/70 dark:from-emerald-950/25 dark:via-zinc-950 dark:to-teal-950/20 dark:shadow-none sm:p-6">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">
+              Config simulator
+            </p>
+            <h2 className="mt-2 text-xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
+              설정 편집 전 권한 선택 미리보기
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
+              세 가지 starter configuration으로 allow/deny, MCP local boundary, 팀 guardrail의 before/after를 빠르게 비교합니다.
+            </p>
             <a
-              href={withBasePath("/feature-lab/")}
-              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-zinc-950 px-5 py-3 text-sm font-black text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700 dark:bg-white dark:text-zinc-950 dark:shadow-none dark:hover:bg-indigo-100"
+              href={withBasePath("/config-simulator/")}
+              className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-emerald-700 px-4 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-emerald-800 dark:bg-emerald-200 dark:text-emerald-950 dark:hover:bg-white"
             >
-              Feature Lab에서 TUI 미리보기 →
+              Config Simulator 열기 →
             </a>
-          </div>
-        </section>
+          </aside>
+        </div>
 
         <ReleaseIntelligenceRail buckets={releaseIntelligence} />
 

@@ -2,8 +2,8 @@ import type {
   DevImpactItem,
   DevImpactRef,
   ReleaseSummary,
-} from "@/lib/types";
-import { isStructuredDevImpact } from "@/lib/types";
+} from "./types.ts";
+import { isStructuredDevImpact } from "./types.ts";
 
 export function normalizeDevImpact(
   devImpact: string | DevImpactItem[] | undefined,

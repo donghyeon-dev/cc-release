@@ -254,10 +254,10 @@ git diff --check
 
 ## Definition of Done
 
-- [ ] `buildReleaseIntelligence` creates deterministic non-empty buckets from current data.
-- [ ] Validator catches empty/malformed release intelligence output.
-- [ ] Home page renders Release Intelligence rail above the release list.
-- [ ] Rail item anchors link to existing release cards.
+- [x] `buildReleaseIntelligence` creates deterministic non-empty buckets from current data.
+- [x] Validator catches empty/malformed release intelligence output.
+- [x] Home page renders Release Intelligence rail above the release list.
+- [x] Rail item anchors link to existing release cards.
 - [ ] Existing release list/search behavior still works.
 - [ ] GitHub Pages preview is deployed and verified.
 - [ ] Production deploy is verified after merge.

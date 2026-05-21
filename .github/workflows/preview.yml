@@ -1,0 +1,115 @@
+name: Preview Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - preview
+    paths:
+      - "web/**"
+      - "data/**"
+      - ".github/workflows/preview.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout production source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+
+      - name: Checkout preview source
+        uses: actions/checkout@v4
+        with:
+          ref: preview
+          path: preview
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: |
+            main/web/pnpm-lock.yaml
+            preview/web/pnpm-lock.yaml
+
+      - name: Build production root from main
+        working-directory: main/web
+        env:
+          NEXT_PUBLIC_BASE_PATH: /cc-release
+        run: |
+          pnpm install --frozen-lockfile
+          mkdir -p public/data
+          cp ../data/releases.json public/data/releases.json
+          pnpm build
+
+      - name: Build preview branch
+        working-directory: preview/web
+        env:
+          NEXT_PUBLIC_BASE_PATH: /cc-release/preview
+        run: |
+          pnpm install --frozen-lockfile
+          mkdir -p public/data
+          cp ../data/releases.json public/data/releases.json
+          pnpm build
+
+      - name: Compose Pages artifact
+        shell: bash
+        run: |
+          mkdir -p site/preview
+          cp -R main/web/out/. site/
+          cp -R preview/web/out/. site/preview/
+          cat > site/preview-info.html <<'HTML'
+          <!doctype html>
+          <html lang="ko">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <title>cc-release preview</title>
+              <style>
+                body { font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 20px; line-height: 1.6; }
+                a { color: #18181b; }
+                code { background: #f4f4f5; padding: 2px 6px; border-radius: 4px; }
+              </style>
+            </head>
+            <body>
+              <h1>cc-release preview</h1>
+              <p>Preview branch builds are published at <a href="./preview/"><code>/preview/</code></a>.</p>
+              <p>The production root is rebuilt from <code>main</code> in the same Pages artifact.</p>
+            </body>
+          </html>
+          HTML
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy preview to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Add preview URL to summary
+        run: |
+          echo "### Preview deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "URL: ${{ steps.deployment.outputs.page_url }}preview/" >> "$GITHUB_STEP_SUMMARY"

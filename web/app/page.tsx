@@ -2,14 +2,19 @@ import { withBasePath } from "@/lib/assets";
 import { getLatestUpdatedAt, getReleases } from "@/lib/data";
 import { getFeatureLabFeatures } from "@/lib/feature-lab-data";
 import { formatDateTimeKorean } from "@/lib/format";
+import { ReleaseIntelligenceRail } from "@/components/ReleaseIntelligenceRail";
 import { ReleaseList } from "@/components/ReleaseList";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TourController } from "@/components/TourController";
+import { buildRelatedReleaseVersions, buildReleaseIntelligence } from "@/lib/release-intelligence";
 
 export default async function Home() {
   const releases = await getReleases();
   const features = await getFeatureLabFeatures();
   const updatedAt = await getLatestUpdatedAt();
+  const releaseIntelligence = buildReleaseIntelligence(releases, {
+    relatedReleaseVersions: buildRelatedReleaseVersions(features),
+  });
 
   return (
     <div className="min-h-screen bg-[#f7f7f4] text-zinc-950 dark:bg-[#090909] dark:text-zinc-50">
@@ -74,6 +79,8 @@ export default async function Home() {
             </a>
           </div>
         </section>
+
+        <ReleaseIntelligenceRail buckets={releaseIntelligence} />
 
         {releases.length === 0 ? (
           <div className="rounded-lg border border-zinc-200 bg-white p-8 text-center text-zinc-500 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">

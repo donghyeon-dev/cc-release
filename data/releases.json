@@ -1,5 +1,281 @@
 [
   {
+    "version": "v2.1.147",
+    "tagName": "v2.1.147",
+    "publishedAt": "2026-05-21T20:39:22Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.147",
+    "originalBody": "## What's changed\n\n- Pinned background sessions (`Ctrl+T` in `claude agents`) now stay alive when idle, are restarted in place to apply Claude Code updates, and are shed under memory pressure only after non-pinned sessions\n- Renamed `/simplify` to `/code-review`. It now reports correctness bugs at a chosen effort level (e.g., `/code-review high`); pass `--comment` to post findings as inline GitHub PR comments. The old cleanup-and-fix behavior has been removed\n- Improved auto-updater: retries transient network failures, reports specific error categories and OS error codes on failure, and shows the current version when an update fails\n- Improved diff rendering performance for large file edits\n- Prompt history no longer records consecutive duplicate entries — recalling a prompt with arrow-up and submitting it again won't add another copy\n- Fixed enterprise login restrictions (`forceLoginOrgUUID` and `forceLoginMethod` managed-settings) not being enforced against third-party-provider and API-key sessions\n- Fixed `&` in `!` command output displaying as `&amp;`, which broke copy-pasting URLs from commands like `gcloud auth login` on headless machines\n- Fixed unknown slash commands silently doing nothing in headless/SDK mode — they now show an error message\n- Fixed `/help` rendering a broken tab header and showing only one command per page on small terminals when not in fullscreen mode\n- Fixed shell snapshot dropping user functions whose names start with a single underscore, which broke aliases referencing them\n- Fixed plugin agents that declare multiple `Agent(...)` types in `tools:` frontmatter dropping all but the last entry\n- Fixed hook `if` conditions like `PowerShell(git push*)` never matching — only `PowerShell(*)` worked\n- Fixed PowerShell tool dropping output for commands that rely on the default formatter\n- Fixed: on Windows, \"Yes, and don't ask again\" for a PowerShell script invocation now writes a rule that actually matches on subsequent runs\n- Fixed PowerShell tool failing on Windows with exit code 1 when `pwsh` is installed via winget or the Microsoft Store\n- Fixed `/effort` opening with the slider on the wrong level — it now starts at your current effort\n- Fixed paginating MCP servers dropping resources, templates, and prompts past page 1\n- Fixed full-screen strobing in attached background sessions on Windows Terminal while Claude is streaming\n- Fixed: on Windows, removing a background-job worktree no longer follows NTFS junctions into the main repo\n- Fixed `/background` refusing sessions whose only typed input was a skill or custom slash command\n- Fixed auto mode suppressing `AskUserQuestion` when the user or a skill explicitly relies on it; the auto-mode classifier now sees the user's answers as intent signal\n- Fixed `/theme` \"New custom theme\" and color editor dialogs not responding to Esc\n- Fixed an uncaught exception at the end of streaming sessions when running via the Agent SDK\n- Fixed a rare hang when waiting for scroll to settle on Windows\n- Fixed stale and doubled rows in the agent view list on Windows when background session results contain wide (CJK) characters\n- Fixed pasted text being delivered to agents as an unreadable `[Pasted text #N]` placeholder instead of the actual content\n- Fixed plugin component counts in `claude plugin details` and `/plugin` being doubled when a plugin's manifest listed paths overlapping its default directories\n- Fixed backgrounded sessions re-prompting for tool permissions you already granted with \"don't ask again\"\n- Fixed GNOME Terminal right-click and middle-click paste not inserting text\n- Fixed `CLAUDE_CODE_SUBAGENT_MODEL` not applying to teammate processes spawned by agent teams\n- Fixed slash commands followed by a tab or newline being treated as an unknown command\n- Fixed several spacing and layout glitches in the `/plugin`, `/status`, `/mobile`, `/sandbox`, and `/permissions` menus\n- Fixed stripped images prompting the model to repeatedly re-read media that was no longer present\n",
+    "summary": {
+      "headline": "`/simplify` → `/code-review` 재정의·핀 백그라운드 세션",
+      "newFeatures": [
+        {
+          "text": "`claude agents` 의 `Ctrl+T` 로 핀 처리한 백그라운드 세션이 idle 에서도 유지되고, Claude Code 업데이트 시 제자리 재시작되며, 메모리 압박 시 비-핀 세션부터 제거됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/code-review` 가 effort 레벨(예: `/code-review high`) 로 정확성 버그를 보고하고, `--comment` 플래그로 GitHub PR 인라인 코멘트 게시 가능",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/simplify` 가 `/code-review` 로 이름이 바뀌며 기존 cleanup-and-fix 동작은 제거됨",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "auto-updater 가 일시적 네트워크 실패를 재시도하고, 실패 시 에러 카테고리·OS 에러 코드와 현재 버전을 표시함",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "대용량 파일 편집 시 diff 렌더링 성능 향상",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "프롬프트 히스토리가 연속 중복 항목을 더 이상 저장하지 않음 — 위 화살표로 불러와 다시 제출해도 사본이 쌓이지 않음",
+          "originalRefs": [
+            4
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`forceLoginOrgUUID`·`forceLoginMethod` managed-settings 의 엔터프라이즈 로그인 제한이 third-party 프로바이더·API 키 세션에도 적용됨",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`!` 명령 출력에서 `&` 가 `&amp;` 로 표시돼 `gcloud auth login` 같은 명령의 URL 복사·붙여넣기가 깨지던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "headless·SDK 모드에서 알 수 없는 슬래시 명령이 조용히 무시되던 문제 수정 — 이제 에러 메시지 표시",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "전체화면이 아닐 때 소형 터미널에서 `/help` 의 탭 헤더가 깨지고 페이지당 명령 1개만 보이던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "이름이 언더스코어 1개로 시작하는 사용자 함수가 shell snapshot 에서 누락되어 이를 참조하는 alias 가 깨지던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "플러그인 에이전트 frontmatter `tools:` 에 `Agent(...)` 타입을 여러 개 선언하면 마지막 항목만 남고 나머지가 누락되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "Hook `if` 조건에서 `PowerShell(git push*)` 같은 패턴이 매칭되지 않고 `PowerShell(*)` 만 동작하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "PowerShell 도구가 기본 포매터에 의존하는 명령의 출력을 누락시키던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Windows 에서 PowerShell 스크립트 호출에 \"Yes, and don't ask again\" 을 선택해도 이후 실행에 매칭되지 않는 규칙이 저장되던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "winget·Microsoft Store 로 설치한 `pwsh` 사용 시 PowerShell 도구가 Windows 에서 exit code 1 로 실패하던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`/effort` 슬라이더가 현재 effort 가 아닌 다른 레벨에서 열리던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "페이지네이션 MCP 서버에서 resources·templates·prompts 의 2페이지 이후 항목이 누락되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Windows Terminal 에서 Claude 가 스트리밍 중일 때 attached 백그라운드 세션이 전체화면으로 깜박이던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "Windows 에서 백그라운드 작업 worktree 제거 시 NTFS junction 을 따라 본 레포까지 영향이 가던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`/background` 가 스킬이나 커스텀 슬래시 명령만 입력된 세션을 거부하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "Auto 모드가 사용자나 스킬이 명시적으로 의존하는 `AskUserQuestion` 을 억제하던 문제 수정 — 분류기가 사용자 응답을 의도 신호로 인식",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "`/theme` 의 \"New custom theme\" 및 컬러 에디터 다이얼로그가 Esc 키에 반응하지 않던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "Agent SDK 로 실행 시 스트리밍 세션 종료 시점에 발생하던 uncaught exception 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "Windows 에서 스크롤 안정화 대기 중 드물게 발생하던 hang 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "Windows 에서 백그라운드 세션 결과에 wide(CJK) 문자가 포함될 때 agent view 리스트의 행이 stale 하거나 중복 표시되던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "붙여넣은 텍스트가 에이전트에게 실제 내용 대신 `[Pasted text #N]` 플레이스홀더로 전달되던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "플러그인 manifest 의 path 가 기본 디렉토리와 겹칠 때 `claude plugin details` 와 `/plugin` 의 컴포넌트 카운트가 2배로 표시되던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 \"don't ask again\" 으로 이미 승인한 도구 권한을 다시 묻던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "GNOME Terminal 의 우클릭·휠클릭 붙여넣기가 텍스트를 삽입하지 않던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "agent team 이 생성한 teammate 프로세스에 `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수가 적용되지 않던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "슬래시 명령 뒤에 탭·개행 문자가 따라오면 unknown command 로 처리되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "`/plugin`·`/status`·`/mobile`·`/sandbox`·`/permissions` 메뉴의 여러 간격·레이아웃 결함 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "스트립된 이미지가 더 이상 존재하지 않는 미디어를 모델이 반복 재독하게 유도하던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`/simplify` 를 호출하던 자동화·스크립트는 `/code-review` 로 교체 필요하고, 기존 cleanup-and-fix 동작은 제거됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            },
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "엔터프라이즈 관리자는 third-party·API 키 세션도 `forceLoginOrgUUID`·`forceLoginMethod` 정책 enforcement 범위에 포함됨을 인지하고 정책을 재확인 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Windows·PowerShell 환경 사용자는 winget·Microsoft Store 설치본 호환, hook 매칭, NTFS junction 처리, 권한 규칙 저장 등 다수 회귀가 해결됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 9
+            },
+            {
+              "bucket": "fixes",
+              "index": 6
+            },
+            {
+              "bucket": "fixes",
+              "index": 13
+            },
+            {
+              "bucket": "fixes",
+              "index": 8
+            }
+          ]
+        },
+        {
+          "text": "agent team·teammate 프로세스에 `CLAUDE_CODE_SUBAGENT_MODEL` 가 다시 forwarding 되므로 모델 라우팅 검증 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 24
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-22T00:19:14.712Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.146",
     "tagName": "v2.1.146",
     "publishedAt": "2026-05-21T01:51:52Z",

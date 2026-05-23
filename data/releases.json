@@ -1,5 +1,241 @@
 [
   {
+    "version": "v2.1.149",
+    "tagName": "v2.1.149",
+    "publishedAt": "2026-05-22T22:09:29Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.149",
+    "originalBody": "## What's changed\n\n- `/usage` now shows a per-category breakdown of what's driving your limits usage — skills, subagents, plugins, and per-MCP-server cost\n- `/diff` detail view can now be scrolled with the keyboard (arrows, `j`/`k`, `PgUp`/`PgDn`, `Space`, `Home`/`End`)\n- Markdown output now renders GFM task list checkboxes (`- [ ] todo` / `- [x] done`) instead of plain bullets\n- Enterprise: added the `allowAllClaudeAiMcps` managed setting to load claude.ai cloud MCP connectors alongside `managed-mcp.json`\n- Fixed a PowerShell permission bypass: built-in `cd` functions (`cd..`, `cd\\`, `cd~`, `X:`) changed the working directory undetected, letting a later command read outside the workspace\n- Fixed the sandbox write allowlist in git worktrees covering the entire main repository root instead of only the shared `.git` directory (with `hooks/` and `config` denied)\n- Fixed PowerShell prefix/wildcard allow rules (e.g. `PowerShell(dotnet.exe build *)`) not pre-approving native executables and scripts\n- Fixed a permission-analysis gap where the parser trusted stale variable-tracking values for `PWD`/`OLDPWD`/`DIRSTACK` across `cd`/`pushd`/`popd`\n- Fixed `find` in the Bash tool exhausting the macOS system file/vnode table and crashing the host on large directory trees\n- Fixed the managed-settings approval dialog leaving the terminal frozen after accepting at startup\n- Fixed `/ultraplan` and remote session creation failing with \"Could not capture uncommitted changes\" when the working tree has no real changes\n- Fixed `otelHeadersHelper` failing silently when the script path contains spaces; helper failures are now reported in `/doctor` and the debug log\n- Fixed the thinking spinner staying amber across tool calls and onto fresh thinking bursts\n- Fixed collapsed Bash output reporting the wrong hidden-line count for outputs with many short lines\n- Fixed slash-command argument-hint clipping trailing typed characters when the hint overflows the input box\n- Fixed argument-hint and progressive arg suggestions not appearing after Tab-completing a skill whose frontmatter `name:` differs from its directory basename\n- Fixed the status bar showing the user's baseline `/effort` setting instead of the effort level applied by skill/agent `effort:` frontmatter\n- Fixed Ctrl+O transcript view freezing at the moment it was opened instead of tailing new messages\n- Fixed editing a recalled prompt-history entry losing the edit when navigating further up/down with arrow keys\n- Fixed `/config` exit summary reporting phantom changes to auto-compact and theme when toggling unrelated settings\n- Fixed `/insights` crashing when cached session-meta files are missing optional fields\n- Fixed malformed PowerShell and History tool calls with missing input being misclassified as reads in transcript collapsing\n- Fixed renaming a Remote Control session from claude.ai or the Claude mobile app not updating the local session name for `claude --resume`\n- Fixed a race where a just-submitted prompt could appear twice in the up-arrow history\n- Fixed tapping the \"Jump to bottom\" pill in fullscreen mode not dismissing it immediately\n- Improved `/feedback` reports to include the conversation that happened before context compaction, making issues from earlier in long sessions easier to triage\n",
+    "summary": {
+      "headline": "PowerShell `cd` 권한 우회 핫픽스 및 `/usage` 카테고리 분해",
+      "newFeatures": [
+        {
+          "text": "`/usage` 가 skills·subagents·plugins·MCP 서버별 사용량 비용 분해 표시",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/diff` 상세 뷰를 키보드(`j`/`k`, `PgUp`/`PgDn`, `Space`, `Home`/`End`)로 스크롤 가능",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "엔터프라이즈 관리 설정 `allowAllClaudeAiMcps` 추가 — `managed-mcp.json` 과 함께 claude.ai 클라우드 MCP 커넥터 로드",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "마크다운 출력이 `- [ ]`/`- [x]` GFM 태스크 체크박스를 평문 불릿 대신 렌더링",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`/feedback` 리포트가 context compaction 이전 대화까지 포함 — 긴 세션 초반 이슈 트리아지 용이",
+          "originalRefs": [
+            24
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "PowerShell 빌트인 `cd` 함수(`cd..`, `cd\\`, `cd~`, `X:`)가 작업 디렉토리를 미감지로 변경해 워크스페이스 외부 읽기를 허용하던 권한 우회 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "git worktree 의 샌드박스 쓰기 허용 범위가 공유 `.git` 디렉토리(`hooks/`·`config` 제외)가 아닌 메인 레포 루트 전체를 덮던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "PowerShell prefix/wildcard 허용 규칙(예: `PowerShell(dotnet.exe build *)`)이 네이티브 실행 파일·스크립트를 사전 승인하지 않던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "권한 분석 파서가 `cd`/`pushd`/`popd` 전후로 `PWD`/`OLDPWD`/`DIRSTACK` 변수 추적값을 stale 상태로 신뢰하던 갭 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Bash 툴의 `find` 가 대규모 디렉토리 트리에서 macOS 파일·vnode 테이블을 고갈시켜 호스트를 크래시시키던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "시작 시 managed-settings 승인 다이얼로그 수락 후 터미널이 얼어붙던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "워킹 트리에 실제 변경이 없을 때 `/ultraplan` 및 원격 세션 생성이 uncommitted changes 캡처 실패 에러로 종료되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "스크립트 경로에 공백이 있을 때 `otelHeadersHelper` 가 무음 실패하던 문제 수정 — 헬퍼 실패가 `/doctor` 와 디버그 로그에 보고됨",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "thinking 스피너가 툴 호출 사이 및 새 thinking 버스트에서도 호박색으로 유지되던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "다수의 짧은 라인 출력에서 collapsed Bash 결과의 숨김 라인 카운트가 잘못 표시되던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "argument-hint 가 입력 박스를 넘칠 때 슬래시 커맨드의 trailing 입력 문자가 잘리던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "frontmatter `name:` 이 디렉토리 basename 과 다른 skill 을 Tab 자동완성한 후 argument-hint 와 progressive 인자 제안이 안 뜨던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "상태 바가 skill/agent frontmatter `effort:` 값 대신 사용자의 기본 `/effort` 설정을 표시하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Ctrl+O 트랜스크립트 뷰가 열린 순간에 얼어붙고 새 메시지를 tailing 하지 않던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "프롬프트 히스토리 항목을 호출 후 편집한 상태에서 위/아래 화살표로 추가 이동 시 편집이 사라지던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "무관한 설정 토글 시 `/config` 종료 요약이 auto-compact 와 theme 의 phantom 변경을 보고하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "캐시된 session-meta 파일에 선택 필드가 누락되면 `/insights` 가 크래시되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "입력이 누락된 PowerShell·History 툴 호출이 트랜스크립트 collapsing 에서 read 로 잘못 분류되던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "claude.ai 또는 Claude 모바일 앱에서 Remote Control 세션 이름을 바꿔도 `claude --resume` 의 로컬 세션 이름이 갱신되지 않던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "방금 제출한 프롬프트가 위쪽 화살표 히스토리에 두 번 나타나던 race 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "풀스크린 모드에서 \"Jump to bottom\" pill 을 탭해도 즉시 사라지지 않던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "PowerShell `cd` 빌트인 함수가 작업 디렉토리를 가로채 워크스페이스 외부 읽기를 허용했던 보안 결함이 패치됨 — 권한 정책에 의존하는 팀은 즉시 업그레이드 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "git worktree 사용자는 샌드박스 쓰기 범위가 메인 레포 루트 전체로 확장되던 결함이 좁혀짐 — `.git/hooks` 및 `config` 쓰기 시도가 다시 거부됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "엔터프라이즈는 `allowAllClaudeAiMcps` managed setting 로 claude.ai 클라우드 MCP 자동 로드를 활성화 가능 — managed-mcp.json 정책 검토 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-23T00:12:24.081Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
+    "version": "v2.1.148",
+    "tagName": "v2.1.148",
+    "publishedAt": "2026-05-22T01:16:52Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.148",
+    "originalBody": "## What's changed\n\n- Fixed the Bash tool returning exit code 127 on every command for some users (a regression introduced in 2.1.147)\n",
+    "summary": {
+      "headline": "Bash 툴 전체 exit code 127 회귀 핫픽스",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "일부 사용자의 Bash 툴이 모든 명령에 exit code 127 을 반환하던 회귀(v2.1.147 도입) 수정",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "v2.1.147 에서 Bash 툴이 명령마다 127 을 반환해 워크플로가 깨졌던 사용자는 v2.1.148 로 즉시 업그레이드 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-23T00:12:24.081Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
     "version": "v2.1.147",
     "tagName": "v2.1.147",
     "publishedAt": "2026-05-21T20:39:22Z",

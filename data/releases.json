@@ -1,5 +1,28 @@
 [
   {
+    "version": "v2.1.150",
+    "tagName": "v2.1.150",
+    "publishedAt": "2026-05-23T04:03:51Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.150",
+    "originalBody": "## What's changed\n\n- Internal infrastructure improvements (no user-facing changes)",
+    "summary": {
+      "headline": "내부 인프라 개선만 포함된 유지보수 릴리즈",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "사용자에게 노출되지 않는 internal infrastructure 개선만 반영됨",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "fixes": [],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-05-24T00:33:22.249Z",
+    "summaryModel": "claude-opus-4-7"
+  },
+  {
     "version": "v2.1.149",
     "tagName": "v2.1.149",
     "publishedAt": "2026-05-22T22:09:29Z",

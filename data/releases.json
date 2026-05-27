@@ -1,5 +1,263 @@
 [
   {
+    "version": "v2.1.152",
+    "tagName": "v2.1.152",
+    "publishedAt": "2026-05-27T01:30:59Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.152",
+    "originalBody": "## What's changed\n\n- `/code-review --fix` now applies review findings to your working tree after the review, surfacing reuse, simplification, and efficiency suggestions; `/simplify` now invokes `/code-review --fix`\n- Skills and slash commands can now set `disallowed-tools` in frontmatter to remove tools from the model while the skill is active\n- Added `/reload-skills` command to re-scan skill directories without restarting the session\n- `SessionStart` hooks can now return `reloadSkills: true` to re-scan skill directories, making skills installed by the hook available in the same session\n- `SessionStart` hooks can now set the session title via `hookSpecificOutput.sessionTitle` on startup and resume\n- Added a `MessageDisplay` hook event that lets hooks transform or hide assistant message text as it is displayed\n- Added `pluginSuggestionMarketplaces` managed setting: admins can allowlist org marketplaces whose plugins may be suggested via context-aware tips\n- `claude plugin marketplace remove` now accepts `--scope user|project|local` for symmetry with `marketplace add`, `install`, and `uninstall`\n- Claude Code now switches to your configured `--fallback-model` for the rest of the session when the primary model is not found, instead of failing every request\n- Auto mode no longer requires opt-in consent\n- Vim mode: `/` in NORMAL mode now opens reverse history search (like Ctrl+R), matching bash/zsh vi-mode\n- The `/usage` breakdown now includes large session files; files are scanned with a streaming read so memory usage stays flat\n- Thinking summaries in the collapsed group now stay readable for at least 3 seconds, render as markdown, and cap at 10 lines (`Ctrl+O` shows the full thinking)\n- In fullscreen mode, the \"Thinking for Ns\" indicator now counts up live while the model is thinking, and keeps its value if you interrupt mid-thought\n- Simplified the Workflow tool's inline progress display — live agent counts now show only in the persistent workflow status row below the prompt\n- The post-response timer now shows \"Waiting for N background agents/workflows to finish\" when backgrounded agents or workflows are still running, and reports the cumulative time once their results are processed\n- Added the session entrypoint as an OpenTelemetry metric attribute (`app.entrypoint`, opt-in via `OTEL_METRICS_INCLUDE_ENTRYPOINT=true`)\n- Fixed terminal styling degrading in very long sessions by recycling the renderer's style pool\n- Fixed the sandbox-enabled warning not appearing in condensed startup mode — it now shows in every layout\n- Fixed the loading spinner showing \"still thinking\"/\"almost done thinking\" while a tool is running, and reset the thinking status to \"thinking\" after each tool\n- Fixed focus mode showing a spurious \"N messages hidden\" count on turns with no hidden activity\n- Fixed clicking a link inside an expanded tool result collapsing the section instead of opening the link\n- Fixed markdown table cell borders inheriting the color of inline code, wrapped continuation lines losing their style, and empty header cells showing a label in the narrow-terminal stacked layout\n- Fixed plugin MCP servers with the same command but different environment variables being incorrectly deduplicated\n- Fixed `/doctor` reporting \"marketplace not found\" or \"plugin not found\" for stale `enabledPlugins` entries referencing removed marketplaces or dropped plugins\n- Fixed plugins that track a git branch silently no longer receiving updates after the plugin registry was rebuilt\n- Fixed remote MCP servers failing to connect in Claude Code Remote sessions when the egress proxy is enabled\n- Fixed the effort-change confirmation dialog appearing when the conversation has no messages or when switching between effort levels that resolve to the same underlying value\n- Fixed the Agent tool description referencing an agent list that is never delivered when running with `--bare` or with attachments disabled\n- Fixed a background worker crash in `claude agents` when accepting a stale permission prompt after a subagent was cancelled\n- Fixed `cache_creation_input_tokens` reporting as 0 in transcript and result usage when the API reports cache writes only via the nested `cache_creation` breakdown\n- Fixed the PushNotification tool incorrectly reporting \"Mobile push not sent (Remote Control inactive)\" in SDK-hosted sessions when Remote Control is enabled\n- Fixed sessions getting stuck after a model or login switch left stale thinking-block signatures in history; now stripped proactively with a retry safety-net\n",
+    "summary": {
+      "headline": "스킬 핫리로드와 코드리뷰 자동 수정 강화",
+      "newFeatures": [
+        {
+          "text": "`/reload-skills` 명령으로 세션 재시작 없이 스킬 디렉터리 재스캔 가능",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`SessionStart` 훅이 `reloadSkills: true` 반환 시 같은 세션에서 훅이 설치한 스킬 즉시 사용 가능",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`SessionStart` 훅이 `hookSpecificOutput.sessionTitle` 로 시작·재개 시 세션 제목 설정 가능",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "새 `MessageDisplay` 훅 이벤트로 어시스턴트 메시지 텍스트를 표시 시점에 변형·숨김 처리 가능",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "스킬·슬래시 명령 frontmatter 에 `disallowed-tools` 를 지정해 활성 동안 특정 도구를 모델에서 제거 가능",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`pluginSuggestionMarketplaces` 관리 설정 추가 — 관리자가 추천 가능한 조직 마켓플레이스를 allowlist 로 제한",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "OpenTelemetry 지표에 세션 진입점 속성 `app.entrypoint` 추가 (`OTEL_METRICS_INCLUDE_ENTRYPOINT=true` 로 opt-in)",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/code-review --fix` 가 리뷰 후 결과를 워킹 트리에 직접 적용하고 재사용·단순화·효율 개선 제안 노출, `/simplify` 는 `/code-review --fix` 호출로 변경",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`claude plugin marketplace remove` 가 `--scope user|project|local` 옵션 지원 (`add`/`install`/`uninstall` 과 대칭)",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "기본 모델을 찾지 못하면 매 요청 실패 대신 설정된 `--fallback-model` 로 세션 나머지를 전환",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Auto mode 가 더 이상 opt-in 동의를 요구하지 않음",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "Vim 모드 NORMAL 상태에서 `/` 가 `Ctrl+R` 처럼 역방향 히스토리 검색 실행 (bash/zsh vi-mode 와 일치)",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`/usage` 분석에 대형 세션 파일이 포함되며, 스트리밍 읽기로 메모리 사용량을 일정하게 유지",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "접힌 그룹의 thinking 요약이 최소 3초간 표시되고 markdown 렌더링, 10줄로 제한 (`Ctrl+O` 로 전체 표시)",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "전체화면 모드에서 \"Thinking for Ns\" 표시가 실시간 카운트되고 중간 인터럽트 시 값 유지",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "Workflow 도구의 인라인 진행 표시 간소화 — 라이브 에이전트 수는 프롬프트 하단 상태 행에만 표시",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트·워크플로 실행 중일 때 post-response 타이머가 남은 작업 수를 알리는 대기 메시지를 표시하고 처리 후 누적 시간 보고",
+          "originalRefs": [
+            15
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "긴 세션에서 터미널 스타일이 저하되던 문제 수정 — 렌더러 스타일 풀 재활용",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "응축 시작 레이아웃에서 sandbox-enabled 경고가 안 보이던 문제 수정 — 모든 레이아웃에서 표시",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "도구 실행 중 로딩 스피너가 \"still thinking\"/\"almost done thinking\" 을 표시하던 문제 수정, 각 도구 후 상태를 \"thinking\" 으로 리셋",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "focus 모드에서 숨긴 활동이 없는 턴에 \"N messages hidden\" 카운트가 잘못 표시되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "확장된 도구 결과 내 링크 클릭 시 링크가 열리지 않고 섹션이 접히던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "markdown 표 셀 테두리가 인라인 코드 색을 상속하고, 줄바꿈 연속 행이 스타일을 잃으며, 좁은 터미널에서 빈 헤더 셀에 라벨이 표시되던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "같은 command 지만 환경변수가 다른 플러그인 MCP 서버가 잘못 중복 제거되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "제거된 마켓플레이스·드롭된 플러그인을 참조하는 오래된 `enabledPlugins` 항목에 대해 `/doctor` 가 \"marketplace not found\"/\"plugin not found\" 를 보고하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "플러그인 레지스트리 재구축 후 git 브랜치를 추적하는 플러그인이 조용히 업데이트를 못 받던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "egress 프록시 활성 시 Claude Code Remote 세션에서 원격 MCP 서버 연결 실패 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "대화에 메시지가 없거나 동일 값으로 해석되는 effort 레벨 전환 시 effort 변경 확인 대화상자가 뜨던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "`--bare` 또는 attachments 비활성 실행 시 전달되지 않는 에이전트 목록을 참조하던 Agent 도구 설명 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "서브에이전트 취소 후 오래된 권한 프롬프트 수락 시 `claude agents` 의 백그라운드 워커 크래시 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "API 가 캐시 쓰기를 중첩된 `cache_creation` 으로만 보고할 때 `cache_creation_input_tokens` 가 0 으로 보고되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "Remote Control 활성 SDK 호스팅 세션에서 PushNotification 도구가 \"Mobile push not sent (Remote Control inactive)\" 를 잘못 보고하던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "모델·로그인 전환 후 남은 stale thinking-block 시그니처로 세션이 멈추던 문제 수정 — 사전 제거 및 재시도 안전망 추가",
+          "originalRefs": [
+            32
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Auto mode 가 별도 동의 없이 즉시 활성화되므로 자동 실행 동작을 사전에 점검 권장.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "기본 모델 미존재 시 `--fallback-model` 로 세션 전체가 전환되어, 설정한 fallback 모델이 의도와 맞는지 확인 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`SessionStart` 훅에서 스킬 설치 후 `reloadSkills: true` 만 반환하면 재시작 없이 적용되므로 훅 기반 스킬 배포 워크플로 단순화 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            },
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`OTEL_METRICS_INCLUDE_ENTRYPOINT=true` 를 켜야 `app.entrypoint` 지표 속성이 수집됨.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 6
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-27T01:45:07Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.150",
     "tagName": "v2.1.150",
     "publishedAt": "2026-05-23T04:03:51Z",

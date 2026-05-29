@@ -1,5 +1,615 @@
 [
   {
+    "version": "v2.1.154",
+    "tagName": "v2.1.154",
+    "publishedAt": "2026-05-28T18:00:55Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.154",
+    "originalBody": "## What's changed\n\n- Opus 4.8 is here! Now defaults to high effort · /effort xhigh for your hardest tasks\n- Introducing dynamic workflows: ask Claude to create a workflow and it orchestrates work across tens to hundreds of agents in the background, so you can take on larger, more complex tasks. Run `/workflows` to view your runs\n- Fast mode on Opus 4.8 is now available at a fraction of its previous cost: 2x the standard rate for 2.5x the speed\n- The lean system prompt is now the default for all models except Haiku, Sonnet, and Opus 4.7 and earlier\n- Claude now reserves the multiple-choice question prompt for decisions it genuinely cannot make itself, instead of asking when it already has enough context to proceed\n- `/simplify` now runs a cleanup-only review (reuse, simplification, efficiency, altitude) and applies the fixes, instead of running the full `/code-review --fix` bug-hunting review\n- Renamed the `/effort` slider labels from \"Speed\"/\"Intelligence\" to \"Faster\"/\"Smarter\" for clarity\n- `claude agents`: type `! <command>` to run a shell command as a background session you can attach to and detach from. Also available as `claude --bg --exec '<command>'`\n- `claude agents`: `/logout` now signs you out instead of being sent to a background session\n- `←←` to open the agents view now works on Bedrock, Vertex, Foundry, and with telemetry disabled\n- Claude in Chrome: pick which connected browser to use via `/chrome` → \"Select browser…\", or in-chat when a browser action runs with multiple connected\n- Plugins can now declare `defaultEnabled: false` in `plugin.json` or a marketplace entry; enable them with `/plugin` or `claude plugin enable`. Dependencies of enabled plugins are still enabled automatically\n- The `/plugin` Discover tab now pins plugins whose relevance signals match the current directory with a \"suggested for this directory\" annotation\n- Streaming tool execution is now always enabled, including when telemetry is disabled or on Bedrock/Vertex/Foundry (previously behind a feature flag)\n- Stdio MCP server subprocesses now receive `CLAUDE_CODE_SESSION_ID` and `CLAUDECODE=1` in their environment\n- `claude mcp list`/`get` now show unapproved `.mcp.json` servers as `⏸ Pending approval` instead of auto-approving and connecting when output is piped\n- `/remote-control` autocomplete now shows \"Disconnect Remote Control\" when Remote Control is already active\n- Added Claude Opus 4.8 support and 4.7 → 4.8 migration guidance to the `/claude-api` skill\n- Deprecated `CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` (will be removed on 06/01). To use fast mode on Opus 4.6, switch with `/model claude-opus-4-6[1m]` and then `/fast on`\n- Improved the auto-mode classifier's detection of data exfiltration, particularly bulk transfers of repository contents\n- Fixed `rm -rf $HOME` not being blocked as a dangerous path when `HOME` has a trailing slash\n- Fixed `$TMPDIR` resolving to different directories in sandboxed vs unsandboxed Bash commands within the same session\n- Fixed unreadable highlighted-row text in `claude agents` when the Claude Code theme doesn't match the terminal background\n- Fixed background-agent completion notifications triggering premature \"out of context\" behavior on some 1M-context models\n- Fixed background-session classifier losing the user's goal when a scheduled `/command` fires\n- Fixed pinned background sessions respawning every minute after a Claude Code update, causing repeated agent-start notifications and process churn at idle\n- Fixed background sessions stuck at \"blocked\", \"running\", or \"working\" not retiring after the idle grace period\n- Fixed subagents in background sessions bypassing the worktree-isolation guard and writing to the shared checkout\n- Fixed orphaned `claude --bg-pty-host` processes spinning at 100% CPU after the daemon exits on macOS\n- Fixed number key shortcuts not working for options shown below the divider in option dialogs\n- Fixed `worktree.baseRef: \"head\"` resolving to the main checkout's HEAD instead of the current worktree's HEAD when spawning subagents or calling `EnterWorktree` from inside a linked worktree\n- Fixed a stray leading space on wrapped lines when the previous line ended exactly at the terminal width\n- Fixed intermittent terminal rendering corruption in VS Code by capping the number of distinct colors the thinking spinner produces\n- Fixed plan file names including `[Image #N]` / `[Pasted text #N]` placeholders when a plan-mode prompt starts with pasted images or text\n- Fixed a phantom expand/click affordance on colored tool output: short ANSI-colored lines that fit on screen no longer show a \"ctrl+o to expand\" hint\n- Fixed a single invalid `allowedMcpServers`/`deniedMcpServers` entry in managed settings discarding all managed-settings policy; the bad entry is now dropped with a `claude doctor` warning\n- Fixed API 400 errors on models that don't support the effort parameter when `CLAUDE_CODE_ALWAYS_ENABLE_EFFORT` is set\n- Windows: Fixed update failures caused by `claude.exe` being in use showing a generic error instead of telling you to close other sessions and retry\n- Removed the stale \"& for background\" hint from the shortcuts help panel\n- [VSCode] Auto mode no longer requires the bypass-permissions setting to appear in the mode picker, and a dismissable notice on the new-session screen explains auto mode the first time it's active\n- Fixed the task panel below the prompt showing a stray unselectable \"main\" row when only a workflow is running\n- Fixed /mcp tools list and tool detail rendering when MCP servers have long or multi-line tool names or long descriptions\n- Fixed the /model picker not showing fast mode pricing on the Default option for API (pay-as-you-go) users when fast mode is on\n- Fixed auto mode incorrectly blocking actions with \"could not evaluate this action\" when the safety classifier ran out of output tokens while reasoning\n",
+    "summary": {
+      "headline": "Opus 4.8 출시 및 동적 워크플로우 도입",
+      "newFeatures": [
+        {
+          "text": "`Opus 4.8` 모델 도입, `high` effort 기본값. `/effort xhigh` 로 최고 난도 작업 처리",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "동적 워크플로우(`/workflows`) 도입 — 수십~수백 에이전트를 백그라운드에서 오케스트레이션",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "Opus 4.8 Fast mode 가격 인하: 표준 요금의 2배로 2.5배 속도 제공",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`claude agents` 에서 `! <command>` 입력 시 백그라운드 셸 세션 실행, attach/detach 가능. `claude --bg --exec '<command>'` 형태도 지원",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`claude` 의 Chrome 연결 시 `/chrome` → \"Select browser…\" 또는 in-chat 으로 사용할 브라우저 선택 가능",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "플러그인 매니페스트에 `defaultEnabled: false` 선언 지원 — `/plugin` 또는 `claude plugin enable` 로 활성화",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`/plugin` Discover 탭이 현재 디렉토리 관련성에 따라 \"suggested for this directory\" 로 상단 고정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`/claude-api` 스킬에 Opus 4.8 지원과 4.7→4.8 마이그레이션 가이드 추가",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Haiku, Sonnet, Opus 4.7 이하를 제외한 모든 모델에서 lean system prompt 가 기본값으로 적용",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "Claude 가 충분한 컨텍스트가 있을 때 다중 선택 프롬프트로 묻지 않고 스스로 결정하도록 조정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`/simplify` 가 `/code-review --fix` 의 버그 헌팅 대신 정리 전용 리뷰(재사용, 단순화, 효율, altitude)만 실행하고 즉시 적용",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`/effort` 슬라이더 라벨이 \"Speed\"/\"Intelligence\" → \"Faster\"/\"Smarter\" 로 변경",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`claude agents` 에서 `/logout` 이 백그라운드 세션 진입 대신 실제 로그아웃 동작",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`←←` 단축키로 에이전트 뷰 진입이 Bedrock, Vertex, Foundry, 텔레메트리 비활성 환경에서도 동작",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "스트리밍 툴 실행이 기능 플래그 없이 항상 활성화 (Bedrock/Vertex/Foundry, 텔레메트리 비활성 포함)",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "Stdio MCP 서버 서브프로세스 환경에 `CLAUDE_CODE_SESSION_ID` 와 `CLAUDECODE=1` 주입",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`claude mcp list`/`get` 가 파이프 출력 시 미승인 `.mcp.json` 서버를 자동 승인하지 않고 `⏸ Pending approval` 로 표시",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`/remote-control` 자동완성이 활성 상태일 때 \"Disconnect Remote Control\" 표시",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 환경변수 deprecate (06/01 제거 예정). 대신 `/model claude-opus-4-6[1m]` 후 `/fast on` 사용",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "auto-mode classifier 의 데이터 유출 탐지 강화 — 특히 레포지토리 콘텐츠의 대량 전송 케이스",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "단축키 도움말 패널에서 더 이상 사용되지 않는 \"& for background\" 힌트 제거",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "[VSCode] Auto mode 가 mode picker 에서 bypass-permissions 설정 없이도 노출되며, 첫 활성 시 새 세션 화면에 설명 노티스 표시",
+          "originalRefs": [
+            39
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`HOME` 에 끝에 슬래시가 있을 때 `rm -rf $HOME` 이 위험 경로로 차단되지 않던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "같은 세션 안에서 샌드박스 Bash 와 비샌드박스 Bash 의 `$TMPDIR` 가 서로 다른 디렉토리로 해석되던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "터미널 배경과 테마가 안 맞을 때 `claude agents` 의 강조 행 텍스트가 안 읽히던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 완료 알림이 1M 컨텍스트 모델에서 \"out of context\" 동작을 조기 트리거하던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "예약된 `/command` 가 실행되면 백그라운드 세션 classifier 가 사용자 목표를 잃어버리던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "업데이트 후 핀 고정된 백그라운드 세션이 매분 재생성되며 알림과 프로세스 churn 을 유발하던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "\"blocked\"/\"running\"/\"working\" 상태에 멈춘 백그라운드 세션이 idle grace period 후에도 종료되지 않던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "백그라운드 세션의 서브에이전트가 worktree 격리 가드를 우회해 공유 체크아웃에 쓰던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "macOS 에서 데몬 종료 후 고아 `claude --bg-pty-host` 프로세스가 CPU 100% 로 도는 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "옵션 다이얼로그에서 구분선 아래 옵션의 숫자 키 단축키가 안 먹던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "연결된 worktree 안에서 서브에이전트 spawn 이나 `EnterWorktree` 호출 시 `worktree.baseRef: \"head\"` 가 현재 worktree 의 HEAD 가 아닌 main 체크아웃 HEAD 로 해석되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "이전 줄이 정확히 터미널 폭에서 끝났을 때 다음 wrap 된 줄에 stray leading space 가 나타나던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "thinking spinner 의 색상 수를 제한해 VS Code 터미널 렌더링 간헐적 깨짐 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "plan-mode 프롬프트가 붙여넣은 이미지/텍스트로 시작할 때 plan 파일명에 `[Image #N]` / `[Pasted text #N]` 플레이스홀더가 포함되던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "한 줄에 들어가는 짧은 ANSI 컬러 출력에 더 이상 \"ctrl+o to expand\" 힌트가 표시되지 않도록 phantom expand 어포던스 제거",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "managed settings 의 `allowedMcpServers`/`deniedMcpServers` 중 한 항목만 잘못돼도 정책 전체가 폐기되던 문제 수정 — 이제 잘못된 항목만 드롭하고 `claude doctor` 가 경고",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_ALWAYS_ENABLE_EFFORT` 설정 시 effort 파라미터 미지원 모델에서 API 400 이 나던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "Windows 에서 `claude.exe` 가 사용 중일 때 업데이트 실패가 일반 에러로 표시되던 문제 수정 — 이제 다른 세션 종료 후 재시도 안내",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "워크플로우만 실행 중일 때 프롬프트 아래 task 패널에 선택 불가능한 \"main\" 행이 잘못 표시되던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "MCP 서버의 툴 이름·설명이 길거나 여러 줄일 때 `/mcp` tools list 와 상세 화면 렌더링이 깨지던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "API (pay-as-you-go) 사용자에서 `/model` picker 의 Default 옵션이 fast mode 가격을 표시하지 않던 문제 수정",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "안전 분류기가 추론 중 출력 토큰을 소진하면 auto mode 가 동작을 평가할 수 없다는 사유로 잘못 차단하던 문제 수정",
+          "originalRefs": [
+            43
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Opus 4.8 가 새 기본 모델이고 `/effort xhigh` 가 추가됨 — 기존 자동화 스크립트는 모델·effort 가정 점검 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Haiku/Sonnet/Opus 4.7 이하 외 모델은 lean system prompt 가 기본이므로 시스템 프롬프트 의존 동작 변화 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE` 는 06/01 에 제거되므로 `/model claude-opus-4-6[1m]` + `/fast on` 으로 전환 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 10
+            }
+          ]
+        },
+        {
+          "text": "Stdio MCP 서버 서브프로세스에 `CLAUDE_CODE_SESSION_ID`, `CLAUDECODE=1` 가 자동 주입되므로 환경변수 기반 분기 사용 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 7
+            }
+          ]
+        },
+        {
+          "text": "managed settings 의 MCP allow/deny 정책이 잘못된 항목 하나로 전부 무시되던 동작이 사라지므로 기존 정책 검토 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 14
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-29T00:14:34.505Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.153",
+    "tagName": "v2.1.153",
+    "publishedAt": "2026-05-28T00:52:08Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.153",
+    "originalBody": "## What's changed\n\n- Added `skipLfs` option to `github`/`git` plugin marketplace sources to skip Git LFS downloads during clone and update\n- Claude Code now shows a one-time notice when your npm global install can't auto-update; `/doctor` lists the fixes\n- Status line commands now receive `COLUMNS` and `LINES` environment variables so scripts can size output to the terminal width\n- `claude agents`: autocomplete in the dispatch input now suggests native slash commands and bundled skills, not just project skills\n- `claude agents`: PR column now shows `PR #N` for a single PR or `N PRs` for multiple\n- `claude doctor` now shows the result of your last update attempt\n- Combined the separate \"needs authentication\" startup notifications for MCP servers and connectors into a single message\n- macOS: background agents now appear as \"Claude Code\" in Privacy & Security and keep their permission grants across upgrades\n- Fixed stateful MCP servers without the optional GET SSE stream reconnect-looping on `tools/list` (regression in v2.1.147)\n- Fixed a regression where a custom API gateway could receive the user's Anthropic OAuth credential instead of the gateway's own token\n- Fixed subagent (Agent tool) frontmatter MCP servers ignoring `--strict-mcp-config`, `--bare`, remote mode, enterprise managed MCP config, and managed-settings MCP server allow/deny policies\n- `--strict-mcp-config` no longer strips inline `mcpServers` from explicitly-passed agent definitions (`--agents` / SDK `agents`), and blocked subagent MCP servers now surface a visible warning\n- Fixed the Windows PowerShell installer reporting \"Installation complete!\" when installation actually failed\n- Fixed `claude update` installing the latest version instead of the configured release channel's version for npm installations\n- Fixed excessive memory usage (multiple GB) when resuming a session by transcript file path on machines with many stored sessions\n- Fixed `claude agents` and `claude --bg` running on a stale daemon started before binary-takeover support, even after upgrading\n- Fixed a hang where the CLI could fail to exit when stdin was closed without EOF in stream-json mode, leaving a stale session marker behind\n- Fixed malformed `file://` links in Claude's responses not being clickable in the terminal\n- Fixed `claude --help` rendering unwrapped output on terminals narrower than 92 columns\n- Fixed MCP tool progress notifications not rendering in the collapsed tool view\n- Fixed `Agent` tool with `subagent_type: 'claude'` running in an undocumented temporary worktree, which could silently discard outputs written to gitignored paths\n- `/bg` while Claude is responding now continues the response in the background session instead of dropping it\n- Fixed `/btw` keyboard shortcuts becoming unresponsive in background sessions while a task is running\n- Fixed background sessions writing temp files to `$CLAUDE_JOB_DIR` triggering a \"sensitive file\" permission prompt\n- Fixed recovering a background agent whose working directory was deleted showing a truncated stack trace instead of a clear error message\n- Fixed `EnterWorktree` not being available immediately in background sessions (previously required `ToolSearch` first)\n- Fixed `cmd+k` in iTerm2/Terminal.app not repainting attached background sessions\n- Fixed the IME candidate window appearing at the bottom of the screen instead of next to the input caret in attached background sessions on Windows\n- Fixed background-color bleed when attaching to a background agent from 256-color-only terminals after the agent had rendered file diffs\n- Fixed `/copy` and copy-on-select silently failing to update the system clipboard when attached to a background session inside tmux\n- Fixed opening `claude agents` with Remote Control enabled leaving zombie session entries on the Code tab after exiting\n- Fixed `/rename` in background sessions not updating the session banner immediately\n- Fixed Windows update rollback: if a Windows update fails, Claude Code now restores the original executable by copy and tells you how to recover\n- [VSCode] Fixed Claude Code processes not shutting down cleanly when VS Code closed on Windows, causing false \"unclean exit\" reports and orphaned MCP servers\n- `/model` now saves your selection as the default for new sessions (matching the IDE). Press `s` in the picker to switch models for the current session only.\n- If you customized the `modelPicker:setAsDefault` keybinding, rename it to `modelPicker:thisSessionOnly` in keybindings.json (the `d` action was replaced by `s`)\n",
+    "summary": {
+      "headline": "MCP 보안 강화 및 백그라운드 세션 안정화",
+      "newFeatures": [
+        {
+          "text": "`github`/`git` 플러그인 마켓플레이스 소스에 `skipLfs` 옵션 추가 — clone/update 시 Git LFS 다운로드 건너뛰기 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "status line 명령에 `COLUMNS`, `LINES` 환경변수 전달 — 스크립트가 터미널 폭에 맞춰 출력 크기 조정 가능",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`claude agents` dispatch 입력 자동완성이 프로젝트 스킬 외에 native 슬래시 명령과 번들 스킬도 제안",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`claude agents` PR 컬럼이 단일 PR 은 `PR #N`, 다중은 `N PRs` 로 표시",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`claude doctor` 가 마지막 업데이트 시도 결과를 표시",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "npm 글로벌 설치가 auto-update 불가능할 때 일회성 노티스 표시, `/doctor` 에 해결 방법 노출",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "MCP 서버와 connector 의 \"needs authentication\" 시작 시 알림을 단일 메시지로 통합",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "macOS 에서 백그라운드 에이전트가 Privacy & Security 에 \"Claude Code\" 로 표시되며 업그레이드 후에도 권한 유지",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`/model` 이 선택을 새 세션 기본값으로 저장(IDE 동작과 일치). picker 에서 `s` 누르면 현재 세션만 변경",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "`modelPicker:setAsDefault` 키바인딩 사용자는 `keybindings.json` 에서 `modelPicker:thisSessionOnly` 로 이름 변경 필요 (`d` 액션이 `s` 로 대체됨)",
+          "originalRefs": [
+            35
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`tools/list` 에서 optional GET SSE 스트림이 없는 stateful MCP 서버가 재연결 루프에 빠지던 회귀(v2.1.147) 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "커스텀 API 게이트웨이가 게이트웨이 자체 토큰 대신 사용자의 Anthropic OAuth 자격증명을 받던 회귀 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "Agent 도구 frontmatter 의 MCP 서버가 `--strict-mcp-config`, `--bare`, remote mode, 엔터프라이즈 managed MCP config, managed-settings allow/deny 정책을 무시하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`--strict-mcp-config` 가 명시적으로 전달된 agent 정의(`--agents` / SDK `agents`)의 inline `mcpServers` 를 더 이상 제거하지 않고, 차단된 서브에이전트 MCP 서버에 가시적인 경고 표시",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Windows PowerShell 인스톨러가 설치 실패 시에도 \"Installation complete!\" 로 보고하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "npm 설치에서 `claude update` 가 설정된 release channel 버전이 아닌 최신 버전을 설치하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "transcript 파일 경로로 세션 재개 시 저장된 세션이 많은 머신에서 수 GB 메모리를 쓰던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "binary-takeover 지원 이전에 시작된 stale 데몬으로 `claude agents` 및 `claude --bg` 가 동작하던 문제 수정 (업그레이드 후에도)",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "stream-json 모드에서 stdin 이 EOF 없이 닫힐 때 CLI 가 종료되지 않고 stale 세션 마커를 남기던 hang 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Claude 응답에 포함된 잘못된 `file://` 링크가 터미널에서 클릭되지 않던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`claude --help` 가 92 컬럼보다 좁은 터미널에서 줄바꿈 없이 렌더링되던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "접힌 툴 뷰에서 MCP 툴 진행 알림이 렌더링되지 않던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "`subagent_type: 'claude'` Agent 도구가 비공식 임시 worktree 에서 실행되어 gitignored 경로 출력이 조용히 누락되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "Claude 응답 중 `/bg` 를 누르면 응답을 끊지 않고 백그라운드 세션에서 계속 진행",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "백그라운드 세션에서 작업 실행 중 `/btw` 키보드 단축키가 응답하지 않던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 `$CLAUDE_JOB_DIR` 에 임시 파일을 쓸 때 \"sensitive file\" 권한 프롬프트가 뜨던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "작업 디렉토리가 삭제된 백그라운드 에이전트 복구 시 truncated stack trace 대신 명확한 에러 메시지 표시",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "백그라운드 세션에서 `EnterWorktree` 가 즉시 사용 불가(이전엔 `ToolSearch` 선행 필요)이던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "iTerm2/Terminal.app 에서 attached 백그라운드 세션이 `cmd+k` 로 다시 그려지지 않던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "Windows 의 attached 백그라운드 세션에서 IME 후보 창이 입력 caret 옆이 아닌 화면 하단에 뜨던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "256색 전용 터미널에서 file diff 렌더링 후 백그라운드 에이전트에 붙으면 배경색이 번지던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "tmux 안에서 백그라운드 세션에 attach 한 상태로 `/copy` 및 copy-on-select 가 시스템 클립보드를 갱신하지 못하던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "Remote Control 활성 상태로 `claude agents` 를 열고 종료하면 Code 탭에 좀비 세션 항목이 남던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "백그라운드 세션의 `/rename` 이 세션 배너를 즉시 갱신하지 않던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "Windows 업데이트 실패 시 Claude Code 가 원본 실행 파일을 copy 로 복원하고 복구 방법을 안내하도록 롤백 동작 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "[VSCode] Windows 에서 VS Code 종료 시 Claude Code 프로세스가 깨끗하게 종료되지 않아 false \"unclean exit\" 와 고아 MCP 서버를 남기던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "커스텀 API 게이트웨이 사용자: 이전엔 게이트웨이가 사용자의 Anthropic OAuth 자격증명을 받을 수 있었음 — 즉시 업데이트 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "서브에이전트 frontmatter 의 MCP 서버가 그동안 `--strict-mcp-config` 등 보안 정책을 우회했음 — 엔터프라이즈 managed MCP 정책 운영 환경은 적용 결과 재확인 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`/model` 선택이 이제 새 세션 기본값으로 저장됨 — 일시 변경하려면 picker 에서 `s` 사용.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "커스텀 키바인딩 사용자는 `keybindings.json` 의 `modelPicker:setAsDefault` 를 `modelPicker:thisSessionOnly` 로 변경해야 동작.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "v2.1.147 이후 stateful MCP 서버를 운영했다면 `tools/list` 재연결 루프 가능성이 있었으므로 운영 로그 확인 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-29T00:14:34.505Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.152",
     "tagName": "v2.1.152",
     "publishedAt": "2026-05-27T01:30:59Z",

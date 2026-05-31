@@ -1,5 +1,38 @@
 [
   {
+    "version": "v2.1.158",
+    "tagName": "v2.1.158",
+    "publishedAt": "2026-05-30T02:42:16Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.158",
+    "originalBody": "## What's changed\n\n- Auto mode is now available on Bedrock, Vertex, and Foundry for Opus 4.7 and Opus 4.8. Opt in by setting `CLAUDE_CODE_ENABLE_AUTO_MODE=1`\n",
+    "summary": {
+      "headline": "Bedrock/Vertex/Foundry에서 Auto mode 지원",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "Bedrock, Vertex, Foundry 환경에서 Opus 4.7·Opus 4.8 대상 Auto mode 사용 가능 — `CLAUDE_CODE_ENABLE_AUTO_MODE=1` 환경변수로 opt-in",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "fixes": [],
+      "devImpact": [
+        {
+          "text": "엔터프라이즈 클라우드(Bedrock/Vertex/Foundry) 사용자도 `CLAUDE_CODE_ENABLE_AUTO_MODE=1` 설정 시 Opus 4.7/4.8 Auto mode 활성화 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-05-31T00:13:03.258Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.157",
     "tagName": "v2.1.157",
     "publishedAt": "2026-05-29T20:20:38Z",

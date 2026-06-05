@@ -1,5 +1,184 @@
 [
   {
+    "version": "v2.1.163",
+    "tagName": "v2.1.163",
+    "publishedAt": "2026-06-04T21:52:51Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.163",
+    "originalBody": "## What's changed\n\n- Added `requiredMinimumVersion` and `requiredMaximumVersion` managed settings — Claude Code refuses to start if its version is outside the allowed range and directs the user to an approved version\n- Added `/plugin list` command to list installed plugins, with `--enabled`/`--disabled` filters\n- Added a \"c to copy\" shortcut to `/btw` that copies the raw markdown answer to the clipboard, preserving formatting when pasted elsewhere\n- Hooks: Stop and SubagentStop hooks can now return `hookSpecificOutput.additionalContext` to give Claude feedback and keep the turn going without being labeled a hook error\n- Skills: added `\\$` escape syntax to include a literal `$` before a digit in command bodies\n- stdio MCP servers now receive the same `CLAUDE_CODE_SESSION_ID` as hooks/Bash on `--resume`\n- Fixed `claude -p` hanging forever after its final result when a backgrounded command never exits — background shells are now stopped ~5s after the result once stdin closes\n- Fixed `claude -p` failing with \"ANTHROPIC_API_KEY required\" on Bedrock/Vertex/Foundry when `CI=true` and no Anthropic API key is set\n- Fixed bash commands failing under bazel and EDR-protected Go workflows: `$TMPDIR` was overridden to `/tmp/claude-{uid}` for all commands instead of only sandboxed ones (regression in 2.1.154)\n- Fixed Bash commands failing on Windows with \"EEXIST: file already exists\" on the session-env directory when it has the read-only attribute or is inside OneDrive\n- Fixed org-managed permission rules not applying for the entire session when the managed settings fetch completed during startup on a fresh config directory\n- Fixed background sessions in `claude agents` losing their running background tasks when reattached after a Claude Code update\n- Fixed terminal misalignment and a multi-second hang when exiting the agent view by pressing Esc\n- Fixed clicking Stop on a background-task chip in the desktop app not clearing the chip when the underlying process was already gone\n- Fixed keyboard input becoming permanently unresponsive after a paste operation whose end marker is dropped by the terminal\n- Fixed hook `if: \"Bash(...)\"` conditions firing on every Bash command containing `$()` or `$VAR`; the pattern now matches against commands inside subshells and backticks too\n- Fixed deny rules on home-directory paths (e.g. `Read(~/Desktop/**)`) not blocking Bash commands that reference the path via `$HOME`\n- Fixed a stray \"(no content)\" line left in the transcript after closing panel dialogs like /mcp and /plugins\n- Background agent sessions now update to a new Claude Code version in the background, so opening a session after an update no longer waits on a cold restart\n- Clearer descriptions for built-in commands and skills in the / menu\n- The subscription-switch suggestion now shows in the startup announcement slot instead of a toast\n- `claude agents` dispatching from the state-grouped view now starts the session in the directory the agent view was opened from\n",
+    "summary": {
+      "headline": "버전 강제·플러그인 관리·다수 버그 수정",
+      "newFeatures": [
+        {
+          "text": "`requiredMinimumVersion`·`requiredMaximumVersion` managed setting 추가 — 허용 범위를 벗어난 버전이면 시작 거부 후 승인된 버전으로 안내",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/plugin list` 명령 추가 — 설치된 플러그인 목록 표시, `--enabled`·`--disabled` 필터 지원",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/btw` 에 `c to copy` 단축키 추가 — 원본 markdown 답변을 서식 유지한 채 클립보드로 복사",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "Stop·SubagentStop hook 이 `hookSpecificOutput.additionalContext` 반환 시 hook 에러로 처리되지 않고 Claude 에 피드백 주며 턴 지속 가능",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "Skill 의 command body 에서 숫자 앞 리터럴 `$` 를 넣는 `\\$` escape 구문 추가",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "stdio MCP 서버도 `--resume` 시 hook·Bash 와 동일한 `CLAUDE_CODE_SESSION_ID` 전달받음",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "백그라운드 agent 세션이 업데이트를 백그라운드로 적용 — 업데이트 후 세션 열 때 cold restart 대기 사라짐",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`/` 메뉴의 내장 명령·skill 설명이 더 명확하게 정리됨",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "구독 전환 제안이 toast 대신 시작 announcement 슬롯에 표시됨",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "`claude agents` 의 state-grouped view 에서 dispatch 시 agent view 를 연 디렉토리에서 세션 시작",
+          "originalRefs": [
+            21
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "백그라운드 명령이 끝나지 않을 때 `claude -p` 가 최종 결과 후 무한 대기하던 문제 수정 — stdin 닫힌 뒤 결과 약 5초 후 백그라운드 셸 종료",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Foundry 에서 `CI=true` 이고 Anthropic API 키 없을 때 `claude -p` 가 \"ANTHROPIC_API_KEY required\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`$TMPDIR` 가 샌드박스 외 모든 명령에도 `/tmp/claude-{uid}` 로 덮어써져 bazel·EDR 보호 Go 워크플로 bash 명령이 실패하던 회귀(2.1.154) 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "session-env 디렉토리가 읽기 전용이거나 OneDrive 안에 있을 때 Windows 에서 Bash 명령이 \"EEXIST: file already exists\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "fresh config 디렉토리에서 시작 중 managed settings fetch 가 완료되면 org-managed 권한 규칙이 세션 전체에 적용되지 않던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "업데이트 후 재연결 시 `claude agents` 백그라운드 세션이 실행 중인 백그라운드 작업을 잃던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Esc 로 agent view 종료 시 터미널 정렬 깨짐과 수 초 hang 발생하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "데스크톱 앱에서 이미 종료된 프로세스의 background-task chip 에 Stop 클릭 시 chip 이 사라지지 않던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "터미널이 paste 종료 마커를 누락하면 키보드 입력이 영구 무응답이 되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "hook `if: \"Bash(...)\"` 조건이 `$()`·`$VAR` 포함 모든 Bash 명령에 발동하던 문제 수정 — subshell·backtick 내부 명령까지 패턴 매칭",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "홈 디렉토리 경로 deny 규칙(예: `Read(~/Desktop/**)`)이 `$HOME` 으로 경로 참조하는 Bash 명령을 막지 못하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`/mcp`·`/plugins` 같은 패널 다이얼로그 닫은 뒤 transcript 에 \"(no content)\" 줄이 남던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`requiredMinimumVersion`·`requiredMaximumVersion` 를 managed setting 으로 설정하면 범위 밖 버전은 실행이 차단되므로, 조직 배포 시 버전 핀 정책 점검 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`$TMPDIR` 오버라이드 회귀가 2.1.154~2.1.162 구간에서 bazel·EDR Go 빌드를 깨뜨렸으므로, 해당 환경은 2.1.163 으로 올려야 정상화됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "홈 경로 deny 규칙이 `$HOME` 참조 Bash 명령을 막지 못하던 보안 허점이 수정되어, `Read(~/...)` deny 에 의존하던 권한 설정의 실효성이 회복됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 10
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-05T00:04:13.291Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.162",
     "tagName": "v2.1.162",
     "publishedAt": "2026-06-03T21:31:35Z",

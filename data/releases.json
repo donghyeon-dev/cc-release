@@ -1,5 +1,259 @@
 [
   {
+    "version": "v2.1.169",
+    "tagName": "v2.1.169",
+    "publishedAt": "2026-06-08T21:57:18Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.169",
+    "originalBody": "## What's changed\n\n- Added `--safe-mode` flag (and `CLAUDE_CODE_SAFE_MODE`) to start Claude Code with all customizations (CLAUDE.md, plugins, skills, hooks, MCP servers) disabled for troubleshooting\n- Added `/cd` command to move a session to a new working directory without breaking the prompt cache mid-session\n- Added a `disableBundledSkills` setting and `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` environment variable to hide bundled skills, workflows, and built-in slash commands from the model\n- Fixed Up/Down arrows jumping to command history past the wrapped rows of a long input line — they now move through each visual row first, and history recall enters at the near edge\n- Fixed enterprise managed MCP policies (`allowedMcpServers`/`deniedMcpServers`) not being enforced on reconnect, IDE-typed configs, `--mcp-config` servers during the first session after install, or before remote settings loaded; also fixed slow cold starts for orgs without remote settings\n- Fixed a ~30-50ms UI stall at the start of each turn for macOS users logged in with claude.ai credentials\n- Fixed `claude -p` being slow or appearing to hang on Windows while waiting for the slash-command/skill scan (regression in 2.1.161)\n- Fixed Remote Control getting stuck on \"reconnecting\" after resuming a session when an OAuth token refresh happened at the same time\n- Fixed Git Credential Manager's \"Connect to GitHub\" popup appearing on Windows at startup when background git commands ran without cached credentials\n- Fixed footer hints (e.g. \"esc to interrupt\") not showing for users with a custom statusline\n- Fixed stale permission and dialog prompts reappearing every time you reattached to a remote session whose worker had died while waiting on them\n- Fixed `claude agents --json` omitting blocked and just-dispatched background sessions; added `--all` to include completed sessions, plus new `id` and `state` fields\n- Fixed agents view leaving a stale/garbled frame after navigating back from an agent on WSL in Windows Terminal\n- Fixed background agents ignoring project-level settings `env` values (e.g. `ANTHROPIC_MODEL`) when dispatched onto a pre-warmed worker\n- Fixed MCPB plugin cache being spuriously invalidated on Windows, causing unnecessary re-extraction\n- Fixed plugin `.in_use` PID lock files accumulating without bound; stale markers from crashed sessions are now swept once per day\n- Fixed untrusted project settings being able to set OTEL client-certificate paths without trust confirmation\n- `/workflows` now opens immediately even while a turn is in progress\n- Improved `TaskCreate` reliability: malformed inputs are repaired automatically and validation errors for unloaded tools include the schema\n- Improved the error message shown when your organization has disabled API key authentication, with guidance based on where the active API key comes from\n- Reduced CPU usage while responses stream and during spinner animations\n- Restored a default 5-minute idle timeout on Vertex/Foundry so a stalled stream aborts instead of hanging indefinitely; set `API_FORCE_IDLE_TIMEOUT=0` to opt out\n- Remote-managed settings with an invalid entry now apply their remaining valid policies and surface the validation error, instead of silently dropping the whole payload\n- Background sessions now preserve `--ide`, `--chrome`, `--bare`, `--remote-control`, and other flags across retire→wake, and respawn state validation was hardened\n- Background sessions are now told that shared-checkout edits are blocked until they enter a worktree, avoiding a wasted rejected edit before `EnterWorktree`\n- The \"CLAUDE.md is too long\" warning threshold now scales with the model's context window\n- Auto-updater on Windows now stops retrying within a session once `claude.exe` is held by another process\n- Improved color contrast for skill tags in the slash-command menu\n- Promo credit claims for Apple/Google-billed subscribers without a payment method now explain where to add one\n- Added a tip suggesting `claude agents` when running multiple concurrent sessions\n",
+    "summary": {
+      "headline": "안전 모드와 /cd 추가, MCP 정책·원격 세션 다수 수정",
+      "newFeatures": [
+        {
+          "text": "`--safe-mode` 플래그와 `CLAUDE_CODE_SAFE_MODE` 환경변수로 CLAUDE.md·플러그인·스킬·hook·MCP 서버를 모두 비활성화한 상태로 기동 가능 — 문제 진단용",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/cd` 명령으로 세션 중간에 프롬프트 캐시를 깨지 않고 작업 디렉토리 변경 가능",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`disableBundledSkills` 설정과 `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` 환경변수로 번들 스킬·워크플로·내장 슬래시 명령을 모델에서 숨김",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/workflows` 가 턴 진행 중에도 즉시 열림",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`TaskCreate` 안정성 개선 — 잘못된 입력 자동 복구, 미로딩 도구의 검증 에러에 스키마 포함",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "조직이 API 키 인증을 비활성화했을 때 표시되는 에러 메시지를 활성 API 키 출처 기반 안내로 개선",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "응답 스트리밍 및 스피너 애니메이션 중 CPU 사용량 감소",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "Vertex/Foundry 에 기본 5분 idle timeout 복원 — 멈춘 스트림이 무한 대기 대신 abort됨, `API_FORCE_IDLE_TIMEOUT=0` 로 해제 가능",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "원격 관리 설정에 잘못된 항목이 있어도 전체 페이로드를 버리지 않고 유효한 정책은 적용하며 검증 에러를 노출",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 retire→wake 시 `--ide`·`--chrome`·`--bare`·`--remote-control` 등 플래그를 유지하고 respawn 상태 검증 강화",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 `EnterWorktree` 전까지 공유 체크아웃 편집이 차단됨을 사전 통지받아 거부될 편집 낭비를 회피",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "CLAUDE.md 길이 초과 경고의 임계값이 모델 context window 크기에 따라 조정됨",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "Windows 자동 업데이터가 `claude.exe` 가 다른 프로세스에 점유된 경우 세션 내 재시도를 중단",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "슬래시 명령 메뉴의 스킬 태그 색상 대비 개선",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "결제 수단 없는 Apple/Google 결제 구독자의 프로모 크레딧 청구 시 결제 수단 추가 위치 안내",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "다중 동시 세션 실행 시 `claude agents` 사용을 제안하는 팁 추가",
+          "originalRefs": [
+            29
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "긴 입력 줄의 wrap된 행을 지나쳐 명령 히스토리로 점프하던 Up/Down 화살표 수정 — 이제 시각적 행을 먼저 이동하고 히스토리는 가까운 끝에서 진입",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "재접속·IDE 입력 설정·첫 세션의 `--mcp-config` 서버·원격 설정 로드 전에 적용되지 않던 엔터프라이즈 관리 MCP 정책(`allowedMcpServers`/`deniedMcpServers`) 수정, 원격 설정 없는 조직의 느린 콜드 스타트도 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "claude.ai 자격증명으로 로그인한 macOS 사용자에게 매 턴 시작 시 발생하던 ~30-50ms UI 멈춤 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "Windows에서 슬래시 명령/스킬 스캔 대기 중 `claude -p` 가 느리거나 멈춘 듯 보이던 문제 수정 (2.1.161 회귀)",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "세션 재개 시 OAuth 토큰 갱신이 동시에 발생하면 Remote Control이 \"reconnecting\" 상태로 멈추던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "캐시된 자격증명 없이 백그라운드 git 명령이 실행될 때 Windows 시작 시 나타나던 Git Credential Manager의 \"Connect to GitHub\" 팝업 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "커스텀 statusline 사용자에게 푸터 힌트(예: \"esc to interrupt\")가 표시되지 않던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "워커가 죽은 원격 세션에 재접속할 때마다 오래된 권한·대화상자 프롬프트가 반복 표시되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`claude agents --json` 이 차단·방금 디스패치된 백그라운드 세션을 누락하던 문제 수정, 완료 세션 포함용 `--all` 과 `id`·`state` 필드 추가",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "WSL의 Windows Terminal에서 에이전트에서 뒤로 이동 후 agents 뷰에 오래된/깨진 프레임이 남던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트가 pre-warmed 워커에 디스패치될 때 프로젝트 단위 설정 `env` 값(예: `ANTHROPIC_MODEL`)을 무시하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "Windows에서 MCPB 플러그인 캐시가 잘못 무효화되어 불필요한 재추출이 발생하던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "플러그인 `.in_use` PID 잠금 파일이 무한정 쌓이던 문제 수정 — 크래시 세션의 오래된 마커는 하루 1회 정리됨",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "신뢰되지 않은 프로젝트 설정이 신뢰 확인 없이 OTEL 클라이언트 인증서 경로를 설정할 수 있던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`--safe-mode`(또는 `CLAUDE_CODE_SAFE_MODE`)로 모든 커스터마이징을 끈 클린 환경에서 문제를 재현·격리할 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`disableBundledSkills`/`CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` 신설로 번들 스킬을 모델 노출에서 제외 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "엔터프라이즈 MCP 정책(`allowedMcpServers`/`deniedMcpServers`)이 재접속·첫 세션·원격 설정 로드 전에도 강제되도록 수정되어 관리 정책 우회 가능성이 줄어듦.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "신뢰되지 않은 프로젝트 설정의 OTEL 클라이언트 인증서 경로 설정에 신뢰 확인이 적용됨 — 보안 동작 변경.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 13
+            }
+          ]
+        },
+        {
+          "text": "Vertex/Foundry 사용 시 기본 5분 idle timeout 이 복원됨, 기존 무한 대기에 의존하던 환경은 `API_FORCE_IDLE_TIMEOUT=0` 으로 해제.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트의 프로젝트 단위 `env`(예: `ANTHROPIC_MODEL`) 무시 버그 수정으로 pre-warmed 워커에서도 모델 설정이 반영됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 10
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-09T00:04:12.987Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.168",
     "tagName": "v2.1.168",
     "publishedAt": "2026-06-06T23:41:53Z",

@@ -1,5 +1,45 @@
 [
   {
+    "version": "v2.1.170",
+    "tagName": "v2.1.170",
+    "publishedAt": "2026-06-09T17:23:09Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.170",
+    "originalBody": "## What's changed\n\n- Introducing Claude Fable 5: a Mythos-class model that we’ve made safe for general use. Fable’s capabilities exceed those of any model we’ve ever made generally available. Update to version 2.1.170 for access. https://www.anthropic.com/news/claude-fable-5-mythos-5\n- Fixed sessions not saving transcripts (and not appearing in --resume) when launched from the VS Code integrated terminal or any shell that inherited Claude Code environment variables.\n",
+    "summary": {
+      "headline": "Fable 5 모델 추가, VS Code 터미널 세션 저장 수정",
+      "newFeatures": [
+        {
+          "text": "`2.1.170` 으로 업데이트 시 Mythos 급 신규 모델 `Claude Fable 5` 사용 가능",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "VS Code 통합 터미널 등 Claude Code 환경변수를 상속한 셸에서 실행 시 transcript 가 저장되지 않아 `--resume` 목록에 안 뜨던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "VS Code 통합 터미널에서 띄운 세션도 정상적으로 transcript 가 저장되어 `--resume` 으로 재개 가능해짐.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-10T00:05:32.646Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.169",
     "tagName": "v2.1.169",
     "publishedAt": "2026-06-08T21:57:18Z",

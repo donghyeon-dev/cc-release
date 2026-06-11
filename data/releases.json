@@ -1,5 +1,250 @@
 [
   {
+    "version": "v2.1.172",
+    "tagName": "v2.1.172",
+    "publishedAt": "2026-06-10T20:44:15Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.172",
+    "originalBody": "## What's changed\n\n- Sub-agents can now spawn their own sub-agents (up to 5 levels deep)\n- Amazon Bedrock now reads the AWS region from `~/.aws` config files when `AWS_REGION` isn't set, matching AWS SDK precedence; `/status` shows where the region came from\n- Added a search bar when browsing a marketplace's plugins in `/plugin`\n- Added `model` attribute to the `claude_code.lines_of_code.count` OTEL metric\n- Fixed sessions using 1M context without usage credits getting permanently stuck — the session now automatically compacts back under the standard context limit\n- Fixed a repeating \"an image in the conversation could not be processed and was removed\" error when the conversation contained multiple images\n- Fixed the agents view keeping a session under Working with a busy spinner for up to 30 seconds after the worker replied\n- Fixed background agents potentially reading another directory's project settings (`.mcp.json` approvals, trust) when dispatched onto a pre-warmed worker\n- Fixed background-session attach failing with EAUTH for sessions started on an older version after the daemon auto-updated\n- Fixed a background sub-agent staying stuck as \"active\" in the agent panel after a nested agent it spawned was stopped\n- Fixed `/model` suggestions in the `claude agents` dispatch input rendering with a misleading slash prefix and showing models disabled for your org\n- Fixed `availableModels` restrictions not being applied to subagent model overrides, the agent dispatch model picker, and the advisor model\n- Fixed `availableModels` allowlists hiding the `/model` picker's Opus and Sonnet 1M rows when entries use version-specific IDs like `claude-opus-4-8`\n- Fixed the `/model` picker on Bedrock offering models the provider doesn't serve — selecting one silently switched the session model and lit the selection marker on multiple rows\n- Fixed model IDs getting a doubled 1M-context suffix (e.g. `[1M][1m]`) when `ANTHROPIC_DEFAULT_OPUS_MODEL` already includes one\n- Fixed `opusplan` model setting not shipping with 1M context in plan mode for entitled users; the `opusplan[1m]` workaround now also correctly switches to Opus in plan mode\n- Fixed `WebFetch(domain:*.example.com)` wildcard domain rules never matching subdomains in allow, deny, and ask position, and file permission rules with mid-pattern wildcards (e.g. `Read(secrets-*/config.json)`) being rejected at startup\n- Fixed up-arrow prompt history showing the main agent's prompts while a subagent's chat tab is open\n- Fixed memory recall not finding mounted team memory stores (`CLAUDE_MEMORY_STORES`) in remote sessions\n- Fixed workflow validation rejecting scripts whose prompt strings or comments merely mention `Date.now()`/`Math.random()`\n- Disable mouse tracking on Windows consoles that don't fully support it\n- Fixed the `/plugin` marketplace list losing its cursor after backing out of a long plugin list, and Esc from the plugin browser returning to the wrong tab\n- Improved performance in long conversations by removing redundant message normalization and avoiding full message-history transforms when streaming tool-use state is unchanged\n- Reduced idle CPU usage: `/goal` status chip no longer re-renders the terminal at 5 Hz while idle, and fewer UI re-renders while subagents run in parallel\n- Improved Claude in Chrome tool loading: browser tools now load in a single batched call instead of one per tool\n- Improved the non-interactive Usage Policy refusal message to suggest starting a new session or changing your model\n- `/code-review` now keeps the `ultra` option visible when you're not signed in to claude.ai, with an explanation that the cloud review requires a claude.ai account\n- Shortened the Remote Control footer indicator to \"/rc active\" and hid it on narrow terminals\n- Stopped promoting `/loop` in remote sessions, where pending loops don't keep the container alive\n- [VSCode] Fixed PowerShell tool calls rendering as raw JSON instead of a proper command display and permission dialog, and stripped ANSI escape codes from displayed shell output\n",
+    "summary": {
+      "headline": "서브에이전트 중첩 spawn, availableModels 관련 다수 수정",
+      "newFeatures": [
+        {
+          "text": "서브에이전트가 자체 서브에이전트를 최대 5단계까지 중첩 spawn 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/plugin` 마켓플레이스 플러그인 탐색 시 검색 바 추가",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`claude_code.lines_of_code.count` OTEL 메트릭에 `model` 속성 추가",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Amazon Bedrock 이 `AWS_REGION` 미설정 시 `~/.aws` config 에서 리전을 읽도록 변경 (AWS SDK 우선순위 일치), `/status` 가 리전 출처 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "지원 미비 Windows 콘솔에서 마우스 트래킹 비활성화",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "긴 대화에서 중복 메시지 정규화 제거 및 스트리밍 tool-use 상태 미변경 시 전체 히스토리 변환 생략으로 성능 개선",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "idle CPU 사용량 감소 — `/goal` 상태 칩이 유휴 시 5Hz 터미널 재렌더링 중단, 서브에이전트 병렬 실행 중 UI 재렌더링 축소",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "Claude in Chrome 브라우저 도구를 도구별 호출 대신 단일 배치 호출로 로드하도록 개선",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "비대화형 Usage Policy 거부 메시지에 새 세션 시작 또는 모델 변경 제안 추가",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "claude.ai 미로그인 상태에서도 `/code-review` 의 `ultra` 옵션을 노출하되 클라우드 리뷰에 claude.ai 계정 필요함을 안내",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "Remote Control 푸터 표시를 `/rc active` 로 축약하고 좁은 터미널에서 숨김",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "원격 세션에서 pending loop 가 컨테이너를 유지하지 못하므로 `/loop` 홍보 중단",
+          "originalRefs": [
+            28
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "사용 크레딧 없이 1M 컨텍스트 사용 시 세션이 영구 멈추던 문제 수정 — 표준 컨텍스트 한도 아래로 자동 compact",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "대화에 이미지가 여러 개 포함될 때 이미지 처리 실패(`could not be processed`) 오류가 반복 표시되던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "워커 응답 후에도 agents 뷰가 최대 30초간 Working 스피너로 세션을 유지하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "pre-warmed 워커에 디스패치된 백그라운드 에이전트가 다른 디렉터리의 프로젝트 설정(`.mcp.json` 승인, trust)을 읽을 수 있던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "데몬 자동 업데이트 후 구버전에서 시작된 세션의 백그라운드 세션 attach 가 `EAUTH` 로 실패하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "중첩 spawn 한 에이전트가 중단된 후에도 백그라운드 서브에이전트가 agent 패널에 \"active\" 로 멈춰있던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`claude agents` 디스패치 입력의 `/model` 제안이 오해 소지 있는 슬래시 접두사로 렌더링되고 조직에서 비활성화된 모델을 표시하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`availableModels` 제한이 서브에이전트 모델 오버라이드, 에이전트 디스패치 모델 선택기, advisor 모델에 적용되지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`availableModels` 허용목록 항목이 `claude-opus-4-8` 같은 버전 지정 ID 일 때 `/model` 선택기의 Opus·Sonnet 1M 행이 숨겨지던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Bedrock 의 `/model` 선택기가 프로바이더가 제공하지 않는 모델을 제시하고, 선택 시 세션 모델이 조용히 바뀌며 여러 행에 선택 마커가 켜지던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_DEFAULT_OPUS_MODEL` 에 이미 1M 접미사가 포함된 경우 모델 ID 에 `[1M][1m]` 처럼 접미사가 중복되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "엔타이틀 사용자 대상 `opusplan` 모델 설정이 plan mode 에서 1M 컨텍스트로 동작하지 않던 문제 수정, `opusplan[1m]` 우회도 plan mode 에서 Opus 로 정상 전환됨",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`WebFetch(domain:*.example.com)` 와일드카드 도메인 규칙이 서브도메인에 매칭되지 않고, `Read(secrets-*/config.json)` 같은 중간 와일드카드 파일 권한 규칙이 시작 시 거부되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "서브에이전트 채팅 탭이 열린 상태에서 위쪽 화살표 프롬프트 히스토리가 메인 에이전트의 프롬프트를 보여주던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "원격 세션에서 마운트된 팀 메모리 스토어(`CLAUDE_MEMORY_STORES`)를 메모리 recall 이 찾지 못하던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "프롬프트 문자열이나 주석에 `Date.now()`/`Math.random()` 가 단순 언급만 되어도 워크플로우 검증이 스크립트를 거부하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "`/plugin` 마켓플레이스 목록이 긴 플러그인 목록에서 빠져나온 뒤 커서를 잃고, 플러그인 브라우저에서 Esc 시 잘못된 탭으로 돌아가던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "[VSCode] PowerShell 도구 호출이 명령 표시·권한 대화상자 대신 raw JSON 으로 렌더링되던 문제 수정 및 셸 출력의 ANSI 이스케이프 코드 제거",
+          "originalRefs": [
+            29
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "서브에이전트가 자식 서브에이전트를 최대 5단계까지 spawn 가능해져 다층 에이전트 오케스트레이션 구성 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Bedrock 사용 시 `AWS_REGION` 미설정 환경에서 `~/.aws` config 의 리전이 적용되므로 기존 리전 추론 동작이 달라질 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`availableModels` 허용목록을 `claude-opus-4-8` 같은 버전 지정 ID 로 운영하던 조직은 `/model` 선택기에서 가려졌던 Opus·Sonnet 1M 행이 다시 노출됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 8
+            }
+          ]
+        },
+        {
+          "text": "`WebFetch` 와일드카드 도메인 규칙과 중간 와일드카드 파일 권한 규칙이 정상 적용되므로 기존에 동작하지 않던 권한 정책이 실제로 발효됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 12
+            }
+          ]
+        },
+        {
+          "text": "워크플로우 스크립트의 주석·문자열에 `Date.now()`/`Math.random()` 를 언급해도 검증에 통과함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 15
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-11T00:07:51.669Z",
+    "summaryModel": "claude-opus-4-8"
+  },
+  {
     "version": "v2.1.170",
     "tagName": "v2.1.170",
     "publishedAt": "2026-06-09T17:23:09Z",

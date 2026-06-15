@@ -1,5 +1,342 @@
 [
   {
+    "version": "v2.1.177",
+    "tagName": "v2.1.177",
+    "publishedAt": "2026-06-13T01:25:15Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.177",
+    "originalBody": "\n",
+    "summary": {
+      "headline": "릴리즈 노트 본문 없음 (v2.1.177)",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-06-15T00:07:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.176",
+    "tagName": "v2.1.176",
+    "publishedAt": "2026-06-12T21:53:27Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.176",
+    "originalBody": "## What's changed\n\n- Session titles are now generated in the language of your conversation (set the `language` setting to pin a specific language)\n- Added `footerLinksRegexes` setting for regex-matched link badges in the footer row, configurable via user or managed settings\n- Improved Bedrock credential caching: credentials from `awsCredentialExport` are now cached until their `Expiration` instead of a fixed 1 hour\n- Fixed `availableModels` enforcement: alias model picks can no longer be redirected to a blocked model via `ANTHROPIC_DEFAULT_*_MODEL` environment variables, and `/fast` now refuses to toggle when it would switch to a model outside the allowlist\n- Fixed auto mode failing on Fable 5 for organizations without Opus 4.8 enabled — the classifier now falls back to the best available Opus model\n- Fixed hook `if` conditions for Read/Edit/Write tool paths: documented patterns like `Edit(src/**)`, `Read(~/.ssh/**)`, and `Read(.env)` now match correctly\n- Fixed Linux sandbox failing to start when `.claude/settings.json` is a symlink with an absolute target\n- Fixed `/copy` and mouse-selection copy not reaching the system clipboard inside tmux over SSH, and tmux paste buffer not loading on versions older than 3.2\n- Fixed Remote Control connecting from web/mobile silently switching the session's model\n- Fixed Remote Control disconnect notifications showing a bare numeric code instead of a human-readable reason, and connection failures adding a duplicate line to the conversation transcript\n- Fixed Remote Control sessions not disconnecting when you sign in to a different account\n- Fixed `/cd` and worktree moves leaving the session reporting the previous directory's git branch\n- Fixed `claude agents`: pressing back in one window no longer detaches other windows attached to the same session\n- Fixed backgrounded sessions showing \"Working\" forever when `/bg` mid-turn had nothing left to continue\n- Fixed background agent search by PR URL: PRs opened during scheduled wakeups or while a job was blocked now appear in `claude agents` search\n- Fixed the agents view input showing no text cursor on Windows\n- Fixed `claude --bg -cn <name>` not seeding the session name\n- Fixed background sessions to neutralize Windows network paths in persisted state before respawn\n- Fixed background-session respawn rejecting malformed resume IDs from corrupted state files\n- Fixed the Windows background-service daemon not starting when `~/.claude/daemon` has the ReadOnly attribute set\n- Fixed cloud sessions failing with \"Could not resolve authentication method\" when idle for too long before being claimed\n- Background sessions now show clearer guidance when a window left open across an auto-update can't submit a reply, and `claude daemon status` explains version-skew behavior\n",
+    "summary": {
+      "headline": "세션 제목 다국어화, Remote Control·백그라운드 세션 다수 수정",
+      "newFeatures": [
+        {
+          "text": "세션 제목이 대화 언어로 생성됨 — 특정 언어로 고정하려면 `language` 설정 사용",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "푸터 행에 정규식 매칭 링크 배지를 다는 `footerLinksRegexes` 설정 추가 (user 또는 managed 설정에서 구성 가능)",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Bedrock 자격증명 캐싱 개선 — `awsCredentialExport` 자격증명을 고정 1시간 대신 `Expiration` 까지 캐싱",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`availableModels` 강제 적용 수정 — 별칭 모델 선택이 `ANTHROPIC_DEFAULT_*_MODEL` 환경변수로 차단 모델에 리디렉트되지 못하게 하고, `/fast` 가 허용목록 밖 모델로 전환될 상황에서 토글을 거부함",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "Opus 4.8 미활성 조직에서 auto mode 가 Fable 5 로 실패하던 문제 수정 — 분류기가 사용 가능한 최선의 Opus 모델로 폴백함",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Read/Edit/Write 도구 경로의 hook `if` 조건 수정 — `Edit(src/**)`, `Read(~/.ssh/**)`, `Read(.env)` 같은 문서화된 패턴이 올바르게 매칭됨",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`.claude/settings.json` 이 절대 경로 타깃의 symlink 일 때 Linux 샌드박스가 시작되지 않던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "SSH 상의 tmux 안에서 `/copy` 와 마우스 선택 복사가 시스템 클립보드에 닿지 않고, 3.2 이전 tmux 에서 paste buffer 가 로드되지 않던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "web/mobile 에서 Remote Control 연결 시 세션 모델이 조용히 바뀌던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Remote Control 연결 끊김 알림이 사람이 읽을 수 있는 사유 대신 숫자 코드만 표시하고, 연결 실패가 대화 트랜스크립트에 중복 줄을 추가하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "다른 계정으로 로그인해도 Remote Control 세션이 끊기지 않던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`/cd` 와 worktree 이동 후 세션이 이전 디렉터리의 git 브랜치를 보고하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`claude agents` 에서 한 창에서 back 을 누르면 같은 세션에 붙은 다른 창들이 분리되던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`/bg` 가 턴 중간에 이어갈 작업이 없을 때 백그라운드 세션이 영구히 \"Working\" 으로 표시되던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "PR URL 로 백그라운드 에이전트 검색 시, 스케줄 wakeup 중이거나 작업 차단 중에 열린 PR 이 `claude agents` 검색에 나타나도록 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "Windows 에서 agents 뷰 입력란에 텍스트 커서가 보이지 않던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`claude --bg -cn <name>` 가 세션 이름을 시드하지 않던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "백그라운드 세션 respawn 전에 영속 상태의 Windows 네트워크 경로를 중화하도록 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "손상된 상태 파일의 잘못된 resume ID 로 백그라운드 세션 respawn 이 거부되던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`~/.claude/daemon` 에 ReadOnly 속성이 설정되면 Windows 백그라운드 서비스 데몬이 시작되지 않던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "claim 전 너무 오래 유휴 상태였던 클라우드 세션이 `Could not resolve authentication method` 로 실패하던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "hook `if` 조건의 `Edit(src/**)`·`Read(~/.ssh/**)`·`Read(.env)` 경로 패턴이 이제 올바르게 매칭되므로 기존에 미동작하던 hook 권한 규칙이 실제 발효됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_DEFAULT_*_MODEL` 로 차단 모델을 우회하던 경로가 막히고 `/fast` 도 허용목록 밖 전환을 거부하므로 모델 거버넌스가 강화됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Windows 의 `~/.claude/daemon` 에 ReadOnly 속성이 있으면 데몬이 시작되지 않던 문제가 해소되어 백그라운드 서비스 구동이 안정화됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 16
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-15T00:07:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.175",
+    "tagName": "v2.1.175",
+    "publishedAt": "2026-06-12T04:23:51Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.175",
+    "originalBody": "## What's changed\n\n- Added `enforceAvailableModels` managed setting — when enabled, the `availableModels` allowlist also constrains the Default model (a Default that would resolve to a disallowed model now falls back to the first allowed model), and user or project settings can no longer widen a managed `availableModels` list\n",
+    "summary": {
+      "headline": "`enforceAvailableModels` 관리 설정 추가",
+      "newFeatures": [
+        {
+          "text": "`enforceAvailableModels` 관리 설정 추가 — 활성화 시 `availableModels` 허용목록이 Default 모델까지 제약하며(허용목록 밖으로 해석되는 Default 는 첫 허용 모델로 폴백), user·project 설정으로 관리되는 `availableModels` 목록을 넓힐 수 없음",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [],
+      "fixes": [],
+      "devImpact": [
+        {
+          "text": "`enforceAvailableModels` 를 켠 조직은 Default 모델도 허용목록 검사를 받으며, user·project 설정으로 관리 허용목록을 확장할 수 없으므로 모델 거버넌스가 강화됨.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-15T00:07:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.174",
+    "tagName": "v2.1.174",
+    "publishedAt": "2026-06-12T01:16:36Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.174",
+    "originalBody": "## What's changed\n\n- Added `wheelScrollAccelerationEnabled` setting to disable mouse-wheel scroll acceleration in fullscreen mode\n- Fixed the `/model` picker hiding the model family that Default resolves to — Opus now appears as its own row on Max/Team Premium/Enterprise plans, Sonnet on Pro/Team plans, and Opus on pay-as-you-go API accounts\n- Fixed `/model` picker showing a hardcoded Sonnet version label when `ANTHROPIC_DEFAULT_SONNET_MODEL` pins a different Sonnet\n- Fixed the \"Fable 5 is now consuming usage credits\" banner incorrectly showing for enterprise accounts with usage-based billing\n- Fixed Bedrock GovCloud regions (`us-gov-*`) deriving the wrong inference profile prefix (`global` instead of `us-gov`), causing 400 errors on derived model IDs\n- Fixed background sessions inheriting another session's `ANTHROPIC_*` provider env (gateway URL, custom headers, `/model` aliases) from the shell that started the background daemon\n- Fixed a 1-2 second pause when exiting Claude Code shortly after a shell command was interrupted or killed on macOS and Linux\n- Fixed git commit co-author attribution showing an incorrect model name for some models\n- Fixed the `/advisor` dialog pre-selecting a saved advisor model that is blocked by the `availableModels` allowlist\n- Fixed skill hot-reload re-sending the entire skill listing when a single skill changed; only changed skills are now re-announced\n- Fixed Workflow tool `agent()` subagents missing per-agent attribution headers\n- [VSCode] Added usage attribution to the Account & usage dialog (`/usage`) showing cache misses, long context, subagents, and per-skill/agent/plugin/MCP breakdowns over the last 24h or 7d\n- Fixed pre-warmed background workers failing with \"Could not resolve authentication method\" when claimed after sitting idle\n",
+    "summary": {
+      "headline": "`/model` 선택기·Bedrock 리전·백그라운드 env 다수 수정",
+      "newFeatures": [
+        {
+          "text": "풀스크린 모드에서 마우스 휠 스크롤 가속을 끄는 `wheelScrollAccelerationEnabled` 설정 추가",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "[VSCode] `/usage` Account & usage 대화상자에 캐시 미스·long context·서브에이전트 및 skill/agent/plugin/MCP 별 24h·7d 사용량 분석 추가",
+          "originalRefs": [
+            11
+          ]
+        }
+      ],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "`/model` 선택기가 Default 가 해석되는 모델 패밀리를 숨기던 문제 수정 — `Max`·`Team Premium`·`Enterprise` 플랜은 Opus, `Pro`·`Team` 플랜은 Sonnet, `pay-as-you-go` API 계정은 Opus 가 각각 별도 행으로 표시됨",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_DEFAULT_SONNET_MODEL` 로 다른 Sonnet 을 고정해도 `/model` 선택기가 하드코딩된 Sonnet 버전 라벨을 표시하던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "사용량 기반 과금 엔터프라이즈 계정에 `Fable 5 is now consuming usage credits` 배너가 잘못 표시되던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "Bedrock GovCloud 리전(`us-gov-*`)이 추론 프로파일 접두사를 `us-gov` 대신 `global` 로 잘못 도출해 파생 모델 ID 에서 400 오류가 나던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 데몬을 시작한 셸의 `ANTHROPIC_*` 프로바이더 env(게이트웨이 URL, 커스텀 헤더, `/model` 별칭)를 다른 세션에서 상속하던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "macOS·Linux 에서 셸 명령을 중단·종료한 직후 Claude Code 종료 시 1-2초 멈추던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "일부 모델에서 git commit co-author 귀속이 잘못된 모델 이름을 표시하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`availableModels` 허용목록에 막힌 advisor 모델을 `/advisor` 대화상자가 미리 선택하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "skill 하나만 바뀌어도 skill hot-reload 가 전체 skill 목록을 재전송하던 문제 수정 — 이제 변경된 skill 만 재공지됨",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "Workflow 도구 `agent()` 서브에이전트에 에이전트별 attribution 헤더가 누락되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "pre-warmed 백그라운드 워커가 유휴 상태로 대기 후 claim 될 때 `Could not resolve authentication method` 로 실패하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Bedrock GovCloud(`us-gov-*`) 사용자는 추론 프로파일 접두사가 올바르게 `us-gov` 로 도출되어 기존 400 오류가 해소됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "백그라운드 데몬을 띄운 셸의 `ANTHROPIC_*` 프로바이더 env 가 더 이상 다른 세션으로 누출되지 않으므로 게이트웨이·헤더·모델 별칭 격리가 보장됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-15T00:07:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.173",
     "tagName": "v2.1.173",
     "publishedAt": "2026-06-11T05:41:54Z",

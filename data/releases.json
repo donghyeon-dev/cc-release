@@ -1,5 +1,583 @@
 [
   {
+    "version": "v2.1.181",
+    "tagName": "v2.1.181",
+    "publishedAt": "2026-06-17T22:07:41Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.181",
+    "originalBody": "## What's changed\n\n- Added `/config key=value` syntax to set any setting from the prompt (e.g. `/config thinking=false`) — works in interactive, `-p`, and Remote Control\n- Added `sandbox.allowAppleEvents` opt-in setting that lets sandboxed commands send Apple Events on macOS\n- Added `CLAUDE_CLIENT_PRESENCE_FILE` environment variable: point it at a marker file to suppress mobile push notifications while you're at the machine\n- Upgraded the bundled Bun runtime to 1.4\n- Improved streaming of long paragraphs: text now appears line-by-line instead of waiting for the first line break\n- Improved auto-retry: API connection drops mid-thinking now automatically retry instead of showing \"Connection closed while thinking\"\n- Improved the subagent panel: idle subagents auto-hide after 30s, the list caps at 5 rows with scroll hints, and keyboard hints now show in the footer\n- Improved the MCP OAuth browser page to match Claude Code's visual style and auto-close on success\n- Changed fullscreen mode URL opening to require Cmd+click (macOS) / Ctrl+click, matching native terminal behavior\n- Changed the `Improved N memories` line to no longer list individual files outside verbose mode\n- Fixed prompt caching not reading on custom `ANTHROPIC_BASE_URL` and on Foundry due to a per-request attestation token changing every turn\n- Fixed Write/Edit producing 0-byte or truncated files on network drives and cloud-synced folders\n- Fixed `open`, `osascript`, and browser-based auth flows failing with error -600 on macOS by adding the Apple Events entitlement\n- Fixed a startup regression (~120ms per launch in fresh environments, introduced in 2.1.169): the first prompt no longer waits for the managed-settings fetch when no MCP servers are configured\n- Fixed startup blocking with a blank terminal for up to 15 seconds when the account settings fetch is slow on a degraded network\n- Fixed startup crash (`TypeError: Cannot read properties of null`) when `.claude.json` contains corrupted null project entries\n- Fixed macOS TUI freezing at session start (Ctrl+C unresponsive) when Spotlight is busy reindexing\n- Fixed long-running idle sessions losing their history when another Claude Code process ran the 30-day transcript cleanup\n- Fixed foreground subagents spawning unbounded nested chains; they now respect the same 5-level depth limit as background subagents\n- Fixed `/recap` and conversation forks using the previous model immediately after a model switch\n- Fixed subagent \"Thinking\" duration showing the parent agent's elapsed time instead of the subagent's own\n- Fixed subagents blocked on a nested agent showing a ticking elapsed time instead of \"waiting\" in the agent panel\n- Fixed the API retry indicator (\"Retrying in 0s · attempt N/10\") staying on screen after the retry succeeded\n- Fixed AWS `awsCredentialExport` credentials with a short remaining lifetime causing credential refreshes every minute, and now accepts the JSON shape from `aws configure export-credentials`\n- Fixed `claude mcp get`/`list` showing `✓ Connected` when tools/list fails; they now show `! Connected · tools fetch failed` with the error detail\n- Fixed `/remote-control` leaving a stale \"connecting…\" line; it now confirms in the transcript once connected\n- Fixed ExitWorktree refusing to remove a clean worktree with \"Could not verify worktree state\" when bare `git` cannot be resolved on Windows\n- Fixed settings changes (such as `/effort` or `/model`) failing with ENOENT when `~/.claude/settings.json` is a relative symlink under a symlinked `~/.claude`\n- Fixed IDE selection line numbers in context reminders being off by one (IntelliJ and VS Code)\n- Fixed Ctrl+C in fullscreen after a native terminal selection (modifier+drag) overwriting the clipboard with the app's prior selection\n- Fixed Ctrl+V showing \"No image found in clipboard\" instead of pasting when the clipboard contains text\n- Fixed agent creation failing with \"EEXIST: file already exists\" when the agents directory already exists (Windows/OneDrive)\n- Fixed AskUserQuestion preview content being cut off at the dialog edge instead of word-wrapping\n- Fixed AskUserQuestion multi-select questions silently dropping a typed \"Other\" free-text answer when submitting\n- Fixed `/stats` \"Most active day\" and daily token chart dates showing one day early in UTC-negative timezones\n- Fixed `/copy` and copy-on-select on Linux not detecting a clipboard utility installed after Claude Code started\n- Fixed tab-indented code rendering with incorrect indentation in the Write (create-file) preview\n- Fixed user prompts queued mid-turn not showing a full-width background highlight in the transcript\n- Fixed the activity spinner's pulse dwelling on the wrong glyph size in Ghostty\n",
+    "summary": {
+      "headline": "프롬프트에서 `/config key=value` 설정, 대량 안정화",
+      "newFeatures": [
+        {
+          "text": "프롬프트에서 `/config key=value` 로 모든 설정 변경 가능(`/config thinking=false` 등) — 대화형·`-p`·Remote Control 모두 지원",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "macOS 에서 sandbox 명령이 Apple Events 를 보낼 수 있게 하는 `sandbox.allowAppleEvents` opt-in 설정 추가",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`CLAUDE_CLIENT_PRESENCE_FILE` 환경변수 추가 — 마커 파일을 가리키면 사용자가 기기 앞에 있는 동안 모바일 푸시 알림 억제",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "번들 Bun 런타임을 1.4 로 업그레이드",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "긴 문단 스트리밍 개선 — 첫 줄바꿈을 기다리지 않고 텍스트가 줄 단위로 나타남",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "auto-retry 개선 — thinking 중 API 연결 끊김이 \"Connection closed while thinking\" 대신 자동 재시도됨",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "서브에이전트 패널 개선 — idle 서브에이전트는 30초 후 자동 숨김, 목록은 5행으로 제한 후 스크롤 힌트, footer 에 키보드 힌트 표시",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "MCP OAuth 브라우저 페이지를 Claude Code 비주얼 스타일에 맞추고 성공 시 자동 닫힘으로 개선",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "fullscreen 모드의 URL 열기가 네이티브 터미널처럼 `Cmd+click`(macOS)/`Ctrl+click` 필요로 변경됨",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`Improved N memories` 줄이 verbose 모드 밖에서는 개별 파일 목록을 더 이상 나열하지 않도록 변경",
+          "originalRefs": [
+            9
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "커스텀 `ANTHROPIC_BASE_URL` 과 Foundry 에서 매 턴 바뀌는 per-request attestation 토큰 때문에 prompt caching 읽기가 안 되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "네트워크 드라이브·클라우드 동기화 폴더에서 Write/Edit 가 0바이트·잘린 파일을 만들던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Apple Events entitlement 추가로 macOS 에서 `open`·`osascript`·브라우저 인증 흐름이 error -600 으로 실패하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "2.1.169 에서 도입된 시작 회귀(신규 환경 launch 당 ~120ms) 수정 — MCP 서버가 없으면 첫 프롬프트가 managed-settings fetch 를 기다리지 않음",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "열악한 네트워크에서 account settings fetch 가 느릴 때 빈 터미널로 최대 15초 시작이 막히던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`.claude.json` 에 손상된 null project 항목이 있을 때 나던 시작 크래시(`TypeError: Cannot read properties of null`) 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "Spotlight 가 재색인 중일 때 세션 시작에서 macOS TUI 가 멈추고 `Ctrl+C` 가 안 먹던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "다른 Claude Code 프로세스가 30일 transcript 정리를 실행할 때 장시간 idle 세션이 히스토리를 잃던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "foreground 서브에이전트가 무제한 중첩 체인을 만들던 문제 수정 — 백그라운드와 동일한 5단계 depth 제한 적용",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "모델 전환 직후 `/recap` 과 대화 fork 가 이전 모델을 쓰던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "서브에이전트 \"Thinking\" 시간이 자신이 아닌 부모 에이전트의 경과 시간을 표시하던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "중첩 에이전트에 막힌 서브에이전트가 agent 패널에서 \"waiting\" 대신 째깍이는 경과 시간을 표시하던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "재시도 성공 후에도 API 재시도 표시(\"Retrying in 0s · attempt N/10\")가 화면에 남던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "수명이 짧은 AWS `awsCredentialExport` 자격증명이 매분 갱신을 유발하던 문제 수정, `aws configure export-credentials` 의 JSON 형태도 수용",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "tools/list 실패 시 `claude mcp get`/`list` 가 `✓ Connected` 로 표시하던 문제 수정 — 이제 에러 상세와 함께 `! Connected · tools fetch failed` 표시",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`/remote-control` 이 \"connecting…\" 줄을 남기던 문제 수정 — 연결되면 transcript 에서 확인됨",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "Windows 에서 bare `git` 해석 실패 시 ExitWorktree 가 깨끗한 worktree 제거를 `Could not verify worktree state` 로 거부하던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "심볼릭 링크된 `~/.claude` 아래 `~/.claude/settings.json` 이 상대 심링크일 때 `/effort`·`/model` 등 설정 변경이 ENOENT 로 실패하던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "IntelliJ·VS Code 컨텍스트 리마인더의 IDE 선택 줄 번호가 1씩 어긋나던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "fullscreen 에서 네이티브 터미널 선택(modifier+drag) 후 `Ctrl+C` 가 앱의 이전 선택으로 클립보드를 덮어쓰던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "클립보드에 텍스트가 있을 때 `Ctrl+V` 가 붙여넣기 대신 `No image found in clipboard` 를 띄우던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "agents 디렉터리가 이미 있을 때 agent 생성이 \"EEXIST: file already exists\" 로 실패하던 Windows/OneDrive 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "AskUserQuestion 미리보기 내용이 word-wrap 대신 다이얼로그 가장자리에서 잘리던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "AskUserQuestion 다중 선택에서 입력한 \"Other\" 자유 텍스트 답변이 제출 시 조용히 누락되던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "UTC 음수 시간대에서 `/stats` 의 \"Most active day\" 와 일별 토큰 차트 날짜가 하루 빠르게 표시되던 문제 수정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "Linux 에서 실행 후 설치된 클립보드 유틸리티를 `/copy`·copy-on-select 가 감지 못 하던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "Write(파일 생성) 미리보기에서 탭 들여쓰기 코드가 잘못된 들여쓰기로 렌더되던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "턴 중 큐에 쌓인 사용자 프롬프트가 transcript 에서 전체 너비 배경 강조를 안 보이던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "Ghostty 에서 활동 스피너 펄스가 잘못된 글리프 크기에 머무르던 문제 수정",
+          "originalRefs": [
+            38
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "프롬프트에서 `/config key=value` 로 설정을 바꿀 수 있어 대화형·`-p`·Remote Control 모두에서 런타임 설정 조정이 가능해짐.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CLIENT_PRESENCE_FILE` 신규 환경변수로 기기 사용 중 모바일 푸시 알림을 억제할 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`sandbox.allowAppleEvents` 설정 신설 — macOS sandbox 명령의 Apple Events 전송을 명시적 opt-in 으로만 허용.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "fullscreen URL 열기가 `Cmd/Ctrl+click` 필요로 바뀌어 기존 단순 클릭 동작과 달라짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "네트워크 드라이브·클라우드 동기화 폴더 사용자는 Write/Edit 의 0바이트·파일 손상 위험이 해소됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "커스텀 `ANTHROPIC_BASE_URL`·Foundry 환경에서 prompt caching 읽기가 정상화되어 토큰 비용 절감이 복구됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-18T00:02:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.179",
+    "tagName": "v2.1.179",
+    "publishedAt": "2026-06-16T20:22:14Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.179",
+    "originalBody": "## What's changed\n\n- Fixed mid-stream connection drops: partial responses are now preserved instead of showing a raw error, and the spinner no longer gets stuck at \"running tool\"\n- Fixed mouse-wheel scrolling in WSL2 under Windows Terminal and VS Code (regression in 2.1.172)\n- Fixed a sandbox `denyRead`/`allowRead` glob over a large directory tree making the Bash tool description enormous and the session unusable on Linux\n- Fixed the feedback survey capturing a single-digit reply as a session rating immediately after a turn completes\n- Fixed the welcome screen stacking multiple promotional banners — at most one promo now shows per session\n- Fixed Ctrl+O not showing the subagent's transcript when viewing a subagent\n- Fixed clicking the prompt input not returning focus from the subagent/footer panel\n- Fixed remote session background tasks appearing stuck as \"still running\" between turns\n- Improved plugin loading performance in remote sessions\n",
+    "summary": {
+      "headline": "스트림 끊김 복원, WSL2 스크롤 회귀 수정",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "remote 세션의 plugin 로딩 성능 개선",
+          "originalRefs": [
+            8
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "스트림 중간 연결 끊김 시 raw 에러 대신 부분 응답이 보존되고, 스피너가 \"running tool\" 에 멈추지 않도록 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "Windows Terminal·VS Code 의 WSL2 에서 마우스 휠 스크롤이 안 되던 회귀(2.1.172 도입) 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "큰 디렉터리 트리에 대한 sandbox `denyRead`/`allowRead` glob 때문에 Bash 도구 설명이 비대해져 Linux 세션을 못 쓰게 되던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "턴 완료 직후 한 자리 숫자 답변을 세션 평점으로 잘못 수집하던 feedback survey 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "welcome 화면에 프로모 배너가 여러 개 쌓이던 문제 수정 — 세션당 최대 1개만 표시",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "서브에이전트를 볼 때 `Ctrl+O` 로 해당 transcript 가 안 보이던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "서브에이전트/footer 패널에서 프롬프트 입력을 클릭해도 포커스가 안 돌아오던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "remote 세션 백그라운드 작업이 턴 사이에 \"still running\" 으로 멈춰 보이던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "WSL2(Windows Terminal·VS Code) 사용자는 2.1.172 부터 깨졌던 마우스 휠 스크롤이 이번 버전에서 복구됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-18T00:02:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.178",
+    "tagName": "v2.1.178",
+    "publishedAt": "2026-06-15T21:35:55Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.178",
+    "originalBody": "## What's changed\n\n- Added `Tool(param:value)` syntax for permission rules to match a tool's input parameters (with `*` wildcard), e.g. `Agent(model:opus)` to block Opus subagents\n- Skills in nested `.claude/skills` directories now load when working on files there; on a name clash, the nested skill appears as `<dir>:<name>` so both stay available\n- Nested `.claude/` directories: the agent, workflow, and output-style closest to the working directory now wins when names collide; project-scope workflow saves now target the closest existing `.claude/workflows/`\n- Improved auto mode: subagent spawns are now evaluated by the classifier before launch, closing a gap where a subagent could request a blocked action without review\n- Improved `/doctor` with consistent flat tree layout across all sections, clearer section status icons, and highlighted command names\n- Improved the skill listing truncation warning to show how many skill descriptions are affected\n- Changed the workflow prompt keyword to use a purple shimmer highlight and trigger only on explicit phrases like \"run a workflow\" or \"workflow:\", not on any mention of the word\n- Improved Remote Control error messages: connection failures now show a persistent red \"/rc failed\" indicator in the footer, and the \"not yet enabled\" error now explains whether it's a gate, a check failure, stale entitlement, or org policy\n- `/bug` now requires a description before submitting, and no longer uses model-refusal text as the GitHub issue title\n- Fixed a crash (out-of-memory) when the CLI inherits a stale websocket/OAuth file-descriptor environment variable from a parent process\n- Fixed Claude in Chrome silently failing to connect when the OAuth token belongs to a different account than the Claude Code login\n- Fixed nested `.claude/skills` skills with directory-qualified names being blocked by permission prompts in non-interactive runs\n- Fixed several subagent issues: viewing a subagent's transcript now shows tool results and live progress, messages sent while it finishes its turn are no longer dropped, and backgrounding a running subagent (ctrl+b) no longer restarts it from scratch\n- Fixed `claude agents` workers failing with `401 Invalid bearer token` when the daemon was started from a shell with a custom API gateway via `ANTHROPIC_BASE_URL` and `ANTHROPIC_AUTH_TOKEN`\n- Fixed compaction not honoring `--fallback-model`: compaction now falls back to the configured fallback model chain on overload or model-availability errors\n- Fixed model requests continuing to fail with auth errors after credentials were refreshed outside the session, due to a stale cached request configuration\n- Fixed background sessions created with `/bg` or `←←` after a turn finished showing \"Working\" forever in the agents list\n- Fixed `CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE=1` preventing fresh marketplace installs from cloning\n- Fixed MCP server-level specs (`mcp__server`, `mcp__server__*`, `mcp__*`) in subagent `disallowedTools` being silently ignored\n- Fixed vim mode undo: `u` now steps through NORMAL/VISUAL-mode commands one at a time instead of merging commands in quick succession into a single undo step\n- Fixed statusline links with custom URI schemes (e.g. `vscode://`) not opening when clicked in `claude agents`\n- [VSCode] Fixed pressing Esc to dismiss a CJK IME candidate window canceling the running Claude task\n",
+    "summary": {
+      "headline": "권한 규칙 파라미터 매칭, 중첩 skills 지원",
+      "newFeatures": [
+        {
+          "text": "권한 규칙에 `Tool(param:value)` 문법 추가 — `Agent(model:opus)` 처럼 도구 입력 파라미터를 `*` 와일드카드로 매칭해 차단 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "중첩된 `.claude/skills` 디렉터리의 skill 이 해당 파일 작업 시 로드됨 — 이름 충돌 시 `<dir>:<name>` 형태로 노출돼 양쪽 모두 사용 가능",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "중첩 `.claude/` 에서 작업 디렉터리에 가장 가까운 agent·workflow·output-style 이 이름 충돌 시 우선 적용됨",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "auto 모드에서 서브에이전트 spawn 을 실행 전 classifier 가 평가하도록 변경 — 차단 대상 동작이 검토 없이 요청되던 공백 차단",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`/doctor` 가 전 섹션 동일한 flat tree 레이아웃, 명확한 상태 아이콘, 명령어 강조로 개선됨",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "skill 목록 truncation 경고가 영향받은 skill 설명 개수를 표시함",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "workflow 프롬프트 키워드가 purple shimmer 강조로 바뀌고 \"run a workflow\"·\"workflow:\" 같은 명시적 표현에서만 발동 — 단어 언급만으론 발동 안 함",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "Remote Control 연결 실패 시 footer 에 빨간 \"/rc failed\" 표시가 유지되고, 미활성 에러가 gate·체크 실패·만료 entitlement·org 정책 중 무엇인지 설명함",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`/bug` 가 제출 전 설명을 필수로 요구하고, 모델 거부 텍스트를 GitHub 이슈 제목으로 쓰지 않음",
+          "originalRefs": [
+            8
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "부모 프로세스에서 오래된 websocket/OAuth 파일 디스크립터 환경변수를 상속할 때 발생하던 out-of-memory 크래시 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "OAuth 토큰이 Claude Code 로그인과 다른 계정일 때 Claude in Chrome 이 조용히 연결 실패하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "중첩 `.claude/skills` 의 디렉터리 한정 이름 skill 이 비대화형 실행에서 권한 프롬프트에 막히던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "서브에이전트 transcript 보기에서 도구 결과·실시간 진행이 표시되고, 턴 종료 중 보낸 메시지가 누락되지 않으며, `ctrl+b` 백그라운드 전환 시 처음부터 재시작하지 않도록 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_BASE_URL` 과 `ANTHROPIC_AUTH_TOKEN` 으로 커스텀 API 게이트웨이를 띄운 셸에서 daemon 시작 시 `claude agents` worker 가 `401 Invalid bearer token` 으로 실패하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "compaction 이 `--fallback-model` 을 무시하던 문제 수정 — overload·모델 가용성 에러 시 설정된 fallback 모델 체인으로 전환됨",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "세션 외부에서 자격증명을 갱신한 뒤에도 캐시된 요청 설정 때문에 모델 요청이 계속 auth 에러로 실패하던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "턴 종료 후 `/bg` 나 `←←` 로 만든 백그라운드 세션이 agents 목록에서 영원히 \"Working\" 으로 표시되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE=1` 이 새 marketplace 설치의 clone 을 막던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "서브에이전트 `disallowedTools` 의 MCP 서버 단위 스펙(`mcp__server`, `mcp__server__*`, `mcp__*`)이 조용히 무시되던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "vim 모드 undo 에서 `u` 가 빠르게 입력된 NORMAL/VISUAL 명령을 하나로 병합하지 않고 한 번에 하나씩 되돌리도록 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "`claude agents` 에서 `vscode://` 같은 커스텀 URI 스킴 statusline 링크가 클릭해도 안 열리던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "VSCode 에서 CJK IME 후보 창을 `Esc` 로 닫을 때 실행 중인 작업까지 취소되던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`Tool(param:value)` 문법으로 모델·파라미터 단위 권한 차단이 가능해져 서브에이전트 모델 제한 등 세밀한 정책 작성 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "auto 모드 서브에이전트 spawn 이 실행 전 classifier 검토를 거치므로 차단 정책이 서브에이전트 경로에도 일관 적용됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "compaction 이 `--fallback-model` 체인을 따르게 되어 overload 상황에서 자동 압축이 끊기지 않음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "커스텀 게이트웨이(`ANTHROPIC_BASE_URL`/`ANTHROPIC_AUTH_TOKEN`) 환경에서 `claude agents` daemon 인증이 정상 동작함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-18T00:02:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.177",
     "tagName": "v2.1.177",
     "publishedAt": "2026-06-13T01:25:15Z",

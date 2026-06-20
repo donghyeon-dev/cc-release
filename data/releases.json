@@ -1,5 +1,164 @@
 [
   {
+    "version": "v2.1.183",
+    "tagName": "v2.1.183",
+    "publishedAt": "2026-06-19T01:20:50Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.183",
+    "originalBody": "## What's changed\n\n- Improved auto mode safety: destructive git commands (`git reset --hard`, `git checkout -- .`, `git clean -fd`, `git stash drop`) are now blocked when you didn't ask to discard local work, `git commit --amend` is blocked when the commit wasn't made by the agent this session, and `terraform destroy`/`pulumi destroy`/`cdk destroy` are blocked unless you asked for the specific stack\n- Added a warning when the requested model is deprecated or automatically updated to a newer model, shown on stderr in print mode (`-p`) and now also covering models set in agent frontmatter\n- Added `attribution.sessionUrl` setting to omit the claude.ai session link from commits and PRs in web and Remote Control sessions\n- Added `/config --help` to list all available shorthand keys for `/config key=value`\n- Changed `/config` toggle behavior: Enter and Space both change the selected setting, and Esc now saves and closes instead of reverting\n- Removed the startup \"setup issues\" line under the logo — run `/doctor` to see configuration issues or use `--debug`\n- Fixed `thinking.disabled.display: Extra inputs are not permitted` 400 errors on subagent spawns and session-title generation for affected configurations\n- Fixed WebSearch returning empty results in subagents\n- Fixed the terminal cursor being stranded above the prompt after navigating history in vim mode with the native cursor enabled\n- Fixed fullscreen TUI corruption (statusline mid-screen, duplicated spinner rows, merged text) in Windows Terminal under heavy nested-subagent load\n- Fixed turns silently completing with no visible output when the model returned only a thinking block; Claude now re-prompts once\n- Fixed user-level skills appearing multiple times in slash-command autocomplete when multiple plugins are enabled\n- Fixed MCP servers requiring authentication exposing auth-stub tools to the model in headless/SDK mode\n- Fixed tmux teammate panes failing to launch when the shell has slow rc-file initialization, and keystrokes typed during agent spawn leaking into the new tmux pane instead of the leader prompt\n- Fixed background tasks started by a teammate being killed when the teammate finishes a turn\n- Fixed scheduled task and webhook trigger deliveries being treated as keyboard input; they now classify as task notifications and can no longer approve a pending action or set the session title in auto mode\n- Fixed focus mode showing \"Ran N PostToolUse hooks\" timing lines under each response\n",
+    "summary": {
+      "headline": "auto 모드 파괴적 명령 차단 강화 + 다수 버그 수정",
+      "newFeatures": [
+        {
+          "text": "`attribution.sessionUrl` 설정으로 web·Remote Control 세션의 커밋·PR 에서 claude.ai 세션 링크 생략 가능",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`/config --help` 추가 — `/config key=value` 에 쓸 수 있는 단축키 전체 목록 표시",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "auto 모드에서 `git reset --hard`·`git checkout -- .`·`git clean -fd`·`git stash drop` 등 파괴적 git 명령이 사용자가 로컬 작업 폐기를 요청하지 않은 경우 차단됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "auto 모드에서 이번 세션에 에이전트가 만들지 않은 커밋에 대한 `git commit --amend` 와, 특정 스택을 지정하지 않은 `terraform destroy`·`pulumi destroy`·`cdk destroy` 도 차단됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "요청 모델이 deprecated 되었거나 최신 모델로 자동 교체될 때 `-p` print 모드 및 에이전트 frontmatter 설정 모델까지 stderr 경고 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/config` 토글 동작 변경 — Enter·Space 모두 선택 설정을 변경하고, Esc 는 되돌리기 대신 저장 후 닫음",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "로고 아래 시작 시 \"setup issues\" 줄 제거됨 — 설정 문제는 `/doctor` 실행 또는 `--debug` 로 확인",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "특정 설정에서 서브에이전트 spawn·세션 제목 생성 시 발생하던 `thinking.disabled.display: Extra inputs are not permitted` 400 에러 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "서브에이전트에서 `WebSearch` 가 빈 결과를 반환하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "vim 모드에서 native cursor 활성 시 히스토리 탐색 후 터미널 커서가 프롬프트 위에 떠 있던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Windows Terminal 의 중첩 서브에이전트 고부하 상황에서 statusline 화면 중앙 출력·spinner 중복·텍스트 병합 등 전체화면 TUI 깨짐 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "모델이 thinking 블록만 반환했을 때 출력 없이 턴이 조용히 종료되던 문제 수정 — 이제 한 번 재프롬프트함",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "여러 플러그인 활성 시 user-level skill 이 슬래시 명령 자동완성에 중복 표시되던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "headless·SDK 모드에서 인증 필요한 MCP 서버가 auth-stub 도구를 모델에 노출하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "셸 rc-file 초기화가 느릴 때 tmux teammate pane 이 실행되지 않거나, 에이전트 spawn 중 입력 키가 새 pane 대신 leader 프롬프트로 새던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "teammate 가 시작한 백그라운드 작업이 해당 teammate 턴 종료 시 함께 종료되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "스케줄 작업·webhook 트리거 전달이 키보드 입력으로 처리되던 문제 수정 — 이제 task notification 으로 분류되어 auto 모드에서 대기 액션 승인·세션 제목 설정 불가",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "focus 모드에서 각 응답 하단에 \"Ran N PostToolUse hooks\" 타이밍 줄이 표시되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "auto 모드 사용자는 명시적 폐기 요청 없이는 파괴적 git·IaC 명령이 막히므로, 의도적 destroy 시 해당 스택·작업을 명확히 지시해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            },
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "`attribution.sessionUrl` 신규 설정으로 자동 생성 커밋·PR 의 claude.ai 링크 노출 여부를 제어 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "스케줄 작업·webhook 트리거가 더 이상 키 입력으로 오인되지 않아 auto 모드에서 의도치 않은 승인·제목 변경 위험 제거.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 9
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-20T00:04:16Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.181",
     "tagName": "v2.1.181",
     "publishedAt": "2026-06-17T22:07:41Z",

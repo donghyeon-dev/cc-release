@@ -1,5 +1,28 @@
 [
   {
+    "version": "v2.1.185",
+    "tagName": "v2.1.185",
+    "publishedAt": "2026-06-20T20:59:19Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.185",
+    "originalBody": "## What's changed\n\n- The stream-stall hint now reads \"Waiting for API response · will retry in …\" instead of \"No response from API · Retrying in …\", and triggers after 20s of silence instead of 10s\n",
+    "summary": {
+      "headline": "스트림 지연 안내 문구·임계값 조정",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "스트림 정체 안내가 \"No response from API · Retrying in …\" 대신 \"Waiting for API response · will retry in …\" 로 바뀌고, 무응답 10초가 아닌 20초 후 표시됨",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "fixes": [],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-06-21T00:03:51.499Z",
+    "summaryModel": "claude-opus-4-8"
+  },
+  {
     "version": "v2.1.183",
     "tagName": "v2.1.183",
     "publishedAt": "2026-06-19T01:20:50Z",

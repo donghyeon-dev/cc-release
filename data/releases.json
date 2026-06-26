@@ -1,5 +1,530 @@
 [
   {
+    "version": "v2.1.193",
+    "tagName": "v2.1.193",
+    "publishedAt": "2026-06-25T21:45:57Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.193",
+    "originalBody": "## What's changed\n\n- Added `autoMode.classifyAllShell` setting to route all Bash/PowerShell commands through the auto-mode classifier instead of only arbitrary-code-execution patterns\n- Added auto-mode denial reasons to the transcript, the denial toast, and `/permissions` recent denials\n- Added `claude_code.assistant_response` OpenTelemetry log event containing the model's response text. Redacted unless `OTEL_LOG_ASSISTANT_RESPONSES=1`; when that var is unset it follows `OTEL_LOG_USER_PROMPTS`, so deployments that already log prompt content will start receiving response content on upgrade — set `OTEL_LOG_ASSISTANT_RESPONSES=0` to keep prompts-only.\n- Added live file path autocomplete to bash mode (`!`)\n- Added a startup notice when MCP servers need authentication, pointing at `/mcp`\n- Added automatic memory-pressure reaping for idle background shell commands (disable with `CLAUDE_CODE_DISABLE_BG_SHELL_PRESSURE_REAP=1`)\n- Fixed `/model` and other client-data-gated UI showing stale/empty state immediately after `/login`\n- Fixed backgrounding (←←) spuriously cancelling with \"N background tasks would be abandoned\" when all running tasks carry over to the new session\n- Fixed pinned background agents being re-prompted to \"Continue from where you left off\" after every auto-update\n- Fixed backgrounding the main turn spawning a phantom \"general-purpose (resumed)\" subagent that re-ran the main conversation\n- Fixed agent panel hiding sibling agents when viewing a subagent\n- Improved background agents: the launch result no longer instructs Claude to \"end your response\" — it keeps working on other tasks while the agent runs\n- Improved MCP `headersHelper` auth: the helper now re-runs and reconnects automatically when a tool call returns 401/403\n- Improved plugin auto-rename: marketplace `renames` maps are now followed automatically, updating your settings to the new name\n- Improved `/add-dir` message when the directory is already a working directory\n",
+    "summary": {
+      "headline": "셸 명령 auto-mode 분류 확장 및 OTEL 응답 로깅",
+      "newFeatures": [
+        {
+          "text": "`autoMode.classifyAllShell` 설정으로 임의 코드 실행 패턴뿐 아니라 모든 `Bash`/`PowerShell` 명령을 auto-mode 분류기로 라우팅 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`claude_code.assistant_response` OpenTelemetry 로그 이벤트 추가 — 모델 응답 텍스트 포함, `OTEL_LOG_ASSISTANT_RESPONSES=1` 없으면 마스킹",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "bash 모드(`!`)에 실시간 파일 경로 자동완성 추가",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "MCP 서버 인증 필요 시 시작 시점에 `/mcp` 안내 알림 표시",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "유휴 백그라운드 셸 명령에 대한 메모리 압박 자동 회수 추가 (`CLAUDE_CODE_DISABLE_BG_SHELL_PRESSURE_REAP=1` 로 비활성화)",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "auto-mode 거부 사유를 트랜스크립트, 거부 토스트, `/permissions` 최근 거부 목록에 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 실행 결과가 더 이상 \"end your response\" 를 지시하지 않아 에이전트 실행 중 다른 작업 계속 진행",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "MCP `headersHelper` 인증이 도구 호출에서 401/403 반환 시 자동 재실행·재연결",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "플러그인 자동 리네임이 마켓플레이스 `renames` 맵을 따라 설정을 새 이름으로 갱신",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`/add-dir` 대상이 이미 작업 디렉토리일 때 메시지 개선",
+          "originalRefs": [
+            14
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`/login` 직후 `/model` 등 클라이언트 데이터 기반 UI 가 오래된/빈 상태로 표시되던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "모든 실행 작업이 새 세션으로 이월될 때 백그라운드 전환(←←)이 작업 포기 경고와 함께 잘못 취소되던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "고정된 백그라운드 에이전트가 자동 업데이트마다 이어서 작업하라는 메시지로 재요청되던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "메인 턴 백그라운드 전환 시 메인 대화를 재실행하는 유령 \"general-purpose (resumed)\" 서브에이전트가 생성되던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "서브에이전트 조회 시 에이전트 패널이 형제 에이전트를 숨기던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "이미 `OTEL_LOG_USER_PROMPTS` 로 프롬프트를 로깅하던 배포 환경은 업그레이드 시 응답 텍스트까지 자동 수집되므로, 프롬프트만 유지하려면 `OTEL_LOG_ASSISTANT_RESPONSES=0` 명시 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-26T01:22:51.628Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.191",
+    "tagName": "v2.1.191",
+    "publishedAt": "2026-06-24T21:58:12Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.191",
+    "originalBody": "## What's changed\n\n- Added `/rewind` support for resuming a conversation from before `/clear` was run\n- Fixed scroll position jumping to the bottom while reading earlier output during a streaming response\n- Fixed background agents resurrecting after being stopped — stopping an agent from the tasks panel is now permanent\n- Fixed `/voice` showing a generic \"not available\" message when disabled by an organization's policy — it now explains the restriction\n- Fixed `/login` URL opening truncated in Windows Terminal when it wraps across lines\n- Fixed Cmd+click on links in fullscreen mode for Ghostty over ssh/tmux\n- Fixed `claude agents` sending builtin slash commands like `/usage` to background sessions as prompt text instead of showing a hint\n- Fixed `claude agents` job rows showing full filesystem paths for pasted images instead of the `[Image #N]` placeholder\n- Fixed hooks with comma-separated matchers (e.g. `\"Bash,PowerShell\"`) silently never firing\n- Fixed `/permissions` Recently-denied tab: approving a denial now persists on close instead of being silently discarded\n- Fixed the agent panel jumping by one row when scrolling the roster past the overflow cap\n- Fixed the welcome splash art overflowing the default 80×24 macOS Terminal window\n- Fixed managed settings: `forceRemoteSettingsRefresh` now takes effect when set via MDM or file policy, and the fetch sends `Cache-Control: no-cache` to prevent proxies from serving stale responses\n- Improved sandbox network permission dialog: hosts you allow with \"Yes\" are now remembered for the rest of the session instead of re-prompting on every connection\n- Improved MCP server reliability: capability discovery (`tools/list`, `prompts/list`, `resources/list`) now retries transient network errors with short backoff\n- Improved MCP OAuth: discovery and token requests now retry once after transient network errors, and headless environments skip the browser popup and go straight to the paste-the-URL prompt\n- Improved MCP error messages: HTTP 404 errors now show the URL and point to your MCP config\n- Improved vim mode prompt-history search (NORMAL `/`) to hint how to reach slash commands\n- Reduced CPU usage during streaming responses by ~37% by coalescing text updates to 100ms\n- Reduced long-session memory growth from terminal output cache\n",
+    "summary": {
+      "headline": "/clear 이전 대화 /rewind 복원 및 스트리밍 CPU 37% 절감",
+      "newFeatures": [
+        {
+          "text": "`/rewind` 가 `/clear` 실행 이전 시점에서 대화 재개 지원",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "샌드박스 네트워크 권한 다이얼로그에서 \"Yes\" 로 허용한 호스트를 세션 동안 기억해 매 연결마다 재요청하지 않음",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "MCP 기능 탐색(`tools/list`, `prompts/list`, `resources/list`)이 일시적 네트워크 오류 시 짧은 백오프로 재시도",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "MCP OAuth 탐색·토큰 요청이 일시 오류 후 1회 재시도하고, 헤드리스 환경은 브라우저 팝업 대신 URL 붙여넣기 프롬프트로 직행",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "MCP 오류 메시지에서 HTTP 404 시 URL 과 MCP 설정 위치 표시",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "스트리밍 응답 중 텍스트 갱신을 100ms 단위로 묶어 CPU 사용량 약 37% 절감",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "터미널 출력 캐시로 인한 장기 세션 메모리 증가 감소",
+          "originalRefs": [
+            19
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "스트리밍 응답 중 이전 출력을 읽을 때 스크롤이 맨 아래로 튀던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "중지된 백그라운드 에이전트가 되살아나던 문제 수정 — 태스크 패널에서의 중지가 이제 영구 적용",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "콤마로 구분된 매처(예: `\"Bash,PowerShell\"`)를 가진 hook 이 조용히 실행되지 않던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`/permissions` 최근 거부 탭에서 거부 승인이 닫을 때 조용히 버려지던 문제 수정 — 이제 영구 저장",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "관리형 설정의 `forceRemoteSettingsRefresh` 가 MDM/파일 정책으로 설정 시 적용되고, 프록시 stale 응답 방지를 위해 `Cache-Control: no-cache` 전송",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Windows Terminal 에서 줄바꿈 시 `/login` URL 이 잘려 열리던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`claude agents` 가 `/usage` 같은 내장 슬래시 명령을 힌트 대신 프롬프트 텍스트로 백그라운드 세션에 보내던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-06-26T01:22:51.628Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.190",
+    "tagName": "v2.1.190",
+    "publishedAt": "2026-06-24T15:53:56Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.190",
+    "originalBody": "## What's changed\n\n- Bug fixes and reliability improvements\n",
+    "summary": {
+      "headline": "버그 수정 및 안정성 개선 릴리즈",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "세부 항목 없는 버그 수정 및 안정성 개선만 포함된 릴리즈",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-06-26T01:22:51.628Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.187",
+    "tagName": "v2.1.187",
+    "publishedAt": "2026-06-23T21:03:48Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.187",
+    "originalBody": "## What's changed\n\n- Added `sandbox.credentials` setting to block sandboxed commands from reading credential files and secret environment variables\n- Added org-configured model restrictions to the model picker, `--model`, `/model`, and `ANTHROPIC_MODEL`, with a \"restricted by your organization's settings\" message when a restricted model is selected\n- Added mouse click support to select menus (permission prompts, `/model`, `/config`, etc.) in fullscreen mode\n- Fixed `--resume` failing with \"No conversation found\" when the original `-p` run produced no model turns\n- Fixed `--json-schema` and workflow `agent({schema})` structured output: the model can no longer re-call `StructuredOutput` indefinitely after a successful call, and follow-up turns now reliably return structured output\n- Fixed remote MCP tool calls that hang with no response for 5 minutes — they now abort with an error instead of blocking indefinitely (override with `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT`)\n- Fixed Claude Code Remote sessions taking ~2.7s longer to start after the agent proxy CA system-trust install was added\n- Fixed pasted Korean/CJK text turning into mojibake in terminals that deliver paste as per-byte extended-key events\n- Fixed `/update` over Remote Control hanging when a startup trust dialog would have shown\n- Fixed background jobs in the agents view getting stuck in \"working\" indefinitely when the agent ended a turn without producing structured output\n- Fixed channel connections dropping after navigating to the agents view and back, and after `/bg`, `/tui`, or `/update`\n- Fixed agent stop notifications not correctly attributing who stopped the agent, and improved wording (\"finished\"/\"stopped\" instead of \"came to rest\")\n- Fixed subagent depth tracking: resumed subagents now restore their original spawn depth, and forked subagents now count toward the depth cap\n- Fixed leaked agent worktree registrations: locked `.git/worktrees/` entries from killed agents are now cleaned up automatically\n- Fixed Cmd+click not opening URLs in fullscreen mode in Ghostty on macOS\n- Fixed `claude --help` not listing the `--bg`/`--background` flag\n- Fixed Esc, Ctrl-C, and Ctrl-D not working while `/share` is uploading\n- Improved `/install-github-app`: GitHub Actions workflow setup is now optional — you can install just the GitHub App and skip the workflow/secret steps\n- Improved `/btw` with ←/→ arrow navigation to step through earlier answers\n- Improved `/plugin` to surface plugins you haven't used recently so you can clean them up\n- [VSCode] Fixed extension becoming unresponsive when resuming a large session\n",
+    "summary": {
+      "headline": "샌드박스 자격증명 차단 및 조직 모델 제한 추가",
+      "newFeatures": [
+        {
+          "text": "`sandbox.credentials` 설정으로 샌드박스 명령이 자격증명 파일·비밀 환경변수를 읽지 못하도록 차단 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "조직 설정 모델 제한을 모델 선택기, `--model`, `/model`, `ANTHROPIC_MODEL` 에 적용하고 제한 모델 선택 시 안내 메시지 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "전체화면 모드에서 권한 프롬프트·`/model`·`/config` 등 선택 메뉴에 마우스 클릭 지원",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/install-github-app` 에서 GitHub Actions 워크플로 설정을 선택사항으로 변경 — App 만 설치하고 워크플로/시크릿 단계 건너뛰기 가능",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`/btw` 에 ←/→ 화살표 탐색을 추가해 이전 답변 단계별 이동 가능",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`/plugin` 이 최근 미사용 플러그인을 노출해 정리 유도",
+          "originalRefs": [
+            19
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`-p` 실행이 모델 턴을 생성하지 않았을 때 `--resume` 가 \"No conversation found\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`--json-schema` 및 워크플로 `agent({schema})` 구조화 출력에서 성공 후 `StructuredOutput` 을 무한 재호출하던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "응답 없이 5분간 멈추던 원격 MCP 도구 호출을 차단 대신 오류로 중단 (`CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT` 로 조정)",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "per-byte 확장키 이벤트로 붙여넣기를 전달하는 터미널에서 한국어/CJK 텍스트가 깨지던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "에이전트 워크트리 등록 누수 수정 — 종료된 에이전트의 잠긴 `.git/worktrees/` 항목 자동 정리",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "재개된 서브에이전트가 원래 spawn 깊이를 복원하고 fork 된 서브에이전트가 깊이 한계에 포함되도록 깊이 추적 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "[VSCode] 대형 세션 재개 시 확장이 응답하지 않던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`sandbox.credentials` 신규 설정으로 샌드박스 실행 시 자격증명·비밀 환경변수 접근을 명시적으로 차단 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "조직 모델 제한이 CLI·환경변수 경로까지 강제되므로, `ANTHROPIC_MODEL` 로 제한 모델 지정 시 거부될 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "원격 MCP 도구의 무응답 타임아웃 기본 동작이 도입돼 `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT` 로 임계값 조정 가능.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-26T01:22:51.628Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.186",
+    "tagName": "v2.1.186",
+    "publishedAt": "2026-06-22T20:37:34Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.186",
+    "originalBody": "## What's changed\n\n- Added `claude mcp login <name>` and `claude mcp logout <name>` to authenticate MCP servers from the CLI without opening the interactive `/mcp` menu, with `--no-browser` stdin redirect support for completing over SSH\n- Added status filtering (press `f`) to the `/workflows` agent detail view\n- Added a \"Skills\" section to the `/plugin` Installed tab\n- Added `teammateMode: \"iterm2\"` setting with a warning when auto mode cannot find the `it2` CLI\n- Added \"Claude Platform on AWS - refresh credentials\" option to `/login` when `awsAuthRefresh` is configured\n- `!` bash commands now trigger Claude to respond to the output automatically; set `\"respondToBashCommands\": false` in settings.json to keep the previous context-only behavior\n- Fixed streaming requests failing with \"Content block not found\" or JSON parse errors after the machine wakes from sleep\n- Fixed subagent transcript scroll position bleeding into the main transcript on exit\n- Fixed background task previews flashing raw tool names before the agent's plan loaded\n- Fixed Chrome tab-group isolation not applying when the in-product permissions gate is off for concurrent CLI sessions\n- Fixed background session recaps being duplicated; the agent's own end-of-turn summary now shows as the recap line\n- Fixed opening a background session from `claude agents` leaving the previous screen painted behind it\n- Fixed `Agent(type)` deny rules and `Agent(x,y)` allowed-types restrictions not being enforced for named subagent spawns\n- Fixed Esc and Ctrl+C not responding while background agents are still running after the main turn ends\n- Fixed misaligned option numbers in permission prompts when the option text overflows\n- Fixed pressing `x` on a finished subagent in the agent panel not dismissing it\n- Fixed a misleading \"MCP server disconnected\" notice for intentionally retired tools when resuming older sessions\n- Fixed `/plugin` Installed showing a \"more above\" indicator when already scrolled to the top\n- Fixed `~~strikethrough~~` showing literal tildes in assistant messages instead of rendering as strikethrough\n- Fixed `--tools` allowing feature-gated tools to slip through before flags loaded on a cold first launch\n- Fixed background job status in `claude agents` showing a stale \"needs input\" message after replying\n- Fixed a dark-theme flash when opening a background session from `claude agents` on a light terminal\n- Fixed mouse-selected text staying highlighted after deleting it in `claude agents`\n- Fixed session cost not showing for usage-based Enterprise and Team subscribers\n- Fixed agent teams: teammates spawned via tmux/pane backends now inherit the leader's `--effort` level\n- Fixed Workflow `agent({schema})` subagents looping forever on repeated schema validation failures instead of aborting after 5 attempts\n- Improved `claude mcp get` and `claude mcp remove` to suggest the closest configured server name on a typo and truncate long server lists\n- Improved memory: the agent is now reminded to compact its `MEMORY.md` index when nearing the size limit\n- Improved skill frontmatter: `display-name`, `default-enabled`, `fallback`, and `metadata.*` keys now accept kebab-case, snake_case, and camelCase\n- Improved malformed `SKILL.md` YAML frontmatter handling: loads the skill body with empty metadata instead of failing silently\n- Changed `CLAUDE_CODE_MAX_RETRIES` to cap at 15; for unattended sessions, use `CLAUDE_CODE_RETRY_WATCHDOG` instead\n- Changed background subagents to surface permission prompts in the main session instead of auto-denying; the dialog shows which agent is asking, and Esc denies just that tool\n- Changed `/review <pr>` to use the same review engine as `/code-review medium`\n",
+    "summary": {
+      "headline": "CLI MCP 로그인 명령 및 ! 셸 출력 자동 응답 추가",
+      "newFeatures": [
+        {
+          "text": "`claude mcp login <name>`·`claude mcp logout <name>` 로 `/mcp` 메뉴 없이 CLI 에서 MCP 서버 인증 가능, SSH 완료용 `--no-browser` stdin 리다이렉트 지원",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/workflows` 에이전트 상세 뷰에 상태 필터링(`f` 키) 추가",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/plugin` Installed 탭에 \"Skills\" 섹션 추가",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`teammateMode: \"iterm2\"` 설정 추가 — auto 모드가 `it2` CLI 를 못 찾으면 경고 표시",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`awsAuthRefresh` 구성 시 `/login` 에 AWS 자격증명 갱신(`Claude Platform on AWS`) 옵션 추가",
+          "originalRefs": [
+            4
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`!` bash 명령 출력에 모델이 자동 응답하도록 변경 — 이전의 컨텍스트 전용 동작은 settings.json 의 `\"respondToBashCommands\": false` 로 유지",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_MAX_RETRIES` 상한을 15 로 변경, 무인 세션은 `CLAUDE_CODE_RETRY_WATCHDOG` 사용 권장",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "백그라운드 서브에이전트가 권한 프롬프트를 자동 거부 대신 메인 세션에 표시하도록 변경 — 다이얼로그에 요청 에이전트 표시, Esc 는 해당 도구만 거부",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "`/review <pr>` 가 `/code-review medium` 과 동일한 리뷰 엔진을 사용하도록 변경",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "스킬 frontmatter 의 `display-name`·`default-enabled`·`fallback`·`metadata.*` 키가 kebab-case·snake_case·camelCase 모두 허용",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "크기 한계에 가까워지면 에이전트가 `MEMORY.md` 인덱스를 압축하도록 상기",
+          "originalRefs": [
+            27
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "머신이 절전에서 깨어난 후 스트리밍 요청이 \"Content block not found\" 또는 JSON 파싱 오류로 실패하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`Agent(type)` deny 규칙과 `Agent(x,y)` 허용 타입 제한이 명명된 서브에이전트 spawn 에 적용되지 않던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`~~strikethrough~~` 가 취소선 대신 리터럴 틸드로 표시되던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`--tools` 가 콜드 첫 실행 시 플래그 로드 전에 기능 게이트된 도구를 통과시키던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "사용량 기반 Enterprise·Team 구독자에게 세션 비용이 표시되지 않던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "tmux/pane 백엔드로 생성된 에이전트 팀 동료가 리더의 `--effort` 수준을 상속하도록 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "워크플로 `agent({schema})` 서브에이전트가 스키마 검증 반복 실패 시 5회 후 중단 대신 무한 반복하던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`!` 셸 명령 출력에 모델이 자동 응답하도록 기본 동작이 바뀌어, 이전처럼 컨텍스트로만 쓰려면 `respondToBashCommands: false` 설정 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_MAX_RETRIES` 가 15 로 캡되므로 그 이상이 필요한 무인 세션은 `CLAUDE_CODE_RETRY_WATCHDOG` 로 전환해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "백그라운드 서브에이전트 권한 프롬프트가 자동 거부에서 메인 세션 표시로 바뀌어 무인 자동화 흐름에 영향 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-26T01:22:51.628Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.185",
     "tagName": "v2.1.185",
     "publishedAt": "2026-06-20T20:59:19Z",

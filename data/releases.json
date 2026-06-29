@@ -1,5 +1,115 @@
 [
   {
+    "version": "v2.1.195",
+    "tagName": "v2.1.195",
+    "publishedAt": "2026-06-26T21:29:42Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.195",
+    "originalBody": "## What's changed\n\n- Added `CLAUDE_CODE_DISABLE_MOUSE_CLICKS` to disable mouse click/drag/hover in fullscreen mode while keeping wheel scroll\n- Fixed hook matchers with hyphenated identifiers (e.g. `code-reviewer`, `mcp__brave-search`) accidentally substring-matching — they now exact-match. Use `mcp__brave-search__.*` to match all tools from a hyphenated MCP server.\n- Fixed voice dictation on macOS capturing silence in long-running sessions after the default input device changes\n- Fixed voice dictation auto-submit never firing for languages written without spaces (Japanese, Chinese, Thai)\n- Fixed external plugins enabled only by project `.claude/settings.json` not requiring explicit install consent on every loader path\n- Fixed `/plugin` Enable/Disable not working when a plugin's `plugin.json` `name` differs from its marketplace entry name\n- Fixed background jobs disappearing from `claude agents` or losing data when written by a newer Claude Code version\n- Fixed reopening a crashed background task showing a blank screen for up to 5 seconds instead of its restart\n- Fixed background agent daemons running unreachable when the control socket fails to start, blocking restarts\n- Improved voice mode on Linux: now distinguishes \"no microphone\" from \"SoX not installed\" when SoX is present but no audio capture device exists\n- Improved `claude agents` completed list to fill available vertical space; on short terminals the header compacts so live sessions stay visible\n- Improved Remote session startup with a provisioning checklist while the container starts\n",
+    "summary": {
+      "headline": "마우스 클릭 비활성화 옵션과 다수 버그 수정",
+      "newFeatures": [
+        {
+          "text": "풀스크린 모드에서 `CLAUDE_CODE_DISABLE_MOUSE_CLICKS` 로 마우스 클릭/드래그/호버를 끄되 휠 스크롤은 유지 가능",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Linux 음성 모드에서 SoX 는 설치됐지만 오디오 캡처 장치가 없는 경우 \"마이크 없음\" 과 \"SoX 미설치\" 를 구분해 표시",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`claude agents` 완료 목록이 세로 공간을 채우도록 개선, 짧은 터미널에서는 헤더를 압축해 실행 중 세션 표시 유지",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "Remote 세션 시작 시 컨테이너 기동 중 프로비저닝 체크리스트 표시",
+          "originalRefs": [
+            11
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "하이픈 포함 식별자(`code-reviewer`, `mcp__brave-search` 등)가 부분 문자열로 잘못 매칭되던 hook matcher 가 정확히 일치하도록 수정 — 하이픈 MCP 서버의 모든 도구를 잡으려면 `mcp__brave-search__.*` 사용",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "macOS 음성 받아쓰기가 장시간 세션에서 기본 입력 장치 변경 후 무음만 캡처하던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "공백 없이 쓰는 언어(일본어, 중국어, 태국어)에서 음성 받아쓰기 자동 제출이 동작하지 않던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "프로젝트 `.claude/settings.json` 으로만 활성화된 외부 플러그인이 모든 로더 경로에서 설치 동의를 요구하지 않던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "플러그인 `plugin.json` 의 `name` 이 마켓플레이스 항목명과 다를 때 `/plugin` 의 Enable/Disable 이 동작하지 않던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "신버전 Claude Code 가 기록한 백그라운드 작업이 `claude agents` 에서 사라지거나 데이터가 유실되던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "크래시된 백그라운드 작업 재진입 시 재시작 화면 대신 최대 5초간 빈 화면이 뜨던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "제어 소켓 기동 실패 시 백그라운드 에이전트 데몬이 도달 불가 상태로 실행돼 재시작을 막던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "하이픈이 들어간 hook matcher 와 MCP 서버 패턴을 쓰던 설정은 이제 정확 일치로 바뀌어, 모든 도구를 잡으려면 `mcp__brave-search__.*` 같은 와일드카드로 갱신 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "풀스크린 마우스 동작을 제어하려면 신규 환경변수 `CLAUDE_CODE_DISABLE_MOUSE_CLICKS` 사용 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-29T01:00:24.582Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.193",
     "tagName": "v2.1.193",
     "publishedAt": "2026-06-25T21:45:57Z",

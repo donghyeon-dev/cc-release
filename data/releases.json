@@ -1,5 +1,214 @@
 [
   {
+    "version": "v2.1.196",
+    "tagName": "v2.1.196",
+    "publishedAt": "2026-06-29T23:27:32Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.196",
+    "summary": {
+      "headline": "조직 기본 모델 지원과 백그라운드 세션 안정성 강화",
+      "newFeatures": [
+        {
+          "text": "관리자가 org 콘솔에서 조직 기본 모델 지정 가능 — 직접 모델 미선택 시 `/model` 에 \"Org default\"(또는 \"Role default\")로 표시됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "세션 시작 시 읽기 쉬운 기본 이름 자동 부여 — 세션 식별·메시지 전송이 쉬워짐",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "채팅 내 파일 첨부를 클릭 가능하게 변경 — `Cmd/Ctrl` 클릭 시 Finder/Explorer 에서 해당 파일 표시",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "백그라운드 세션 안정성 개선 — 프로세스 중지·재시작·업데이트에도 장기 실행 명령과 워크플로우가 살아남음, Windows 에서는 백그라운드 셸을 종료하지 않고 인계함",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "데몬 재시작으로 종료된 백그라운드 에이전트 워커가 다음 agents 뷰 진입 시 중단 지점부터 자동 재개됨",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "`/code-review` 워크플로우의 cleanup finder 5개를 1개로 통합해 토큰 사용량 약 25% 절감",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "스트리밍 중 변화 없는 서브트리 순회를 건너뛰어 터미널 UI 프레임당 렌더링 작업량 감소",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "스트리밍 idle watchdog 가 모든 provider 에서 기본 활성화됨 — 응답 스트림이 5분간 이벤트를 내지 않으면 중단 후 재시도, `CLAUDE_ENABLE_STREAM_WATCHDOG=0` 으로 비활성화 가능",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_BASE_URL` 이 non-Anthropic 호스트를 가리키면 Remote Control 비활성화 — `CLAUDE_CODE_USE_BEDROCK`/`_VERTEX`/`_FOUNDRY` 의 기존 동작과 일치",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "포그라운드 세션에서 agents 뷰 열기가 `←` 두 번에서 한 번으로 변경 — 백그라운드 세션 동작과 일치",
+          "originalRefs": [
+            26
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`claude mcp list`/`get` 가 repo 가 커밋된 `.claude/settings.json` 으로 자가 승인한 `.mcp.json` 서버를 더 이상 자동 실행하지 않음 — 신뢰되지 않은 워크스페이스는 `⏸ Pending approval` 표시",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "백그라운드 작업 깨우기 시 transcript 프로브 오판으로 대화가 영구 삭제되고 원래 프롬프트가 재실행되던 문제 수정 — 이제 파일을 삭제하지 않고 따로 보관함",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "다중 병렬 요청 중 usage limit 도달 시 rate-limit 경고가 깜빡이며 사라지고 텔레메트리가 과다 집계되던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "백그라운드 세션 턴 이후 schema 거부된 StructuredOutput 시도가 재시도와 함께 렌더링되며 recap 줄이 중복되던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "PowerShell 에서 `git diff`/`git grep`, `egrep`/`fgrep` 및 `|` 포함 따옴표 검색 패턴이 exit 1 일 때 실패로 보고되던 문제 수정 — Bash 동작과 일치",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`claude agents` 사이드 패널의 키보드 포커스 고착, 백그라운드 작업의 subagent 타입 소실, 실행 중 세션의 잘못된 상태 표시 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`claude agents --dangerously-skip-permissions` 가 bypass 면책 고지 없이 조용히 auto 모드로 폴백하던 문제 수정 — 이제 spawn 된 에이전트에 bypass 모드 적용",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "서버 재시작으로 중단된 Remote 세션의 턴 중간 크래시 복구 수정 — 다음 워커에서 자동 재개됨",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "비정상 종료 후 특수문자 경로에서 `/cd` 로 이동한 세션이 이전 디렉터리 resume 목록에 다시 나타나던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`claude plugin validate` 가 source 가 \".\" 인 로컬 플러그인을 건너뛰고 첫 에러 클래스 이후 중단되던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "유휴 프롬프트에서 `Esc Esc` 가 rewind 메뉴를 열지 않던 회귀 수정 — 백그라운드 에이전트 중지는 `Ctrl+C` 또는 `Ctrl+X Ctrl+K` 사용",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "scope 미지정 시 MCP OAuth 가 인증 서버의 전체 `scopes_supported` 목록을 요청해 GitLab self-hosted 등 엔터프라이즈 IdP 에서 `invalid_scope` 실패가 나던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "Bedrock 에서 `/context` 가 모든 도구 그룹에 0 토큰으로 표시되던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`/deep-research` 가 verifier 실패를 `unverified` 대신 \"all claims refuted\" 로 잘못 보고하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "marketplace 를 git 백업 로컬 폴더 경로로 추가했을 때 플러그인 의존성 버전 핀이 무시되던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`claude agents` 세션 상태 수정 — 완료 행이 \"Done\"/\"Needs your input\" 사이를 오가지 않고, 멈춘 에이전트는 \"Needs attention\" 으로 표시되며, PR 언급 결과에 클릭 가능한 링크 노출",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "voice 모드에서 빠른 타이핑 중 음성 받아쓰기가 공백을 삼키고 녹음을 잘못 시작하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`.claude/settings.json` 으로 자가 승인된 `.mcp.json` 서버는 `claude mcp list`/`get` 으로 더 이상 자동 실행되지 않으며, 신뢰되지 않은 워크스페이스에서는 `⏸ Pending approval` 로 표시됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "스트리밍 idle watchdog 가 전 provider 기본 활성화되므로 5분 무응답 시 자동 재시도되며, `CLAUDE_ENABLE_STREAM_WATCHDOG=0` 으로 끌 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_BASE_URL` 이 non-Anthropic 호스트면 Remote Control 이 비활성화되므로 게이트웨이·프록시 경유 환경에서 동작 차이 주의.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-06-30T00:23:08.266Z",
+    "summaryModel": "claude-sonnet-4-6",
+    "originalBody": "## What's changed\n\n- Added support for organization default models — admins set it in the org console; it shows as \"Org default\" (or \"Role default\") in `/model` when you haven't picked one yourself\n- Added readable default names for sessions at start, making them easier to identify and message\n- Added clickable file attachments in chat — Cmd/Ctrl-click reveals the file in Finder/Explorer\n- Security: `claude mcp list`/`get` no longer spawn `.mcp.json` servers that a repo self-approved via a committed `.claude/settings.json`; untrusted workspaces show `⏸ Pending approval`\n- Fixed waking a background job permanently deleting its conversation and re-running the original prompt when the transcript probe misread a real transcript; the file is now set aside, never deleted\n- Fixed the rate-limit warning flickering off and rate-limit telemetry being over-counted when multiple parallel requests were in flight at the moment a usage limit was hit\n- Fixed duplicate recap lines after a background session's turn: a schema-rejected StructuredOutput attempt no longer renders alongside its retry\n- Fixed PowerShell `git diff`/`git grep`, `egrep`/`fgrep`, and quoted search patterns containing `|` being reported as failures when they exit 1, matching Bash behavior\n- Fixed multiple `claude agents` side panel issues: keyboard focus getting stuck when opening an agent, background jobs losing their subagent types on every open, and sessions showing incorrect status while actively running\n- Fixed `claude agents --dangerously-skip-permissions` silently falling back to auto mode instead of showing the bypass disclaimer and applying bypass mode to spawned agents\n- Fixed mid-turn crash recovery for Remote sessions — sessions interrupted by a server restart now auto-resume on the next worker\n- Fixed sessions moved with `/cd` reappearing in the old directory's resume list after a non-graceful exit when the old path contained special characters\n- Fixed `claude plugin validate` skipping local plugins whose source is \".\" and stopping after the first error class\n- Fixed Esc Esc at an idle prompt not opening the rewind menu (regression); use Ctrl+C or Ctrl+X Ctrl+K to stop background agents\n- Fixed MCP OAuth requesting the authorization server's full `scopes_supported` catalog when no scope is specified, causing `invalid_scope` failures on GitLab self-hosted and other enterprise IdPs\n- Fixed `/context` showing 0 tokens for all tool groups on Bedrock\n- Fixed `/deep-research` misreporting verifier failures as \"all claims refuted\" instead of `unverified`\n- Fixed plugin dependency version pins not being honored when the marketplace was added as a local folder path backed by a git repo\n- Fixed `claude agents` session status: completed rows no longer flip between \"Done\" and \"Needs your input\", stalled agents are now labeled \"Needs attention\", and results that mention a PR show a clickable link\n- Fixed voice dictation swallowing spaces and spuriously starting a recording during very fast typing when voice mode is enabled\n- Improved background session reliability: long-running commands and workflows now survive the session's process being stopped, restarted, or updated — including on Windows, where background shells are handed off instead of being killed\n- Improved background agents: workers killed by a daemon restart are now automatically resumed from where they left off the next time the agents view opens\n- Improved `/code-review` workflow: merged five cleanup finders into one, cutting token usage by roughly 25%\n- Reduced per-frame rendering work in the terminal UI by skipping no-op subtree walks during streaming\n- The streaming idle watchdog is now on by default for all providers — it aborts and retries when a response stream produces no events for 5 minutes. Set `CLAUDE_ENABLE_STREAM_WATCHDOG=0` to disable.\n- Remote Control is now disabled when `ANTHROPIC_BASE_URL` points at a non-Anthropic host, matching the existing behavior under `CLAUDE_CODE_USE_BEDROCK`/`_VERTEX`/`_FOUNDRY`\n- Changed opening the agents view from a foreground session to require a single `←` press instead of two, matching the behavior in background sessions\n"
+  },
+  {
     "version": "v2.1.195",
     "tagName": "v2.1.195",
     "publishedAt": "2026-06-26T21:29:42Z",

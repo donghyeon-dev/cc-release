@@ -1,5 +1,54 @@
 [
   {
+    "version": "v2.1.197",
+    "tagName": "v2.1.197",
+    "publishedAt": "2026-06-30T17:56:37Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.197",
+    "originalBody": "## What's changed\n\n- Introducing Claude Sonnet 5: now the default model in Claude Code, with a native 1M-token context window and promotional pricing of $2/$10 per Mtok through August 31. Update to version 2.1.197 for access. https://www.anthropic.com/news/claude-sonnet-5\n",
+    "summary": {
+      "headline": "Claude Sonnet 5 신규 기본 모델 탑재",
+      "newFeatures": [
+        {
+          "text": "`Claude Sonnet 5` 가 Claude Code 기본 모델로 탑재됨 — 1M 토큰 네이티브 컨텍스트 윈도우 지원",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "기본 모델이 `Claude Sonnet 5` 로 전환됨. 접근하려면 `2.1.197` 이상으로 업데이트 필요",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "fixes": [],
+      "devImpact": [
+        {
+          "text": "기본 모델이 `Claude Sonnet 5` 로 변경되어 1M 토큰 컨텍스트를 기본으로 활용 가능함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "8월 31일까지 Mtok 당 $2/$10 프로모션 가격 적용 — 이후 정가 전환 시 비용 재산정 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-01T00:09:44.715Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.196",
     "tagName": "v2.1.196",
     "publishedAt": "2026-06-29T23:27:32Z",

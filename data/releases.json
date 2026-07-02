@@ -1,5 +1,253 @@
 [
   {
+    "version": "v2.1.198",
+    "tagName": "v2.1.198",
+    "publishedAt": "2026-07-01T20:45:36Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.198",
+    "originalBody": "## What's changed\n\n- Claude in Chrome is now generally available\n- Added background agent notifications in `claude agents` — sessions that need input or finish now fire the `Notification` hook (`agent_needs_input` / `agent_completed`)\n- Added `/dataviz` skill for chart and dashboard design guidance with a runnable color-palette validator\n- Gateway: added Claude Platform on AWS (anthropicAws) as an upstream provider; model-not-found responses now advance the failover chain\n- Background agents launched from `claude agents` now commit, push, and open a draft PR when they finish code work in a worktree, instead of stopping to ask\n- The built-in Explore agent now inherits the main session's model (capped at opus) instead of running on haiku\n- Subagents and context compaction now inherit the session's extended thinking configuration, improving output quality on delegated tasks\n- Fixed brief network drops mid-response aborting the turn — transient errors like ECONNRESET now retry with backoff instead of failing\n- Fixed excessive background classifier requests when sandboxed processes repeatedly accessed the same network host\n- Fixed background tasks in web, desktop, and VS Code task panels getting stuck on \"Running\" after they finish or after resuming a session\n- Fixed agent teams: a teammate that dies on an API error now reports \"failed\" to the lead, and messaging a stuck teammate wakes it to retry immediately\n- Fixed the `/diff` panel not refreshing when you switch branches or commit outside the session\n- Fixed markdown tables overflowing and wrapping their right border when rendered in fullscreen mode\n- Fixed Claude Platform on AWS and Mantle sessions dead-ending with \"Please run /login\" when the STS token expires — `awsAuthRefresh` now runs automatically\n- Fixed \"no route to host\" for local-network hosts in macOS background agent sessions by declaring Local Network entitlements\n- Fixed `/desktop` failing with \"Cannot determine working directory\" after entering and exiting a worktree\n- Fixed background agents repeatedly showing \"Reconnecting…\" every ~52 seconds on macOS while the agents view was open\n- Fixed pressing `←` inside `claude attach <id>` exiting to the shell instead of opening the agent view\n- Fixed `claude --bg` silently creating an unattachable session when combined with `--print`/`-p`; the conflicting flags are now rejected up front\n- Fixed the workflow progress view dropping the earliest agents from the list while the phase counter stayed correct in SDK and desktop-app sessions\n- Fixed `.claude/rules/` conditional rules not loading when the target file is reached via a symlinked path\n- Fixed Cmd+click not opening URLs in fullscreen mode in Warp on macOS\n- Fixed double-click word selection in fullscreen mode to select the entire URL including the scheme\n- Fixed plan mode not auto-allowing read-only tool calls when a session starts in plan mode\n- Fixed `/branch` deriving its default fork name from the compaction summary instead of the first real prompt\n- Improved focus mode: subagents launched in a turn now appear in its activity summary, and completed background notifications fold into a single count\n- Improved syntax highlighting accuracy in code blocks, diffs, and file previews by upgrading to highlight.js 11\n- Keyboard shortcut hints now show opt/cmd instead of alt/super when connected from a Mac over SSH\n- Improved API retry UX: the error reason is now shown after the second attempt, and a status page link replaces the spinner tip when the API is overloaded\n- `/login` now opens the sign-in dialog from the `claude agents` view instead of saying it isn't available\n- Subagents now treat messages from the agent that launched them as normal task direction; an agent's message is still never treated as the user's approval\n- Removed the `/agents` wizard; ask Claude to create or manage subagents, or edit `.claude/agents/` directly\n",
+    "summary": {
+      "headline": "크롬 GA와 백그라운드 에이전트 대폭 개선",
+      "newFeatures": [
+        {
+          "text": "Claude in Chrome 정식 출시(GA)",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`claude agents`의 백그라운드 에이전트가 입력 대기·완료 시 `Notification` 훅(`agent_needs_input`/`agent_completed`) 발화",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "차트·대시보드 디자인 가이드와 실행형 컬러 팔레트 검증기를 제공하는 `/dataviz` 스킬 추가",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "Gateway에 Claude Platform on AWS(`anthropicAws`) 업스트림 프로바이더 추가, model-not-found 응답 시 failover 체인으로 진행",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`claude agents`로 띄운 백그라운드 에이전트가 worktree 코드 작업 완료 시 중단하지 않고 commit·push 후 draft PR 자동 생성",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "내장 Explore 에이전트가 haiku 대신 메인 세션 모델(opus 상한)을 상속",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "서브에이전트와 컨텍스트 압축이 세션의 extended thinking 설정을 상속해 위임 작업 출력 품질 향상",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "focus mode 개선: 턴 중 실행된 서브에이전트가 활동 요약에 표시되고 완료된 백그라운드 알림은 단일 카운트로 접힘",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "highlight.js 11 업그레이드로 코드 블록·diff·파일 미리보기 구문 강조 정확도 향상",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "Mac에서 SSH 접속 시 키보드 단축키 힌트가 alt/super 대신 opt/cmd 표기",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "API 재시도 UX 개선: 2회차 시도 후 에러 사유 노출, API 과부하 시 스피너 팁 대신 status page 링크 표시",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "`/login`이 `claude agents` 뷰에서 사용 불가 대신 로그인 다이얼로그를 실제로 열도록 변경",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "서브에이전트가 자신을 실행한 에이전트의 메시지를 일반 작업 지시로 처리하되, 에이전트 메시지는 여전히 사용자 승인으로 간주하지 않음",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "`/agents` 마법사 제거 — 서브에이전트는 Claude에 요청하거나 `.claude/agents/`를 직접 편집",
+          "originalRefs": [
+            31
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "응답 도중 짧은 네트워크 끊김으로 턴이 중단되던 문제 수정 — `ECONNRESET` 같은 일시 오류는 backoff로 재시도",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "샌드박스 프로세스가 동일 네트워크 호스트에 반복 접근 시 백그라운드 classifier 요청이 과도하게 발생하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "web·desktop·VS Code 태스크 패널의 백그라운드 작업이 완료·세션 재개 후에도 \"Running\"으로 멈추던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "agent teams 수정: API 오류로 죽은 팀원이 리드에 \"failed\" 보고, 멈춘 팀원에게 메시지 보내면 즉시 깨어나 재시도",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "세션 외부에서 브랜치 전환·커밋 시 `/diff` 패널이 갱신되지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "fullscreen 모드에서 마크다운 테이블이 오른쪽 테두리를 넘쳐 감싸던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "STS 토큰 만료 시 Claude Platform on AWS·Mantle 세션이 \"Please run /login\"으로 막히던 문제 수정 — `awsAuthRefresh` 자동 실행",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "macOS 백그라운드 에이전트 세션에서 로컬 네트워크 호스트에 대한 \"no route to host\" 수정 — Local Network 권한(entitlement) 선언",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "worktree 진입·이탈 후 `/desktop`이 \"Cannot determine working directory\"로 실패하던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "agents 뷰가 열린 동안 macOS에서 백그라운드 에이전트가 약 52초마다 \"Reconnecting…\"을 반복하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`claude attach <id>` 내에서 `←` 키가 에이전트 뷰 대신 셸로 빠져나가던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`claude --bg`를 `--print`/`-p`와 조합 시 붙일 수 없는 세션이 조용히 생성되던 문제 수정 — 충돌 플래그를 사전 거부",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "SDK·desktop-app 세션에서 워크플로 진행 뷰가 phase 카운터는 유지한 채 가장 이른 에이전트를 목록에서 누락하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "symlink 경로로 대상 파일에 도달할 때 `.claude/rules/` 조건부 규칙이 로드되지 않던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "macOS Warp에서 fullscreen 모드 시 Cmd+click으로 URL이 열리지 않던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "fullscreen 모드에서 더블클릭 단어 선택이 scheme 포함 전체 URL을 선택하도록 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "plan mode로 세션 시작 시 read-only 도구 호출이 자동 허용되지 않던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "`/branch`가 기본 fork 이름을 첫 실제 프롬프트 대신 압축 요약에서 도출하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`/agents` 마법사가 제거되어 서브에이전트 생성·관리는 Claude에 요청하거나 `.claude/agents/` 파일을 직접 편집해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 9
+            }
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 완료·입력 대기가 `Notification` 훅으로 발화되므로 `agent_needs_input`/`agent_completed` 이벤트를 훅에서 처리 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "`claude --bg`와 `--print`/`-p` 조합은 이제 사전 거부되므로 해당 조합에 의존하던 스크립트는 수정 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 11
+            }
+          ]
+        },
+        {
+          "text": "Explore 에이전트가 opus 상한으로 메인 세션 모델을 상속해 haiku 대비 탐색 품질은 오르지만 토큰 사용량 증가 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-02T04:36:32Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.197",
     "tagName": "v2.1.197",
     "publishedAt": "2026-06-30T17:56:37Z",

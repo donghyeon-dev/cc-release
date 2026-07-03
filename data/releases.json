@@ -1,5 +1,200 @@
 [
   {
+    "version": "v2.1.199",
+    "tagName": "v2.1.199",
+    "publishedAt": "2026-07-02T23:35:18Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.199",
+    "summary": {
+      "headline": "서브에이전트 에러 전파·재시도 안정성 개선",
+      "newFeatures": [
+        {
+          "text": "`/skill-a /skill-b do XYZ` 처럼 스킬을 연달아 붙이면 선두 스킬 최대 5개까지 모두 로드됨 (기존엔 첫 번째만)",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "사용량 한도와 무관한 일시적 `429` rate-limit 에러는 구독자에 한해 backoff 재시도로 자동 처리됨 — 턴이 바로 실패하지 않음",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_RETRY_WATCHDOG` 설정 시 비용량성 일시 에러 기본 재시도 횟수가 300 으로 상향되고 `CLAUDE_CODE_MAX_RETRIES` 의 15 상한이 해제됨",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "`claude agents` 세션 행에서 PR 링크가 중복 `PR` 라벨 없이 `#N` 형태로만 표시됨",
+          "originalRefs": [
+            23
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "TLS 검사 프록시, `NODE_EXTRA_CA_CERTS` 누락, 만료 인증서로 인한 SSL 인증서 에러가 재시도를 소진하지 않고 즉시 실패하며 해결 힌트를 노출함",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "API 가 부분 출력 후 스트림 중간에 overloaded/server 에러를 낼 때 응답이 통째로 폐기되던 문제 수정 — 부분 응답을 미완료 표시와 함께 보존함",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "서브에이전트가 rate limit 이나 server 에러로 중단될 때 부분 작업을 부모에 반환하지 않고 조용히 실패하던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "서브에이전트가 API 에러(예: usage limit reached)를 성공 결과로 보고하던 문제 수정 — 이제 부모 에이전트에 에러로 전달됨",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Linux 에서 비정상 종료로 worker 레코드가 손상되면 background-agent 데몬이 약 50초마다 자신과 모든 실행 중 에이전트를 죽이던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "macOS 에서 SSH 로 background agent 콜드 스타트 시 `Could not switch to audit session` 오류로 실패하던 문제 수정 (2.1.196 회귀)",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`claude stop` 이 background-agent 재생성과 경합하면 조용히 무효화되던 문제 수정 — 재생성이 stop 을 존중함",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "background job 이 긴 명령을 실행하는 동안 진행 표시기가 수 분간 멈춰 있던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "메모리 부족 머신의 background 세션이 일반 에러만 보이던 문제 수정 — 이제 low memory 를 표시하고 리소스 확보를 안내함",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "background agent 완료 시 agent view 에서 remote 세션이 Working/Idle 사이로 잠깐 깜빡이던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "다른 서브에이전트가 작업 중인데 idle 서브에이전트가 agent panel 에서 사라지던 문제 수정 — 잉여 idle 에이전트는 펼칠 수 있는 요약 행으로 접힘",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "서브에이전트를 보는 중 `/model` 이나 `/fast` 입력이 조용히 lead 의 모델 선택기를 열던 문제 수정 — 명령이 lead 에 적용됨을 알리는 안내가 표시됨",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`SessionStart`, `Setup`, `SubagentStart` 훅이 exit code 2 로 종료할 때 stderr 를 숨기던 문제 수정 — 이제 에러가 트랜스크립트에 표시됨",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`claude --dangerously-skip-permissions daemon <subcommand>` 가 subcommand 실행 대신 채팅 프롬프트로 처리되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "재생성된 에이전트가 이전 에이전트 이름을 재사용할 때 `SendMessage` 가 조용히 잘못 라우팅되던 문제 수정 — 불일치를 감지해 재지정을 요청함",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "새 메시지 없는 세션을 열거나 재개할 때 트랜스크립트 파일이 불필요하게 커지던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`←` 또는 `/background` 로 세션을 백그라운드로 보낼 때 agent view 행에서 `/color` 가 사라지던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "startup 복구 대화상자에서 손상된 config 파일을 리셋하면 복구 불가능하게 파괴되던 문제 수정 — 이제 먼저 백업함",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "서로 다른 빌드나 config 디렉토리에서 세션을 실행하면 Claude in Chrome 이 재연결 페이지를 반복해서 열던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "plan mode 가 상태 변경 브라우저 도구 호출에 확인을 요청하지 않던 문제 수정 — 읽기 전용 `browser_batch` 호출은 올바르게 자동 허용됨",
+          "originalRefs": [
+            20
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "서브에이전트가 API 에러를 성공으로 위장하거나 부분 작업을 버리던 동작이 고쳐져, 멀티 에이전트 워크플로에서 실패가 부모로 정확히 전파됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            },
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_RETRY_WATCHDOG` 를 켜면 비용량성 일시 에러 재시도가 최대 300회까지 늘고 `CLAUDE_CODE_MAX_RETRIES` 상한이 풀리므로, 불안정 네트워크 환경의 재시도 정책 튜닝 여지가 커짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "`SessionStart`/`Setup`/`SubagentStart` 훅이 exit code 2 로 죽을 때 stderr 가 트랜스크립트에 노출되므로, 훅 디버깅이 쉬워짐.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 12
+            }
+          ]
+        }
+      ]
+    },
+    "originalBody": "## What's changed\n\n- Stacked slash-skill invocations like `/skill-a /skill-b do XYZ` now load all leading skills (up to 5), not just the first\n- Fixed SSL certificate errors (TLS-inspecting proxies, missing `NODE_EXTRA_CA_CERTS`, expired certs) burning retries before showing actionable guidance — they now fail immediately with the fix hint\n- Fixed streaming responses being discarded when the API emits a mid-stream overloaded/server error after partial output — the partial is now kept with an incomplete-response notice\n- Fixed subagents cut off by a rate limit or server error silently failing instead of returning their partial work to the parent\n- Fixed subagents reporting API errors (e.g. usage limit reached) as successful results — the error is now reported to the parent agent\n- Fixed the background-agent daemon on Linux killing itself and every running agent every ~50 seconds after an unclean shutdown left a corrupted worker record\n- Fixed background agents failing to cold-start over SSH on macOS with \"Could not switch to audit session\" (regression in 2.1.196)\n- Fixed `claude stop` being silently undone when it raced a background-agent respawn — the respawn now honors the stop\n- Fixed background job progress indicators stalling for minutes while the job ran long commands\n- Fixed background sessions on memory-starved machines showing a generic error — they now indicate low memory and suggest freeing resources\n- Fixed remote sessions briefly flapping between Working and Idle in the agent view when a background agent completes\n- Fixed idle subagents vanishing from the agent panel while other subagents were still working; surplus idle agents now collapse into an expandable summary row\n- Fixed typing `/model` or `/fast` while viewing a subagent silently opening the lead's model picker — a notice now explains the command applies to the lead\n- Fixed `SessionStart`, `Setup`, and `SubagentStart` hooks silently hiding stderr when exiting with code 2 — the error is now shown in the transcript\n- Fixed `claude --dangerously-skip-permissions daemon <subcommand>` being treated as a chat prompt instead of running the subcommand\n- Fixed `SendMessage` silently misrouting when a re-spawned agent reuses a previous agent's name — the tool now detects the mismatch and asks the caller to retarget\n- Fixed opening or resuming a session with no new messages needlessly growing the transcript file\n- Fixed backgrounding a session with `←` or `/background` dropping its `/color` from the agent view row\n- Fixed resetting a corrupted config file from the startup recovery dialog destroying it unrecoverably — it now backs up the file first\n- Fixed Claude in Chrome repeatedly opening the reconnect page when sessions run from different builds or config directories\n- Fixed plan mode not prompting for state-changing browser tool calls; read-only `browser_batch` calls are now correctly auto-allowed\n- Transient server rate-limit errors (429s unrelated to your usage limit) are now retried automatically with backoff for subscribers instead of failing the turn\n- `CLAUDE_CODE_RETRY_WATCHDOG` now raises the default retry count for non-capacity transient errors to 300 and lifts the cap of 15 on `CLAUDE_CODE_MAX_RETRIES`\n- `claude agents` session rows now show pull-request links as bare `#N` without the redundant \"PR\" label\n",
+    "summarizedAt": "2026-07-03T00:03:21.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.198",
     "tagName": "v2.1.198",
     "publishedAt": "2026-07-01T20:45:36Z",

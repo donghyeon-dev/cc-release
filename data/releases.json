@@ -1,5 +1,167 @@
 [
   {
+    "version": "v2.1.201",
+    "tagName": "v2.1.201",
+    "publishedAt": "2026-07-03T23:50:35Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.201",
+    "originalBody": "## What's changed\n\n- Claude Sonnet 5 sessions no longer use the mid-conversation system role for harness reminders\n",
+    "summary": {
+      "headline": "Sonnet 5 하네스 리마인더 전달 방식 변경",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "Sonnet 5 세션이 하네스 리마인더 전달에 대화 중간 `system` role 을 더 이상 사용하지 않음",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "fixes": [],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-07-04T00:07:11Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.200",
+    "tagName": "v2.1.200",
+    "publishedAt": "2026-07-03T16:52:33Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.200",
+    "originalBody": "## What's changed\n\n- Changed `AskUserQuestion` dialogs to no longer auto-continue by default; opt into an idle timeout via `/config`\n- Changed the \"default\" permission mode to \"Manual\" across the CLI, `--help`, VS Code, and JetBrains; `--permission-mode manual` and `\"defaultMode\": \"manual\"` are accepted alongside `default`\n- Fixed a crash at startup when `disabledMcpServers` or `enabledMcpServers` in `.claude.json` is set to a non-array value\n- Fixed background sessions silently stopping mid-turn after sleep/wake or when reopening a stalled session\n- Fixed background sessions re-running a turn cancelled with Esc after a stall respawn\n- Fixed background agents never starting again after a crash left a stale `daemon.lock` whose PID the OS reused\n- Fixed background-agent daemon handover so a reinstalled older build can no longer take over the daemon; build recency is now judged by the version's embedded build timestamp\n- Fixed background-agent roster issues: transient corruption permanently disabling orphan cleanup, older binaries not preserving fields written by newer versions, and socket auth tokens being stripped during daemon restarts\n- Fixed subagents cut off by a rate limit before producing any text output returning an empty result instead of failing cleanly\n- Fixed control bytes from background-agent output reaching the terminal in the agent view\n- Fixed `claude agents --plugin-dir <dir>` not showing the plugin's agents and skills in the agent view when the flag is placed after `agents`\n- Fixed project-scoped plugins not loading correctly from git worktrees of the same repository\n- Fixed `/mcp` server list not tracking focus for screen readers and magnifiers\n- Fixed voice dictation showing a misleading \"Voice connection failed\" message when a recording captures no audio\n- Fixed rendering flicker under tmux 3.4+ by enabling synchronized terminal output\n- Improved screen-reader output: decorative glyphs are now hidden, transcript symbols read as short labels, and nested tables read as `Header: value.` lines\n- Improved the install script to explain when installation is killed by the system running out of memory\n",
+    "summary": {
+      "headline": "권한 기본 모드 Manual 전환, 백그라운드 세션 다수 수정",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "`AskUserQuestion` 다이얼로그가 기본으로 자동 진행하지 않음 — `/config` 에서 idle timeout 을 opt-in 해야 함",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "권한 기본 모드가 CLI·`--help`·VS Code·JetBrains 전반에서 \"default\" 에서 \"Manual\" 로 변경됨 (`--permission-mode manual`, `\"defaultMode\": \"manual\"` 도 `default` 와 함께 허용)",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "스크린 리더 출력 개선 — 장식용 글리프 숨김, transcript 기호를 짧은 라벨로 읽음, 중첩 테이블을 `Header: value.` 줄로 읽음",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "설치 스크립트가 시스템 메모리 부족(OOM)으로 설치가 종료된 경우를 설명하도록 개선",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`.claude.json` 의 `disabledMcpServers`/`enabledMcpServers` 가 배열이 아닌 값일 때 시작 시 크래시하던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 sleep/wake 후 또는 멈춘 세션 재오픈 시 턴 도중 조용히 중단되던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "stall 재생성 후 Esc 로 취소한 턴을 백그라운드 세션이 다시 실행하던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "크래시로 남은 stale `daemon.lock` 의 PID 를 OS 가 재사용하면 백그라운드 에이전트가 다시 시작되지 않던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "재설치된 구버전 빌드가 daemon 을 탈취하지 못하도록 handover 수정 — 빌드 최신 여부를 embedded build timestamp 로 판정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 roster 문제 수정 — 일시적 손상이 orphan 정리를 영구 비활성화, 구버전 바이너리가 신버전 필드 미보존, daemon 재시작 시 socket 인증 토큰 유실",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "rate limit 으로 텍스트 출력 전에 끊긴 서브에이전트가 깔끔히 실패하지 않고 빈 결과를 반환하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 출력의 control byte 가 agent view 터미널로 새어나오던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`claude agents --plugin-dir <dir>` 에서 `agents` 뒤에 플래그를 두면 플러그인의 에이전트·스킬이 agent view 에 표시되지 않던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "동일 레포의 git worktree 에서 project-scoped 플러그인이 제대로 로드되지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`/mcp` 서버 목록이 스크린 리더·확대기용 focus 를 추적하지 못하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "녹음에 오디오가 없을 때 음성 받아쓰기가 오해 소지 있는 \"Voice connection failed\" 메시지를 표시하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "tmux 3.4+ 에서 synchronized terminal output 활성화로 렌더링 깜빡임 수정",
+          "originalRefs": [
+            14
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "권한 기본 모드가 \"Manual\" 로 바뀌어 별도 설정 없이는 각 작업에 수동 승인이 필요해짐 — 기존 자동 흐름에 의존하던 스크립트/워크플로우 재확인 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "`AskUserQuestion` 이 더 이상 자동 진행하지 않으므로 무인 실행 환경에서는 `/config` 로 idle timeout 을 명시 opt-in 해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-04T00:07:11Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.199",
     "tagName": "v2.1.199",
     "publishedAt": "2026-07-02T23:35:18Z",

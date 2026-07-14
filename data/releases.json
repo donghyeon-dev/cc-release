@@ -1,5 +1,973 @@
 [
   {
+    "version": "v2.1.208",
+    "tagName": "v2.1.208",
+    "publishedAt": "2026-07-14T01:10:42Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.208",
+    "originalBody": "## What's changed\n\n- Added screen reader mode: opt-in plain-text rendering for screen reader users. Run `claude --ax-screen-reader`, set CLAUDE_AX_SCREEN_READER=1, or add \"axScreenReader\": true to settings.\n- Added `vimInsertModeRemaps` setting: map two-key insert-mode sequences like `jj` to Escape in vim mode\n- Added `CLAUDE_CODE_PROCESS_WRAPPER`: agent view and the background service now honor a corporate launcher by running every Claude Code self-spawn through a required wrapper executable\n- Added mouse-click support for multi-select menus and \"Other\" input rows in fullscreen mode\n- Fixed fast mode staying off after switching back to a model that supports it — it now restores automatically when enabled in settings\n- Fixed replies typed to a background agent being lost when delivery fails — the text is now saved and delivered when the session restarts\n- Fixed background-session attach failing permanently (\"Couldn't start the background daemon\") after an update replaced the binary a running `claude agents` process was launched from\n- Fixed the context window (and auto-compact indicator) briefly resetting to 200k after the CLI auto-updates, causing a false \"100% context used\" when resuming long-context sessions\n- Fixed supervised and background sessions crashing when a server closed an HTTP/2 connection with a GOAWAY while requests were in flight\n- Fixed truncated stream-json/JSON output and missing result message when piping large responses from `claude -p`\n- Fixed `CLAUDE_CODE_MAX_OUTPUT_TOKENS` and similar env vars silently using the mantissa of scientific-notation values (`1e6` became `1`)\n- Fixed very large markdown tables stalling rendering or using excessive memory; tables over 200 rows show the first 200 with a \"… N more rows\" notice\n- Fixed the Edit tool failing on files modified after reading when the target text still matches uniquely\n- Fixed Read reporting empty files as \"shorter than offset\", Grep silently returning \"No files found\" for invalid regex patterns, Grep count mode under-reporting totals when paginated, and Glob crashing with an unclear error when the pattern, path, or working directory contained a null byte\n- Fixed `apiKeyHelper` script failures being hidden behind a generic 401 after ~10 silent retries; the script's own error is now shown within 3 attempts\n- Fixed Bedrock streaming requests failing with a misleading \"Truncated event message received\" when a gateway transforms the response — the error now names the content-type and points at the proxy\n- Fixed `/upgrade` showing a login flow instead of the upgrade URL when the browser fails to open\n- Fixed stream-json input killing the session on blank CRLF or whitespace-only lines from Windows-style SDK hosts\n- Fixed headless stream-json sessions hanging permanently when a `control_request` carried a non-string `set_model` payload; the CLI now answers with an error response\n- Fixed repeated \"No completion record was found\" notices on session resume — orphaned background tasks now collapse into a single summary\n- Fixed Remote Control clients attaching to a terminal-hosted session not seeing background agents and workflow progress until a task started or stopped\n- Fixed the Agent tool launching with no tools when a subagent's `tools` list resolves to nothing — it now returns a clear error naming the unrecognized entries\n- Fixed `/usage` showing stale cached bars over fresher data, and `/mcp` not reclassifying placeholder servers after config edits\n- Fixed \"Change directory\" in SDK hosts (e.g. Claude Desktop) failing with \"A turn is in progress\" on idle sessions that have a running background task\n- Fixed the workflow save dialog showing `~/.claude/workflows/` instead of the `CLAUDE_CONFIG_DIR` location for user-scope saves\n- Fixed `/release-notes` adding the viewed notes to the model's context — \"Show all\" previously injected the entire changelog into every subsequent request\n- Fixed a memory leak in the agent view where pasted images were retained for the screen's lifetime after sending peek replies\n- Fixed SDK sessions losing agents defined via the initialize request when a plugin refresh ran before the client attached\n- Fixed several memory leaks in long sessions: MCP stdio server stderr accumulating up to 64 MB per server, LSP documents staying open indefinitely (now LRU with 50-doc cap), async hook output retained after backgrounding, and unbounded growth in headless/SDK sessions from large tool-result payloads\n- Fixed a memory blowup when reading files with extremely long single lines using offset/limit — the read now returns a clean error instead of loading the whole line\n- Fixed multi-second per-turn slowdowns in sessions with many permission deny/ask rules — rule matchers are now compiled once and cached\n- Improved input responsiveness while agent task lists update — task updates no longer re-render the entire UI\n- Reduced per-tool-call CPU overhead in print/SDK sessions with many MCP tools by caching tool-pool assembly (up to 7x faster tool rounds at high tool counts)\n- Reduced memory usage by bounding the file edit read cache to 16 MB instead of pinning up to 1,000 full files\n- Reduced session transcript size (up to 79x in edit-heavy sessions) and bounded checkpoint disk usage by pruning superseded file-history backups\n- Reduced memory usage when resuming sessions with background agents or forks spawned from large conversations\n- Completed background agents now stay listed in `/tasks` until cleanup instead of vanishing the moment they finish\n- Attaching to a stopped background agent now shows its transcript immediately while the session warms up, instead of a blank \"Session is starting\" screen\n- Background sessions: an older daemon no longer silently restarts workers spawned by a newer version onto the older binary\n- Agent view: Ctrl+X now deletes renamed-branch worktrees, never destroys unpushed commits, keeps the session row when a worktree is kept, and reused worktree names reset to the current base\n- Catastrophic removals (e.g. `rm -rf ~`) in commands containing `$(…)`/backticks/`<(…)` now prompt in `--dangerously-skip-permissions` and auto mode, matching the plain form\n- `/install-github-app` and the `/mcp` settings menu no longer open in background sessions\n- MCP servers configured with an empty URL now show as \"not configured\" in `/mcp` instead of a config error\n- `/usage` now shows your last-known usage bars with an \"as of\" note when the usage endpoint is rate-limited, instead of an error screen\n- Fixed Bedrock auth failing with \"Session token not found or invalid\" for AWS SSO profiles whose sso_region differs from the Bedrock region (2.1.207 regression)\n",
+    "summary": {
+      "headline": "접근성 스크린리더 모드 + 대규모 메모리 누수 다수 수정",
+      "newFeatures": [
+        {
+          "text": "스크린리더 사용자용 평문 렌더링 모드 추가 — `claude --ax-screen-reader`, `CLAUDE_AX_SCREEN_READER=1`, 또는 설정 `\"axScreenReader\": true` 로 활성화",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "vim 모드에서 `jj` 같은 두 키 삽입모드 시퀀스를 Escape 로 매핑하는 `vimInsertModeRemaps` 설정 추가",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PROCESS_WRAPPER` 추가 — 모든 Claude Code self-spawn 을 지정한 래퍼 실행파일로 강제 실행해 사내 런처 연동 지원",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "전체화면 모드의 멀티셀렉트 메뉴와 \"Other\" 입력행에 마우스 클릭 지원 추가",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "완료된 백그라운드 에이전트가 정리 전까지 `/tasks` 에 계속 표시됨 (완료 즉시 사라지던 동작 개선)",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "중단된 백그라운드 에이전트에 attach 시 세션 준비 중에도 트랜스크립트를 즉시 표시 (빈 \"Session is starting\" 화면 대신)",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "`$(…)`/백틱/`<(…)` 포함 명령의 파괴적 삭제(`rm -rf ~` 등)가 `--dangerously-skip-permissions` 및 auto 모드에서도 프롬프트하도록 통일",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "`/usage` 가 usage 엔드포인트 rate-limit 시 에러 화면 대신 마지막 사용량 막대를 \"as of\" 표기와 함께 표시",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "파일 편집 read 캐시를 최대 1,000개 파일 고정 대신 16 MB 로 제한해 메모리 사용 감소",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "편집 많은 세션의 트랜스크립트 크기를 최대 79배 축소하고 중복 file-history 백업 정리로 체크포인트 디스크 사용량 제한",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "MCP 도구 많은 print/SDK 세션에서 tool-pool 조립 캐싱으로 tool round 최대 7배 빨라짐",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "permission deny/ask 규칙 많은 세션에서 rule matcher 를 1회 컴파일·캐시해 턴당 수초 지연 제거",
+          "originalRefs": [
+            30
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "지원 모델로 다시 전환 시 fast mode 가 꺼진 채 남던 문제 수정 — 설정에서 켜져 있으면 자동 복원",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "CLI auto-update 후 context window(및 auto-compact 표시)가 일시적으로 200k 로 리셋되어 긴 세션 재개 시 \"100% context used\" 오표시되던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "HTTP/2 GOAWAY 로 서버가 연결을 닫을 때 supervised·백그라운드 세션이 크래시하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`claude -p` 로 대형 응답 파이핑 시 stream-json/JSON 출력이 잘리고 result 메시지가 누락되던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_MAX_OUTPUT_TOKENS` 등 환경변수가 과학표기값(`1e6`)의 가수부만 사용해 `1` 로 처리되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "200행 초과 대형 markdown 테이블이 렌더링을 멈추거나 과도한 메모리를 쓰던 문제 수정 — 앞 200행만 표시하고 \"… N more rows\" 안내",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "읽은 뒤 수정된 파일에서 대상 텍스트가 여전히 유일하게 일치해도 Edit 도구가 실패하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`apiKeyHelper` 스크립트 실패가 ~10회 조용한 재시도 후 일반 401 뒤에 숨던 문제 수정 — 3회 내에 스크립트 자체 오류 노출",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "긴 세션의 다수 메모리 누수 수정 — MCP stdio stderr 서버당 최대 64 MB 누적, LSP 문서 무한 유지(50개 LRU 로 제한), backgrounding 후 async hook 출력 잔존, headless/SDK 무한 증가",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "headless stream-json 세션에서 `control_request` 의 `set_model` 페이로드가 비문자열일 때 영구 hang 되던 문제 수정 — 이제 에러 응답 반환",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "AWS SSO 프로필의 `sso_region` 이 Bedrock region 과 다를 때 `Session token not found or invalid` 오류로 Bedrock 인증이 실패하던 2.1.207 회귀 수정",
+          "originalRefs": [
+            44
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`--ax-screen-reader` 플래그·`CLAUDE_AX_SCREEN_READER` 환경변수·`axScreenReader` 설정키가 신설되어 접근성 요구 환경에서 평문 렌더링 옵트인 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PROCESS_WRAPPER` 환경변수 신설 — 사내 정책상 모든 self-spawn 을 래퍼로 강제해야 하는 환경에서 설정 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "Bedrock 사용 시 AWS SSO 프로필의 `sso_region` 이 Bedrock region 과 다르면 2.1.207 에서 인증이 깨졌으나 이번 버전에서 복구됨 — 2.1.207 사용자는 업그레이드 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 10
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_MAX_OUTPUT_TOKENS` 를 `1e6` 같은 과학표기로 지정했다면 실제로 `1` 로 적용됐던 만큼 십진수 표기로 재확인 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-14T04:40:20Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.207",
+    "tagName": "v2.1.207",
+    "publishedAt": "2026-07-11T00:52:10Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.207",
+    "originalBody": "## What's changed\n\n- Auto mode is now available without `CLAUDE_CODE_ENABLE_AUTO_MODE` opt-in on Bedrock, Vertex AI, and Foundry; disable via `disableAutoMode` in settings\n- Fixed the terminal freezing and keystrokes lagging while streaming responses containing very long lists, tables, paragraphs, or code blocks\n- Fixed remote managed settings from a non-interactive run (`claude -p`, the SDK) being permanently recorded as consented without ever showing the security consent dialog\n- Fixed spurious prompt-injection warnings triggered by benign system-generated conversation updates\n- Fixed the auto-updater overwriting a custom launcher script or symlink at `~/.local/bin/claude` on every release; `/doctor` now reports an externally managed launcher\n- Fixed compound commands with `cd` prompting for permission when the only output redirect was to `/dev/null`\n- Fixed the transcript jumping above the start of the answer when a response finishes streaming\n- Fixed `extensions.worktreeConfig` being left in the repo's `.git/config` (breaking go-git tools like `tea`) after the last `worktree.sparsePaths` worktree was removed\n- Fixed malformed bracket patterns in rules globs, skill paths, `.ignore`, and `.worktreeinclude` breaking file reads, file suggestions, and worktree creation\n- Fixed a crash loop in agent teams where a malformed teammate mailbox message caused repeated errors every second until the mailbox file was manually deleted\n- Fixed background sessions auto-named by accepting a plan not showing that name on their agent-view row\n- Fixed background sessions that entered a git worktree resuming blank after a cold reopen from the agent list\n- Fixed Remote Control task status updates being lost when the connection recovered from a network interruption or credential refresh\n- Fixed Remote Control sessions hosted by the desktop app not showing background agent and workflow progress on mobile and web\n- Fixed Deep research runs labeling every Fetch-phase agent \"unknown\" — chips now show the source hostname\n- Fixed Bedrock repeatedly requesting fresh AWS SSO credentials from IAM Identity Center on every API request\n- Improved agent view: pasting the same text again now expands the collapsed `[Pasted text #N]` placeholder instead of adding a second one\n- Improved agent view: blocked session peeks now lead with the question and show a worded staleness clock (`waiting 3m`) instead of the same timestamp twice\n- Changed Bedrock, Vertex, and Claude Platform on AWS to default to Claude Opus 4.8\n- Changed auto mode to no longer read `autoMode` from `.claude/settings.local.json` (repo-resident); use `~/.claude/settings.json` instead\n- Fixed an indefinite hang on Windows when AWS credential resolution stalls (e.g. a stuck `credential_process`): the 60-second stall guard now fires instead of waiting forever.\n- Plugin hooks/monitors/MCP headersHelper: `${user_config.*}` in shell-form commands is now rejected (shell-injection fix). Hooks: use exec form (`args` array) or `$CLAUDE_PLUGIN_OPTION_<KEY>`; monitors and headersHelper: read the value inside the script (config file or the server's `env` block).\n- Plugin option values (`pluginConfigs`) are no longer read from project-level `.claude/settings.json`; only user, `--settings`, and managed settings are honored\n- Fixed `/usage-credits` amount inputs silently stripping malformed values (e.g. a pasted timestamp) to digits; malformed amounts are now rejected with an error, and amounts over $1,000 require a typed confirmation\n",
+    "summary": {
+      "headline": "auto 모드 옵트인 제거 + Bedrock/Vertex Opus 4.8 기본화",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "Bedrock·Vertex AI·Foundry 에서 `CLAUDE_CODE_ENABLE_AUTO_MODE` 옵트인 없이 auto 모드 사용 가능 — 설정 `disableAutoMode` 로 비활성화",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Claude Platform on AWS 의 기본 모델이 Claude Opus 4.8 로 변경됨",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "auto 모드가 `.claude/settings.local.json`(repo 내)의 `autoMode` 를 더 이상 읽지 않음 — `~/.claude/settings.json` 사용",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "플러그인 옵션값(`pluginConfigs`)을 project 레벨 `.claude/settings.json` 에서 더 이상 읽지 않음 — user·`--settings`·managed 설정만 허용",
+          "originalRefs": [
+            22
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "매우 긴 리스트·테이블·문단·코드블록을 스트리밍할 때 터미널이 멈추고 키 입력이 지연되던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "비대화형 실행(`claude -p`, SDK)의 remote managed 설정이 보안 동의 다이얼로그 없이 영구 consented 로 기록되던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "정상적인 시스템 생성 대화 업데이트에서 잘못된 prompt-injection 경고가 뜨던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "auto-updater 가 릴리즈마다 `~/.local/bin/claude` 의 커스텀 런처 스크립트/심링크를 덮어쓰던 문제 수정 — `/doctor` 가 외부 관리 런처를 보고",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "유일한 출력 리다이렉트가 `/dev/null` 인데도 `cd` 포함 복합 명령이 권한을 묻던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "마지막 `worktree.sparsePaths` worktree 제거 후 `extensions.worktreeConfig` 가 repo `.git/config` 에 남아 `tea` 등 go-git 도구가 깨지던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "agent team 에서 잘못된 teammate mailbox 메시지가 매초 반복 에러를 내는 크래시 루프 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "Windows 에서 AWS 자격증명 해석이 멈출 때(예: `credential_process` 정지) 무한 hang 되던 문제 수정 — 60초 stall guard 발동",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "`/usage-credits` 금액 입력이 잘못된 값(붙여넣은 타임스탬프 등)을 숫자만 남기던 문제 수정 — 이제 거부하고 $1,000 초과는 타이핑 확인 요구",
+          "originalRefs": [
+            23
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Bedrock·Vertex AI·Foundry 에서 `CLAUDE_CODE_ENABLE_AUTO_MODE` 옵트인이 사라져 auto 모드가 기본 활성 — 원치 않으면 `disableAutoMode` 설정 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Claude Platform on AWS 기본 모델이 Opus 4.8 로 상향됨 — 비용·토큰 사용량 변동 주의.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "auto 모드 설정 소스가 바뀌어 repo 내 `.claude/settings.local.json` 의 `autoMode` 는 무시됨 — `~/.claude/settings.json` 으로 이전 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "플러그인 옵션값을 project `.claude/settings.json` 에서 더 이상 읽지 않으므로 해당 위치에 의존하던 플러그인 설정은 user/managed 로 옮겨야 함 (shell-injection 완화 목적).",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-14T04:40:20Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.206",
+    "tagName": "v2.1.206",
+    "publishedAt": "2026-07-10T01:45:26Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.206",
+    "originalBody": "## What's changed\n\n- Added directory path suggestions to `/cd`, matching `/add-dir` behavior\n- Added a `/doctor` check that proposes trimming checked-in `CLAUDE.md` files by cutting content Claude could derive from the codebase\n- `/commit-push-pr` now auto-allows `git push` to the repo's configured push remote (`remote.pushDefault`, or the sole remote when only one is configured) in addition to `origin`\n- Gateway: `/login` now supports Anthropic-operated public gateway endpoints\n- `EnterWorktree` now asks for confirmation before entering a git worktree outside the project's `.claude/worktrees/` directory\n- Background agents now upgrade to a new version in the background right after a Claude Code update, instead of paying a slow stale-session upgrade when you attach\n- Fixed an expired login failing every model with a misleading \"There's an issue with the selected model\" error instead of prompting to run `/login`\n- Fixed `claude --resume` and `--continue` not responding to keyboard input on startup\n- Fixed MCP servers configured via `--mcp-config` or `.mcp.json` ignoring a per-server `request_timeout_ms`, which caused long-running MCP tool calls to time out at the 60s default in fresh sessions\n- Fixed `CLAUDE_CODE_EXTRA_BODY` being silently ignored by `claude agents` / `--bg` background workers; the shell-exported override now follows the dispatching session\n- Fixed OAuth MCP servers requiring manual re-authentication after a single failed token refresh\n- Fixed `--permission-prompt-tool` pointing at an MCP server crashing with \"MCP tool not found\" on cold start before the server finishes connecting\n- Fixed `/model` picker rows printing a price for a different model than the row named, and stopped quoting first-party list prices on providers that don't bill them\n- Fixed server-provided model rows being misplaced in the `/model` picker when an entitlement or allowlist restriction drops the row they were positioned against\n- Fixed desktop sessions getting stuck showing \"running\" after a slash command was sent mid-turn\n- Fixed keyboard input being ignored in the agents view when a setup prompt appeared before a bare `claude --resume` on Windows\n- Fixed `claude rm` leaving the removed job in the daemon roster, causing the row to reappear in `claude agents`\n- Fixed `/remote-control` showing \"Unknown command\" when logged out — it now explains how to sign in\n- Fixed left arrow not stepping back out of a phase or agent in the workflow detail view\n- Fixed `/status` listing the same broken-install warning twice\n- Fixed false \"disused plugin\" tips and skewed disuse telemetry for LSP plugins\n- Fixed `/doctor`'s update check to compare Homebrew installs against their cask's channel instead of the settings channel\n- Fixed the fullscreen jump-to-bottom pill suggesting Ctrl+End on macOS, not showing rebound chords, and wrapping over the transcript\n- Bedrock: fixed a multi-minute startup hang when using an `awsCredentialExport` helper on networks with restricted egress\n- Improved `/code-review` findings quality on claude-opus-4-8 across all effort levels\n- Improved agents view: status column now uses full terminal width instead of truncating at 64 characters\n- Changed agents view: Ctrl+X now permanently removes a completed session, and sessions no longer render twice; deleted background jobs stay deleted\n",
+    "summary": {
+      "headline": "`/cd` 경로 제안 + 백그라운드 에이전트 선제 업그레이드",
+      "newFeatures": [
+        {
+          "text": "`/cd` 에 `/add-dir` 와 동일한 디렉토리 경로 제안 추가",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/doctor` 에 codebase 로부터 유추 가능한 내용을 잘라 checked-in `CLAUDE.md` 를 다듬어주는 점검 추가",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`EnterWorktree` 가 프로젝트 `.claude/worktrees/` 밖 worktree 진입 시 확인을 요구하도록 추가",
+          "originalRefs": [
+            4
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/commit-push-pr` 이 `origin` 외에 repo 의 설정된 push remote(`remote.pushDefault`, 또는 단일 remote)로의 `git push` 도 자동 허용",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "Gateway: `/login` 이 Anthropic 운영 public gateway 엔드포인트를 지원",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트가 Claude Code 업데이트 직후 백그라운드에서 새 버전으로 업그레이드 — attach 시 느린 stale 세션 업그레이드 제거",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "claude-opus-4-8 에서 모든 effort 레벨의 `/code-review` 발견 품질 개선",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "agents view 상태 열이 64자 절단 대신 터미널 전체 폭을 사용",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "agents view: Ctrl+X 가 완료된 세션을 영구 삭제하고 세션 중복 렌더 제거 — 삭제된 백그라운드 작업은 삭제 상태 유지",
+          "originalRefs": [
+            26
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "로그인 만료 시 모든 모델이 `issue with the selected model` 오류로 실패하던 문제 수정 — `/login` 실행 안내로 변경",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`claude --resume` 및 `--continue` 가 시작 시 키보드 입력에 반응하지 않던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`--mcp-config`/`.mcp.json` 의 서버별 `request_timeout_ms` 가 무시되어 긴 MCP 도구 호출이 fresh 세션에서 60초 기본값에 타임아웃되던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_EXTRA_BODY` 가 `claude agents`/`--bg` 백그라운드 워커에서 무시되던 문제 수정 — shell-export override 가 dispatching 세션을 따라감",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "단일 토큰 갱신 실패 후 OAuth MCP 서버가 수동 재인증을 요구하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`/model` picker 행이 행 이름과 다른 모델 가격을 표시하던 문제 수정 — 청구하지 않는 provider 의 1st-party 정가 표시 중단",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Windows 에서 bare `claude --resume` 앞에 setup 프롬프트가 뜨면 agents view 에서 키보드 입력이 무시되던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`claude rm` 이 제거된 작업을 daemon roster 에 남겨 `claude agents` 에 행이 다시 나타나던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Bedrock: 제한된 egress 네트워크에서 `awsCredentialExport` 헬퍼 사용 시 수분간 시작 hang 되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`/commit-push-pr` 이 `remote.pushDefault`(또는 단일 remote)로의 push 도 자동 허용하므로 origin 외 remote 를 쓰는 워크플로에서 추가 권한 프롬프트가 줄어듦.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`--mcp-config`/`.mcp.json` 서버별 `request_timeout_ms` 가 이제 존중되어 긴 MCP 도구 호출의 60초 조기 타임아웃이 해소됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_EXTRA_BODY` shell-export 가 백그라운드 워커에도 전달되므로 body override 에 의존하는 프록시/게이트웨이 설정이 `--bg` 에서도 동작.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-14T04:40:20Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.205",
+    "tagName": "v2.1.205",
+    "publishedAt": "2026-07-08T21:22:06Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.205",
+    "originalBody": "## What's changed\n\n- Added an auto mode rule that blocks tampering with session transcript files\n- Fixed `--json-schema` silently producing unstructured output when the schema was invalid, and schemas using the `format` keyword being rejected\n- Fixed a message sent while Claude was working being silently lost when the turn ended at the `--max-turns` limit\n- Fixed Windows worktree removal deleting files outside the worktree when an NTFS junction or directory symlink existed inside it\n- Fixed background agents staying shown as \"failed\" or \"completed\" in the agent list after being resumed with `SendMessage`\n- Fixed background jobs flipping from \"needs input\" back to \"working\" in the agent list when the agent's turn contained no readable text\n- Fixed `claude attach` erroring when a background agent was mid-upgrade restart instead of waiting for it to come back\n- Fixed session-to-PR linking missing a PR created in a Bash call whose output exceeded the 30K inline limit\n- Fixed `claude mcp add-from-claude-desktop` getting stuck when a server name contains unsupported characters; invalid names are now reported and remaining servers still import\n- Fixed a plugin LSP server that fails to initialize preventing a valid LSP server from another plugin handling the same file extension\n- Fixed a Windows crash when the directory Claude was launched from is deleted, locked, or unmounted while a command is running\n- Fixed a crash when a file watcher was closed while a directory scan was still in flight\n- Fixed project verify skills being rewritten on every session instead of only when a documented command changed\n- Fixed the agent view rendering one line too high and clipping its header when the job list slightly overflowed the screen\n- Fixed background tasks in the web and mobile Remote Control panels showing stale \"Running\" status by forwarding full task state on every membership change\n- Improved auto mode to ask before running `rm -rf` on a variable it can't resolve from context\n- Auto-update binary downloads now stream to disk instead of buffering in memory, cutting the updater's peak memory usage by roughly 400 MB\n- Background task notifications now explicitly state that no human input has occurred, preventing fabricated in-transcript approvals from being acted on\n- Improved agent view: sessions that edit, merge, comment on, or push to an existing PR now link it in `claude agents`\n- Improved agent view: rows now show a colored state word and a classifier-written headline instead of raw tool call text, and the peek opens with full status including the exact ask for blocked sessions\n- `/doctor` is now a full setup checkup that can diagnose and fix issues; `/checkup` is its alias\n- Reserved the \"Claude Browser\" MCP server name (alongside \"Claude Preview\") ahead of the Claude Desktop pane rename; user-configured MCP servers can no longer register under either name\n- Fixed Cowork VM-mode local-agent sessions failing to start with \"Not logged in · Please run /login\" on CLI 2.1.203+\n",
+    "summary": {
+      "headline": "`--json-schema` 검증 강화 + auto-update 메모리 400 MB 절감",
+      "newFeatures": [
+        {
+          "text": "세션 트랜스크립트 파일 변조를 차단하는 auto 모드 규칙 추가",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/doctor` 가 문제 진단·수정까지 하는 전체 setup 점검으로 확장됨 — `/checkup` 이 별칭",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "auto-update 바이너리 다운로드를 메모리 버퍼링 대신 디스크로 스트리밍해 updater 최대 메모리를 약 400 MB 절감",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "백그라운드 작업 알림이 사람 입력이 없었음을 명시해 트랜스크립트 내 조작된 승인이 실행되는 것을 방지",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "agent view: PR 을 편집·merge·comment·push 하는 세션이 `claude agents` 에서 해당 PR 을 링크",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "agent view: 행이 raw tool call 대신 색상 상태 단어와 classifier 작성 헤드라인을 표시하고, peek 이 blocked 세션의 정확한 질문까지 전체 상태로 열림",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "Claude Desktop pane 개명에 앞서 \"Claude Browser\" MCP 서버명을 (\"Claude Preview\" 와 함께) 예약 — 사용자 MCP 서버는 두 이름으로 등록 불가",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "auto 모드가 context 로 해석 불가한 변수에 `rm -rf` 실행 전 확인하도록 개선",
+          "originalRefs": [
+            15
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`--json-schema` 가 유효하지 않은 스키마에서 조용히 비구조화 출력을 내고 `format` 키워드 스키마가 거부되던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "Claude 작업 중 보낸 메시지가 턴이 `--max-turns` 한계에서 끝날 때 조용히 유실되던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "Windows worktree 제거가 내부에 NTFS junction/디렉토리 심링크가 있을 때 worktree 밖 파일까지 삭제하던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`SendMessage` 로 재개된 백그라운드 에이전트가 agent 목록에 \"failed\"/\"completed\" 로 계속 표시되던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`claude attach` 가 백그라운드 에이전트의 업그레이드 재시작 중 대기하지 않고 에러를 내던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "30K 인라인 한계를 초과한 Bash 호출로 생성된 PR 을 session-to-PR 링킹이 놓치던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Windows 에서 실행 디렉토리가 실행 중 삭제·잠금·언마운트되면 크래시하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "project verify 스킬이 문서화된 명령 변경 시가 아니라 매 세션 재작성되던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "CLI 2.1.203+ 에서 Cowork VM 모드 local-agent 세션이 \"Not logged in · Please run /login\" 으로 시작 실패하던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`--json-schema` 가 유효하지 않은 스키마를 조용히 무시하지 않고 오류를 내며 `format` 키워드도 허용되므로, 구조화 출력 파이프라인의 스키마 검증이 엄격해짐.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "\"Claude Browser\"·\"Claude Preview\" 가 MCP 서버 예약명이 되어 해당 이름으로 커스텀 MCP 서버를 등록할 수 없음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "auto-update 다운로드가 디스크 스트리밍으로 바뀌어 updater 피크 메모리가 약 400 MB 감소 — 저메모리 환경 업데이트 안정성 향상.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-14T04:40:20Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.204",
+    "tagName": "v2.1.204",
+    "publishedAt": "2026-07-08T00:27:50Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.204",
+    "originalBody": "## What's changed\n\n- Fixed hook events not streaming during SessionStart hooks in headless sessions, which could cause remote workers to be idle-reaped mid-hook\n",
+    "summary": {
+      "headline": "headless SessionStart hook 스트리밍 유실 수정",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "headless 세션의 SessionStart hook 중 hook 이벤트가 스트리밍되지 않아 remote 워커가 hook 도중 idle-reap 되던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "headless/remote 워커에서 SessionStart hook 이 길어도 도중에 idle 로 회수되지 않으므로, 무거운 SessionStart hook 을 쓰는 CI/자동화가 안정화됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-14T04:40:20Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.203",
+    "tagName": "v2.1.203",
+    "publishedAt": "2026-07-07T21:06:12Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.203",
+    "originalBody": "## What's changed\n\n- Added a warning when your login is about to expire, so you can re-authenticate before background sessions are interrupted\n- Added a grey ⏸ badge to the footer when in manual permission mode, making the active mode always visible\n- Added the session's additional working directories to MCP `roots/list`, with `notifications/roots/list_changed` sent when the set changes\n- Fixed opening or switching background agent sessions on macOS stalling for 15–20 seconds due to a false low-memory detection (regression in 2.1.196)\n- Fixed background sessions becoming permanently unresponsive to attach, replies, and stop when the daemon's session token went stale — the session now recovers automatically\n- Fixed returning to `claude agents` silently stopping running subagents and re-running the prompt from scratch — their work now carries over\n- Fixed a memory and per-turn CPU regression in interactive sessions: the context-usage indicator no longer re-analyzes the entire transcript after every turn\n- Fixed background agents inheriting a stale `PATH` from the daemon instead of the dispatching shell, causing missing tools on Windows\n- Fixed background and agent-view sessions dropping a shell-exported `ANTHROPIC_BASE_URL`, which sent API keys to the default endpoint and failed with 401\n- Fixed Bash failing with \"argument list too long\" in repos with many git worktrees\n- Fixed worktree-isolated subagents sometimes running shell commands in the parent checkout instead of their own worktree\n- Fixed worktree creation rejecting nested repositories in multi-repo workspaces, leaving background sessions unable to isolate and edit\n- Fixed background agents crash-looping when their working directory was deleted, replaced by a file, or became an invalid path — they now fail once with a clear error\n- Fixed a background daemon auto-upgrade failure silently killing all running background sessions\n- Fixed `TaskStop` and `TaskOutput` failing to find background agents spawned by another agent — errors now list running agents by id and description\n- Fixed the `claude agents` composer discarding your typed message when a slash command isn't available there\n- Fixed the agent list crashing when opening a stopped session whose conversation was already open in another session\n- Fixed background sessions showing \"Needs input\" in the agent list after the question was already answered\n- Fixed background agent startup failures showing only \"exit_with_message\" instead of the actual error\n- Fixed background sessions ignoring `effortLevel` changes in settings.json when forked through the daemon\n- Fixed attached background sessions ignoring `CLAUDE_CODE_DISABLE_MOUSE` and `CLAUDE_CODE_DISABLE_MOUSE_CLICKS` opt-outs\n- Fixed `/exit` incorrectly warning about running background agents after all named agents had completed\n- Fixed background sessions started from a non-git directory unable to edit files when a `WorktreeCreate` hook was configured\n- Fixed the `@` directory picker in `claude agents` not showing registered git worktrees\n- Fixed background task output on Windows being permanently replaced by an empty file after `/clear`\n- Fixed content jumping when scrolling up through long transcript history\n- Fixed the terminal flickering and jumping while typing in bash mode when a shell-history suggestion was shown\n- Fixed literal `^[[I` / `^[[O` escape codes being printed when reattaching to a background session\n- Fixed LSP-only plugins being incorrectly flagged for disuse when their language servers deliver diagnostics or answer navigation requests\n- Improved responsiveness while long responses stream: live-preview updates no longer re-render the whole screen\n- Improved subagent behavior: agents are now less likely to re-delegate their entire task to another subagent\n- Reduced binary size by ~7 MB and startup memory by ~7 MB by loading a large bundled dependency lazily instead of inlining it\n- Changed left arrow to no longer close the background tasks, diff, and workflow detail views — press Esc instead\n- Changed the empty `claude agents` view to always show the organized sections (Needs input / Working / Completed) with descriptions\n- Removed the startup \"claude command missing or broken\" warnings — they now appear in `/doctor` and `/status` instead\n- Removed a redundant navigation hint from the `claude agents` footer\n- [VSCode] Added a Settings toggle for \"Enable Remote Control for all sessions\"\n",
+    "summary": {
+      "headline": "백그라운드 세션 안정화 대량 수정 + 바이너리 7 MB 감량",
+      "newFeatures": [
+        {
+          "text": "로그인 만료 임박 시 경고를 추가해 백그라운드 세션 중단 전 재인증 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "수동 권한 모드일 때 footer 에 회색 ⏸ 배지를 추가해 활성 모드를 항상 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "세션의 추가 작업 디렉토리를 MCP `roots/list` 에 포함하고, 집합 변경 시 `notifications/roots/list_changed` 전송",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "[VSCode] `Enable Remote Control for all sessions` 설정 토글 추가",
+          "originalRefs": [
+            36
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "왼쪽 화살표가 백그라운드 작업·diff·workflow 상세 뷰를 더 이상 닫지 않음 — Esc 사용",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "빈 `claude agents` 뷰가 항상 정리된 섹션(Needs input / Working / Completed)을 설명과 함께 표시",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "시작 시 `claude command missing or broken` 경고 제거 — `/doctor` 와 `/status` 에 표시",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "큰 번들 의존성을 인라인 대신 지연 로드해 바이너리 크기 ~7 MB, 시작 메모리 ~7 MB 감소",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "서브에이전트가 전체 태스크를 다른 서브에이전트에 재위임하는 경향 감소",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "긴 응답 스트리밍 중 live-preview 업데이트가 전체 화면을 재렌더하지 않도록 개선",
+          "originalRefs": [
+            29
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "macOS 에서 잘못된 저메모리 감지로 백그라운드 에이전트 세션 열기/전환이 15–20초 멈추던 문제 수정 (2.1.196 회귀)",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "daemon 세션 토큰이 stale 되면 백그라운드 세션이 attach·reply·stop 에 영구 무응답이던 문제 수정 — 자동 복구",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`claude agents` 로 돌아가면 실행 중 서브에이전트가 조용히 중단되고 프롬프트가 처음부터 재실행되던 문제 수정 — 작업이 이어짐",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "대화형 세션의 context-usage 표시가 매 턴 전체 트랜스크립트를 재분석하던 메모리·CPU 회귀 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트가 dispatching 셸 대신 daemon 의 stale `PATH` 를 상속해 Windows 에서 도구가 누락되던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "백그라운드·agent-view 세션이 shell-export `ANTHROPIC_BASE_URL` 을 누락해 기본 엔드포인트로 API 키를 보내고 401 로 실패하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "git worktree 많은 repo 에서 Bash 가 \"argument list too long\" 으로 실패하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "worktree 격리 서브에이전트가 자체 worktree 대신 부모 checkout 에서 셸 명령을 실행하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "백그라운드 세션이 Windows 에서 `/clear` 후 task 출력이 빈 파일로 영구 대체되던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "재접속 시 `^[[I`/`^[[O` 리터럴 이스케이프 코드가 출력되던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "백그라운드·agent-view 세션이 shell-export `ANTHROPIC_BASE_URL` 을 다시 존중하므로, 커스텀 엔드포인트/게이트웨이 사용자가 백그라운드에서 401 없이 동작.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트가 dispatching 셸의 `PATH` 를 상속하도록 수정되어 Windows 에서 PATH 의존 도구 누락이 해소됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "왼쪽 화살표로 닫히던 백그라운드/diff/workflow 뷰가 이제 Esc 로만 닫히므로 기존 키 습관 조정 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "세션 추가 작업 디렉토리가 MCP `roots/list` 에 노출되고 변경 시 `notifications/roots/list_changed` 가 전송되므로, roots 를 소비하는 MCP 서버가 멀티 디렉토리를 인지 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-14T04:40:20Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.202",
+    "tagName": "v2.1.202",
+    "publishedAt": "2026-07-06T22:51:16Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.202",
+    "originalBody": "## What's changed\n\n- Added a \"Dynamic workflow size\" setting in `/config` for controlling how large Claude generally makes dynamic workflows (small/medium/large agent counts) — an advisory guideline, not an enforced cap\n- Added `workflow.run_id` and `workflow.name` OpenTelemetry attributes to telemetry emitted by workflow-spawned agents, so a workflow run's activity can be reconstructed from OTel data\n- Fixed a crash in the inline Ctrl+R history search when accepting or cancelling while the search was still scanning the history file\n- Fixed `/rename` on background sessions being reverted when the job restarts, which broke addressing the session by its new name\n- Fixed transient mTLS handshake failures when settings were re-applied during an in-place client certificate rotation\n- Fixed commands sent from Remote Control (mobile/web) into an interactive session failing with \"Unknown command\"\n- Fixed images and files sent from the Remote Control mobile or web app without a caption being silently dropped\n- Fixed the sign-in URL printed by `claude auth login` and `claude mcp login --no-browser` not being reliably clickable when it wraps over SSH — it is now emitted as a single hyperlink\n- Fixed opening a chat from `claude agents` sometimes failing with \"currently running as a background agent\" followed by a worker crash/respawn loop\n- Fixed workflow scripts with unicode quote escapes in strings being corrupted before parsing; workflow parse errors now show the offending line instead of always blaming TypeScript\n- Fixed voice dictation retrying in an unbounded loop when the microphone or audio recorder fails — repeated capture failures now pause voice input\n- Fixed `/remote-control` sessions showing the wrong permission mode in the mobile and web apps\n- Fixed resuming a session by name, or opening the resume picker, taking minutes and using a large amount of memory in repositories with many git worktrees\n- Fixed installer and updater downloads failing immediately with \"aborted\" when a proxy or network drops the connection mid-download — transient connection drops now retry\n- Fixed re-invoking an already-loaded skill appending a duplicate copy of its instructions to context\n- Improved `/workflows` agent list layout: wider titles, a dedicated time column, shorter model names, and no per-row tool-call counts\n- Improved MCP error messages: clearer error when a server config has `url` but no `type`, suggesting `\"type\": \"http\"` instead of the misleading \"command: expected string\"\n- Changed `/review <pr>` back to a fast single-pass review; use `/code-review <level> <pr#>` for the multi-agent review at a chosen effort level\n",
+    "summary": {
+      "headline": "Dynamic workflow size 설정 + `/review` 단일 패스 복귀",
+      "newFeatures": [
+        {
+          "text": "dynamic workflow 크기를 조절하는 \"Dynamic workflow size\" 설정(`/config`, small/medium/large)을 추가 — 강제 상한이 아닌 권고 지침",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "workflow-spawned 에이전트 텔레메트리에 `workflow.run_id`·`workflow.name` OpenTelemetry 속성을 추가해 OTel 데이터로 workflow run 활동 재구성 가능",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/review <pr>` 을 빠른 단일 패스 리뷰로 되돌림 — 지정 effort 의 멀티에이전트 리뷰는 `/code-review <level> <pr#>` 사용",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`/workflows` 에이전트 목록 레이아웃 개선 — 넓은 제목, 전용 time 열, 짧은 모델명, per-row tool-call 수 제거",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "MCP 오류 메시지 개선 — 서버 config 에 `url` 만 있고 `type` 이 없을 때 오해 소지 있는 \"command: expected string\" 대신 `\"type\": \"http\"` 제안",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "히스토리 파일 스캔 중 inline Ctrl+R 검색을 수락/취소할 때 크래시하던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "백그라운드 세션의 `/rename` 이 작업 재시작 시 되돌려져 새 이름으로 세션 주소 지정이 깨지던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "in-place 클라이언트 인증서 회전 중 설정 재적용 시 일시적 mTLS 핸드셰이크 실패 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Remote Control(모바일/웹)에서 대화형 세션으로 보낸 명령이 \"Unknown command\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "Remote Control 모바일/웹 앱에서 캡션 없이 보낸 이미지·파일이 조용히 드롭되던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "workflow 스크립트 문자열의 unicode 따옴표 이스케이프가 파싱 전 손상되던 문제 수정 — 파싱 오류가 문제 라인을 표시",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "마이크/오디오 레코더 실패 시 음성 받아쓰기가 무한 재시도 루프에 빠지던 문제 수정 — 반복 실패 시 음성 입력 일시정지",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "git worktree 많은 repo 에서 이름으로 세션 재개 또는 resume picker 열기가 수분 걸리고 대량 메모리를 쓰던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "프록시/네트워크가 다운로드 중 연결을 끊으면 installer·updater 다운로드가 즉시 \"aborted\" 로 실패하던 문제 수정 — 일시적 연결 끊김은 재시도",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "이미 로드된 스킬을 재호출하면 지시문 사본이 context 에 중복 추가되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`/review <pr>` 이 다시 빠른 단일 패스로 동작하므로, 멀티에이전트 심층 리뷰가 필요하면 `/code-review <level> <pr#>` 로 명시 호출해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "workflow 에이전트 텔레메트리에 `workflow.run_id`·`workflow.name` OTel 속성이 추가되어 OTel 백엔드에서 workflow 단위 추적·집계 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-14T04:40:20Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.201",
     "tagName": "v2.1.201",
     "publishedAt": "2026-07-03T23:50:35Z",

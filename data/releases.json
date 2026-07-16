@@ -1,5 +1,450 @@
 [
   {
+    "version": "v2.1.211",
+    "tagName": "v2.1.211",
+    "publishedAt": "2026-07-15T23:02:35Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.211",
+    "originalBody": "## What's changed\n\n- Added `--forward-subagent-text` flag and `CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` environment variable to include subagent text and thinking in stream-json output\n- Fixed permission previews relayed to chat channels not neutralizing bidirectional-override, zero-width, and look-alike quote characters, so tool inputs cannot visually alter the approval message\n- Fixed auto mode overriding a PreToolUse hook's `ask` decision for unsandboxed Bash — a hook `ask` now floors the decision at a prompt\n- Fixed parallel Claude Code sessions all logging out simultaneously after wake-from-sleep when many sessions share one credential store\n- Fixed plugin MCP servers not reconnecting after an idle web session woke, leaving MCP calls failing until the next message\n- Fixed Claude Code on Vertex and Bedrock attempting the default Opus model at startup and printing a spurious fallback notice when a model is explicitly configured\n- Fixed subagents spawned with an explicit model override reverting to the parent's model when resumed or sent a follow-up message\n- Fixed nested `.claude/rules/*.md` files loading even when setting sources exclude project settings\n- Fixed file upload validation: filenames ending in a DOS device suffix (`.prn`) or trailing dot are now accepted, and files with multiple hard links are refused\n- Fixed file uploads to Claude in Chrome from remote and CLI sessions\n- Fixed edits that leave the input as \"?\" being silently swallowed and toggling the shortcuts panel\n- Fixed a startup hang when the Claude in Chrome extension is enabled but Chrome is not running\n- Fixed a 300ms delay revealing async content (Settings tabs, Stats, diff views, and other loading states)\n- Fixed reopening a just-stopped background session from the agents view starting a blank conversation under the same session id\n- Fixed `/loop` hiding the session from `/resume` after a single use\n- Fixed screen reader users losing the audible terminal bell after `/terminal-setup` or onboarding terminal setup\n- Fixed background jobs on LLM gateway auth (`ANTHROPIC_AUTH_TOKEN` + `ANTHROPIC_BASE_URL`) coming back \"Not logged in\" after the daemon respawns them\n- Fixed `claude agents` jobs becoming permanently undeletable when git no longer recognizes their worktree — the row now shows why the delete was refused instead of silently reappearing\n- Fixed `/clear` not resetting the session cost counter — the statusline's cost now starts at $0 after `/clear`\n- Fixed Claude in Chrome setup pages failing to open in the browser on Windows\n- Fixed headless print-mode sessions on Windows crashing or silently exiting when stdin is unreadable\n- Fixed background session titles in the agents view showing the naming model's refusal text when the prompt contains a link\n- Fixed background agents killed by the user auto-respawning, and revived agents re-running stale prompts from old sessions\n- Fixed routines with no schedule reporting a next run time in the year 1\n- Hardened synced skill/plugin directory naming on Windows and kept CCR web fetch/search proxies working after `/clear`\n- Improved terminal layout and rendering performance\n- Improved background agent result reporting — Claude now reports the status of still-running agents and waits for the real completion instead of fabricating results\n- Improved the memory index over-limit warning to measure only loaded content, excluding frontmatter and HTML comments\n- Updated integer environment variables (timeouts, token budgets, retry counts) to accept scientific notation and digit-separator spellings like `1e6` and `64_000`\n- Updated documentation links to the current docs sites\n- Changed \"always allow\" permission rules to save at the repository root, so approvals granted in a git worktree persist across sessions and worktrees\n- Changed `/usage-credits` to ask for confirmation before sending a request to organization admins\n- Changed Vim mode `s` and `S` (substitute char/line) to work in NORMAL mode, matching vim behavior\n- [VSCode] Updated the Remote Control banner to describe what it does\n- Claude in Chrome: hardened file-upload path validation\n- Claude in Chrome: `save_to_disk` on screenshot actions now writes the image to disk and returns the path; previously it did nothing\n- Fixed a prompt-caching regression on Bedrock, Vertex, Mantle, and Foundry that billed the trailing system context block as fresh input tokens on every request.\n",
+    "summary": {
+      "headline": "서브에이전트 텍스트 stream-json 노출 + 다수 안정화",
+      "newFeatures": [
+        {
+          "text": "`--forward-subagent-text` 플래그와 `CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` 환경변수로 서브에이전트 텍스트·사고 과정을 stream-json 출력에 포함 가능",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`always allow` 권한 규칙을 레포 루트에 저장하도록 변경 — worktree 에서 승인한 권한이 세션·worktree 간 유지됨",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "`/usage-credits` 가 조직 관리자에게 요청 전송 전 확인을 받도록 변경됨",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "Vim 모드의 `s`·`S`(문자/줄 치환)가 NORMAL 모드에서 vim 동작대로 작동하도록 변경됨",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "타임아웃·토큰 예산·재시도 횟수 등 정수 환경변수가 `1e6`·`64_000` 같은 지수 표기와 자릿수 구분자 표기를 허용",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "still-running 서브에이전트 결과 보고 개선 — 완료를 조작하지 않고 실제 완료까지 대기 후 상태 보고",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "메모리 인덱스 초과 경고가 frontmatter·HTML 주석을 제외한 실제 로드 콘텐츠만 측정하도록 개선됨",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "`save_to_disk` 스크린샷 액션이 실제로 이미지를 디스크에 저장하고 경로를 반환하도록 변경 (이전엔 아무 동작 안 함)",
+          "originalRefs": [
+            35
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "채팅 채널로 전달되는 권한 미리보기가 양방향 override·zero-width·유사 인용부호 문자를 무력화하지 못해 도구 입력이 승인 메시지를 시각적으로 변조할 수 있던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "샌드박스 미적용 Bash 에서 auto 모드가 PreToolUse hook 의 `ask` 결정을 덮어쓰던 문제 수정 — hook 의 `ask` 가 최소 프롬프트 수준으로 보장됨",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "다수 세션이 하나의 credential store 를 공유할 때 절전 복귀 후 병렬 세션이 동시에 로그아웃되던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "유휴 웹 세션 복귀 후 플러그인 MCP 서버가 재연결되지 않아 다음 메시지까지 MCP 호출이 실패하던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Vertex·Bedrock 에서 모델이 명시 설정됐는데도 시작 시 기본 Opus 모델을 시도하고 잘못된 fallback 알림을 출력하던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "모델 override 로 생성된 서브에이전트가 재개·후속 메시지 시 부모 모델로 되돌아가던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "설정 소스에서 프로젝트 설정을 제외해도 중첩 `.claude/rules/*.md` 파일이 로드되던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "파일 업로드 검증 개선 — `.prn` 등 DOS 디바이스 접미사나 끝 점(.)으로 끝나는 파일명 허용, 하드링크가 여러 개인 파일은 거부",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`/clear` 가 세션 비용 카운터를 리셋하지 않던 문제 수정 — 이제 `/clear` 후 statusline 비용이 $0 부터 시작",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "Windows 에서 headless print-mode 세션이 stdin 을 읽을 수 없을 때 크래시하거나 조용히 종료되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "LLM gateway 인증(`ANTHROPIC_AUTH_TOKEN` + `ANTHROPIC_BASE_URL`)의 백그라운드 작업이 daemon 재생성 후 `Not logged in` 으로 돌아오던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "git 이 worktree 를 더 이상 인식하지 못할 때 `claude agents` 작업이 영구 삭제 불가 상태가 되던 문제 수정 — 이제 삭제 거부 사유를 행에 표시",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`/loop` 사용 시 세션이 한 번 쓰고 나면 `/resume` 목록에서 숨겨지던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "사용자가 종료한 백그라운드 에이전트가 자동 재생성되고, 되살아난 에이전트가 옛 세션의 stale 프롬프트를 재실행하던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "일정이 없는 routine 이 다음 실행 시각을 서기 1년으로 보고하던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Mantle·Foundry 에서 매 요청마다 후행 시스템 컨텍스트 블록을 fresh input 토큰으로 청구하던 prompt-caching 회귀 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "Windows 에서 Claude in Chrome 설정 페이지가 브라우저에서 열리지 않던 문제와, 동기화된 skill/plugin 디렉토리 이름 처리 강화",
+          "originalRefs": [
+            19,
+            24
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`always allow` 권한이 이제 레포 루트에 저장되므로 worktree 에서 부여한 승인이 다른 worktree·세션에서도 그대로 적용됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`--forward-subagent-text`·`CLAUDE_CODE_FORWARD_SUBAGENT_TEXT` 신설로 stream-json 파이프라인에서 서브에이전트 내부 텍스트를 캡처할 수 있게 됨.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "hook 의 `ask` 결정이 auto 모드에 의해 무시되지 않으므로 PreToolUse 게이트가 샌드박스 미적용 Bash 에서도 신뢰 가능해짐.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Mantle·Foundry 사용자는 prompt-caching 회귀 수정으로 매 요청 과다 청구되던 input 토큰 비용이 정상화됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 15
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-16T00:04:36.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.210",
+    "tagName": "v2.1.210",
+    "publishedAt": "2026-07-14T23:45:25Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.210",
+    "originalBody": "## What's changed\n\n- Added a live elapsed-time counter to the collapsed tool summary line so long-running tool calls visibly tick instead of looking stuck\n- Added a startup warning for `Write(path)`, `NotebookEdit(path)`, and `Glob(path)` permission rules — use `Edit(path)` or `Read(path)` instead\n- Fixed `isolation: 'worktree'` subagents being able to run git-mutating commands against the main repo checkout instead of their own isolated worktree\n- Fixed the `ultracode` keyword opt-in firing on non-human-originated input such as webhook payloads and relayed PR comments\n- Fixed a rendered text fragment leaking into crash telemetry when a UI component returned content outside a styled text element\n- Fixed paste markers leaking into external editors opened from Claude Code, which could appear as stray È/É characters around pasted text\n- Fixed `claude attach` sometimes failing with \"job not found\" or \"agent is still starting\" errors during session transitions — attach now waits for the daemon to settle, and terminal resizes during a slow attach are applied once it completes\n- Fixed a session crash when a tool's result renderer returned a numeric bigint value or plain text instead of a UI element\n- Fixed a hook callback timeout being misreported to the model as a user rejection, which made unattended sessions stop and wait\n- Fixed Claude assuming a `cd` took effect after its command was moved to the background; the tool result now states the working directory is unchanged\n- Fixed plugin-provided MCP servers being torn down when MCP servers are re-synced mid-session\n- Fixed plan approvals without edits being labeled \"(edited by user)\" and overwriting the plan file with a stale snapshot\n- Fixed `/doctor` skipping its auto-mode-default proposal on Bedrock, Vertex, and Foundry, where auto mode no longer needs an opt-in\n- Fixed Grep content mode claiming \"No matches found\" when paginating past the end of results\n- Fixed unmatched `$1`/`$2` positional placeholders in skills and commands being silently stripped; they are now preserved verbatim\n- Fixed plugin cache writes leaving temp files behind on failure and failing on locked-file renames on Windows and network filesystems\n- Fixed background workers crash-looping when a client resets its connection to the background service\n- Fixed `claude agents --effort ultracode` not reaching dispatched sessions; the value was silently dropped\n- Fixed pressing ← to open the agents view dropping the task tracker when returning to the session\n- Fixed the agents dashboard retaining pasted images from abandoned reply drafts after their session was deleted\n- Fixed killed background sessions leaving a permanent `git worktree lock` behind; the periodic sweep now releases locks whose owning process is gone\n- Fixed SDK MCP servers registered via an `initialize` control request waiting until the next turn to start connecting\n- Fixed returning to the agents view from a session leaving overlapping ghost frames with `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1`\n- Fixed late-appearing `.claude/*` symlinks not being reconciled into the sandbox deny-write list\n- Hardened the Agent tool against indirect prompt injection via content a subagent read\n- Improved the Bash/PowerShell tool message when a command hits its timeout and is auto-backgrounded, so the model can distinguish a hang from an explicit background request\n- Improved auto mode: the permission classifier now defaults to Sonnet 5 for external sessions, validated on the session's first request and pinned for the session\n- Improved the bundled dataviz skill's chart color validation with perceptual OKLab color difference and recalibrated color-blindness thresholds\n- Memory writes that leave a MEMORY.md index over its read limit now produce an explicit error instead of silent truncation\n- Screen reader mode now announces permission mode changes aloud when cycling modes with Shift+Tab\n- The agents footer hint now shows how many background agents are waiting on your input, with a brief color emphasis when the count changes\n- Agent view: the session you pressed ← from stays visibly marked even after mouse hover or arrow keys move the selection\n- Fable temporarily shows as unavailable in the advisor picker while a server-side issue causing Fable advisor failures is fixed\n",
+    "summary": {
+      "headline": "worktree 서브에이전트 격리 강화 + auto 모드 개선",
+      "newFeatures": [
+        {
+          "text": "긴 도구 호출이 멈춘 것처럼 보이지 않도록 접힌 도구 요약 줄에 실시간 경과 시간 카운터 추가",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`Write(path)`·`NotebookEdit(path)`·`Glob(path)` 권한 규칙에 대한 시작 경고 추가 — `Edit(path)`·`Read(path)` 사용 권장",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "auto 모드 개선 — 권한 분류기가 외부 세션에서 기본으로 `Sonnet 5` 를 쓰고 세션 첫 요청에서 검증 후 세션 내내 고정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "명령이 타임아웃으로 auto-backgrounded 될 때 Bash/PowerShell 도구 메시지를 개선해 hang 과 명시적 백그라운드 요청을 구분 가능하게 함",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "번들 dataviz 스킬의 차트 색상 검증을 perceptual OKLab 색차 기반으로 개선하고 색맹 임계값 재보정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "MEMORY.md 인덱스가 read 한도를 초과하게 되는 메모리 쓰기는 조용한 truncation 대신 명시적 에러 발생",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "스크린 리더 모드가 Shift+Tab 으로 권한 모드 순환 시 변경을 소리로 안내",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "서버 측 Fable advisor 실패 이슈 수정 동안 advisor picker 에서 Fable 이 임시로 unavailable 로 표시됨",
+          "originalRefs": [
+            32
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`isolation: 'worktree'` 서브에이전트가 자기 격리 worktree 대신 메인 레포 체크아웃에 git 변경 명령을 실행할 수 있던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`ultracode` 키워드 opt-in 이 webhook payload·전달된 PR 코멘트 같은 비인간 입력에서 발동하던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "hook 콜백 타임아웃이 사용자 거부로 잘못 보고돼 무인 세션이 멈추고 대기하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "명령이 백그라운드로 이동한 뒤에도 `cd` 가 적용됐다고 가정하던 문제 수정 — 이제 도구 결과가 작업 디렉토리 미변경을 명시",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "세션 중 MCP 서버 재동기화 시 플러그인 제공 MCP 서버가 함께 해제되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "편집 없는 플랜 승인이 `(edited by user)` 로 표시되고 stale 스냅샷으로 플랜 파일을 덮어쓰던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "auto 모드가 opt-in 불필요한 Bedrock·Vertex·Foundry 에서 `/doctor` 가 auto-mode 기본값 제안을 건너뛰던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "스킬·명령의 매칭되지 않은 `$1`·`$2` 위치 플레이스홀더가 조용히 제거되던 문제 수정 — 이제 그대로 보존됨",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "실패 시 플러그인 캐시 쓰기가 임시 파일을 남기고 Windows·네트워크 파일시스템의 locked-file 이름변경에서 실패하던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`claude agents --effort ultracode` 값이 조용히 버려져 dispatch 세션에 전달되지 않던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "종료된 백그라운드 세션이 영구 `git worktree lock` 을 남기던 문제 수정 — 주기적 sweep 이 소유 프로세스가 사라진 lock 을 해제",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "`initialize` control request 로 등록된 SDK MCP 서버가 다음 턴까지 연결을 시작하지 않던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "뒤늦게 나타나는 `.claude/*` symlink 가 샌드박스 deny-write 목록에 반영되지 않던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "서브에이전트가 읽은 콘텐츠를 통한 간접 프롬프트 인젝션에 대해 Agent 도구를 강화",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`claude attach` 가 세션 전환 중 `job not found`·`agent is still starting` 으로 실패하던 문제 수정 — daemon 안정화까지 대기하고 느린 attach 중 터미널 리사이즈를 완료 후 적용",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "도구 결과 렌더러가 bigint 숫자값이나 평문을 반환할 때 세션이 크래시하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "클라이언트가 백그라운드 서비스 연결을 리셋할 때 백그라운드 워커가 crash-loop 하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`isolation: 'worktree'` 서브에이전트가 메인 체크아웃에 git 변경을 가할 수 없게 격리가 강화됨 — 병렬 실험 워커의 안전성 향상.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "auto 모드 권한 분류기가 외부 세션에서 `Sonnet 5` 로 고정되므로 세션 내 권한 판정이 일관됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`ultracode` opt-in 이 webhook·PR 코멘트 등 비인간 입력에서 발동하지 않으므로 자동화 파이프라인에서 의도치 않은 고비용 모드 활성화가 막힘.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "스킬·명령에서 `$1`·`$2` 미매칭 플레이스홀더가 보존되므로 인자 전달 로직이 예측대로 동작함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 7
+            }
+          ]
+        },
+        {
+          "text": "MEMORY.md 인덱스 한도 초과 시 명시적 에러가 나므로 메모리 유실을 조기에 감지 가능.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-16T00:04:36.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.209",
+    "tagName": "v2.1.209",
+    "publishedAt": "2026-07-14T06:36:28Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.209",
+    "originalBody": "## What's changed\n\n- Fixed /model and other dialogs being blocked in `claude agents` background sessions (reverts an overly broad guard)\n",
+    "summary": {
+      "headline": "background 세션 `/model` 다이얼로그 차단 해제",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "`claude agents` 백그라운드 세션에서 `/model` 등 다이얼로그가 차단되던 문제 수정 (과도하게 넓던 guard 를 되돌림)",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-07-16T00:04:36.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.208",
     "tagName": "v2.1.208",
     "publishedAt": "2026-07-14T01:10:42Z",

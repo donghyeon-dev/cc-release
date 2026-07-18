@@ -1,5 +1,366 @@
 [
   {
+    "version": "v2.1.212",
+    "tagName": "v2.1.212",
+    "publishedAt": "2026-07-17T00:26:27Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.212",
+    "originalBody": "## What's changed\n\n- `/fork` now copies your conversation into a new background session (its own row in `claude agents`) while you keep working; the in-session subagent it used to launch is now `/subtask`\n- Added `claude auto-mode reset` to restore the default auto-mode configuration, with a confirmation prompt (pass `--yes` to skip)\n- Added a session-wide limit on WebSearch tool calls (default 200, tunable via `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`) to stop runaway search loops\n- Added a per-session cap on subagent spawns (default 200, override with `CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`) to stop runaway delegation loops; `/clear` resets the budget\n- MCP tool calls running longer than 2 minutes now move to the background automatically so the session stays usable; configure the threshold or disable with `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS`\n- Typing `/resume` in the agent view now opens a picker of past sessions — including sessions deleted from the list — and resumes your pick as a background session\n- Fixed plan mode auto-running file-modifying Bash commands (e.g. `touch`, `rm`) without a permission prompt or SDK `canUseTool` callback\n- Fixed worktree creation following a repository-committed symlink at `.claude/worktrees`, which could create files outside the repository\n- Fixed a `continue:false` hook's halt being dropped when the tool fails or completes mid-stream, and hook infrastructure errors being misreported as user rejections\n- Fixed SIGTERM during a running Bash tool orphaning the command's process tree in print/SDK mode; the CLI now aborts the turn, kills the tree, and exits 143\n- Fixed `/background` and `claude --bg` failing with \"EUNKNOWN: unknown error, uv_spawn\" on Windows when Group Policy blocks PowerShell 5.1; the daemon now prefers PowerShell 7\n- Fixed shell mode (`!`) not executing commands containing file paths while the path autocomplete popup was open\n- Fixed auto-mode denial notifications rendering broken characters when a long denial reason was truncated mid-emoji\n- Fixed Ctrl+J not inserting a newline in the agent view dispatch input on terminals with extended key reporting, and surfaced the newline shortcut in the `?` help overlay\n- Fixed `/ultrareview` rejecting PR references like `#123`, `PR 123`, and pasted PR URLs; error hints now name the command you actually typed\n- Fixed `/ultrareview <branch>` not fetching the branch from origin when it exists remotely; it now suggests the closest branch name on typos\n- Fixed `/ultrareview` skipping the billing confirmation in a new conversation after `/clear`\n- Fixed `/ultrareview`'s \"not a git repository\" error on Claude Desktop now suggesting the project's repository folder instead of terminal commands\n- Fixed hosted (host-managed) sessions failing at startup when repository settings configured mTLS certs, extra CA bundles, or OAuth scopes; these transport settings are now ignored with a warning\n- Fixed a spurious \"File has not been read yet\" error when editing a file that had been read with offset/limit before resuming a session\n- Fixed `ExitWorktree` failing with \"no active EnterWorktree session\" after resuming a session with `--continue`/`--resume` in print/SDK mode\n- Fixed the workflow agent grid staying empty for Remote Control clients that join a session mid-run\n- Fixed streaming-mode control requests being marked complete before their handler finished, which could lose the request on session restart\n- Fixed background sessions created with `/fork` losing their live-parent protection after a state write failure\n- Fixed reopening a stopped background session from the agent view failing silently — it now resumes the session, or shows why it can't and lets you force a restart\n- Fixed agent teams: a stopping teammate could send the leader duplicate idle notifications when team initialization re-ran within a session\n- Fixed the plan-approval dialog footer splitting \"ctrl+g to edit in <editor>\" apart when the file path is long\n- Fixed the welcome banner keeping its old panel widths after a combined width+height terminal resize in fullscreen mode\n- Fixed diff previews losing their line numbers and +/- markers in narrow layouts\n- Fixed @-mentions attaching nothing after a partial file read, plugin uninstall targeting the wrong marketplace, and false \"Command timed out\" on exit code 143\n- Fixed OpenTelemetry HTTP exports being rejected with 411/400 by Azure Monitor and other endpoints that don't accept chunked transfer encoding\n- Fixed OTLP event log records missing `trace_id`/`span_id` when `TRACEPARENT` is set in SDK/headless mode\n- Fixed conversations with many images incorrectly failing with \"Request too large\" errors, and improved the error message to explain the actual cause\n- Fixed web search and web fetch returning \"API Error\" text as search results or page content when the API was overloaded\n- Improved web search and web fetch reliability by retrying 529 errors and rate-limited requests with bounded backoff\n- Improved prompt caching: the mid-conversation system block now works behind LLM gateways and custom base URLs (Bedrock, Vertex, 1P)\n- Improved background agent attach: cold-attaching now instantly shows the formatted transcript while the session boots, instead of a blank wait\n- Reduced token usage in inter-agent messaging: `SendMessage` bodies are no longer duplicated into replayed history and tool results\n- Changed `/fork` to name the copy after your prompt when the session has no title, so the row is recognizable in the agent view\n- Changed bare `/btw` to reopen the side-question panel on your most recent exchange so you can browse earlier answers\n- Changed the `←` footer hint to pulse `N done` for a moment when a background agent finishes while nothing needs your input\n- Deprecated the Task tool's `mode` parameter (now ignored); subagents inherit the parent session's permission mode by default\n- Changed Enterprise `forceLoginMethod` to be enforced for VS Code extension, SDK, `setup-token`, and `install-github-app` logins, not just the terminal\n- Changed session transcripts to record the reasoning effort level on each assistant message\n- Changed headless/SDK sessions to apply a `set_model` control request mid-turn; the next model round-trip uses the new model instead of waiting for the next turn\n- Changed agent view / `claude agents --json`: sessions waiting on a sandbox, MCP-input, or managed-settings prompt now show as \"Needs input\" instead of \"Working\"\n- Updated the auth status panel title from \"Cloud authentication\" to \"Authentication\"\n- Corrected an earlier release note (2.1.200): tmux through the 3.6 series lacks synchronized output; newer tmux with support is detected automatically\n",
+    "summary": {
+      "headline": "/fork 백그라운드 세션화 + 다수 안정화",
+      "newFeatures": [
+        {
+          "text": "`/fork` 가 대화를 새 백그라운드 세션(`claude agents` 별도 행)으로 복사하며 계속 작업 가능 — 기존 인세션 서브에이전트는 `/subtask` 로 분리됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`claude auto-mode reset` 추가 — 확인 프롬프트와 함께 auto-mode 기본 설정 복원 (`--yes` 로 건너뛰기)",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`(기본 200)으로 세션당 WebSearch 호출 횟수 제한 추가 — 무한 검색 루프 차단",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`(기본 200)으로 세션당 서브에이전트 생성 상한 추가 — `/clear` 시 예산 리셋",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "2분 넘게 실행되는 MCP 도구 호출이 자동으로 백그라운드로 이동해 세션 사용성 유지 — `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` 로 임계값 조정/비활성화",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "agent view 에서 `/resume` 입력 시 목록에서 삭제된 세션까지 포함한 과거 세션 picker 가 열리고, 선택한 세션을 백그라운드로 재개",
+          "originalRefs": [
+            5
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`SendMessage` 본문이 replay 히스토리·도구 결과에 중복 삽입되지 않도록 변경 — 에이전트 간 메시징 토큰 사용량 감소",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "세션 제목이 없을 때 `/fork` 가 프롬프트 기준으로 사본 이름을 지어 agent view 행 식별 가능",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "인자 없는 `/btw` 가 가장 최근 교환에서 사이드 질문 패널을 다시 열어 이전 답변 탐색 가능",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "Task 도구의 `mode` 파라미터 deprecated (무시됨) — 서브에이전트는 부모 세션의 권한 모드를 기본 상속",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "Enterprise `forceLoginMethod` 가 터미널뿐 아니라 VS Code 확장·SDK·`setup-token`·`install-github-app` 로그인에도 적용됨",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "세션 transcript 가 각 assistant 메시지에 reasoning effort 레벨을 기록하도록 변경됨",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "headless/SDK 세션이 턴 중간에 `set_model` 제어 요청을 적용 — 다음 모델 왕복부터 새 모델 사용 (다음 턴 대기 없음)",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "agent view / `claude agents --json` 에서 샌드박스·MCP 입력·managed-settings 프롬프트 대기 세션이 `Working` 대신 `Needs input` 으로 표시됨",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "prompt caching 개선 — 대화 중간 시스템 블록이 LLM 게이트웨이·커스텀 base URL(Bedrock, Vertex, 1P) 뒤에서도 동작",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "cold-attach 시 세션 부팅 중에도 포맷된 transcript 를 즉시 표시 (빈 화면 대기 제거)",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "web search·web fetch 가 529 에러와 rate-limit 요청을 bounded backoff 로 재시도해 신뢰성 개선",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 완료 시 입력 대기 없을 때 `←` 푸터 힌트가 잠시 `N done` 으로 펄스",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "auth status 패널 제목이 `Cloud authentication` 에서 `Authentication` 으로 변경됨",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "2.1.200 릴리즈 노트 정정 — tmux 3.6 계열은 synchronized output 미지원, 지원되는 최신 tmux 는 자동 감지됨",
+          "originalRefs": [
+            47
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "plan 모드가 `touch`·`rm` 등 파일 변경 Bash 명령을 권한 프롬프트나 SDK `canUseTool` 콜백 없이 자동 실행하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "worktree 생성이 `.claude/worktrees` 의 레포 커밋된 symlink 를 따라가 레포 밖에 파일을 생성할 수 있던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "도구가 mid-stream 으로 실패·완료될 때 `continue:false` hook 의 halt 가 누락되고, hook 인프라 오류가 사용자 거부로 오보고되던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "print/SDK 모드에서 실행 중 Bash 도구에 SIGTERM 이 오면 프로세스 트리가 고아가 되던 문제 수정 — 이제 턴 중단·트리 종료 후 exit 143",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "Windows 에서 Group Policy 가 PowerShell 5.1 을 차단할 때 `/background`·`claude --bg` 가 `EUNKNOWN: uv_spawn` 으로 실패하던 문제 수정 — daemon 이 PowerShell 7 우선 사용",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "경로 자동완성 팝업이 열린 동안 shell 모드(`!`)가 파일 경로 포함 명령을 실행하지 못하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "extended key reporting 터미널의 agent view dispatch 입력에서 Ctrl+J 가 개행을 삽입하지 못하던 문제 수정 — `?` 도움말에 개행 단축키 노출",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`/ultrareview` 가 `#123`·`PR 123`·붙여넣은 PR URL 형태를 거부하던 문제 수정 — 오류 힌트가 실제 입력한 명령을 표시",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`/ultrareview <branch>` 가 원격에만 있는 브랜치를 origin 에서 fetch 하지 않던 문제 수정 — 오타 시 가장 가까운 브랜치명 제안",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`/clear` 이후 새 대화에서 `/ultrareview` 가 billing 확인을 건너뛰던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "hosted(host-managed) 세션이 레포 설정의 mTLS 인증서·추가 CA 번들·OAuth 스코프로 시작 실패하던 문제 수정 — 해당 transport 설정은 경고와 함께 무시됨",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "세션 재개 전 offset/limit 로 읽은 파일 편집 시 잘못된 `File has not been read yet` 오류가 뜨던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "print/SDK 모드에서 `--continue`/`--resume` 로 세션 재개 후 `ExitWorktree` 가 `no active EnterWorktree session` 으로 실패하던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "세션 실행 중 합류한 Remote Control 클라이언트에서 workflow agent 그리드가 비어 있던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "streaming 모드 제어 요청이 핸들러 완료 전에 complete 로 표시돼 세션 재시작 시 요청이 유실될 수 있던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "`/fork` 로 생성된 백그라운드 세션이 state write 실패 후 live-parent 보호를 잃던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "agent view 에서 정지된 백그라운드 세션 재개가 조용히 실패하던 문제 수정 — 이제 재개하거나, 불가 사유를 보여주고 강제 재시작 허용",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "세션 내에서 팀 초기화가 재실행될 때 정지 중인 teammate 가 리더에게 중복 idle 알림을 보내던 agent teams 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "파일 경로가 길 때 plan-approval 다이얼로그 푸터의 `ctrl+g to edit in <editor>` 가 갈라지던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "너비+높이 동시 터미널 리사이즈 후 fullscreen 웰컴 배너가 옛 패널 너비를 유지하던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "좁은 레이아웃에서 diff 미리보기가 줄 번호와 +/- 마커를 잃던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "부분 파일 읽기 후 @-mention 이 아무것도 첨부하지 못하고, 플러그인 제거가 엉뚱한 marketplace 를 대상으로 하며, exit code 143 에서 거짓 `Command timed out` 이 뜨던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "chunked transfer encoding 을 받지 않는 Azure Monitor 등에서 OpenTelemetry HTTP export 가 411/400 으로 거부되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "SDK/headless 모드에서 `TRACEPARENT` 설정 시 OTLP 이벤트 로그 레코드에 `trace_id`/`span_id` 가 누락되던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "이미지가 많은 대화가 잘못 `Request too large` 로 실패하던 문제 수정 — 실제 원인을 설명하도록 오류 메시지 개선",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "API 과부하 시 web search·web fetch 가 `API Error` 텍스트를 검색 결과·페이지 내용으로 반환하던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "긴 거부 사유가 이모지 중간에서 잘릴 때 auto-mode 거부 알림이 깨진 문자로 렌더링되던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Claude Desktop 에서 `/ultrareview` 의 `not a git repository` 오류가 터미널 명령 대신 프로젝트 레포 폴더를 제안하도록 수정",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`/fork` 가 서브에이전트 대신 별도 백그라운드 세션을 만들도록 바뀌었고, 기존 인세션 서브에이전트 동작은 `/subtask` 로 옮겨짐 — 두 명령을 구분해 써야 함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`·`CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION`·`CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` 환경변수가 신설돼 세션당 검색·서브에이전트·MCP 백그라운드 임계값을 조정 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            },
+            {
+              "bucket": "newFeatures",
+              "index": 3
+            },
+            {
+              "bucket": "newFeatures",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "Task 도구의 `mode` 파라미터가 deprecated 되어 무시되므로, 명시적 mode 지정에 의존하던 SDK 코드는 부모 권한 모드 상속 동작으로 이관해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "Enterprise `forceLoginMethod` 적용 범위가 VS Code 확장·SDK·`setup-token`·`install-github-app` 로그인까지 확대돼, 해당 경로 로그인 정책이 달라짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "plan 모드가 파일 변경 Bash 명령을 권한 프롬프트 없이 실행하던 문제가 수정돼, SDK `canUseTool` 게이트가 plan 모드에서도 신뢰 가능해짐.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-18T00:00:00.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.211",
     "tagName": "v2.1.211",
     "publishedAt": "2026-07-15T23:02:35Z",

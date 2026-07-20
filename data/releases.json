@@ -1,5 +1,426 @@
 [
   {
+    "version": "v2.1.215",
+    "tagName": "v2.1.215",
+    "publishedAt": "2026-07-19T02:56:01Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.215",
+    "originalBody": "## What's changed\n\n- Claude no longer runs the `/verify` and `/code-review` skills on its own; invoke them with `/verify` or `/code-review` when you want them\n",
+    "summary": {
+      "headline": "`/verify`·`/code-review` 자동 실행 중단",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "`/verify`·`/code-review` 스킬을 Claude 가 자동 실행하지 않고, 사용자가 직접 `/verify` 또는 `/code-review` 로 호출해야 함",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "fixes": [],
+      "devImpact": [
+        {
+          "text": "검증·리뷰 스킬이 자동으로 돌던 흐름에 의존했다면 이제 명시적 호출을 워크플로에 추가해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-20T00:07:04.382Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.214",
+    "tagName": "v2.1.214",
+    "publishedAt": "2026-07-18T01:20:30Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.214",
+    "originalBody": "## What's changed\n\n- Fixed single-segment `dir/**` allow rules like `Edit(src/**)` auto-approving writes to nested `dir/` directories anywhere in the tree instead of only `<cwd>/dir`\n- Fixed a permission-check bypass affecting commands run in Windows PowerShell 5.1 sessions\n- Fixed Bash permission checks to fail closed on file-descriptor redirect forms that bash parses differently than the permission analyzer\n- Fixed Bash permission checks misjudging very long commands — commands over 10,000 characters now always prompt instead of running automatically\n- Fixed Bash permission checks treating zsh variable subscripts and modifiers in `[[ ]]` comparisons as inert text — these commands now prompt for approval\n- Fixed Bash permission checks to no longer auto-approve certain `help` and `man` commands that could run unsafe options, command substitutions, or backslash paths\n- Fixed permission prompts on remote sessions that could proceed before the local confirmation dialog\n- Added the EndConversation tool: Claude can end sessions with highly abusive users or jailbreak attempts, as on claude.ai since 2025 — see https://www.anthropic.com/research/end-subset-conversations\n- Added a periodic progress heartbeat for long-running tool calls that previously went silent\n- Added an ISO `modified` timestamp to memory file frontmatter\n- Added `message.uuid`, `client_request_id`, and `tool_source` attributes to OpenTelemetry log events for message-level correlation and tool provenance\n- Added `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` to configure the 60 KB truncation limit on OpenTelemetry content attributes\n- Added reasoning effort to the `subagentStatusLine` payload, so custom agent rows can render model and effort\n- Added permission prompts for `docker` commands (including the Podman `docker` shim) carrying daemon-redirect flags (`--url`, `--connection`, `--identity`, and Podman's remote mode) that previously ran without one\n- Fixed a crash when a GrowthBook feature evaluates to null, and a bug where a malformed flag payload could wipe the cached feature flags\n- Fixed Bash tool killing the Claude session when a `pkill -f` pattern accidentally matched the CLI's own process (Linux)\n- Fixed unbounded memory growth when `--settings` points at a device file or multi-GB file; oversized (>2 MiB) settings files now fail at startup with a clear error\n- Fixed streaming turns failing with \"Socket is closed\" behind corporate proxies on Windows\n- Fixed stream-json output truncation at exit for slow-reading SDK/pipeline consumers; the exit drain now scales with queued bytes instead of a flat 2s cap\n- Fixed scheduled tasks refusing their own configured prompt as untrusted input — the fired prompt is now delivered as the session's assigned task\n- Fixed PowerShell tool commands hanging until timeout when a child process waited on standard input (Windows)\n- Fixed Python scripts under the PowerShell tool crashing with UnicodeDecodeError when reading non-UTF-8 data from standard input (Windows)\n- Fixed Python scripts run via the PowerShell tool crashing with UnicodeEncodeError on non-ASCII output, and PowerShell 7 error messages containing raw ANSI escape sequences (Windows)\n- Fixed the PowerShell tool reporting `where.exe`, `fc.exe`, and `diff.exe` as errors when they return a valid negative answer (Windows)\n- Fixed `>` and `>>` under the PowerShell tool on Windows PowerShell 5.1 writing UTF-16LE files that other tools couldn't read as UTF-8\n- Fixed a displaced background daemon deleting its successor's control socket on shutdown, which made the next client kill the healthy replacement daemon\n- Fixed background sessions parked with `←` or `/background` and left idle keeping the background daemon and a worker process alive indefinitely\n- Fixed completed background sessions being impossible to remove via `claude rm` or the agent view once the background service had gone idle\n- Fixed background sessions dispatched from a non-git folder being impossible to delete from the agents view\n- Fixed reopening a stopped background session failing to restore its saved conversation when an unreadable folder exists in the session store\n- Fixed the Remote Control \"session ready\" push notification firing for sessions where Remote Control was not explicitly enabled\n- Fixed `/install-github-app` and the `/mcp` settings menu being blocked in agent-view sessions — they're now refused only in background sessions with no terminal attached\n- Fixed plugins enabled via the `--settings` CLI flag not loading (regression since v2.1.181)\n- Fixed feature flags going stale in long-running sessions after the OAuth token rotates\n- Fixed `/ultrareview` refusing to run in repos with no merge base — it now offers to review all tracked files\n- Fixed `claude update` and `claude doctor` hanging silently, and the `/status` System diagnostics section going blank, when a shell-config path is a directory\n- Fixed memory frontmatter values being silently truncated at an inline `#` when memory files are saved\n- Fixed session cost and token telemetry double-counting on streams that emit multiple cumulative `message_delta` frames\n- Fixed a spurious \"check your network\" warning that appeared while the advisor was thinking\n- Fixed hooks with exit code 2 not blocking as documented when the hook's stdout JSON fails schema validation\n- Fixed OTel log events emitted outside the turn's async context missing the interaction span's trace context\n- Fixed MCP transient errors during prompts/resources refresh clearing the server's slash commands and resources\n- Improved the `claude rc` workspace-trust error in the home directory to say trust there is never saved and to suggest running from a project directory\n- Changed single-segment `dir/**` hook `if:` conditions to match only `<cwd>/dir`; write `**/dir/**` for any-depth matching. `deny`/`ask` permission rules keep their any-depth match.\n- Changed `file` commands using `-m`/`--magic-file` or `-f`/`--files-from` to require permission instead of being auto-allowed as read-only\n- Changed keep-alive connection pooling to disable after a stale-connection error, so retries open a fresh socket\n- Changed SessionStart hooks to report source `\"fork\"` when a session begins as a fork instead of `\"resume\"`\n",
+    "summary": {
+      "headline": "권한 검사 우회 다수 수정과 EndConversation 도구 추가",
+      "newFeatures": [
+        {
+          "text": "`EndConversation` 도구 추가 — 심한 악용·jailbreak 시도 세션을 Claude 가 종료 가능",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "장시간 무응답이던 tool 호출에 주기적 진행 heartbeat 표시",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "메모리 파일 frontmatter 에 ISO `modified` 타임스탬프 추가",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "OpenTelemetry 로그 이벤트에 `message.uuid`·`client_request_id`·`tool_source` 속성 추가 — 메시지 단위 상관관계와 tool 출처 추적",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "OpenTelemetry 콘텐츠 속성의 60KB 절단 한계를 조정하는 `CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` 환경변수 추가",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`subagentStatusLine` payload 에 reasoning effort 추가 — 커스텀 에이전트 행에 모델·effort 렌더 가능",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "daemon-redirect 플래그(`--url`·`--connection`·`--identity`, Podman remote 모드)를 단 `docker` 명령(Podman `docker` shim 포함)에 권한 프롬프트 추가",
+          "originalRefs": [
+            13
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "홈 디렉토리 `claude rc` 워크스페이스 신뢰 에러 문구 개선 — 홈에서는 신뢰가 저장 안 됨을 명시하고 프로젝트 디렉토리 실행 권장",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "단일 세그먼트 `dir/**` hook `if:` 조건이 `<cwd>/dir` 만 매칭하도록 변경, 임의 깊이는 `**/dir/**` 작성 필요 (`deny`·`ask` 규칙은 임의 깊이 유지)",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "`-m`/`--magic-file` 또는 `-f`/`--files-from` 을 쓰는 `file` 명령은 read-only 자동 허용 대신 권한 요구",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "stale-connection 에러 후 keep-alive 커넥션 풀링 비활성화 — 재시도 시 새 소켓 열림",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "fork 로 시작한 세션의 SessionStart hook 이 source 를 `\"resume\"` 대신 `\"fork\"` 로 보고",
+          "originalRefs": [
+            46
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "단일 세그먼트 `dir/**` allow 규칙(`Edit(src/**)` 등)이 `<cwd>/dir` 만이 아니라 트리 전역의 중첩 `dir/` 쓰기를 자동 승인하던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "Windows PowerShell 5.1 세션에서 실행되는 명령의 권한 검사 우회 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "bash 가 권한 분석기와 다르게 파싱하는 file-descriptor redirect 형태에 대해 Bash 권한 검사가 fail-closed 하도록 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "10,000 자 초과 매우 긴 명령을 오판하던 Bash 권한 검사 수정 — 이제 자동 실행 대신 항상 프롬프트",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`[[ ]]` 비교의 zsh 변수 subscript·modifier 를 무해한 텍스트로 취급하던 Bash 권한 검사 수정 — 이제 승인 프롬프트 표시",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "위험한 옵션·명령 치환·역슬래시 경로를 실행할 수 있는 일부 `help`·`man` 명령을 자동 승인하던 Bash 권한 검사 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "로컬 확인 다이얼로그 전에 진행될 수 있던 원격 세션 권한 프롬프트 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "GrowthBook feature 가 null 로 평가될 때의 크래시와, malformed flag payload 가 캐시된 feature flag 를 지우던 버그 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`pkill -f` 패턴이 CLI 자기 프로세스에 우연히 매칭돼 Claude 세션을 죽이던 Bash tool 문제 수정 (Linux)",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`--settings` 가 디바이스 파일·수 GB 파일을 가리킬 때 무한 메모리 증가 수정 — 2MiB 초과 settings 파일은 시작 시 명확한 에러로 실패",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Windows 기업 프록시 뒤에서 스트리밍 턴이 \"Socket is closed\" 로 실패하던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "느리게 읽는 SDK/파이프라인 소비자에서 종료 시 stream-json 출력이 잘리던 문제 수정 — exit drain 이 고정 2초 대신 대기 바이트에 비례",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "스케줄 작업이 자신의 설정된 프롬프트를 신뢰 불가 입력으로 거부하던 문제 수정 — fired 프롬프트가 세션의 지정 작업으로 전달됨",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "자식 프로세스가 표준 입력을 기다릴 때 PowerShell tool 명령이 timeout 까지 hang 하던 문제 수정 (Windows)",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "PowerShell tool 하의 Python 스크립트가 표준 입력의 non-UTF-8 데이터를 읽을 때 `UnicodeDecodeError` 로 크래시하던 문제 수정 (Windows)",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "PowerShell tool 로 실행한 Python 스크립트가 non-ASCII 출력에서 `UnicodeEncodeError` 로 크래시하고 PowerShell 7 에러 메시지에 raw ANSI escape 가 포함되던 문제 수정 (Windows)",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "PowerShell tool 이 `where.exe`·`fc.exe`·`diff.exe` 의 유효한 negative 결과를 에러로 보고하던 문제 수정 (Windows)",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "Windows PowerShell 5.1 의 PowerShell tool 에서 `>`·`>>` 가 다른 도구가 UTF-8 로 못 읽는 UTF-16LE 파일을 쓰던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "밀려난 background daemon 이 종료 시 후속 daemon 의 control socket 을 지워 다음 클라이언트가 정상 교체 daemon 을 죽이던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "`←`·`/background` 로 park 후 idle 상태로 둔 background 세션이 daemon 과 worker 프로세스를 무기한 살려두던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "background 서비스가 idle 된 후 완료된 background 세션을 `claude rm`·agent view 로 제거 못 하던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "non-git 폴더에서 디스패치된 background 세션을 agents view 에서 삭제 못 하던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "세션 스토어에 읽을 수 없는 폴더가 있을 때 중단된 background 세션 재개 시 저장 대화 복원에 실패하던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "Remote Control 이 명시적으로 활성화되지 않은 세션에서 \"session ready\" push 알림이 발화하던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "agent-view 세션에서 `/install-github-app`·`/mcp` 설정 메뉴가 차단되던 문제 수정 — 이제 터미널 미연결 background 세션에서만 거부",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "`--settings` CLI 플래그로 활성화한 플러그인이 로드되지 않던 회귀 수정 (v2.1.181 이후)",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "OAuth 토큰 회전 후 장시간 세션에서 feature flag 가 stale 되던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "merge base 없는 repo 에서 `/ultrareview` 가 실행을 거부하던 문제 수정 — 이제 모든 추적 파일 리뷰 제안",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "shell-config 경로가 디렉토리일 때 `claude update`·`claude doctor` 가 조용히 hang 하고 `/status` System 진단이 비던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "메모리 파일 저장 시 frontmatter 값이 인라인 `#` 에서 조용히 잘리던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "누적 `message_delta` 프레임을 여러 개 emit 하는 스트림에서 세션 비용·토큰 telemetry 가 이중 계산되던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "advisor 가 사고 중일 때 나타나던 잘못된 \"check your network\" 경고 수정",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "hook 의 stdout JSON 이 스키마 검증에 실패할 때 exit code 2 hook 이 문서대로 차단하지 않던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "턴의 async 컨텍스트 밖에서 emit 된 OTel 로그 이벤트가 interaction span 의 trace 컨텍스트를 놓치던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "prompts/resources 갱신 중 MCP 일시 에러가 서버의 slash 명령·리소스를 지우던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`Edit(src/**)` 같은 단일 세그먼트 allow 규칙이 트리 전역 중첩 디렉토리까지 자동 승인하던 동작이 `<cwd>/dir` 로 좁혀짐 — 넓은 자동 승인에 의존했다면 권한 규칙 재점검 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            },
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Windows PowerShell·Bash·원격 세션의 권한 검사 우회가 다수 막혀, 이전에 자동 실행되던 일부 명령이 이제 승인 프롬프트를 띄움.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            },
+            {
+              "bucket": "fixes",
+              "index": 2
+            },
+            {
+              "bucket": "fixes",
+              "index": 3
+            },
+            {
+              "bucket": "fixes",
+              "index": 4
+            },
+            {
+              "bucket": "fixes",
+              "index": 5
+            },
+            {
+              "bucket": "fixes",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_OTEL_CONTENT_MAX_LENGTH` 환경변수와 OTel 이벤트 속성 3종이 신설돼 telemetry 파이프라인 설정·파싱을 조정할 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 4
+            },
+            {
+              "bucket": "newFeatures",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "daemon-redirect 플래그를 단 `docker`/Podman 명령과 `file` 의 `-m`/`-f` 옵션이 자동 허용에서 권한 요구로 바뀜.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 6
+            },
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`--settings` 플래그로 활성화한 플러그인 미로딩 회귀(v2.1.181 이후)가 수정돼 해당 로딩 방식이 정상 복구됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 25
+            }
+          ]
+        },
+        {
+          "text": "fork 세션의 SessionStart hook source 가 `\"fork\"` 로 보고되므로 source 값에 분기하는 hook 은 대응 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-20T00:07:04.382Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.212",
     "tagName": "v2.1.212",
     "publishedAt": "2026-07-17T00:26:27Z",

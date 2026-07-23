@@ -1,5 +1,292 @@
 [
   {
+    "version": "v2.1.218",
+    "tagName": "v2.1.218",
+    "publishedAt": "2026-07-22T21:24:56Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.218",
+    "originalBody": "## What's changed\n\n- Changed `/code-review` to run as a background subagent, so review work no longer fills your conversation and keeps stacked slash commands as its review target\n- Added screen-reader announcements of deleted text for word and line deletions (`Option+Delete`, `Ctrl+W`, `Cmd+Backspace`, `Ctrl+U`, `Ctrl+K`) in `--ax-screen-reader` mode\n- Fixed Windows paths with `\\u`-prefixed segments (like `C:\\Users\\unicorn`) being corrupted into CJK characters in tool inputs, which made those files inaccessible\n- Fixed the left arrow key discarding the conversation with no undo: presses right after editing now ask to confirm, and Esc in the agent view returns to the conversation it backgrounded\n- Added HTTP status and error text to `claude mcp list` and `/mcp` when a server fails to connect, and a warning for MCP config values with hidden leading or trailing whitespace\n- Fixed multi-line paste collapsing into one line with `j` in place of newlines in terminals that encode pasted newlines as Ctrl+J\n- Fixed `/context` reporting stale pre-compact token usage after compacting from the message picker\n- Fixed `/ultrareview` failing on descriptive arguments like \"review my auth changes\" — they now run a review of your current branch with the text applied as a note to the findings\n- Fixed `/code-review ultra` silently running a local review in non-interactive sessions — it now launches the cloud review\n- Fixed gateway spend metering to price Bedrock application-inference-profile ARNs and other config-mapped upstream model IDs at the configured model's rates\n- Fixed mojibake when a long IDE selection was truncated mid-emoji, and a case where a tool executor error could be silently dropped\n- Fixed an engine teardown race that could start and abandon a phantom turn, and made input pushed after close consistently rejected\n- Fixed spurious \"[Request interrupted by user]\" messages after interrupted tool calls, and an unpaired `tool_use` block left in the transcript when a tool aborted mid-response\n- Fixed VoiceOver reading \"new line\" instead of echoing the typed space at the end of the input in `--ax-screen-reader` mode\n- Fixed plugin and settings panels not moving the terminal cursor to the focused row, so screen readers and magnifiers can follow arrow-key navigation\n- Fixed crashes (maximum call stack exceeded) when a deeply nested watched directory tree was deleted or moved, and when rendering deeply nested UI trees\n- Fixed pull request events occasionally being lost when a session exited immediately after creating or linking a PR\n- Fixed the Bedrock setup wizard failing profile verification for assume-role profiles in partitioned AWS regions and on proxy-only networks\n- Fixed rare negative or incorrect turn duration measurements after a system clock adjustment by timing turns with a monotonic clock\n- Fixed the \"N MCP servers need authentication\" startup notice over-counting claude.ai connectors that aren't connected in claude.ai\n- Fixed prompt history entries being dropped or duplicated when history writes raced or failed\n- Fixed a retry loop that re-sent identical doomed requests after a context-overflow error with a large thinking budget; `Ctrl+B` backgrounding now applies the same background-shell caps as other paths\n- Fixed agent frontmatter hooks running from untrusted folders: hooks now require the agent file's own folder to have accepted workspace trust\n- Fixed fork-session lineage being lost after compaction in headless and SDK sessions\n- Fixed a resumed session failing every turn, or crashing on resume, when its history held a malformed delta attachment\n- Improved `/ultrareview` error feedback so Claude can correct an invalid argument instead of retrying it unchanged\n- Improved auto mode: the dangerous-rm, background-`&`, and suspicious-Windows-path checks no longer open permission dialogs; the auto-mode classifier adjudicates them instead\n- Improved sandbox command restrictions for IDE interactions\n- Improved trust dialogs to name the repository root the grant covers\n- Changed `/deep-research` to start only when invoked manually; Claude no longer launches it on its own\n- Changed plan mode with auto to no longer prompt for Bash commands the static analyzer can't prove read-only; the auto-mode classifier judges them instead\n- Added an announcement when fast mode changes as a result of switching models via `/config model=<x>` or Remote Control\n- Changed server-managed settings so benign feature and cost toggles no longer trigger the settings-approval prompt\n- Changed agent markdown files to reject agent names containing `:`, which is reserved for plugin namespacing\n- Changed skills with `context: fork` to run in the background by default; opt out per skill with `background: false`\n- Added `yes`/`no`/`on`/`off`/`1`/`0` (case-insensitive) as accepted values for skill and plugin frontmatter booleans, alongside `true`/`false`\n- Fixed remote sessions continuing to send heartbeats after their worker was replaced, which left long-lived desktop and IDE processes retrying a rejected request every few seconds forever\n",
+    "summary": {
+      "headline": "`/code-review` 백그라운드화 + 다수 크래시·접근성 수정",
+      "newFeatures": [
+        {
+          "text": "`--ax-screen-reader` 모드에서 `Option+Delete`·`Ctrl+W`·`Cmd+Backspace`·`Ctrl+U`·`Ctrl+K` 단어/줄 삭제 시 삭제된 텍스트를 스크린리더로 읽어줌",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "MCP 서버 연결 실패 시 `claude mcp list`·`/mcp` 에 HTTP 상태·에러 텍스트 표시, config 값 앞뒤 공백 숨김에 경고 추가",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`/config model=<x>` 나 Remote Control 로 모델 전환 시 fast mode 변경 여부를 알림으로 안내",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "skill·plugin frontmatter boolean 에 `true`/`false` 외 `yes`/`no`/`on`/`off`/`1`/`0` (대소문자 무관) 값 허용",
+          "originalRefs": [
+            35
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/code-review` 가 백그라운드 서브에이전트로 실행돼 리뷰 작업이 대화창을 채우지 않고, 스택된 슬래시 명령을 리뷰 대상으로 유지",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/ultrareview` 잘못된 인자에 대한 에러 피드백 개선 — 재시도 대신 인자 교정 유도",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "auto 모드에서 dangerous-rm·백그라운드 `&`·의심스러운 Windows 경로 체크가 권한 대화상자를 열지 않고 auto-mode 분류기가 판정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "IDE 상호작용에 대한 sandbox 명령 제약 개선",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "trust 대화상자가 권한이 적용되는 저장소 루트 경로를 명시하도록 개선",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "`/deep-research` 는 수동 호출 시에만 시작 — Claude 가 스스로 실행하지 않음",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "auto 켠 plan 모드에서 정적 분석기가 read-only 로 증명 못 하는 Bash 명령을 더 이상 프롬프트하지 않고 auto-mode 분류기가 판단",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "server-managed settings 의 무해한 feature·cost 토글이 settings-approval 프롬프트를 트리거하지 않음",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "agent markdown 파일이 plugin 네임스페이싱용으로 예약된 `:` 포함 agent 이름을 거부",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "`context: fork` skill 이 기본으로 백그라운드 실행 — skill 별 `background: false` 로 opt-out 가능",
+          "originalRefs": [
+            34
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`C:\\Users\\unicorn` 처럼 `\\u` 접두 세그먼트를 가진 Windows 경로가 tool 입력에서 CJK 문자로 손상돼 파일 접근 불가하던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "좌측 화살표 키가 되돌리기 없이 대화를 폐기하던 문제 수정 — 편집 직후 입력은 확인을 요구하고, agent 뷰에서 Esc 는 백그라운드된 대화로 복귀",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "붙여넣은 개행을 Ctrl+J 로 인코딩하는 터미널에서 멀티라인 붙여넣기가 개행 대신 `j` 로 한 줄로 뭉치던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "message picker 에서 compact 후 `/context` 가 compact 이전의 오래된 토큰 사용량을 보고하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`/ultrareview` 가 \"review my auth changes\" 같은 서술형 인자에 실패하던 문제 수정 — 현재 브랜치 리뷰를 실행하고 텍스트는 findings 노트로 적용",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "`/code-review ultra` 가 비대화형 세션에서 조용히 로컬 리뷰를 돌리던 문제 수정 — 이제 cloud 리뷰를 실행",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "gateway 과금 계측이 Bedrock `application-inference-profile` ARN 과 config 매핑된 upstream 모델 ID 를 설정된 모델 요율로 청구하도록 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "긴 IDE 선택이 이모지 중간에서 잘릴 때의 mojibake 및 tool executor 에러가 조용히 누락되던 케이스 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "phantom turn 을 시작·방치하던 engine teardown race 수정, close 이후 push 된 입력을 일관되게 거부하도록 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "중단된 tool 호출 후 발생하던 잘못된 \"[Request interrupted by user]\" 메시지 및 tool 이 응답 중 abort 될 때 남던 짝 없는 `tool_use` 블록 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`--ax-screen-reader` 모드에서 VoiceOver 가 입력 끝의 타이핑한 공백을 반향하지 않고 \"new line\" 을 읽던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "plugin·settings 패널이 포커스된 행으로 터미널 커서를 옮기지 않아 스크린리더·확대기가 화살표 탐색을 따라가지 못하던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "깊게 중첩된 감시 디렉토리 트리 삭제·이동 시, 그리고 깊게 중첩된 UI 트리 렌더링 시 발생하던 maximum call stack 크래시 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "PR 생성·연결 직후 세션이 즉시 종료될 때 pull request 이벤트가 간헐적으로 유실되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Bedrock 설정 마법사가 파티션된 AWS 리전과 proxy-only 네트워크에서 assume-role 프로필 검증에 실패하던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "시스템 시계 조정 후 turn 시간이 음수·부정확하게 측정되던 문제를 monotonic clock 계측으로 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "MCP 서버 인증 필요 개수를 알리는 시작 알림이 claude.ai 에 연결되지 않은 커넥터를 과다 집계하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "history 쓰기 경쟁·실패 시 prompt history 항목이 누락·중복되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "큰 thinking budget 으로 context-overflow 에러 후 동일한 실패 요청을 재전송하던 retry loop 수정, `Ctrl+B` 백그라운드화에 동일한 background-shell 상한 적용",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "신뢰되지 않은 폴더에서 agent frontmatter hook 이 실행되던 문제 수정 — hook 이 agent 파일 자체 폴더의 workspace trust 승인을 요구",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "headless·SDK 세션에서 compaction 후 fork-session lineage 가 유실되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "history 에 잘못된 delta attachment 가 있을 때 재개된 세션이 매 turn 실패하거나 resume 시 크래시하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "worker 교체 후에도 remote 세션이 heartbeat 를 계속 보내 장기 실행 desktop·IDE 프로세스가 거부된 요청을 몇 초마다 영원히 재시도하던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`\\u` 접두 세그먼트를 포함한 Windows 경로(`C:\\Users\\unicorn` 등)를 다루던 세션에서 파일 접근 불가 문제가 해소됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "agent frontmatter hook 이 이제 해당 agent 파일 폴더의 workspace trust 승인을 요구하므로, 신뢰되지 않은 폴더의 hook 이 더 이상 자동 실행되지 않음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 19
+            }
+          ]
+        },
+        {
+          "text": "agent 이름에 `:` 사용이 거부되므로, 콜론을 포함한 기존 agent 파일명은 리네임 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 8
+            }
+          ]
+        },
+        {
+          "text": "`context: fork` skill 의 기본 실행이 백그라운드로 바뀜 — 기존 동작을 유지하려면 skill 에 `background: false` 명시 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 9
+            }
+          ]
+        },
+        {
+          "text": "`/deep-research` 자동 실행이 제거되어 수동 호출만 가능해짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-23T00:06:55.126Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.217",
     "tagName": "v2.1.217",
     "publishedAt": "2026-07-21T21:35:10Z",

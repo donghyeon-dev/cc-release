@@ -1,5 +1,236 @@
 [
   {
+    "version": "v2.1.219",
+    "tagName": "v2.1.219",
+    "publishedAt": "2026-07-24T17:14:23Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.219",
+    "originalBody": "## What's changed\n\n- Added Claude Opus 5 (`claude-opus-5`), now the default Opus model — 1M context, fast mode at $10/$50 per Mtok\n- Added `sandbox.network.strictAllowlist` setting to deny non-allowlisted hosts for sandboxed commands without prompting\n- Added `DirectoryAdded` hook that fires after `/add-dir` or the SDK `register_repo_root` control request registers a new working directory mid-session\n- Added `mcp_server_errors` to the headless stream-json init event, listing `--mcp-config` entries skipped by config validation; terminal runs print a startup warning\n- Added the `workflowSizeGuideline` settings key so the advisory Dynamic workflow size guideline can be set from any settings file; the `/config` row is hidden while one does\n- Added nested subagent forwarding in stream-json: subagents spawned at depth-2+ now appear when `--forward-subagent-text` is set, keyed by their spawning Agent `tool_use` id\n- Fixed `claude -p` text output dropping the answer already produced when a turn dies on a mid-stream API error\n- Added HTTP status and error text to `claude mcp list` and `/mcp` when a server fails to connect, and a warning for MCP config values with hidden leading or trailing whitespace\n- Fixed a permission you approved while a self-hosted runner was restarting being dropped when the session resumed, so the approved action now runs\n- Fixed the Fable model row showing \"Requires usage credits\" for plans that include it, when a stale cache had baked the label in\n- Fixed a SIGTERM arriving while a self-hosted runner was starting up leaving a stale active row until the lease expired; it now deregisters cleanly\n- Added structured failure categories to self-hosted runner spawn and session failures, so hook errors, runner crashes and config errors can be told apart\n- Fixed the `/model` picker showing the merged Opus row as plain \"Opus\" instead of \"Opus (1M context)\"\n- Fixed copy-on-select inside GNU screen printing base64 into the terminal instead of copying the selection\n- Fixed Remote Control clients keeping a stale fast-mode status after a model switch, reconnect, or failed org check\n- Fixed `CLAUDE_CODE_GIT_BASH_PATH` on Windows exiting or being used as bash when the path isn't a bash/sh binary; it's now ignored with a warning\n- Fixed Vim mode: pressing ← on an empty prompt now returns to the agent view from NORMAL mode, not just INSERT\n- Fixed screen-reader mode rewriting the entire input line on every keystroke instead of echoing only the typed character\n- Improved the \"Remote Control is only available via api.anthropic.com\" error to name the specific setting that caused it\n- Improved `claude --teleport` to show which repo your current checkout points at when it doesn't match the session's repo\n- Changed dynamic workflows to default to a medium size guideline (aim for fewer than 15 agents); pick another size or unrestricted with Dynamic workflow size in `/config`\n- Changed managed MCP allowlist/denylist `${VAR}` entries to resolve from the startup environment and managed-settings env instead of settings-file env\n- Changed the `/model` picker to highlight only the newest model's name, so the highlight marks the new release rather than an arbitrary subset of the list\n- Added the current default workflow size to the running-workflow status line, with a pointer to `/config` for changing it\n- Removed Opus 4.7 from fast mode; `/fast` now applies to Opus 5 and Opus 4.8\n- Updated the claude-api skill to default to Claude Opus 5, with a migration path from Opus 4.8\n- Subagents can now spawn nested subagents up to depth 3 by default (was 1); set CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1 to disable nesting\n",
+    "summary": {
+      "headline": "Opus 5 기본 탑재, 서브에이전트 3단 중첩",
+      "newFeatures": [
+        {
+          "text": "`claude-opus-5` 신규 추가 — 새 기본 Opus 모델로 1M 컨텍스트 지원, fast 모드 요금 `$10/$50 per Mtok`",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`sandbox.network.strictAllowlist` 설정 추가 — 샌드박스 명령의 allowlist 밖 호스트를 프롬프트 없이 거부",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/add-dir` 또는 SDK `register_repo_root` 로 세션 중 새 작업 디렉토리 등록 시 발동하는 `DirectoryAdded` hook 추가",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "headless stream-json init 이벤트에 `mcp_server_errors` 추가 — 설정 검증에서 스킵된 `--mcp-config` 항목을 나열하고, 터미널 실행 시 시작 경고 출력",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`workflowSizeGuideline` 설정 키 추가로 Dynamic workflow size 가이드라인을 임의 설정 파일에서 지정 가능 (지정 시 `/config` 행 숨김)",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "stream-json 중첩 서브에이전트 forwarding 추가 — `--forward-subagent-text` 설정 시 depth-2+ 서브에이전트가 spawn Agent `tool_use` id 기준으로 노출됨",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "서버 연결 실패 시 `claude mcp list` 와 `/mcp` 에 HTTP 상태·에러 텍스트 표시, MCP 설정값의 숨은 앞뒤 공백 경고 추가",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "self-hosted runner spawn·세션 실패에 구조화된 failure category 추가 — hook 에러, runner 크래시, 설정 에러를 구분 가능",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "실행 중 워크플로 상태줄에 현재 기본 workflow size 표시, 변경용 `/config` 안내 포함",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "서브에이전트가 기본 depth 3 까지 중첩 서브에이전트 spawn 가능 (기존 1) — `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` 로 중첩 비활성화",
+          "originalRefs": [
+            26
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "Remote Control 이 `api.anthropic.com` 전용이라는 에러가 원인이 된 설정 이름을 명시하도록 개선",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`claude --teleport` 가 현재 checkout 이 세션 repo 와 불일치할 때 어느 repo 를 가리키는지 표시하도록 개선",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "dynamic workflow 기본값을 medium 가이드라인(15개 미만 agent 권장)으로 변경 — `/config` 의 Dynamic workflow size 에서 다른 크기나 unrestricted 선택 가능",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "managed MCP allowlist/denylist 의 `${VAR}` 항목을 settings-file env 대신 시작 환경·managed-settings env 에서 해석하도록 변경",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "`/model` 피커가 최신 모델 이름만 하이라이트하도록 변경 — 하이라이트가 신규 릴리즈를 정확히 표시",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "fast 모드에서 Opus 4.7 제거 — `/fast` 는 이제 Opus 5 와 Opus 4.8 에 적용됨",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "claude-api 스킬이 Claude Opus 5 를 기본으로 사용하도록 갱신, Opus 4.8 에서의 마이그레이션 경로 포함",
+          "originalRefs": [
+            25
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`claude -p` 텍스트 출력이 턴 중간 API 에러로 죽을 때 이미 생성된 답변을 버리던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "self-hosted runner 재시작 중 승인한 권한이 세션 재개 시 유실되던 문제 수정 — 승인한 동작이 이제 실행됨",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Fable 모델 행이 포함 플랜인데도 stale 캐시로 \"Requires usage credits\" 를 표시하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "self-hosted runner 시작 중 SIGTERM 도착 시 lease 만료까지 stale active 행이 남던 문제 수정 — 이제 정상 deregister 됨",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`/model` 피커가 병합된 Opus 행을 \"Opus (1M context)\" 대신 그냥 \"Opus\" 로 표시하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "GNU screen 내부 copy-on-select 가 선택 복사 대신 base64 를 터미널에 출력하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "Remote Control 클라이언트가 모델 전환·재연결·org 체크 실패 후 stale fast-mode 상태를 유지하던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "Windows 에서 `CLAUDE_CODE_GIT_BASH_PATH` 경로가 bash/sh 바이너리가 아닐 때 종료되거나 bash 로 쓰이던 문제 수정 — 이제 경고와 함께 무시됨",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "Vim 모드에서 빈 프롬프트에 ← 입력 시 INSERT 모드뿐 아니라 NORMAL 모드에서도 agent 뷰로 복귀하도록 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "스크린리더 모드가 키 입력마다 입력 줄 전체를 다시 쓰던 문제 수정 — 이제 입력한 문자만 echo",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "새 기본 Opus 모델이 `claude-opus-5` 로 바뀌어 fast 모드가 Opus 5·Opus 4.8 에만 적용되고 Opus 4.7 은 fast 대상에서 제외됨.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            },
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "서브에이전트 기본 중첩 depth 가 1에서 3으로 상향돼 다단 fan-out 이 기본 허용됨 — 기존 동작 유지가 필요하면 `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` 설정 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 9
+            }
+          ]
+        },
+        {
+          "text": "dynamic workflow 기본 크기가 medium(15개 미만 agent)으로 제한돼, 대규모 fan-out 을 쓰던 워크플로는 `/config` 에서 크기를 재설정해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "managed MCP 의 `${VAR}` 해석 출처가 settings-file env 에서 시작 환경·managed-settings env 로 바뀌어, settings env 에만 의존하던 allowlist/denylist 는 재설정 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "`sandbox.network.strictAllowlist` 신설로 샌드박스 명령의 네트워크 정책을 프롬프트 없이 차단하도록 강화 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-07-25T00:06:41Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.218",
     "tagName": "v2.1.218",
     "publishedAt": "2026-07-22T21:24:56Z",

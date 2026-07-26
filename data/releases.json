@@ -1,5 +1,28 @@
 [
   {
+    "version": "v2.1.220",
+    "tagName": "v2.1.220",
+    "publishedAt": "2026-07-25T01:35:55Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.220",
+    "originalBody": "## What's changed\n\n- Bug fixes and reliability improvements\n",
+    "summary": {
+      "headline": "버그 수정 및 안정성 개선 릴리즈",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "세부 항목 없는 버그 수정 및 신뢰성 개선 (`bug fixes and reliability improvements`)",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-07-26T00:05:41.146Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.219",
     "tagName": "v2.1.219",
     "publishedAt": "2026-07-24T17:14:23Z",

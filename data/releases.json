@@ -1,5 +1,484 @@
 [
   {
+    "version": "v2.1.222",
+    "tagName": "v2.1.222",
+    "publishedAt": "2026-08-04T22:39:55Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.222",
+    "originalBody": "## What's changed\n\n- Fixed worktree-isolated sessions and their subagents being able to run destructive git commands against the main checkout; isolation now applies to file edits and Bash in every session type\n- Fixed PreToolUse auto-allow hooks bypassing tool restrictions in background agent tasks (summaries, compaction, renames)\n- Fixed `/usage-credits` on Team and Enterprise showing \"you've already sent a usage credit request\" for members whose earlier request was dismissed, blocking them from sending a new one\n- Fixed the startup connectivity check hanging and then failing behind an HTTPS proxy; it now uses the same proxy-aware transport as API requests and times out with a clear message\n- Fixed \"Connection closed mid-response\" errors being reported on responses that had actually completed\n- Fixed `/usage` overattributing usage to MCP servers: a server's share now reflects only the requests that actually consumed its tool results, instead of every turn after any call to it\n- Fixed sessions not linking to pull requests created after the branch was pushed, including through the GitHub REST API\n- Fixed org-restricted `model: opus`-style subagent and teammate family aliases dropping to the parent model instead of stepping down to the newest org-allowed model in the family\n- Fixed stream idle timeout firing on custom `ANTHROPIC_BASE_URL` gateways despite server keep-alive pings arriving on the wire\n- Fixed claude.ai connectors being falsely marked as needing authorization when the session token is invalid — they now show a `/login` hint instead\n- Fixed tool errors not being displayed for tools no longer available locally, for example after an MCP server is removed\n- Fixed `SendMessage` rejecting a long summary — it now truncates instead, so sends no longer fail on a character limit\n- Fixed the spinner's effort label in a subagent's transcript view showing the session's effort level instead of the subagent's own `effort:` setting\n- Fixed rare crashes when a file watcher hit a filesystem error or during file-watcher teardown\n- Fixed screen readers re-reading the whole input line on every backspace in `--ax-screen-reader` mode — end-of-line deletions now echo just the deleted characters\n- Fixed host model-selection keys not taking precedence over a stale on-disk `managed-settings.json` when `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` is set\n- Improved auto mode safety: messages sent to other agent sessions via `SendMessage` are now evaluated by the permission classifier before dispatch\n- Improved the refusal when Claude tries to invoke a skill with `disable-model-invocation`: Claude is now told to ask you to run the skill instead of replicating its workflow\n- Improved the `/diff` view, the Remote Control workspace diff, and file-edit diffs in Claude Code on the web sessions to use raw git blob content, ignoring workspace-configured diff drivers and textconv\n- Changed Remote Control auto-start so repo-local settings (`.claude/settings.json` or `.claude/settings.local.json`) can no longer turn it on (they can still turn it off); enable it at user scope via `/config`\n- Removed ultraplan feature\n",
+    "summary": {
+      "headline": "worktree 격리 우회와 hook 제약 우회 차단",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "Remote Control 자동 시작을 레포 로컬 설정(`.claude/settings.json`, `.claude/settings.local.json`)으로 켤 수 없게 변경 — 끄는 것은 여전히 가능하고 활성화는 `/config` 의 user scope 에서만",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "ultraplan 기능 제거",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "auto mode 에서 `SendMessage` 로 다른 에이전트 세션에 보내는 메시지도 발송 전에 권한 분류기 검사를 통과해야 함",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`disable-model-invocation` 스킬 호출 거부 시, 워크플로를 대신 재현하지 말고 사용자에게 직접 실행을 요청하도록 안내 변경",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`/diff`, Remote Control workspace diff, 웹 세션의 파일 편집 diff 가 워크스페이스의 diff driver·textconv 를 무시하고 raw git blob 을 사용",
+          "originalRefs": [
+            18
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "worktree 격리 세션과 그 서브에이전트가 main 체크아웃에 파괴적 git 명령을 실행할 수 있던 문제 수정 — 격리가 모든 세션 타입의 파일 편집과 Bash 에 적용됨",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 작업(요약, compaction, rename)에서 PreToolUse 자동 허용 hook 이 툴 제약을 우회하던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "Team·Enterprise 에서 이전 요청이 반려된 멤버에게 `/usage-credits` 가 \"이미 요청을 보냈다\"고 표시해 재요청을 막던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "HTTPS 프록시 환경에서 시작 시 연결 확인이 멈춘 뒤 실패하던 문제 수정 — API 요청과 동일한 프록시 인식 transport 를 쓰고 타임아웃 시 명확한 메시지 노출",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "정상 완료된 응답에 \"Connection closed mid-response\" 에러가 보고되던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`/usage` 가 MCP 서버 사용량을 과대 계상하던 문제 수정 — 호출 이후 모든 턴이 아니라 해당 툴 결과를 실제로 소비한 요청만 반영",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "브랜치 push 이후 생성된 PR(GitHub REST API 경유 포함)이 세션에 연결되지 않던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "조직 제한 환경에서 `model: opus` 류 서브에이전트·teammate 패밀리 별칭이 같은 패밀리의 최신 허용 모델로 내려가지 않고 부모 모델로 떨어지던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "커스텀 `ANTHROPIC_BASE_URL` 게이트웨이에서 서버 keep-alive ping 이 도착하는데도 스트림 idle 타임아웃이 발동하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "세션 토큰이 무효할 때 claude.ai 커넥터가 인증 필요로 잘못 표시되던 문제 수정 — 이제 `/login` 안내 노출",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "MCP 서버 제거 등으로 로컬에 없어진 툴의 에러가 표시되지 않던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "`SendMessage` 가 긴 요약을 글자 수 제한으로 거부하던 문제 수정 — 이제 잘라서 전송",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "서브에이전트 transcript view 의 spinner effort 라벨이 서브에이전트 자신의 `effort:` 대신 세션 effort 를 표시하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "파일 watcher 가 파일시스템 에러를 만나거나 teardown 중 드물게 발생한 크래시 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`--ax-screen-reader` 모드에서 backspace 마다 입력 줄 전체를 다시 읽던 문제 수정 — 줄 끝 삭제는 삭제된 문자만 echo",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 설정 시 호스트 모델 선택 키가 오래된 `managed-settings.json` 보다 우선하지 않던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "worktree 격리 세션의 파괴적 git 명령 우회가 막혀 격리가 파일 편집과 Bash 전체에 적용되므로, 격리 세션에서 main 체크아웃을 건드리던 스크립트는 이제 차단됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "PreToolUse 자동 허용 hook 이 백그라운드 에이전트 작업에서 툴 제약을 우회하지 못하므로, 해당 hook 에 의존한 무프롬프트 흐름이 달라질 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Remote Control 자동 시작을 레포 로컬 설정으로 켜던 구성은 더 이상 동작하지 않고 `/config` user scope 로 옮겨야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "ultraplan 이 제거되어 이를 사용하던 워크플로는 대체 수단이 필요함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "조직 제한 환경의 `model: opus` 별칭이 패밀리 내 최신 허용 모델로 해석되므로 서브에이전트가 실제로 쓰는 모델이 바뀔 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 7
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-06T00:08:11.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.221",
+    "tagName": "v2.1.221",
+    "publishedAt": "2026-08-04T00:14:23Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.221",
+    "originalBody": "## What's changed\n\n- [VSCode] Added Focus view: a chat-menu toggle that hides tool activity behind an expandable per-turn summary with a live running-tool indicator, toggled with `Ctrl+Alt+F` or the \"Claude Code: Toggle Focus view\" command\n- Added `mode: \"mask\"` for sandbox credential files on Linux and WSL — sandboxed commands read a sentinel copy (the whole file, or just the spans captured by an `extract` regex) while the sandbox proxy substitutes the real value on egress; on macOS file masking falls back to `deny`\n- Added warnings to `claude plugin validate` when a marketplace or plugin name would be rejected by Claude Desktop's managed marketplace sync\n- Added a `prompt-audit` subcommand to the `claude-api` skill for auditing prompts and tool descriptions for patterns written for older models\n- Fixed a Bash tool permission-check bypass where zsh could execute hidden commands in `[[ ]]` regex conditionals; affected commands now prompt for permission\n- Fixed PowerShell permission checks mishandling paths containing quote characters on Windows; such paths now prompt for approval\n- Fixed the thinking toggle having no effect for the rest of a session that started with thinking off; disabling an MCP server mid-connect no longer silently reverts\n- Fixed MCP servers from `--mcp-config` not being connected before the first turn in print mode (`-p`), which made the model emit tool calls as literal text\n- Fixed @-mentioned files being silently dropped when pressing Esc to retract a prompt and resubmitting it\n- Fixed a crash when preparing API requests for SDK MCP tools named after built-in object properties such as `constructor`\n- Fixed WebSearch failing with a 400 error at effort `xhigh`/`max` when thinking is disabled\n- Fixed sandboxed large uploads failing with TLS errors through the sandbox proxy\n- Fixed Team and Enterprise spend-limit message incorrectly blaming the org's monthly limit instead of your individual spend limit\n- Fixed Bedrock authentication with AWS SSO named profiles failing in desktop-managed sessions on Windows machines that set a stray `HOME` environment variable\n- Fixed `CLAUDE_CODE_RESUME_INTERRUPTED_TURN=0` not disabling interrupted-turn auto-resume; falsy values are now honored\n- Fixed a rare wake-from-sleep race where two Claude Code processes could both refresh the same MCP connector or WIF OAuth token at once, forcing re-authentication\n- Fixed renaming a session from Claude Code Desktop or claude.ai not updating the CLI's session name; session names from every rename surface are now sanitized\n- Fixed plugin- and org-delivered skills named after terminal-only built-ins (e.g. `/help`, `/feedback`) being un-invocable in non-interactive sessions\n- Fixed the \"Plugins changed\" notification lingering after plugins were reloaded instead of clearing\n- Fixed Vim mode: the yank register now survives dialogs, history search, and the transcript view instead of being silently emptied\n- Fixed Vim mode: undoing back to an empty prompt now arms the \"press ← again\" confirm before returning to the agent view\n- Improved tool search on Google Vertex AI: re-enabled for Claude 4.5-generation and newer models\n- Improved auto mode: permission checks for parallel tool calls are now cache-efficient, and switching modes while a check is pending reliably prompts instead of applying the stale result\n- Reduced prompt-cache costs for auto-mode permission checks by reusing the cached conversation prefix across decisions\n- Improved Stats panel to count cache tokens in its token totals, with a breakdown by input, output, cache read, and cache write\n- Improved `/ultrareview` error messages when a repo shares no history with its base: a checkout with no branches is now refused up front with advice to create one, and refusal hints no longer suggest `git fetch --unshallow` on clones that are already complete\n- Improved Windows startup: process creation times are now read via a native kernel32 call instead of spawning PowerShell, so endpoint security tools that gate `powershell.exe` no longer prompt\n- Changed background sessions to commit and push to preserve work, open a draft PR only when the task calls for one, follow your CLAUDE.md git instructions, and always end by reporting where the work lives\n- Changed `/plugin install` to refresh a stale marketplace catalog and retry before reporting a plugin not found\n- Changed plugins installed from `/plugin` to activate immediately when safe, instead of always requiring `/reload-plugins`\n- Changed plugins to accept `\".\"` as a `skills` path, and the root-level `SKILL.md` validation error now suggests using the plugin root\n- Changed `/status` to show the session kind: `interactive`, or a background job that is `attached` or `unattended`\n- Changed emoji autocomplete to accept common alternate shortcodes like `:thumbsup:`, `:thumbsdown:`, and `:love:`\n- Changed sessions forked with `/fork` to create a new worktree of their own instead of working in the original session's checkout\n- Changed Claude in Chrome to close the browser tabs it opens once it no longer needs them\n- Changed fast mode to report on the stream when usage credits run out mid-session, instead of failing silently\n- Changed Monitor: a watch that exits without producing any output now says so instead of reporting \"stream ended\"\n- Changed the Gateway `model` field validation: non-string values are rejected with a 400 instead of being forwarded\n- Removed the repeated \"Permission mode changed while the auto-mode classifier call was queued\" notice from approval prompts\n",
+    "summary": {
+      "headline": "샌드박스 자격증명 마스킹과 권한 우회 차단",
+      "newFeatures": [
+        {
+          "text": "VSCode 확장에 Focus view 추가 — `Ctrl+Alt+F` 로 툴 실행 내역을 턴별 접이식 요약 뒤로 숨김",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "Linux/WSL 샌드박스 자격증명 파일에 `mode: \"mask\"` 지원 — 샌드박스 명령은 sentinel 사본만 읽고 실제 값은 프록시가 egress 시점에 치환. macOS 는 `deny` 로 폴백",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`claude plugin validate` 가 Claude Desktop 관리형 마켓플레이스 동기화에서 거부될 이름을 미리 경고",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`claude-api` 스킬에 `prompt-audit` 서브커맨드 추가 — 구형 모델 기준으로 작성된 프롬프트·툴 설명 점검",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "백그라운드 세션이 작업 보존을 위해 commit·push 하고, 필요할 때만 draft PR 을 열며 CLAUDE.md 의 git 지침을 따르고 결과 위치를 반드시 보고",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "`/plugin install` 이 플러그인 미발견 보고 전에 오래된 마켓플레이스 카탈로그를 갱신 후 재시도",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "`/plugin` 설치 플러그인이 안전한 경우 `/reload-plugins` 없이 즉시 활성화",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "플러그인 `skills` 경로에 `\".\"` 허용, 루트 `SKILL.md` 검증 에러가 플러그인 루트 사용을 안내",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "`/status` 가 세션 종류를 `interactive` / `attached` / `unattended` 로 표시",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "`/fork` 로 분기한 세션이 원본 체크아웃을 공유하지 않고 자체 worktree 를 생성",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "이모지 자동완성이 `:thumbsup:`, `:thumbsdown:`, `:love:` 같은 대체 shortcode 를 인식",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "Claude in Chrome 이 더 이상 필요 없어진 브라우저 탭을 자동으로 닫음",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "fast mode 가 세션 중 usage credit 소진 시 조용히 실패하지 않고 스트림에 보고",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "Monitor 의 watch 가 출력 없이 종료되면 \"stream ended\" 대신 그 사실을 명시",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "Gateway 의 `model` 필드가 문자열이 아니면 전달 대신 400 으로 거부",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "Google Vertex AI 에서 Claude 4.5 세대 이후 모델의 tool search 재활성화",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "auto mode 의 병렬 툴 호출 권한 검사가 캐시 효율화되고, 검사 대기 중 모드 변경 시 낡은 결과 대신 재프롬프트",
+          "originalRefs": [
+            22,
+            23
+          ]
+        },
+        {
+          "text": "Stats 패널이 cache 토큰을 합계에 포함하고 input·output·cache read·cache write 로 분해 표시",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`/ultrareview` 가 base 와 히스토리를 공유하지 않는 레포를 사전 거부하고, 이미 완전한 clone 에는 `git fetch --unshallow` 를 권하지 않음",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "Windows 시작 시 프로세스 생성 시각을 PowerShell 대신 kernel32 네이티브 호출로 읽어 `powershell.exe` 를 차단하는 엔드포인트 보안 툴의 프롬프트 제거",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "auto-mode 분류기 대기 중 권한 모드 변경 알림이 승인 프롬프트에서 반복 노출되던 문제 제거",
+          "originalRefs": [
+            38
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "zsh 의 `[[ ]]` 정규식 조건절로 숨은 명령을 실행할 수 있던 Bash 툴 권한 검사 우회 차단 — 해당 명령은 이제 권한 프롬프트 표시",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Windows 에서 인용부호가 포함된 경로의 PowerShell 권한 검사 오류 수정 — 이제 승인 요청",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "thinking 을 끈 상태로 시작한 세션에서 thinking 토글이 먹지 않던 문제, MCP 서버를 연결 중 비활성화하면 조용히 되돌아가던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "print 모드(`-p`)에서 `--mcp-config` MCP 서버가 첫 턴 전에 연결되지 않아 모델이 툴 호출을 그대로 텍스트로 출력하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Esc 로 프롬프트를 회수한 뒤 재전송할 때 @-멘션 파일이 조용히 누락되던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`constructor` 처럼 내장 객체 속성명을 쓴 SDK MCP 툴의 API 요청 준비 중 크래시 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "thinking 비활성 상태에서 effort `xhigh`/`max` 로 WebSearch 가 400 에러로 실패하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "샌드박스 프록시 경유 대용량 업로드가 TLS 에러로 실패하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Team·Enterprise 의 지출 한도 메시지가 개인 한도 대신 조직 월 한도를 잘못 지목하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`HOME` 환경변수가 엉뚱하게 설정된 Windows 에서 AWS SSO named profile 기반 Bedrock 인증이 실패하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_RESUME_INTERRUPTED_TURN=0` 이 중단 턴 자동 재개를 끄지 못하던 문제 수정 — falsy 값 정상 반영",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "절전 해제 직후 두 Claude Code 프로세스가 같은 MCP 커넥터·WIF OAuth 토큰을 동시에 갱신해 재인증을 강제하던 경쟁 조건 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "Desktop·claude.ai 에서 세션 이름을 바꿔도 CLI 에 반영되지 않던 문제 수정 — 모든 rename 경로의 이름을 정규화",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`/help`, `/feedback` 처럼 터미널 전용 내장 명령과 이름이 겹치는 플러그인·조직 배포 스킬이 비대화형 세션에서 호출 불가했던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "플러그인 재로드 후에도 \"Plugins changed\" 알림이 남아 있던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "Vim 모드에서 yank 레지스터가 다이얼로그·히스토리 검색·transcript view 진입 시 비워지던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "Vim 모드에서 빈 프롬프트까지 undo 하면 에이전트 뷰 복귀 전에 \"press ← again\" 확인이 걸리도록 수정",
+          "originalRefs": [
+            20
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "zsh `[[ ]]` 조건절과 Windows 인용부호 경로를 통한 권한 검사 우회가 막혔으므로, 기존에 통과하던 명령이 이제 승인 프롬프트를 띄울 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            },
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Linux·WSL 에서 `mode: \"mask\"` 로 샌드박스에 실제 자격증명을 노출하지 않고 명령을 실행할 수 있으나, macOS 는 `deny` 로 폴백되어 동일 설정이 다르게 동작함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "`/fork` 세션이 자체 worktree 를 만들도록 바뀌어 원본 체크아웃을 공유하던 기존 워크플로가 달라짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_RESUME_INTERRUPTED_TURN=0` 이 이제 실제로 자동 재개를 비활성화하므로, 이 값을 켜둔 환경의 재개 동작이 바뀜.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 10
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-06T00:08:11.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.220",
     "tagName": "v2.1.220",
     "publishedAt": "2026-07-25T01:35:55Z",

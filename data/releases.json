@@ -1,5 +1,209 @@
 [
   {
+    "version": "v2.1.223",
+    "tagName": "v2.1.223",
+    "publishedAt": "2026-08-06T00:52:37Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.223",
+    "originalBody": "## What's changed\n\n- Added owner wildcard entries (`\"owner/*\"`) to the `strictKnownMarketplaces` and `blockedMarketplaces` managed settings for allowing or blocking all marketplace repos under a GitHub org\n- Added a warning when workflow agents, forked skills, slash commands, or resumed background agents' requested subagent model is restricted and the parent model runs instead\n- Added a `/teleport` hint in cloud sessions showing how to continue locally with `claude --teleport <session id>`\n- Fixed a Bash permission bypass where a crafted command could hide parts of itself from permission checks\n- Fixed permission prompts so commands padded with tabs or invisible Unicode can no longer hide part of the command from the approval dialog\n- Fixed workflow scripts being able to use dynamic `import()` to run code outside the workflow sandbox\n- Fixed a permission gap where an agent definition's `bypassPermissions` mode ignored the org bypass-permissions disable policy\n- Fixed resuming a session after a mid-session `/cd` coming back empty\n- Fixed gateway model discovery hiding Claude models registered under provider-prefixed IDs such as `vertex_ai/claude-*` or `bedrock/anthropic.claude-*`\n- Fixed `modelOverrides` keys that aren't Anthropic model IDs being treated as the session's canonical model ID; unknown keys are now ignored as documented\n- Fixed managed settings: server-delivered settings no longer disable the env block of a machine-local `managed-settings.json` or MDM profile; admin env now merges per key\n- Fixed sandboxed commands failing to start on Linux when `sandbox.filesystem.denyWrite` covers the working directory\n- Fixed forked background agents getting stuck \"already resuming\" for the rest of the session when rebuilding the fork's parent prompt failed during resume\n- Fixed a resumed session failing every turn, or leaving the interactive app on an unresponsive error screen, when its history held a malformed diagnostics attachment\n- Fixed a rare hang when parsing unusual `git push` output\n- Changed `CLAUDE_CODE_DISABLE_1M_CONTEXT` to hold every Claude model with a native 1M window to 200K via auto-compaction, not just a fixed list; a startup warning now appears when auto-compaction isn't holding the session to 200K\n- Changed auto-compact to keep sessions on unrecognized model IDs within the assumed context window instead of letting them grow past it; set `CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1` to restore the previous behavior\n- Changed `/review` to be an alias of `/code-review`, which reviews the current diff or a PR (`/code-review <level> <pr#>`); use `/code-review ultra` for a deep cloud review\n- Changed `/code-review` with no effort level to reuse the level you typed last; type a level like `/code-review high` to change it\n",
+    "summary": {
+      "headline": "Bash 권한 우회 차단과 1M 컨텍스트 제어 개편",
+      "newFeatures": [
+        {
+          "text": "`strictKnownMarketplaces`/`blockedMarketplaces` 관리 설정에 `\"owner/*\"` 와일드카드 지원 — GitHub org 단위로 마켓플레이스 레포 일괄 허용·차단 가능",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "workflow 에이전트·fork 스킬·슬래시 커맨드·재개된 백그라운드 에이전트가 요청한 서브에이전트 모델이 제한돼 부모 모델로 대체 실행될 때 경고 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "클라우드 세션에 `/teleport` 힌트 추가 — `claude --teleport <session id>` 로 로컬 이어받기 안내",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`CLAUDE_CODE_DISABLE_1M_CONTEXT` 가 고정 목록이 아니라 네이티브 1M 윈도우를 가진 모든 Claude 모델을 auto-compaction 으로 200K 에 묶도록 변경, 200K 유지에 실패하면 시작 시 경고 표시",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "인식되지 않는 모델 ID 세션도 auto-compact 가 가정 컨텍스트 윈도우 안에서 유지하도록 변경 — 이전 동작은 `CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1` 로 복원",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`/review` 가 `/code-review` 별칭으로 통합됨. 현재 diff 또는 PR 리뷰(`/code-review <level> <pr#>`), 심층 클라우드 리뷰는 `/code-review ultra`",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`/code-review` 를 레벨 없이 실행하면 마지막에 입력한 effort 레벨을 재사용, `/code-review high` 처럼 입력해 변경",
+          "originalRefs": [
+            18
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "조작된 명령이 권한 검사에서 자기 일부를 숨길 수 있던 Bash 권한 우회 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "탭이나 비가시 Unicode 로 패딩된 Bash 명령이 승인 다이얼로그에서 일부를 감추지 못하도록 권한 프롬프트 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "workflow 스크립트가 동적 `import()` 로 workflow 샌드박스 밖 코드를 실행할 수 있던 문제 차단",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "에이전트 정의의 `bypassPermissions` 모드가 조직의 bypass-permissions 비활성 정책을 무시하던 권한 공백 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "세션 중간에 `/cd` 한 뒤 재개하면 빈 세션으로 돌아오던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "게이트웨이 모델 탐색이 `vertex_ai/claude-*`, `bedrock/anthropic.claude-*` 같은 provider 접두 ID 로 등록된 Claude 모델을 숨기던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Anthropic 모델 ID 가 아닌 `modelOverrides` 키가 세션의 정식 모델 ID 로 취급되던 문제 수정 — 문서대로 알 수 없는 키는 무시됨",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "서버 전달 설정이 머신 로컬 `managed-settings.json` 이나 MDM 프로필의 env 블록을 비활성화하지 않도록 수정, 관리자 env 는 키 단위로 병합됨",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "Linux 에서 `sandbox.filesystem.denyWrite` 가 작업 디렉토리를 포함할 때 샌드박스 명령이 시작되지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "재개 중 fork 부모 프롬프트 재구성에 실패하면 fork 된 백그라운드 에이전트가 세션 내내 \"already resuming\" 상태로 멈추던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "히스토리에 malformed diagnostics 첨부가 있을 때 재개 세션이 매 턴 실패하거나 응답 없는 에러 화면에 갇히던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "비정형 `git push` 출력 파싱 시 드물게 발생하던 hang 수정",
+          "originalRefs": [
+            14
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "권한 검사 우회 3건(Bash 명령 은닉, 유니코드 패딩, workflow 동적 `import()`)과 `bypassPermissions` 조직 정책 무시가 함께 수정된 보안 릴리즈라 조기 업데이트 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            },
+            {
+              "bucket": "fixes",
+              "index": 1
+            },
+            {
+              "bucket": "fixes",
+              "index": 2
+            },
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "1M 컨텍스트 모델을 쓰던 환경은 `CLAUDE_CODE_DISABLE_1M_CONTEXT` 적용 범위가 넓어져 이전엔 제외되던 모델도 200K 로 묶이므로 설정 재확인 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "알 수 없는 모델 ID 로 auto-compact 가 강제되는 것이 기본값이 됐고, 되돌리려면 `CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1` 설정 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "`/review` 가 `/code-review` 별칭이 되면서 인자 체계가 바뀌어 기존 `/review` 사용 스크립트·문서 갱신 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            },
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "MDM·managed-settings 로 env 를 배포하던 조직은 서버 설정과 로컬 설정이 키 단위 병합으로 바뀌어 실제 적용 값이 달라질 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 7
+            }
+          ]
+        },
+        {
+          "text": "Linux 에서 `sandbox.filesystem.denyWrite` 로 작업 디렉토리를 막던 설정은 이번 수정 전까지 샌드박스 실행이 불가능했음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 8
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-07T00:04:36.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.222",
     "tagName": "v2.1.222",
     "publishedAt": "2026-08-04T22:39:55Z",

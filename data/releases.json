@@ -1,5 +1,78 @@
 [
   {
+    "version": "v2.1.227",
+    "tagName": "v2.1.227",
+    "publishedAt": "2026-08-10T22:56:53Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.227",
+    "originalBody": "## What's changed\n\n- Fixed feature flags being evaluated without the user's subscription tier when a session started with an expired login token, which could wrongly prompt Max plan users to enable usage credits for Fable\n- Fixed every Bash command failing under `claude-code-action` with `allowed_non_write_users` on GitHub-hosted runners\n- Fixed `/tui` bringing back a conversation that had been rewound to before its first message\n- Improved slash-command menu: blue now marks only the selected row, matched characters are bolded instead of recolored, and emoji or accented names keep their glyphs\n- Improved performance: fewer event-loop stalls on file-not-found suggestions and at-mention size checks\n",
+    "summary": {
+      "headline": "만료 토큰 구독 티어 오판 및 Bash 실패 수정",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "슬래시 명령 메뉴에서 파란색이 선택된 행에만 적용되고, 일치 문자는 색상 변경 대신 굵게(bold) 표시됨",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "이모지나 악센트가 들어간 슬래시 명령 이름의 글리프가 깨지지 않고 유지됨",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "파일 미발견 제안과 at-mention 크기 검사에서 이벤트 루프 정체가 줄어 응답성 개선",
+          "originalRefs": [
+            4
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "만료된 로그인 토큰으로 세션 시작 시 구독 티어 없이 기능 플래그가 평가되어 Max 플랜 사용자에게 Fable 사용 크레딧 활성화를 잘못 안내하던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "GitHub 호스팅 러너에서 `allowed_non_write_users` 를 쓴 `claude-code-action` 의 모든 Bash 명령이 실패하던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/tui` 가 첫 메시지 이전으로 rewind 된 대화를 다시 불러오던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`claude-code-action` 을 `allowed_non_write_users` 와 함께 GitHub 호스팅 러너에서 쓰는 CI 파이프라인은 이 버전으로 올려야 Bash 단계가 동작함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Max 플랜에서 만료 토큰 상태로 세션을 시작해도 Fable 크레딧 활성화 안내가 더 이상 잘못 뜨지 않음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-11T00:05:53.000Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.226",
     "tagName": "v2.1.226",
     "publishedAt": "2026-08-08T02:48:05Z",

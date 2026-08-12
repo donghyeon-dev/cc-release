@@ -1,5 +1,181 @@
 [
   {
+    "version": "v2.1.228",
+    "tagName": "v2.1.228",
+    "publishedAt": "2026-08-11T19:50:59Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.228",
+    "originalBody": "## What's changed\n\n- Fixed interactive sessions that could stop redrawing entirely, while the process kept running, after a rare internal layout error\n- Fixed `git` / Git Bash not being found on Windows when Claude Code is launched from a parent folder of the git installation\n- Fixed `/tui` reverting the session to an earlier model when `/model` had been changed since the last response\n- Fixed cross-session messaging sometimes starting without an inbox in the first session after install or upgrade\n- Fixed Remote Control `/resume` while connected leaking the resumed conversation's title or history into the connected session\n- Fixed `claude self-hosted-runner` sessions failing on every fresh runner when the `checkout` hook fails for a repository the session doesn't push to; that repository is now skipped with a warning\n- Fixed self-hosted runners ending sessions in the gap between a background task finishing and the follow-up turn starting\n- Fixed session cleanup deleting contents inside a project's memory folder\n- Fixed background plugin-cache cleanup deleting a plugin's cache when its only version is a symlinked development checkout\n- Fixed a settings-merge issue where a marketplace entry redefined in a higher-precedence settings tier could inherit another tier's custom headers; marketplace entries now merge as whole entries\n- Fixed the deferred-tools reminder occasionally being sent to the model twice after a skill invocation\n- Hardened skills synced from claude.ai: they no longer shadow local commands or MCP prompts, their descriptions are sanitized and labeled, and on your machine their bodies don't run `!` commands or expand `@` files\n- Improved cross-session messages: the sender and body now display inline instead of a collapsed line, and messages to Remote Control sessions on other machines show your Remote Control session name as the sender\n- Improved Vertex AI credential handling: expired or missing Google Cloud credentials now fail within seconds instead of retrying for minutes\n- Improved compaction progress: the retry countdown and stall hint now appear during compaction instead of only a progress bar\n- Updated terminal title busy-spinner glyphs to reduce tab-bar jitter on some terminals\n- Changed the Write tool so newer models can overwrite an existing file they haven't read this session, matching the Edit tool's rules; older models still require the read first\n- Removed the outdated note about auto mode sessions costing slightly more from the first-use notice for Pro, Max, and Team plans\n",
+    "summary": {
+      "headline": "세션 렌더링 멈춤·Windows git 탐지 등 대량 수정",
+      "newFeatures": [],
+      "changes": [
+        {
+          "text": "claude.ai 동기화 스킬 보안 강화 — 로컬 명령어·MCP 프롬프트를 가릴 수 없고, description 은 sanitize 후 라벨 표시되며, 본문의 `!` 명령 실행과 `@` 파일 확장이 차단됨",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "크로스 세션 메시지가 접힌 한 줄 대신 발신자와 본문을 인라인으로 표시하고, Remote Control 세션 수신 시 발신자로 Remote Control 세션 이름이 표기됨",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Vertex AI 자격증명 처리 개선 — 만료·누락된 Google Cloud 인증 정보가 수 분간 재시도 대신 수 초 내 실패 처리됨",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "compaction 진행 표시에 진행 바뿐 아니라 재시도 카운트다운과 stall 힌트가 함께 노출됨",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "터미널 제목의 busy 스피너 글리프 교체로 일부 터미널의 탭바 흔들림 완화",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "Write 툴 규칙 변경 — 최신 모델은 세션 내에서 읽지 않은 기존 파일도 덮어쓰기 가능(Edit 툴과 동일 규칙), 구형 모델은 기존대로 선행 read 필요",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "Pro·Max·Team 플랜 최초 사용 안내에서 auto 모드 세션 비용이 더 든다는 낡은 문구 제거",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "드문 내부 layout error 이후 프로세스는 살아 있는데 대화형 세션의 TUI 화면 재렌더링이 완전히 멈추던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "Windows 에서 git 설치 경로의 상위 폴더에서 실행하면 `git` / Git Bash 를 찾지 못하던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "마지막 응답 이후 `/model` 로 모델을 바꿨는데 `/tui` 가 세션을 이전 모델로 되돌리던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "설치·업그레이드 직후 첫 세션에서 크로스 세션 메시징이 inbox 없이 시작되던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "Remote Control 연결 중 `/resume` 이 재개한 대화의 제목·히스토리를 연결된 세션으로 유출하던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`claude self-hosted-runner` 가 push 하지 않는 레포의 `checkout` 훅 실패로 신규 runner 마다 세션이 실패하던 문제 수정 — 해당 레포는 경고와 함께 건너뜀",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "self-hosted runner 가 백그라운드 작업 완료와 후속 턴 시작 사이 공백에서 세션을 종료하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "세션 정리 작업이 프로젝트 memory 폴더 내부 내용을 삭제하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "유일한 버전이 심볼릭 링크된 개발 체크아웃일 때 백그라운드 plugin-cache 정리가 해당 플러그인 캐시를 지우던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "상위 우선순위 settings 계층에서 재정의된 marketplace 항목이 다른 계층의 custom header 를 상속하던 병합 문제 수정 — marketplace 항목은 이제 항목 전체 단위로 병합됨",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "스킬 호출 후 deferred-tools 리마인더가 모델에 두 번 전달되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Write 툴 기본 동작이 바뀌어 최신 모델은 선행 read 없이 기존 파일을 덮어쓸 수 있음 — 읽기 강제에 의존하던 워크플로는 재점검 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "claude.ai 동기화 스킬은 이제 로컬 명령어·MCP 프롬프트를 가릴 수 없고 본문의 `!` 실행과 `@` 확장이 막히므로, 이를 쓰던 원격 스킬은 동작이 달라짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "Windows 사용자는 git 설치 경로 상위 폴더에서 실행해도 `git` 탐지가 정상화됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Remote Control `/resume` 의 대화 제목·히스토리 유출이 막혀 다중 세션 사용 시 정보 노출 위험이 해소됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "세션 정리와 plugin-cache 정리가 프로젝트 memory 폴더와 심볼릭 링크 개발 체크아웃을 더 이상 삭제하지 않음 — 로컬 플러그인 개발 환경 데이터 손실 위험 제거.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 7
+            },
+            {
+              "bucket": "fixes",
+              "index": 8
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-12T00:08:50.697Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.227",
     "tagName": "v2.1.227",
     "publishedAt": "2026-08-10T22:56:53Z",

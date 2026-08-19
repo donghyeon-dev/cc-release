@@ -1,5 +1,571 @@
 [
   {
+    "version": "v2.1.235",
+    "tagName": "v2.1.235",
+    "publishedAt": "2026-08-18T20:38:54Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.235",
+    "originalBody": "## What's changed\n\n- Added an optional `spellcheck` setting that underlines misspelled words in the prompt input as you type, using your installed `aspell`, `hunspell`, or `ispell`\n- Fixed whole-prompt-cache invalidation when a language server disconnected or reconnected mid-session\n- Fixed nested markdown list items misaligning at depth 3+ and added a hanging indent to wrapped list items in the terminal UI\n- Fixed prompt input highlights (slash commands, keywords, mentions) appearing shifted by one or more characters in some multi-line prompts\n- Fixed Shift+Tab inside the permission prompt's comment field approving the edit and granting session-wide edit permission instead of closing the field\n- Fixed the Agent tool advertising a general-purpose default in sessions where that agent is unavailable: an omitted `subagent_type` there now gets a clear error listing the available agents\n- Fixed notebook cell delete/replace approval dialogs silently omitting the existing cell content when the notebook or cell could not be read; the dialog now says why\n- Fixed slash commands run while Claude is responding showing HTML entities instead of the actual characters\n- Fixed the prompt footer not showing the \"Update installed\" restart notice after a background auto-update\n- Fixed the expanded task list (`ctrl+t`) always starting collapsed when resuming or relaunching into a session that still has open tasks\n- Improved memory and CPU usage while cloud sessions such as `/ultrareview` or `/autofix-pr` run in the background — their event streams are no longer re-scanned and re-rendered on every update\n- Improved permission dialogs: display text and \"don't ask again\" options now always match what a grant would cover, and \"don't ask again\" is withheld when contents cannot be fully displayed\n- Improved the embedded `grep` in native macOS/Linux builds: pathological patterns now fail fast instead of exhausting memory, and `-m N` with `-A/-C` prints correct context\n- Improved the context-limit error to say when auto-compact is off and point to `/config` to re-enable it\n- Vim mode: NORMAL mode and cursor position are now preserved when toggling the detailed transcript (ctrl+o) or closing a panel\n- Dialogs: arrow keys and Enter pressed in quick succession now select the option you navigated to instead of the previously highlighted one\n- `SendMessage` now refuses messages too large for cross-session delivery up front instead of silently dropping them\n- Remote Control: `claude rc` now applies the same enterprise-gateway availability check as interactive startup\n- [VSCode] Fixed focus jumping between open Claude tabs on its own when a window with several Claude panels is restored or reloaded\n",
+    "summary": {
+      "headline": "맞춤법 검사 설정 추가, 권한 다이얼로그 정합성 개선",
+      "newFeatures": [
+        {
+          "text": "`spellcheck` 설정으로 프롬프트 입력 중 오타에 밑줄 표시 — 설치된 `aspell`/`hunspell`/`ispell` 활용",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/ultrareview`, `/autofix-pr` 등 백그라운드 클라우드 세션의 이벤트 스트림 재스캔·재렌더를 없애 메모리·CPU 사용량 절감",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "권한 다이얼로그 표기와 \"don't ask again\" 범위가 실제 승인 범위와 항상 일치하도록 조정되고, 내용을 전부 표시할 수 없으면 \"don't ask again\" 자체를 제공하지 않음",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "macOS/Linux 네이티브 빌드 내장 `grep` 이 병적 패턴에서 메모리를 소진하지 않고 빠르게 실패하며, `-m N` 과 `-A/-C` 조합의 컨텍스트 출력이 정확해짐",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "컨텍스트 한도 초과 에러가 auto-compact 가 꺼져 있음을 알리고 `/config` 로 재활성화하도록 안내",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "Vim 모드에서 상세 트랜스크립트(ctrl+o) 토글이나 패널 닫기 후에도 NORMAL 모드와 커서 위치 유지",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "다이얼로그에서 방향키와 Enter 를 빠르게 연타해도 직전 하이라이트가 아닌 실제 이동한 항목이 선택됨",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`SendMessage` 가 세션 간 전달 한도를 넘는 메시지를 조용히 버리지 않고 전송 시점에 거부",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`claude rc` 가 대화형 시작과 동일한 엔터프라이즈 게이트웨이 가용성 검사를 적용",
+          "originalRefs": [
+            17
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "language server 가 세션 중간에 끊기거나 재연결될 때 프롬프트 캐시 전체가 무효화되던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "depth 3 이상 중첩 마크다운 리스트 정렬 깨짐 수정, 터미널 UI 에서 줄바꿈된 리스트 항목에 hanging indent 적용",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "여러 줄 프롬프트에서 슬래시 커맨드·키워드·`@` 멘션 하이라이트가 1글자 이상 밀려 보이던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "권한 프롬프트 코멘트 필드에서 Shift+Tab 이 필드를 닫지 않고 편집을 승인하며 세션 전체 편집 권한까지 부여하던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "general-purpose 에이전트가 없는 세션에서 `subagent_type` 생략 시 사용 가능한 에이전트 목록을 담은 에러를 반환하도록 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`NotebookEdit` 셀 삭제·교체 승인 다이얼로그가 노트북이나 셀을 읽지 못했을 때 기존 내용을 조용히 누락하던 문제 수정 — 이제 이유를 표시",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "Claude 응답 중 실행한 슬래시 커맨드가 실제 문자 대신 HTML 엔티티로 표시되던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "백그라운드 자동 업데이트 후 프롬프트 푸터에 \"Update installed\" 재시작 안내가 뜨지 않던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "열린 태스크가 남은 세션을 재개·재실행할 때 확장 태스크 목록(`ctrl+t`)이 항상 접힌 상태로 시작하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "여러 Claude 패널이 있는 VSCode 창을 복원·리로드할 때 탭 간 포커스가 저절로 이동하던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`spellcheck` 설정키가 신설됐고, 시스템에 `aspell`/`hunspell`/`ispell` 중 하나가 설치돼 있어야 동작함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "권한 다이얼로그의 \"don't ask again\" 이 표시 불가 상황에서 제공되지 않으므로, 광범위 승인이 예전보다 덜 남게 되는 권한 동작 변경.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Shift+Tab 으로 세션 전체 편집 권한이 의도치 않게 부여되던 경로가 막혔으니, 해당 방식에 의존한 습관이 있다면 명시 승인으로 바꿔야 함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "내장 `grep` 개선은 macOS/Linux 네이티브 빌드 한정이라 Windows 사용자에게는 해당 없음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-19T05:50:59Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.234",
+    "tagName": "v2.1.234",
+    "publishedAt": "2026-08-17T20:20:58Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.234",
+    "originalBody": "## What's changed\n\n- Added the optional `CLAUDE_CODE_PROJECT_DIR_NAME` environment variable: hosts that give each session its own config directory can choose a short name for the per-project transcript directory\n- Added the `selection:clear` keybinding action, so a key can be bound to clear an in-app text selection; also works in the agents view\n- Added a GitLab merge request badge to the footer and statusline: repos with a GitLab remote and an authenticated glab CLI show MR !N with draft/pending/green states\n- Claude Code now continues your session automatically when a claude.ai usage limit resets; turn it off in `/config` (\"Continue automatically at usage limit\")\n- Claude is now told to use your account email only to identify you, and not to send it to unrelated services unless you ask\n- Security: remote file reads, session restore, CLAUDE.md includes, workflow scripts and file uploads now reject Windows NT-namespace (`\\??\\`) paths, hardening the remaining pre-approval file accesses against the NTLM credential-leak vector\n- Fixed auto mode in very long sessions repeatedly re-checking and denying sandboxed commands' network access after the conversation had been compacted\n- Fixed session-scoped permission answers (including denies) being dropped when answering background subagent tool permission prompts\n- Fixed a crash when an API response on the non-streaming fallback path (typically via third-party gateways) contained a thinking block missing its thinking field or a text block missing its text field\n- Fixed markdown rendering becoming extremely slow for some messages containing unusual Unicode sequences\n- Fixed `SendMessage` rejecting a recipient copied from `ListAgents` when the session name is at the 200-character cap or emoji-heavy\n- Fixed repository detection mis-reading the host of git remotes with unusual userinfo, producing links and repo-specific behavior for the wrong host\n- Fixed MCP diagnostics printing resolved secrets: scope-conflict warnings now show the configured `${VAR}` form, and connection-failure details show only the server origin\n- Fixed `strictKnownMarketplaces` allowlists accepting SCP-style git marketplace sources whose host differs from the one git would actually connect to\n- Fixed modal text such as the `/login` OAuth URL losing characters when copied in fullscreen\n- Fixed a `---` horizontal rule in rendered markdown running into the line after it\n- Fixed consecutive shell commands splitting into multiple \"Ran 1 shell command\" rows when todo/task updates were interleaved between them\n- Fixed dialogs like `/permissions` opened while a `!` shell command was running being dismissed when the command finished\n- Fixed a queued `!` shell command being sent to the model as plain text after pressing up-arrow to edit the queued input\n- Fixed queued messages reappearing in the prompt history while still queued, Esc while selecting a queued message no longer interrupts the turn, and `!` mode no longer sticks after a mid-turn submit\n- Fixed accepting the \"Try the new fullscreen renderer?\" prompt restarting the session without its permission mode (e.g. `--dangerously-skip-permissions`), tool allow/deny rules, model or effort flags\n- Fixed `/tui` dropping launch `--allowed-tools`/`--disallowed-tools` rules when it restarts; it now declines to switch, with the reason, when the session has restrictions a restart can't carry over\n- Fixed trust prompts omitting the repository-wide scope warning when the directory was first seen before the repository existed there\n- Fixed a case where an IDE diff tab closing during a permission re-prompt could answer the new prompt with the previous input\n- Fixed: files sent to the user during Remote Control sessions hosted by Claude Code Desktop or VS Code now upload, so they open on phone and web instead of showing an empty card\n- Fixed: after `/login` while `CLAUDE_CODE_OAUTH_TOKEN` is set, the stale-token reminder no longer leaks into Claude's automatically resumed turn — it now appears only to you\n- Fixed: permission previews now relay only to channel servers admitted by the inbound trust gate, and a server's explicit permission-capability opt-out is honored\n- Fixed: credential masking on relayed permission previews can no longer hide commands, paths, or destinations from the approver; oversized private-key blocks now redact under full-strength redaction\n- Fixed: provider API tokens that mask on permission previews now mask even when directly followed by shell delimiters\n- Fixed Claude Desktop inter-session messages being silently dropped by the recipient session when cross-session messaging read as disabled, which left the sender's query \"thinking\" for many minutes\n- Remote Control: signing this computer in to a different claude.ai account or organization now stops the running session within seconds and says why, instead of a misleading HTTP 404 hours later\n- Remote Control sessions started from Claude Code Desktop or VS Code now keep phones and claude.ai/code updated on the session's permission mode (and claude.ai/code on the model) as they change\n- Remote Control: effort picks made on a phone or on claude.ai/code now apply to terminal- and Desktop/VS Code-hosted sessions, and the session publishes its effort level to connected clients\n- `SendMessage` and `ListAgents` now say when your account's session list was too long to check completely, instead of treating unseen sessions as absent\n- Expired Anthropic profile credential now points you at `/login` when a claude.ai login would take precedence\n- Improved the transcript: your own prompts now render markdown (highlighted code blocks, inline code, lists) the same way replies do\n- Improved the \"API returned an empty or malformed response\" error to say what came back (content type, body kind, size, request ID) and why the original streaming request failed\n- Improved auto-generated session titles to read as short, specific names (e.g. \"Login button bug\") rather than sentences restating your request (e.g. \"Fix the login button on mobile\")\n- Reduced the context cost of loading the built-in `claude-api` skill from ~200k+ tokens to ~25k by loading reference docs on demand\n- `/permissions` can now be opened while Claude is working — rule changes apply to the rest of the current turn\n- `/add-dir <path>` can now be used while Claude is working; `/add-dir`, `/autocompact`, `/theme`, `/help`, `/config` and `/advisor` dialogs open mid-turn in the fullscreen TUI\n- `/goal` now clears itself with a notice when a turn dies on an unrecoverable error (e.g. revoked auth, an exhausted credit balance, or a context overflow) instead of staying armed\n- `/goal`: when background tasks keep a goal waiting for 30+ minutes, Claude now checks in on them instead of waiting indefinitely (set `CLAUDE_CODE_GOAL_CHECKIN_MINUTES=0` to opt out)\n- `claude setup-token` now rejects unexpected extra arguments instead of silently ignoring them\n- Changed Esc in fullscreen mode to no longer clear a mouse text selection: it interrupts or dismisses as usual and the selection stays highlighted\n- Removed the redundant \"Allowed by auto mode classifier\" line that auto mode showed under every Agent tool call\n- Removed the \"Default teammate model\" setting from `/config`; agent-team teammates now use the leader's model unless the spawn names one\n- Dimmed the elapsed-time counter on the running tool header so it no longer competes with the bold counts\n- Background task notifications delivered between turns are now sent to the model inside `<system-reminder>` tags, matching mid-turn delivery\n- Mantle: skip the admin-pin availability probe at startup when a main-loop model is already picked\n- Windows: startup no longer stalls on repeated rename retries when `~/.claude.json` is read-only\n",
+    "summary": {
+      "headline": "NT 경로 차단 보안 강화, 사용량 한도 자동 재개",
+      "newFeatures": [
+        {
+          "text": "`CLAUDE_CODE_PROJECT_DIR_NAME` 환경변수로 프로젝트별 트랜스크립트 디렉토리 이름을 짧게 지정 가능 — 세션마다 설정 디렉토리를 분리하는 호스트용",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`selection:clear` 키바인딩 액션 추가 — 앱 내 텍스트 선택 해제를 키에 바인딩 가능, agents 뷰에서도 동작",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "GitLab remote 와 인증된 `glab` CLI 가 있으면 푸터·statusline 에 머지 리퀘스트 배지 `MR !N` 을 draft/pending/green 상태로 표시",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "claude.ai 사용량 한도가 리셋되면 세션이 자동 재개됨 — `/config` 의 \"Continue automatically\" 항목으로 해제 가능",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "원격 파일 읽기, 세션 복원, CLAUDE.md include, 워크플로 스크립트, 파일 업로드가 Windows NT 네임스페이스(`\\??\\`) 경로를 거부해 NTLM 자격증명 유출 경로를 차단",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "계정 email 을 신원 확인 용도로만 쓰고, 요청 없이는 무관한 서비스로 보내지 않도록 Claude 에 주어지는 지침 변경",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Remote Control 에서 이 컴퓨터를 다른 claude.ai 계정·조직으로 로그인하면 수 시간 뒤 `HTTP 404` 대신 수 초 내에 실행 중 세션을 중단하고 사유를 표시",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "Desktop·VS Code 호스팅 Remote Control 세션이 권한 모드(및 claude.ai/code 쪽 모델) 변경을 휴대폰·claude.ai/code 에 실시간 반영하고, 휴대폰이나 claude.ai/code 에서 고른 effort 가 터미널·Desktop 세션에도 적용됨",
+          "originalRefs": [
+            31,
+            32
+          ]
+        },
+        {
+          "text": "`SendMessage` 와 `ListAgents` 가 계정 세션 목록이 너무 길어 전부 확인하지 못한 경우를 명시 — 미확인 세션을 없는 것으로 처리하지 않음",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "만료된 Anthropic 프로필 자격증명이 claude.ai 로그인이 우선하는 상황에서 `/login` 을 안내",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "트랜스크립트에서 사용자가 입력한 프롬프트도 응답과 동일하게 markdown 렌더링 — 코드 블록 하이라이트·인라인 코드·리스트 적용",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "빈 응답·손상 응답 에러(`API returned an empty` 계열)가 반환된 content type·body 종류·크기·request ID 와 원래 스트리밍 요청 실패 사유까지 표시",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "자동 생성 세션 제목이 요청을 되풀이하는 문장 대신 \"Login button bug\" 같은 짧고 구체적인 이름으로 변경",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "내장 `claude-api` 스킬 로드 컨텍스트 비용이 20만 토큰대에서 약 2.5만 토큰으로 감소 — 레퍼런스 문서를 필요할 때만 로드",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "`/permissions` 를 작업 중에도 열 수 있고, 규칙 변경이 현재 턴 나머지에 즉시 적용됨",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "`/add-dir <path>` 를 작업 중 사용 가능하고, `/autocompact`·`/theme`·`/help`·`/config`·`/advisor` 다이얼로그가 fullscreen TUI 에서 턴 중간에 열림",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "`/goal` 이 인증 취소·크레딧 소진·컨텍스트 초과 같은 복구 불가 에러로 턴이 죽으면 계속 걸린 상태로 남지 않고 안내와 함께 해제됨",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "백그라운드 태스크가 `/goal` 을 30분 이상 대기시키면 무한 대기 대신 Claude 가 상태를 확인 — `CLAUDE_CODE_GOAL_CHECKIN_MINUTES=0` 으로 해제",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "`claude setup-token` 이 예상 밖 추가 인자를 조용히 무시하지 않고 거부",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "fullscreen 모드의 Esc 가 마우스 텍스트 선택을 지우지 않음 — 인터럽트·닫기는 그대로 동작하고 선택 하이라이트는 유지",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "auto mode 가 Agent 툴 호출마다 붙이던 `auto mode classifier` 허용 안내 줄 제거",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "`/config` 의 \"Default teammate model\" 설정 제거 — agent-team teammate 는 spawn 시 지정하지 않으면 리더 모델을 사용",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "실행 중 tool 헤더의 경과 시간 카운터를 흐리게 처리해 굵게 표시된 카운트와 시선이 경합하지 않도록 조정",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "턴 사이에 전달되는 백그라운드 태스크 알림이 턴 중간 전달과 동일하게 `<system-reminder>` 태그로 모델에 전달됨",
+          "originalRefs": [
+            48
+          ]
+        },
+        {
+          "text": "Mantle 에서 main-loop 모델이 이미 선택돼 있으면 시작 시 admin-pin 가용성 프로브를 건너뜀",
+          "originalRefs": [
+            49
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "긴 세션이 compact 된 뒤 auto mode 가 샌드박스 명령의 네트워크 접근을 반복 재검사하고 거부하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "백그라운드 subagent 툴 권한 프롬프트에 답할 때 세션 범위 권한 응답(거부 포함)이 버려지던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "제3자 게이트웨이 등 비스트리밍 폴백 경로에서 thinking 필드 없는 thinking 블록이나 text 필드 없는 text 블록이 오면 크래시하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "특이한 Unicode 시퀀스가 포함된 메시지에서 markdown 렌더링이 극단적으로 느려지던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "세션 이름이 200자 상한이거나 이모지가 많을 때 `ListAgents` 에서 복사한 수신자를 `SendMessage` 가 거부하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "특이한 userinfo 가 붙은 git remote 의 호스트를 잘못 읽어 엉뚱한 호스트용 링크와 레포별 동작이 적용되던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "MCP 진단이 해석된 시크릿을 그대로 출력하던 문제 수정 — scope 충돌 경고는 설정된 `${VAR}` 형태로, 연결 실패 상세는 서버 origin 만 표시",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`strictKnownMarketplaces` 허용목록이 git 이 실제 접속할 호스트와 다른 SCP 형식 마켓플레이스 소스를 통과시키던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "fullscreen 에서 `/login` OAuth URL 같은 모달 텍스트를 복사하면 글자가 누락되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "렌더링된 마크다운의 `---` 수평선이 다음 줄과 붙어 나오던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "todo·task 갱신이 사이에 끼면 연속 셸 명령이 여러 개의 \"Ran 1 shell command\" 행으로 쪼개지던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`!` 셸 명령 실행 중 연 `/permissions` 같은 다이얼로그가 명령 종료와 함께 닫히던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "대기 중인 `!` 셸 명령을 위쪽 방향키로 편집하면 모델에 일반 텍스트로 전송되던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "대기 중 메시지가 프롬프트 히스토리에 다시 나타나던 문제, 대기 메시지 선택 중 Esc 가 턴을 중단하던 문제, 턴 중간 제출 후 `!` 모드가 유지되던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "fullscreen 렌더러 전환 안내(`Try the new fullscreen` 프롬프트) 수락 시 `--dangerously-skip-permissions` 등 권한 모드·툴 허용/거부 규칙·모델·effort 플래그 없이 세션이 재시작되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "`/tui` 재시작 시 실행 인자 `--allowed-tools`/`--disallowed-tools` 규칙이 사라지던 문제 수정 — 재시작으로 이어갈 수 없는 제약이 있으면 사유와 함께 전환을 거부",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "git 레포 생성 전에 처음 인식된 디렉토리에서 trust 프롬프트가 레포 전체 범위 경고를 누락하던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "권한 재확인 중 IDE diff 탭이 닫히면 새 프롬프트가 이전 입력으로 응답되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "Desktop·VS Code 호스팅 Remote Control 세션에서 사용자에게 보낸 파일이 업로드되지 않아 휴대폰·웹에서 빈 카드로 보이던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_OAUTH_TOKEN` 설정 상태에서 `/login` 후 stale 토큰 안내가 자동 재개된 턴으로 새어 들어가던 문제 수정 — 이제 사용자에게만 표시",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "권한 프리뷰가 inbound 신뢰 게이트를 통과한 채널 서버에만 중계되고, 서버의 명시적 permission-capability 옵트아웃을 존중하도록 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "중계된 권한 프리뷰의 자격증명 마스킹이 승인자에게 명령·경로·목적지를 가려버리던 문제 수정, 과대한 private key 블록은 full-strength redaction 적용",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "권한 프리뷰에서 마스킹되는 provider API 토큰이 셸 구분자 바로 뒤에 붙어도 마스킹되도록 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "세션 간 메시징이 비활성으로 읽혀 Claude Desktop 세션 간 메시지가 조용히 버려지고 발신 측이 수 분간 \"thinking\" 에 머물던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "`~/.claude.json` 이 읽기 전용일 때 Windows 시작이 rename 재시도로 멈춰 있던 문제 수정",
+          "originalRefs": [
+            50
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "Windows NT 네임스페이스(`\\??\\`) 경로가 사전 승인 파일 접근 전 구간에서 거부되므로, 해당 표기를 쓰던 스크립트나 include 경로는 일반 경로로 바꿔야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PROJECT_DIR_NAME` 과 `CLAUDE_CODE_GOAL_CHECKIN_MINUTES` 환경변수가 신설됨 — 후자는 `0` 으로 30분 체크인 동작을 끌 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            },
+            {
+              "bucket": "changes",
+              "index": 14
+            }
+          ]
+        },
+        {
+          "text": "claude.ai 사용량 한도 리셋 시 세션 자동 재개가 기본 동작이라, 원치 않으면 `/config` 에서 꺼야 함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "`/config` 의 \"Default teammate model\" 설정이 삭제돼 agent-team teammate 는 spawn 시 지정하지 않는 한 리더 모델을 그대로 쓴다.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 18
+            }
+          ]
+        },
+        {
+          "text": "MCP 진단 출력과 권한 프리뷰의 시크릿 노출 경로가 막혀 로그·승인 화면에서 자격증명이 평문으로 남지 않음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 6
+            },
+            {
+              "bucket": "fixes",
+              "index": 21
+            },
+            {
+              "bucket": "fixes",
+              "index": 22
+            }
+          ]
+        },
+        {
+          "text": "`strictKnownMarketplaces` 로 마켓플레이스를 제한하던 조직은 SCP 형식 소스가 더 이상 우회하지 못하므로 기존 허용목록 동작이 좁아질 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 7
+            }
+          ]
+        },
+        {
+          "text": "`~/.claude.json` 읽기 전용으로 인한 시작 지연 해소는 Windows 한정 영향.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 24
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-19T05:50:59Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.233",
     "tagName": "v2.1.233",
     "publishedAt": "2026-08-14T22:20:57Z",

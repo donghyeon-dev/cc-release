@@ -1,5 +1,268 @@
 [
   {
+    "version": "v2.1.236",
+    "tagName": "v2.1.236",
+    "publishedAt": "2026-08-19T20:02:05Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.236",
+    "originalBody": "## What's changed\n\n- Added `ANTHROPIC_DEFAULT_MODEL` environment variable: sets the model new sessions start on, while a `/model` pick still overrides it and persists across restarts (unlike `ANTHROPIC_MODEL`)\n- Added `notify_when_idle` to cross-session `SendMessage`: ask another Claude Code session on this machine to send one notice when it next goes idle — opt-in, one-shot, no polling (macOS and Linux)\n- Sandbox: on macOS, wildcard read-deny rules (e.g. `**/.env`) now take precedence inside allowed read regions, cover matched directories' contents, and can't be bypassed by renaming the denied file\n- Fixed clipboard copy, background housekeeping, background sessions, and local MCP logs breaking after the directory a session had switched into was removed (since 2.1.229)\n- Fixed the fullscreen renderer failing permanently after a single failed start: it now falls back to the classic renderer instead of exiting on every subsequent launch\n- Fixed the `/model` picker rendering taller than the terminal: it now shows only as many models as fit the window, with the rest reachable by scrolling\n- Fixed `SendMessage` calls being rejected when a malformed closing tag left the message text inside the summary field\n- Fixed unhandled promise rejections when a subprocess fails to start, for example `powershell.exe` on WSL with Windows interop disabled (regression in 2.1.234)\n- Fixed fullscreen mode sometimes not showing a newly sent message until the next update after the terminal was resized\n- Fixed a blank band that could remain above the prompt after clearing a multi-line prompt, and panes not repainting after resizing the terminal away and back, in fullscreen mode\n- Fixed the managed-settings approval prompt sometimes not appearing at startup while still capturing the first keypress as approval\n- Fixed terminal tab titles jumping in tmux (iTerm tmux integration): the title is now written only when its text changes instead of animating every 960ms\n- Fixed an unclear error when the cloud environments list came back empty or malformed\n- Fixed the Fable 5 first-time usage-credits prompt auto-selecting the fallback model after 60 seconds with no answer when using Remote Control\n- Fixed spinner tips never appearing, with a repeated background error, when the cached guest-pass reward in `~/.claude.json` was malformed\n- Fixed skills hot-reload in SDK/VS Code sessions raising an error on every skills change after the session's working directory was deleted (2.1.229+)\n- Fixed self-hosted runner sessions released on idle, retire, or startup timeout occasionally resuming on another runner before the post-session hook had finished\n- Fixed the Clawd mascot's eyes and feet rendering unevenly in iTerm2 at some font sizes\n- Fixed occasional runaway session recaps: recap text (automatic and `/recap`) is now capped at 400 characters, cut at a word boundary\n- Improved startup performance: the session counter is now written in the background\n- Improved auto mode: `Monitor` allow rules are now set aside while auto mode is active, so Monitor commands are reviewed the same way Bash commands are\n- Improved auto mode on Bedrock, Vertex AI, and Foundry, and when telemetry is disabled: the classifier now uses the same defaults as on the Claude API, including severity-scored classification\n- Improved auto mode: the git status check can no longer be fooled by a repo's `status.showUntrackedFiles=no` setting into reporting a clean tree\n- Changed the `/model` picker to highlight only the newest model's name, so the highlight marks the new release rather than an arbitrary subset of the list\n- `/goal`: an idle session whose goal is parked behind long-running background work now checks in automatically after 30 minutes (then 1h, 2h) instead of waiting for you to return\n- `/usage` now shows the usage-credits spend row for Team and Enterprise members, and shows a capped row at 0% before anything is spent\n- SIGTERM in print/SDK mode no longer records an interrupted turn or synthetic tool denials before exiting; running commands are still terminated and the process still exits with code 143\n- Pressing Enter on a slash-command typo or a command unavailable in this session now reports it instead of running the closest fuzzy match; prefixes and aliases still run\n- Remote Control now marks a session offline within seconds when the CLI exits or its terminal closes\n- `SendMessage` now refuses further messages to a session up front once a rapid burst would exceed what that session's inbox accepts, instead of reporting them sent while they were dropped\n- Aligned the session title chip on the prompt border with the footer's right edge\n- Right-aligned footer items (goal indicator, session state, background agent status) and truncated notices now share a consistent right margin with the rest of the prompt area\n- [VSCode] Added screen reader support for the transcript: live announcements for replies, permission requests, errors, and status changes, plus per-turn heading navigation\n",
+    "summary": {
+      "headline": "기본 모델 환경변수 신설, macOS 샌드박스 강화",
+      "newFeatures": [
+        {
+          "text": "`ANTHROPIC_DEFAULT_MODEL` 환경변수 추가 — 새 세션의 시작 모델만 지정하고 `/model` 선택이 우선하며 재시작 후에도 유지됨 (`ANTHROPIC_MODEL` 과 다른 점)",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "세션 간 `SendMessage` 에 `notify_when_idle` 옵션 추가 — 같은 머신의 다른 세션이 idle 진입 시 1회 알림, 폴링 없는 opt-in 방식 (macOS·Linux 한정)",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "[VSCode] 트랜스크립트 스크린 리더 지원 — 응답·권한 요청·에러·상태 변화 음성 안내 및 턴 단위 heading 탐색 제공",
+          "originalRefs": [
+            32
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "macOS 샌드박스에서 `**/.env` 같은 와일드카드 read-deny 규칙이 허용 read 영역 안에서도 우선 적용되고, 매칭된 디렉터리 하위까지 포함하며 파일명 변경으로 우회 불가",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "세션 카운터를 백그라운드 쓰기로 전환해 CLI 시작 성능 개선",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "auto mode 활성 중에는 `Monitor` allow 규칙을 보류해 Monitor 명령을 Bash 명령과 동일하게 심사",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex AI·Foundry 및 telemetry 비활성 환경에서도 auto mode 분류기가 severity 점수 분류를 포함한 Claude API 동일 기본값 사용",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "auto mode 의 git status 검사가 레포의 `status.showUntrackedFiles=no` 설정에 속아 clean 트리로 오판하지 않음",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "`/model` 피커가 최신 모델 이름 하나만 강조해 신규 릴리즈를 정확히 표시",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "`/goal` 이 장기 백그라운드 작업에 묶인 idle 세션에 30분 후 자동 확인, 이후 1시간·2시간 간격으로 재확인",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`/usage` 가 Team·Enterprise 멤버에게 usage-credits 지출 행을 노출하고 지출 전에는 0% 상한 행 표시",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "print·SDK 모드의 SIGTERM 이 중단된 턴이나 합성 tool 거부를 기록하지 않음 — 실행 중 명령 종료와 exit code 143 은 유지",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "슬래시 명령 오타나 현재 세션에서 쓸 수 없는 명령은 Enter 시 가장 가까운 후보를 실행하지 않고 오류 보고 — prefix 와 alias 는 계속 동작",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "Remote Control 이 CLI 종료나 터미널 닫힘을 수초 내에 offline 로 표시",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "`SendMessage` 가 연속 전송으로 대상 세션 inbox 수용치를 넘길 상황이면 사전에 거부 — 전송 성공으로 보고 후 유실되는 동작 제거",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "프롬프트 테두리의 세션 타이틀 chip 을 푸터 우측 끝에 정렬",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "goal 표시기·세션 상태·백그라운드 에이전트 상태 등 우측 정렬 푸터 항목과 잘린 알림이 프롬프트 영역과 동일한 우측 여백 사용",
+          "originalRefs": [
+            31
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "세션이 이동해 들어간 디렉터리가 삭제되면 클립보드 복사·백그라운드 housekeeping·백그라운드 세션·로컬 MCP 로그가 깨지던 문제 수정 (2.1.229 부터)",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "fullscreen 렌더러가 한 번 기동 실패하면 이후 매번 종료되던 문제 수정 — 이제 classic 렌더러로 폴백",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`/model` 피커가 터미널보다 길게 그려지던 문제 수정 — 창에 들어가는 만큼만 표시하고 나머지는 스크롤로 접근",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "닫는 태그가 깨져 메시지 본문이 summary 필드에 들어간 `SendMessage` 호출이 거부되던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "WSL 에서 Windows interop 을 끈 채 `powershell.exe` 등 서브프로세스 기동이 실패할 때 발생하던 unhandled promise rejection 수정 (2.1.234 회귀)",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "터미널 크기 변경 후 fullscreen 모드에서 새로 보낸 메시지가 다음 갱신까지 보이지 않던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "fullscreen 모드에서 여러 줄 프롬프트를 지운 뒤 위쪽에 남던 빈 띠와, 터미널 크기를 줄였다 되돌린 후 pane 이 다시 그려지지 않던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "`managed-settings` 승인 프롬프트가 시작 시 표시되지 않으면서 첫 키 입력을 승인으로 처리하던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "tmux(iTerm tmux integration) 에서 터미널 탭 제목이 960ms 마다 흔들리던 문제 수정 — 텍스트가 바뀔 때만 기록",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`cloud environments` 목록이 비었거나 형식이 깨졌을 때 나오던 불명확한 에러 메시지 개선",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Remote Control 사용 시 Fable 5 최초 usage-credits 안내가 60초 무응답이면 폴백 모델을 자동 선택하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`~/.claude.json` 의 guest-pass 보상 캐시가 깨졌을 때 스피너 팁이 아예 안 뜨고 백그라운드 에러가 반복되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "SDK·VS Code 세션에서 작업 디렉터리 삭제 후 skills hot-reload 가 변경마다 에러를 던지던 문제 수정 (2.1.229 이상)",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "self-hosted runner 세션이 idle·retire·startup timeout 으로 해제될 때 post-session hook 종료 전에 다른 runner 에서 재개되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "iTerm2 특정 폰트 크기에서 Clawd 마스코트의 눈과 발이 어긋나 보이던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "세션 recap 이 폭주하던 문제 수정 — 자동 recap 과 `/recap` 모두 400자 상한, 단어 경계에서 절단",
+          "originalRefs": [
+            18
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`ANTHROPIC_DEFAULT_MODEL` 환경변수가 신설됨 — 기존 `ANTHROPIC_MODEL` 은 `/model` 선택을 무시하고 고정하지만, 새 변수는 시작 기본값만 정하므로 팀 표준 모델 배포 시 어느 쪽을 쓸지 구분 필요.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "macOS 샌드박스의 read-deny 우선순위 변경으로 기존에 읽히던 `.env` 류 파일이 차단될 수 있어, 시크릿 경로에 의존하던 로컬 스크립트 동작 확인 권장.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "auto mode 에서 `Monitor` allow 규칙이 무시되므로 기존 allowlist 로 무프롬프트 실행하던 Monitor 명령이 심사 대상이 됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`notify_when_idle` 은 macOS·Linux 한정이라 Windows 세션에서는 동작하지 않음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "슬래시 명령 fuzzy 매칭 폐지로 오타에 의존하던 스크립트나 습관적 축약 입력이 실행되지 않고 오류로 처리됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 9
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-08-20T00:05:00.000Z",
+    "summaryModel": "claude-opus-5"
+  },
+  {
     "version": "v2.1.235",
     "tagName": "v2.1.235",
     "publishedAt": "2026-08-18T20:38:54Z",

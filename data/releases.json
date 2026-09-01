@@ -1,5 +1,926 @@
 [
   {
+    "version": "v2.1.252",
+    "tagName": "v2.1.252",
+    "publishedAt": "2026-08-31T19:46:55Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.252",
+    "originalBody": "## What's changed\n\n- Fixed Bash commands failing with \"task output swap refused (tasks dir moved or linked)\" on some Macs\n- Fixed \"always allow\" not saving in a project that has no .claude/settings.local.json yet\n- Fixed Remote Control sessions hosted by Claude Desktop or VS Code stalling for minutes after a tool finished when the connection to claude.ai was degraded\n- Fixed background task notifications with very large failure output (for example git errors on a full disk) making the conversation exceed the API request size limit\n",
+    "summary": {
+      "headline": "맥 Bash 실패·설정 저장 등 4건 수정",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "일부 Mac 에서 `task output swap refused (tasks dir moved or linked)` 로 Bash 명령이 실패하던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`.claude/settings.local.json` 이 아직 없는 프로젝트에서 \"always allow\" 선택이 저장되지 않던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "claude.ai 연결이 불안정할 때 Claude Desktop·VS Code 가 호스팅한 Remote Control 세션이 도구 종료 후 수 분간 멈추던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "디스크 가득 참 등으로 백그라운드 작업 실패 출력이 매우 클 때 대화가 API 요청 크기 한도를 넘기던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-09-01T00:12:45.796Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.251",
+    "tagName": "v2.1.251",
+    "publishedAt": "2026-08-28T18:19:32Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.251",
+    "originalBody": "## What's changed\n\n- Added `PreModelSwitch` and `PostModelSwitch` hook events (block, confirm, or annotate a model switch); `SessionStart` resume hooks now receive session staleness and the estimated re-cache cost\n- Added live streaming of a foreground subagent's tool calls and results to Remote Control clients (background subagents, the default, still show status only)\n- Added a Spend limit bar to `/usage` and a `rate_limits.spend_limit` status line field for developers behind a Claude apps gateway with spend limits\n- Added a per-session prompt-cache line to `/cost` (hit ratio, misses, tokens re-cached, warm/cold) and a matching `prompt_cache` object for status line scripts\n- Added `attach`, `logs`, `stop`, `respawn`, and `rm` to `claude --help`; the `--resume` message for a running background session now names the exact `claude attach <id>` command\n- Fixed file tools (Read, Write, Edit) following a symlink swapped inside the working directory after the permission check, which could read or write outside the approved location\n- Fixed plugin commands declared in a marketplace entry being able to point outside the plugin directory; such paths are now rejected with a path-traversal error\n- Fixed project settings being able to enable detailed beta tracing or raw API body logging, and a lower-scope beta tracing endpoint bypassing an OTLP collector pinned by managed settings or a host app\n- Fixed the Workflow tool reading (and quoting in errors) a `scriptPath` outside what the session may read before the permission check ran\n- Fixed Grep and Glob not applying `Read(...)` deny rules to files reached through a symlinked search path\n- Fixed conversations getting stuck on \"text content blocks must be non-empty\" errors after a turn where the model produced only thinking\n- Fixed the first launch on a fresh install starting in default mode instead of auto mode for accounts whose startup default is auto mode\n- Fixed Opus 5 requests failing with \"effort … is not supported when thinking is disabled\" when effort was xhigh/max and thinking was turned off; effort is now sent as `high` in that case\n- Fixed replying to a message Claude Desktop delivered from another session: `SendMessage` to that session id now delivers through Claude Desktop instead of failing with \"not reachable\"\n- Fixed TUI lag with many parallel subagents: per-second progress ticks now replace their predecessor instead of piling up in the transcript\n- Fixed agent teams: a teammate's final answer not reaching the team lead — it now arrives in the idle notification instead of a content-free \"available\" notice\n- Fixed background subagents being unable to reply to a message from an unnamed sibling or parent agent (`from` was the agent type, which is not an address)\n- Fixed managed-settings `disableAutoMode` arriving mid-session not moving an already-running auto-mode session back to default mode\n- Fixed a \"switch to Opus 1M for 5x more context\" tip that appeared even when the current Opus model already has a 1M context window\n- Fixed Claude apps gateway sessions treating a stored Anthropic profile (e.g. a Console sign-in) as active: listing it in `/status` and retrying gateway 401s with it, though requests never use it\n- Fixed cloud sessions telling Claude the model had changed when the host was only setting the session's initial model\n- Fixed Remote Control reporting a failure when an organization's policy disables it; it now shows a single quiet notice instead\n- Fixed `/mcp reconnect` on Remote Control showing a generic withheld-detail error instead of the real remedy when a server was disabled in another session\n- Fixed `--input-format stream-json`: client-injected assistant tool calls sent without a message id were merged into the first one and their results lost, including when resuming older sessions\n- Fixed session transcripts being silently overwritten when a directory change relocated a session onto an existing same-ID transcript\n- Fixed background sessions and their subagents being unable to edit files inside a git worktree they created with `git worktree add`\n- Fixed background sessions occasionally starting without any plugin skills (and staying that way) when another Claude Code process was refreshing the plugin marketplace at the same moment\n- Fixed selecting text in an opened background session inside tmux over SSH: it now copies to the tmux buffer like a foreground session instead of falling back to OSC 52\n- Fixed SDK and cloud sessions hanging indefinitely when an SDK MCP server's handshake acknowledgment was lost; the wait now times out after 70 seconds and marks only that server failed\n- Fixed self-hosted runner leaving a stuck session's Bash tool processes running after the session was force-stopped\n- Fixed `/usage-credits` for Team and Enterprise members whose admin set the org's usage-credit limit to $0: it now offers to ask the admin instead of saying a cap was reached\n- Fixed `--worktree --tmux` with a merge-request number on a gitlab.com origin trying a doomed GitHub-style fetch first instead of fetching the GitLab ref directly\n- Fixed Ctrl+G failing with \"Emacs quit unexpectedly\" in background sessions for editors that open `/dev/tty`, such as `emacs -nw` and `micro`\n- Fixed an `additionalDirectories` entry containing a null byte crashing startup, or breaking `/add-dir` and later settings updates when it came from an SDK host, IDE, or hook; it is now skipped\n- Fixed the MCP server menu's copy shortcut: it now says how the sign-in URL was copied instead of always claiming success\n- Fixed italic text (such as the session recap line) rendering as highlighted blocks in GNU screen and in tmux sessions using a `screen` terminal type\n- Fixed `claude mcp add --header` and `claude mcp add-json` help text naming the wrong transports\n- Fixed `claude ultrareview` and `/ultrareview` waiting the full 30 minutes when the cloud session fails to start; they now stop early and report the reason\n- Fixed Bash permission checks auto-approving commands that assign an arithmetic expression to an integer shell variable (e.g. `OPTIND=1/0`, `RANDOM=2+2`); these now prompt for approval\n- Fixed backgrounded sessions (`←`, `/background`, `--bg`) losing a Vertex/Bedrock gateway (`ANTHROPIC_*_BASE_URL` + `CLAUDE_CODE_SKIP_*_AUTH`) exported in the shell, so every request failed\n- Fixed `claude --bg --model fable` on Max plans stopping to ask for usage credits while the interactive session on the same account still had Fable allowance\n- Fixed the one-time \"make auto mode your default\" offer appearing in unattended sessions (e.g. agent-team teammate panes), where a stray keypress could accept it unread\n- Fixed the managed-settings approval prompt re-appearing after signing in again to the same Claude apps gateway when the settings are unchanged\n- Fixed disabled `/bug` and `/share` reporting that `/feedback` was disabled; tips, `/help`, and refusal messages no longer suggest `/feedback` when an org policy or env var turns it off\n- Fixed cloud session creation advising GitHub setup after a transient GitHub connection failure — the message now says to retry instead\n- Improved CPU usage during turns in interactive sessions by cutting redundant UI re-renders\n- Improved install size: the native binary is about 5 MB smaller\n- Improved cloud sessions: when the session's network proxy drops a connection during a Bash command, the tool result now names the host and reason instead of only \"connection reset\"\n- Improved `/schedule` to explain that MCP servers configured in Claude Code can't be attached to cloud routines, instead of a bare \"No MCP connectors\" message\n- Improved framing of messages from your own subagents: Claude is told the sender is a worker inside this session, not an unrelated Claude session\n- Improved the prompt placeholder to read \"Message @name…\" while viewing a background subagent or fork transcript opened from the subagent panel or `/tasks`\n- Improved sanitization of MCP server names in error messages, menus, and command results\n- Improved Amazon Bedrock session start under `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` (e.g. Claude Desktop): a session given a Bedrock model ID or ARN no longer waits for inference-profile discovery\n- Improved the managed settings approval dialog to list only the settings that changed since you last approved them\n- Improved retry when the model's tool call is malformed: the broken output is now dropped from the retry context, including on Bedrock, Vertex, and Foundry\n- Changed `/radio` to be available on Bedrock, Vertex AI, Foundry, and Claude Platform on AWS, and when telemetry is disabled\n- Changed Claude in Chrome so browser actions always go through Claude Code's permission checks, including in sessions with telemetry disabled, which previously used the Chrome extension's own prompts\n- Changed `CLAUDE_CODE_SUBAGENT_MODEL` to set the default subagent model rather than override everything: an agent definition's `model:` and an explicit per-spawn model now take precedence over it\n- Changed the default commit trailer to `Co-Authored-By: Claude Code` when the active model isn't a recognized Claude model (e.g. third-party models behind a custom `ANTHROPIC_BASE_URL`)\n- Changed the default model for seat-based Enterprise subscriptions to Opus 5, matching other premium plans\n- Changed `/effort` to save your default effort level per model, so each model keeps its own setting when you switch\n- Changed analytics to no longer turn off before sign-in solely because managed settings force gateway login (or cannot be read); they stay off once signed in to the gateway or via `DISABLE_TELEMETRY`\n- Changed the footer PR badge on Bedrock, Vertex, and Foundry, and when telemetry is off, to call the GitHub API directly (via `gh auth token`, `GH_TOKEN`, or `GITHUB_TOKEN`) instead of `gh pr view`\n- Changed how Bash command output files are created and read back when commands run in the sandbox, so a sandboxed command cannot redirect or replace them\n- Changed plugin/LSP install suggestions and the auto-mode default offer to wait until you've sent or cleared what you're typing, so the Enter that sends your prompt can't answer them\n- Changed server-managed settings that terminate sandbox TLS, route sandbox traffic through your own proxy, inject credentials, or weaken sandbox isolation to require approval before they apply\n- Changed `ANTHROPIC_CUSTOM_HEADERS` from managed or project settings to require approval when it sets a credential, org/tenant, routing, or API-behavior header (e.g. `Authorization`, `Host`)\n- Changed project-level `.claude/settings.json` `env` to no longer set `CLAUDE_CONFIG_DIR`, `CLAUDE_CODE_TMPDIR`, or `TMPDIR`/`TMP`/`TEMP`; set them in your shell, user, or managed settings instead\n- Removed syntax highlighting for six rarely used languages (1c, gml, isbl, mathematica, maxima, sqf); the binary is 2.5 MB smaller\n- [VSCode] Fixed the sign-in screen's \"Bedrock, Foundry, or Vertex\" button opening the docs at the top of the page instead of the third-party provider setup section\n- [VSCode] Changed the Remote Control banner to a footer pill (shown while Remote Control is on or has failed) that opens the session on claude.ai/code; turn it on or off with `/remote-control`\n",
+    "summary": {
+      "headline": "심볼릭 링크 권한 우회 등 보안 수정 다수",
+      "newFeatures": [
+        {
+          "text": "`PreModelSwitch`·`PostModelSwitch` 훅 이벤트 추가 — 모델 전환을 차단·확인·주석 처리 가능하며, `SessionStart` resume 훅은 세션 노후도와 재캐싱 예상 비용을 함께 받음",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "포그라운드 서브에이전트의 도구 호출·결과를 Remote Control 클라이언트로 실시간 스트리밍 (기본값인 백그라운드 서브에이전트는 상태만 표시)",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`/usage` 에 Spend limit 바와 상태줄용 `rate_limits.spend_limit` 필드 추가 — 지출 한도가 걸린 Claude apps 게이트웨이 사용자 대상",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`/cost` 에 세션별 프롬프트 캐시 정보(적중률, 미스, 재캐싱 토큰, warm/cold)와 상태줄 스크립트용 `prompt_cache` 객체 추가",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`claude --help` 에 `attach`·`logs`·`stop`·`respawn`·`rm` 노출, 실행 중 백그라운드 세션의 `--resume` 안내가 정확한 `claude attach <id>` 명령을 알려줌",
+          "originalRefs": [
+            4
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`/radio` 를 Bedrock·Vertex AI·Foundry·Claude Platform on AWS 및 텔레메트리 비활성 환경에서도 사용 가능하게 변경",
+          "originalRefs": [
+            55
+          ]
+        },
+        {
+          "text": "Claude in Chrome 의 브라우저 동작이 Chrome 확장 자체 프롬프트 대신 항상 Claude Code 권한 검사를 거치도록 변경 (텔레메트리 비활성 세션 포함)",
+          "originalRefs": [
+            56
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_SUBAGENT_MODEL` 이 전체를 덮어쓰는 대신 기본값만 지정 — 에이전트 정의의 `model:` 과 스폰 시 명시 모델이 우선",
+          "originalRefs": [
+            57
+          ]
+        },
+        {
+          "text": "활성 모델이 알려진 Claude 모델이 아닐 때 기본 커밋 트레일러를 `Co-Authored-By: Claude Code` 로 변경",
+          "originalRefs": [
+            58
+          ]
+        },
+        {
+          "text": "seat 기반 Enterprise 구독의 기본 모델을 다른 프리미엄 플랜과 동일하게 Opus 5 로 변경",
+          "originalRefs": [
+            59
+          ]
+        },
+        {
+          "text": "`/effort` 가 모델별로 기본 effort 를 저장하도록 변경 — 모델을 바꿔도 각자 설정 유지",
+          "originalRefs": [
+            60
+          ]
+        },
+        {
+          "text": "샌드박스에서 실행되는 명령이 Bash 출력 파일을 리다이렉트하거나 교체하지 못하도록 생성·읽기 방식 변경",
+          "originalRefs": [
+            63
+          ]
+        },
+        {
+          "text": "샌드박스 TLS 종료·프록시 경유·자격증명 주입·격리 약화를 유발하는 서버 관리 설정은 적용 전 승인 필요로 변경",
+          "originalRefs": [
+            65
+          ]
+        },
+        {
+          "text": "관리·프로젝트 설정의 `ANTHROPIC_CUSTOM_HEADERS` 가 `Authorization`·`Host` 등 자격증명·라우팅 헤더를 지정하면 승인 필요로 변경",
+          "originalRefs": [
+            66
+          ]
+        },
+        {
+          "text": "프로젝트 `.claude/settings.json` 의 `env` 로 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR`/`TMP`/`TEMP` 를 더는 설정할 수 없음 — 셸·user·managed 설정에서 지정",
+          "originalRefs": [
+            67
+          ]
+        },
+        {
+          "text": "거의 쓰이지 않는 6개 언어(1c, gml, isbl, mathematica, maxima, sqf) 구문 강조 제거로 바이너리 2.5MB 감소",
+          "originalRefs": [
+            68
+          ]
+        },
+        {
+          "text": "Workflow 툴이 잘못된 도구 호출을 재시도할 때 깨진 출력을 컨텍스트에서 제거 (Bedrock·Vertex·Foundry 포함)",
+          "originalRefs": [
+            54
+          ]
+        },
+        {
+          "text": "인터랙티브 세션의 중복 UI 리렌더를 줄여 턴 진행 중 CPU 사용량 개선, 네이티브 바이너리 크기도 약 5MB 축소",
+          "originalRefs": [
+            45,
+            46
+          ]
+        },
+        {
+          "text": "[VSCode] Remote Control 배너를 푸터 pill 로 변경 — claude.ai/code 에서 세션을 열 수 있고 `/remote-control` 로 토글",
+          "originalRefs": [
+            70
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "권한 검사 이후 작업 디렉터리 안에서 심볼릭 링크가 바꿔치기되면 Read·Write·Edit 가 승인 범위 밖을 읽거나 쓸 수 있던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "마켓플레이스 항목에 선언된 플러그인 명령이 플러그인 디렉터리 밖을 가리킬 수 있던 문제 수정 — 이제 path-traversal 오류로 거부",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "프로젝트 설정으로 상세 베타 트레이싱이나 원본 API 본문 로깅을 켤 수 있고, 낮은 스코프 트레이싱 엔드포인트가 고정된 OTLP 컬렉터를 우회하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "Workflow 툴이 권한 검사 전에 세션 읽기 범위 밖의 `scriptPath` 를 읽고 오류 메시지에 인용하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Grep·Glob 이 심볼릭 링크 경로로 도달한 파일에 `Read(...)` deny 규칙을 적용하지 않던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "모델이 thinking 만 생성한 턴 이후 `text content blocks must be non-empty` 오류로 대화가 멈추던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "auto 모드가 시작 기본값인 계정에서 신규 설치 첫 실행이 default 모드로 시작하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "thinking 이 꺼진 상태에서 effort 가 xhigh/max 면 Opus 5 요청이 실패하던 문제 수정 — 해당 경우 effort 를 `high` 로 전송",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Claude Desktop 이 다른 세션에서 전달한 메시지에 답할 때 `SendMessage` 가 not reachable 로 실패하던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "서브에이전트가 많을 때 초당 진행 틱이 트랜스크립트에 쌓여 TUI 가 느려지던 문제 수정 — 이제 이전 틱을 대체",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "에이전트 팀에서 팀원의 최종 답변이 팀 리드에 도달하지 않던 문제 수정 — 내용 없는 available 알림 대신 idle 알림에 실려 전달",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "이름 없는 형제·부모 에이전트의 메시지에 백그라운드 서브에이전트가 답장하지 못하던 문제 수정 (`from` 이 주소가 아닌 에이전트 타입이었음)",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "세션 도중 도착한 관리 설정 `disableAutoMode` 가 이미 실행 중인 auto 모드 세션을 default 로 되돌리지 않던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "현재 Opus 모델이 이미 1M 컨텍스트인데도 \"switch to Opus 1M\" 안내가 뜨던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "Claude apps 게이트웨이 세션이 저장된 Anthropic 프로필을 활성으로 취급해 `/status` 에 표시하고 401 재시도에 쓰던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "호스트가 세션 초기 모델만 지정했을 뿐인데 cloud session 이 모델 변경을 Claude 에게 통지하던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "조직 정책이 Remote Control 을 막았을 때 실패로 보고하던 문제 수정 — 이제 조용한 안내 하나만 표시",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "다른 세션에서 서버가 비활성화된 경우 Remote Control 의 `/mcp reconnect` 가 실제 해결책 대신 일반 오류를 보이던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "`--input-format stream-json` 에서 message id 없이 주입된 클라이언트 도구 호출이 첫 항목에 병합되고 결과가 유실되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "디렉터리 변경으로 세션이 같은 session ID 트랜스크립트 위로 옮겨질 때 기존 기록이 조용히 덮어써지던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "백그라운드 세션과 그 서브에이전트가 스스로 `git worktree add` 로 만든 worktree 내부 파일을 수정하지 못하던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "다른 Claude Code 프로세스가 플러그인 마켓플레이스를 갱신하는 중이면 백그라운드 세션이 플러그인 스킬 없이 시작되던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "SSH 위 tmux 에서 백그라운드 세션 텍스트 선택이 OSC 52 로 떨어지지 않고 tmux 버퍼로 복사되도록 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "SDK MCP 서버 핸드셰이크 확인이 유실되면 SDK·클라우드 세션이 무한 대기하던 문제 수정 — 70초 후 타임아웃하고 해당 서버만 실패 처리",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "강제 종료된 세션의 Bash 프로세스가 self-hosted runner 에 남아 있던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "관리자가 조직 usage-credit 한도를 $0 로 설정한 Team·Enterprise 구성원에게 `/usage-credits` 가 한도 도달이라 말하던 문제 수정 — 이제 관리자에게 요청 제안",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "gitlab.com origin 에서 MR 번호로 `--worktree --tmux` 실행 시 GitHub 방식 fetch 를 먼저 시도하던 문제 수정 — GitLab ref 를 직접 가져옴",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "`emacs -nw`·`micro` 처럼 `/dev/tty` 를 여는 편집기에서 백그라운드 세션의 Ctrl+G 가 실패하던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "널 바이트가 포함된 `additionalDirectories` 항목이 시작을 크래시시키거나 `/add-dir` 을 깨뜨리던 문제 수정 — 이제 건너뜀",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "MCP 서버 메뉴의 복사 단축키가 항상 성공을 주장하던 문제 수정 — 로그인 URL 이 어떻게 복사됐는지 명시",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "GNU screen 및 `screen` 터미널 타입 tmux 에서 이탤릭 텍스트가 하이라이트 블록으로 렌더되던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "`claude mcp add --header` 와 `claude mcp add-json` 도움말이 잘못된 transport 를 안내하던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "클라우드 세션 기동 실패 시 `claude ultrareview` 와 `/ultrareview` 가 30분을 꽉 채워 기다리던 문제 수정 — 조기 중단하고 사유 보고",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "`OPTIND=1/0`·`RANDOM=2+2` 처럼 정수 셸 변수에 산술식을 대입하는 명령이 Bash 권한 검사에서 자동 승인되던 문제 수정 — 이제 승인 프롬프트 표시",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "백그라운드 전환 세션이 셸에 export 된 Vertex·Bedrock 게이트웨이(`ANTHROPIC_*_BASE_URL` + `CLAUDE_CODE_SKIP_*_AUTH`) 설정을 잃어 모든 요청이 실패하던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "Max 플랜에서 인터랙티브 세션에 Fable 한도가 남았는데도 `claude --bg --model fable` 이 usage credit 을 묻고 멈추던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "에이전트 팀 pane 같은 무인 세션에 \"auto 모드를 기본으로\" 일회성 제안이 떠서 오타 키 입력으로 수락될 수 있던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "설정이 그대로인데 같은 Claude apps 게이트웨이에 재로그인하면 관리 설정 승인 프롬프트가 다시 뜨던 문제 수정",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "비활성화된 `/bug`·`/share` 가 `/feedback` 이 꺼졌다고 잘못 보고하던 문제 수정 — 정책·환경변수로 꺼진 경우 `/feedback` 을 제안하지 않음",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "일시적 GitHub 연결 실패 후 클라우드 세션 생성이 GitHub 설정을 안내하던 문제 수정 — 재시도 안내로 변경",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "클라우드 세션에서 네트워크 프록시가 Bash 명령 중 연결을 끊으면 `connection reset` 만 표시하던 것을 호스트와 사유까지 표기하도록 개선",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "`/schedule` 이 \"No MCP connectors\" 대신 Claude Code 에 설정한 MCP 서버는 클라우드 routine 에 붙일 수 없다고 설명하도록 개선",
+          "originalRefs": [
+            48
+          ]
+        },
+        {
+          "text": "자체 서브에이전트가 보낸 메시지를 무관한 Claude 세션이 아니라 이 세션 내부 워커로 인식하도록 프레이밍 개선, 프롬프트 placeholder 도 `Message @name…` 으로 표시",
+          "originalRefs": [
+            49,
+            50
+          ]
+        },
+        {
+          "text": "오류 메시지·메뉴·명령 결과에 나타나는 MCP 서버 이름 sanitization 개선",
+          "originalRefs": [
+            51
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST` 하의 Amazon Bedrock 세션 시작 개선 — Bedrock 모델 ID·ARN 이 주어지면 inference profile 탐색을 기다리지 않음",
+          "originalRefs": [
+            52
+          ]
+        },
+        {
+          "text": "managed settings 승인 대화상자가 마지막 승인 이후 변경된 항목만 나열하도록 개선",
+          "originalRefs": [
+            53
+          ]
+        },
+        {
+          "text": "관리 설정이 게이트웨이 로그인을 강제한다는 이유만으로 애널리틱스가 로그인 전에 꺼지지 않도록 변경 — 게이트웨이 로그인 후나 `DISABLE_TELEMETRY` 설정 시에만 꺼짐",
+          "originalRefs": [
+            61
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Foundry 및 텔레메트리 비활성 환경의 푸터 PR 배지가 `gh pr view` 대신 `gh auth token`·`GH_TOKEN`·`GITHUB_TOKEN` 으로 GitHub API 를 직접 호출하도록 변경",
+          "originalRefs": [
+            62
+          ]
+        },
+        {
+          "text": "플러그인·LSP 설치 제안과 auto 모드 기본 제안이 입력 중인 프롬프트를 보낸 뒤에 뜨도록 변경 — Enter 키가 제안을 대신 수락하지 않음",
+          "originalRefs": [
+            64
+          ]
+        },
+        {
+          "text": "[VSCode] 로그인 화면의 \"Bedrock, Foundry, or Vertex\" 버튼이 문서 최상단이 아니라 서드파티 프로바이더 설정 섹션을 열도록 수정",
+          "originalRefs": [
+            69
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "심볼릭 링크 바꿔치기와 deny 규칙 우회로 승인 범위 밖 파일 읽기·쓰기가 가능했으므로 파일 도구를 신뢰 경계로 삼는 환경은 즉시 업그레이드 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            },
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "프로젝트 `.claude/settings.json` 의 `env` 로 `CLAUDE_CONFIG_DIR`·`CLAUDE_CODE_TMPDIR`·`TMPDIR` 을 설정하던 레포는 셸이나 user 설정으로 옮겨야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 9
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_SUBAGENT_MODEL` 의 의미가 강제 override 에서 기본값으로 바뀌어, 에이전트 정의의 `model:` 이 있으면 그쪽이 이깁니다.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "seat 기반 Enterprise 구독의 기본 모델이 Opus 5 로 올라가 토큰 비용이 늘 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_CUSTOM_HEADERS` 와 샌드박스 완화형 서버 관리 설정은 이제 승인 절차를 타므로 무인 파이프라인은 사전 승인 흐름 점검 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 7
+            },
+            {
+              "bucket": "changes",
+              "index": 8
+            }
+          ]
+        },
+        {
+          "text": "`PreModelSwitch`·`PostModelSwitch` 훅으로 모델 전환 자체를 정책으로 통제할 수 있게 됨.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-09-01T00:12:45.796Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.250",
+    "tagName": "v2.1.250",
+    "publishedAt": "2026-08-28T00:49:16Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.250",
+    "originalBody": "## What's changed\n\n- Bug fixes and reliability improvements\n",
+    "summary": {
+      "headline": "버그 수정 및 안정성 개선",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "`v2.1.250` 릴리즈 노트에는 세부 항목 없이 버그 수정과 안정성 개선만 명시됨",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-09-01T00:12:45.796Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.248",
+    "tagName": "v2.1.248",
+    "publishedAt": "2026-08-27T22:12:20Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.248",
+    "originalBody": "## What's changed\n\n- Added `--restricted` (or `CLAUDE_CODE_RESTRICTED=1`): removes the built-in tools that run commands or code and `WebFetch` (unless named in `--tools`), keeps file tools inside the working directory, refuses `bypassPermissions`, and ignores user, project and local settings files\n- Added `experimental.cacheTtl` (`\"5m\"` or `\"1h\"`) to agent frontmatter: a per-agent prompt cache TTL used when no subagent TTL setting is configured\n- Added `claude self-hosted-runner --client-label <label>` (or `SELF_HOSTED_RUNNER_CLIENT_LABEL`) to override the label the runner registers with (default: hostname)\n- Added server-managed settings diagnostics: a startup warning when the settings fail to load, and a `/doctor` and `/status` line explaining a load failure or why they weren't fetched (Bedrock/Vertex/third-party provider, custom `ANTHROPIC_BASE_URL`)\n- Added a warning in `/web-setup` when the GitHub CLI token lacks the `workflow` scope, since pushes to very large repositories can be rejected without it\n- Added `/usage-credits` for Enterprise organizations billed through AWS Marketplace, self-serve Enterprise, and Enterprise trials, so members can request a higher usage limit from their admin\n- Added cross-session messaging (`SendMessage` / `ListAgents`) between sessions on the same machine on Bedrock, Vertex, and Foundry, and when telemetry is disabled\n- Fixed a prompt-cache miss (and lost extended-thinking context) roughly once an hour in long sessions, caused by tool definitions being re-rendered after an OAuth token refresh\n- Fixed the `ScheduleWakeup` tool definition changing between a session and its `--resume` when the account had entered usage overage, causing a full prompt-cache miss on the resumed session's first turn\n- Fixed Claude Desktop and Cowork sessions disappearing after 30 days: the transcript cleanup now keeps desktop-written sessions while they are in the app (unless org policy manages retention); the new `desktopSessionCleanupPeriodDays` setting caps the exemption\n- Fixed being sent to the login screen when another Claude Code process held the token refresh lock while the session token had expired; the request now fails with a retryable error instead\n- Windows: Fixed the `claude agents` list not responding to the keyboard after detaching from a session, or when launched in a terminal tab left in win32-input-mode\n- Fixed the recommended Console sign-in in `/login` failing with an OAuth error before showing a sign-in URL on machines where it can't be used (for example when `ANTHROPIC_API_KEY` or an API key helper is set); it now falls back to the API-key sign-in\n- Fixed model names in `/model` and fast-mode switch notices to render as code, so suffixes like `[1m]` display literally instead of as a link\n- Fixed `claude agents` skipping the workspace trust prompt when the `CI` environment variable is set\n- Fixed `claude agents` crashing on launch when the PR-status cache held a malformed entry\n- Fixed agent view resurrecting a weeks-old background session after the machine was off: such a session now shows as stopped at its real end, and opening it asks before resuming its saved conversation\n- Fixed agent view sometimes opening an older conversation, and dropping the typed prompt, when starting a new session\n- Fixed `claude agents`: opening a stopped session that you already resumed in another terminal no longer starts a second process on that conversation; the row now says it is open in a terminal\n- Fixed `claude agents` and `claude rm` refusing to delete a session (\"has commits that are not pushed anywhere\") when its worktree branch was already merged into your checked-out default branch (e.g. local `main`) but not yet pushed\n- Fixed background sessions waiting silently when a `PermissionRequest` or `PreToolUse` hook prints an invalid answer: the `claude agents` row now names the hook and the schema error\n- Fixed hooks silently treating a stdout `{…}` object that isn't valid JSON as plain text; it's now reported as a hook error with the parse message\n- Fixed `/mcp` listing a project `.mcp.json` entry that declares the claude.ai connector type under the trusted \"claude.ai\" heading; it now appears under its real scope\n- Fixed MCP servers whose `headersHelper` supplies the `Authorization` header falling into OAuth discovery on a 401 instead of re-running the helper and retrying the call as documented\n- Fixed `/login` to a Claude apps gateway hanging when the managed-settings security approval dialog was required\n- Fixed gateway model discovery (`CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY`) never running when `apiKeyHelper` is the only credential\n- Fixed `claude logs` leaving mouse tracking, bracketed paste and the alternate screen switched on in the terminal it was run from\n- Fixed the trust dialog's list of repo permission rules showing a garbled character when a long rule was cut off in the middle of an emoji\n- Fixed the permission mode indicator staying hidden behind the \"Press Ctrl-C again to exit\" hint when you press shift+tab right after ctrl+c\n- Fixed `/ultrareview` and locally seeded cloud sessions uploading uncommitted edits to `prod.env`-style and `*.tfvars` files, or to editor swap, temp, and backup copies of credential files (e.g. `key.pem.tmp`, `id_rsa.swo`); they now stay on your machine\n- Fixed Remote Control sessions occasionally never showing a permission prompt or the latest messages on the connected device after the CLI silently reconnected\n- Fixed cloud sessions occasionally failing at startup when the container's session credentials were not yet readable\n- Fixed `claude remote-control` rejecting its own flags (e.g. `--spawn`, `--name`) when a global flag or a wrapper-injected option precedes the subcommand\n- Fixed startup warnings (e.g. \"N MCP servers need authentication\") rendering one column right of the rest of the transcript\n- Fixed a backgrounded worktree session losing its checkout: the background session now holds the worktree's lock while it runs, so cleanup and `git worktree remove` leave it alone\n- Fixed @-mentions of other sessions not matching names typed with non-Latin characters (for example Korean entered through an IME)\n- Fixed an invalid `crossSessionInbound` value being silently ignored: it now warns and holds cross-session messages (user settings) or refuses them (managed settings) until fixed\n- Fixed rate-limit, usage, and fast-mode messages telling you to run `/usage-credits` when that command isn't available for your organization (e.g. hidden with `DISABLE_EXTRA_USAGE_COMMAND`)\n- [VSCode] Fixed a chat tab getting stuck on \"No conversation found\" when its session was never saved; it now starts a new conversation instead\n- Improved the Workflow tool's prompt footprint: its description is now about 1k tokens instead of 5.7k, with the script-writing reference moved into a bundled `workflow-authoring` skill\n- Improved the prompt-footer PR badge to check GitHub less often while the pull request is unchanged; a push or a `gh pr` command still refreshes it right away\n- Improved managed settings: client-side timeout, MCP startup-mode, and stream-watchdog env vars no longer trigger the settings-approval prompt\n- Improved `/ultrareview <PR#>` to check before launch that the GitHub account connected to your Claude account can access the repository, and to explain how to fix it, instead of failing after the cloud session starts\n- Improved cross-session messaging: falls back to a private per-user `/tmp` directory when the default one can't be used, and the notice and `/status` name the directory to fix\n- Changed shift+enter in the agent view dispatch input to insert a newline (matching the prompt); ctrl+enter now dispatches and attaches\n- Changed `/loop`: self-paced dynamic mode and the no-prompt autonomous default are now always available, including on Bedrock/Vertex/Foundry\n- Changed Anthropic telemetry export failures to log at debug level as `[Anthropic telemetry]` instead of `[3P telemetry] OTEL diag error`, so they are not mistaken for your OTel collector failing\n- Changed cross-session messaging in Linux user namespaces: root-equivalent trust for unmapped owners is limited to canonical system directories\n- Changed `SendMessage` from a subagent to another session: the result now notes that any reply is delivered to the parent session's conversation, not to the subagent\n",
+    "summary": {
+      "headline": "`--restricted` 모드 신설, 캐시 미스 수정",
+      "newFeatures": [
+        {
+          "text": "`--restricted` (또는 `CLAUDE_CODE_RESTRICTED=1`) 추가 — 명령·코드 실행 내장 도구와 `WebFetch` 를 제거하고(`--tools` 에 명시하면 예외), 파일 도구를 작업 디렉터리로 제한하며 `bypassPermissions` 를 거부하고 user·project·local 설정 파일을 무시",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "에이전트 frontmatter 에 `experimental.cacheTtl`(`\"5m\"` 또는 `\"1h\"`) 추가 — 서브에이전트 TTL 설정이 없을 때 에이전트별 프롬프트 캐시 TTL 로 사용",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`claude self-hosted-runner --client-label <label>` 및 `SELF_HOSTED_RUNNER_CLIENT_LABEL` 로 러너 등록 라벨 지정 가능 (기본값 hostname)",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "서버 관리 설정 진단 추가 — 로드 실패 시 시작 경고와 함께 `/doctor`·`/status` 에 실패 사유나 미조회 이유(Bedrock/Vertex/서드파티, 커스텀 `ANTHROPIC_BASE_URL`) 표시",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "GitHub CLI 토큰에 `workflow` 스코프가 없으면 `/web-setup` 이 경고 — 매우 큰 레포 push 가 거부될 수 있음",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "AWS Marketplace 청구·셀프서브 Enterprise·Enterprise 체험 조직에도 `/usage-credits` 제공 — 구성원이 관리자에게 한도 상향 요청 가능",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Foundry 및 텔레메트리 비활성 환경에서도 동일 머신 세션 간 `SendMessage`·`ListAgents` 사용 가능",
+          "originalRefs": [
+            6
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "에이전트 뷰 dispatch 입력의 shift+enter 를 개행 삽입으로 변경, ctrl+enter 가 dispatch 후 attach 수행",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "`/loop` 의 self-paced dynamic 모드와 프롬프트 없는 autonomous 기본값을 Bedrock·Vertex·Foundry 포함 항상 사용 가능하게 변경",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "Anthropic 텔레메트리 export 실패 로그를 `[3P telemetry] OTEL diag error` 대신 `[Anthropic telemetry]` 로 debug 레벨 기록 — 자체 OTel 컬렉터 장애로 오인 방지",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "Linux user namespace 의 세션 간 메시징에서 매핑되지 않은 소유자에 대한 root 동등 신뢰를 표준 시스템 디렉터리로 한정",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "서브에이전트가 다른 세션으로 `SendMessage` 할 때 답장이 서브에이전트가 아닌 부모 세션 대화로 전달됨을 결과에 명시",
+          "originalRefs": [
+            48
+          ]
+        },
+        {
+          "text": "Workflow 툴 설명을 5.7k 토큰에서 약 1k 토큰으로 축소하고 스크립트 작성 레퍼런스를 `workflow-authoring` 스킬로 분리",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "푸터 PR 배지가 PR 이 변경되지 않은 동안 GitHub 조회 빈도를 낮추도록 개선 — push 나 `gh pr` 실행 시에는 즉시 갱신",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "클라이언트 타임아웃·MCP 시작 모드·스트림 워치독 환경변수는 관리 설정 승인 프롬프트를 유발하지 않도록 변경",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "`/ultrareview <PR#>` 이 실행 전에 Claude 계정에 연결된 GitHub 계정의 레포 접근 권한을 확인하고 해결 방법을 안내하도록 개선",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "세션 간 메시징이 기본 디렉터리를 쓸 수 없을 때 사용자 전용 `/tmp` 디렉터리로 폴백하고, 안내와 `/status` 에 문제 디렉터리를 표시",
+          "originalRefs": [
+            43
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "OAuth 토큰 갱신 후 도구 정의가 다시 렌더링되어 긴 세션에서 시간당 한 번꼴로 프롬프트 캐시가 미스되고 extended thinking 컨텍스트를 잃던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "사용량 초과 상태에서 `ScheduleWakeup` 도구 정의가 세션과 `--resume` 사이에 달라져 재개 첫 턴에 전체 캐시 미스를 일으키던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "Claude Desktop·Cowork 세션이 30일 후 사라지던 문제 수정 — 앱 내 세션은 유지하고 `desktopSessionCleanupPeriodDays` 설정으로 예외 기간 제한",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "다른 Claude Code 프로세스가 토큰 갱신 락을 쥔 채 세션 토큰이 만료되면 로그인 화면으로 보내던 문제 수정 — 재시도 가능한 오류로 실패",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "Windows: 세션에서 detach 한 뒤나 win32-input-mode 로 남은 터미널 탭에서 `claude agents` 목록이 키보드에 반응하지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_API_KEY` 나 API key helper 가 설정된 머신에서 `/login` 의 Console 로그인이 URL 표시 전에 OAuth 오류로 실패하던 문제 수정 — API 키 로그인으로 폴백",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`/model` 과 fast mode 전환 안내의 모델명을 코드로 렌더링해 `[1m]` 같은 접미사가 링크가 아닌 문자 그대로 표시되도록 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`CI` 환경변수가 설정되면 `claude agents` 가 워크스페이스 신뢰 프롬프트를 건너뛰던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "PR 상태 캐시에 잘못된 항목이 있으면 `claude agents` 가 시작 시 크래시하던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "머신이 꺼져 있던 사이 수 주 전 백그라운드 세션이 `claude agents` 뷰에서 되살아나던 문제 수정 — 실제 종료 시점으로 stopped 표시하고 재개 전 확인",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "새 세션 시작 시 `claude agents` 뷰가 이전 대화를 열고 입력한 프롬프트를 잃던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "다른 터미널에서 이미 재개한 stopped 세션을 `claude agents` 에서 열면 같은 대화에 두 번째 프로세스가 뜨던 문제 수정 — 이제 터미널에서 열려 있다고 표시",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "worktree 브랜치가 체크아웃된 기본 브랜치에 이미 병합됐지만 push 되지 않은 경우 `claude agents`·`claude rm` 이 삭제를 거부하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "`PermissionRequest`·`PreToolUse` 훅이 잘못된 응답을 출력하면 백그라운드 세션이 조용히 대기하던 문제 수정 — `claude agents` 행에 훅 이름과 스키마 오류 표시",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "훅 stdout 의 `{…}` 객체가 유효한 JSON 이 아닐 때 평문으로 취급하던 문제 수정 — 파싱 메시지와 함께 훅 오류로 보고",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "프로젝트 `.mcp.json` 의 claude.ai 커넥터 타입 항목이 `/mcp` 에서 신뢰된 claude.ai 헤딩 아래 나열되던 문제 수정 — 실제 스코프로 표시",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "`headersHelper` 가 `Authorization` 헤더를 공급하는 MCP 서버가 401 에서 helper 재실행 대신 OAuth discovery 로 빠지던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "관리 설정 보안 승인 대화상자가 필요한 상황에서 Claude apps 게이트웨이 `/login` 이 멈추던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "`apiKeyHelper` 가 유일한 자격증명일 때 `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` 게이트웨이 모델 탐색이 아예 실행되지 않던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "`claude logs` 가 실행된 터미널에 마우스 트래킹·bracketed paste·대체 화면을 켠 채로 남기던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "긴 권한 규칙이 이모지 중간에서 잘릴 때 trust dialog 의 레포 권한 규칙 목록에 깨진 문자가 보이던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "ctrl+c 직후 shift+tab 을 누르면 권한 모드 표시가 종료 재확인 힌트에 가려지던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "`/ultrareview` 와 로컬 시드 클라우드 세션이 `prod.env`·`*.tfvars` 및 `key.pem.tmp`·`id_rsa.swo` 같은 자격증명 백업·스왑 파일의 미커밋 변경을 업로드하던 문제 수정 — 이제 로컬에 유지",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "CLI 가 조용히 재연결한 뒤 Remote Control 세션이 연결된 기기에 권한 프롬프트나 최신 메시지를 표시하지 않던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "컨테이너의 session credentials 를 아직 읽을 수 없을 때 클라우드 세션 시작이 간헐 실패하던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "전역 플래그나 래퍼 주입 옵션이 서브커맨드 앞에 오면 `claude remote-control` 이 자기 플래그(`--spawn`, `--name`)를 거부하던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "MCP 서버 인증 필요 개수를 알리는 시작 경고가 트랜스크립트보다 한 칸 오른쪽에 렌더되던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "백그라운드로 전환된 worktree 세션이 체크아웃을 잃던 문제 수정 — 이제 실행 중 worktree 락을 잡아 `git worktree remove` 가 건드리지 않음",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "한국어를 IME 로 입력하는 등 비라틴 문자 이름으로 타이핑한 다른 세션 @-멘션이 매칭되지 않던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "잘못된 `crossSessionInbound` 값이 조용히 무시되던 문제 수정 — 이제 경고 후 메시지를 보류(user 설정)하거나 거부(managed 설정)",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "`DISABLE_EXTRA_USAGE_COMMAND` 등으로 조직에서 `/usage-credits` 를 쓸 수 없는데도 rate limit·사용량·fast mode 안내가 이를 실행하라고 하던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "[VSCode] 저장된 적 없는 세션의 채팅 탭이 \"No conversation found\" 로 멈추던 문제 수정 — 새 대화를 시작",
+          "originalRefs": [
+            38
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`--restricted` 는 user·project·local 설정 파일을 전부 무시하므로, 신뢰 경계가 필요한 CI·자동화에서 최소 권한 실행 모드로 쓸 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "에이전트별 `experimental.cacheTtl` 신설로 서브에이전트 캐시 수명을 개별 조정 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "Workflow 툴 설명이 5.7k에서 약 1k 토큰으로 줄어 매 턴 프롬프트 비용이 감소함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 5
+            }
+          ]
+        },
+        {
+          "text": "`desktopSessionCleanupPeriodDays` 설정키가 신설되어 Desktop 세션 보존 기간을 제어할 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`/ultrareview` 가 `*.tfvars`·`prod.env` 및 그 백업·스왑 파일을 더는 업로드하지 않아 자격증명 유출 경로가 막힘.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 24
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-09-01T00:12:45.796Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.247",
     "tagName": "v2.1.247",
     "publishedAt": "2026-08-26T23:06:39Z",

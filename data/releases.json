@@ -1,5 +1,1218 @@
 [
   {
+    "version": "v2.1.266",
+    "tagName": "v2.1.266",
+    "publishedAt": "2026-09-08T23:55:14Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.266",
+    "originalBody": "## What's changed\n\n- Fixed a 2.1.265 regression affecting LLM-gateway and proxy setups: the undocumented `CLAUDE_CODE_USE_GATEWAY` environment variable, previously ignored unless `ANTHROPIC_BASE_URL` and `ANTHROPIC_AUTH_TOKEN` were both set, began forcing Cloud-gateway sign-in on its own in 2.1.265, so configurations that set it alongside an API key, `apiKeyHelper`, or custom auth headers failed every request with \"Not signed in to the Cloud gateway\". The variable on its own is ignored again; no configuration change is needed\n",
+    "summary": {
+      "headline": "`CLAUDE_CODE_USE_GATEWAY` 게이트웨이 회귀 수정",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "2.1.265 에서 `CLAUDE_CODE_USE_GATEWAY` 환경변수가 단독으로도 Cloud 게이트웨이 로그인을 강제해 API 키·`apiKeyHelper`·커스텀 인증 헤더 조합이 전부 `Not signed in to the Cloud gateway` 로 실패하던 회귀 수정 — 단독 설정은 다시 무시됨",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "LLM 게이트웨이·프록시 환경에서 2.1.265 로 올렸다면 모든 요청이 실패하므로 즉시 2.1.266 으로 올려야 함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "설정 변경은 불필요하며 `ANTHROPIC_BASE_URL` 과 `ANTHROPIC_AUTH_TOKEN` 을 함께 둔 경우에만 게이트웨이가 활성화되는 이전 동작으로 복귀함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-09-09T04:24:18.708Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.265",
+    "tagName": "v2.1.265",
+    "publishedAt": "2026-09-08T20:37:31Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.265",
+    "originalBody": "## What's changed\n\n- Added `user.email` and `user.groups` to the telemetry Claude Desktop and Cowork send through a Claude apps gateway, matching terminal sessions\n- Added support for pointing `--plugin-dir` at a folder of plugins: each child folder with a manifest loads, and children added or removed while running are picked up\n- Added a 1 GB cap on tool results saved to disk; the in-conversation preview says when a saved file was truncated\n- Fixed resuming a foreground-spawned subagent changing its tool list and system prompt prefix, which broke prompt-cache reuse for that agent\n- Fixed agent teammates and resumed subagents moving SubagentStart hook context and preloaded skills out of the prompt prefix on later turns, which broke prompt-cache reuse\n- Fixed resume after the previous process died while a tool was running: the last prompt is no longer rewritten, and the interrupted tool call is kept and marked interrupted\n- Fixed `/model opusplan[1m]` being rejected with \"Model not found\"\n- Fixed syntax-highlighted code in permission prompts and messages sometimes omitting a character after a Ruby `?`, Erlang `$`, or Perl `$` sigil\n- Fixed the fullscreen transcript jumping by one row whenever the slash-command or @-file suggestion list opened or closed\n- Fixed a plugin path containing a backslash bypassing the symlink containment check on macOS and Linux\n- Fixed plugin directories whose names begin with two dots being wrongly refused as outside the plugin root\n- Fixed VS Code and SDK sessions occasionally requiring re-login when a session was closed while refreshing its token\n- Fixed Remote Control sessions sending the end-of-turn signal before the reply's last message, which could show a reply as finished in the Claude app before its last part arrived\n- Fixed background (`--bg`) sessions occasionally being retired mid-turn when a message arrived just before the idle timeout\n- Fixed Claude Code's own git status and diff probes running clean filters configured by a nested repository inside the working tree\n- Fixed the advisor tool and its instructions being re-decided per request from the request's model; the decision is now made once and announced in the conversation when it changes\n- Fixed artifact publish accepting connector tool names the connector doesn't expose; the publish is now refused when none of the declared tools exist, and warned when only some don't\n- Fixed `/add-dir <subdirectory>` refusing to load a subdirectory's agents when managed settings lock only skills to plugins, and promising agents when only agents are locked\n- Fixed two-key keyboard shortcuts cancelling silently when the second key arrived more than a second later, as happens inside tmux; they now wait 3 seconds and show a notice when they time out\n- Fixed forked skills (`context: fork`) not streaming their kickoff prompt and, with `--forward-subagent-text`, their text turns as progress events in stream-json\n- Fixed a plugin's default component folder that the OS cannot check, such as a symlink loop, being silently skipped; it is now reported in `/plugin` with the error code\n- Fixed the Claude apps gateway's OTLP telemetry relay pausing all forwarding to a collector for 30 seconds after it rejected a few payloads as malformed or too large\n- Fixed `/plugin` Discover/Browse and `claude plugin list --json --available` showing no description or display name for marketplace plugins whose metadata lives only in their `plugin.json`\n- Fixed `/login` showing \"no gateway URL is configured\" when re-run in a session that signed in to a Claude apps gateway set by managed settings\n- Fixed `/model` claiming a model was \"saved as your default\" when the settings file couldn't be written; it now says the save failed and why\n- Fixed `/clear` from Remote Control waiting on SessionStart hooks and on open terminal dialogs before completing\n- Fixed the `/config` dialog changing height when switching between its tabs\n- Fixed resuming a workflow run after its container restarted; a resume whose run journal is missing now fails with a clear error instead of rerunning every agent\n- Fixed the `claude-api` skill's error-code reference: model access failures return 404 and unavailable beta headers return 400, not 403\n- Fixed non-interactive sessions (`-p` with stream-json input, Agent SDK, cloud sessions) resetting the shell working directory at each new user message; a `cd` now persists across turns\n- Fixed MCP servers configured as `http` that only speak the legacy HTTP+SSE transport never connecting; Claude Code now falls back to SSE as the MCP spec describes\n- Fixed some claude.ai connectors in cloud sessions showing as needing authentication even though they are connected in claude.ai (servers that answer an unsupported request with HTTP 401)\n- Fixed remote sessions keeping their sandbox container alive while a connector approval or sign-in link waits for you\n- Fixed resumed sessions showing long model-facing recovery instructions in \"background task didn't finish\" notices instead of a short status line\n- Windows: Fixed Read, Write and Edit refusing every file (\"symlink resolution changed after permission was checked\") when running inside an AppContainer or restricted-token sandbox\n- Improved `--worktree` startup on large repositories: the new worktree is now checked out in parallel (git 2.32+)\n- Improved `/workflows` agent detail: tool calls are marked running, failed or done, the subagent's task list is shown when it has one, and Enter unfolds the listed calls with their inputs and results\n- Improved slash commands typed mid-prompt: matches now show in a list (Tab opens it outside fullscreen) instead of a single suggestion, and a plugin skill is now found by its bare name\n- Improved remote MCP servers that need sign-in: Claude Code no longer registers an OAuth client with them until you actually authenticate\n- Improved the time to resume long sessions that read many files\n- Improved the error shown when an image over the size limits cannot be decoded: it now names the cause and how to fix it instead of only citing the limit\n- Improved the Artifact tool's read of an artifact someone else wrote: the summary now treats the page as untrusted content and flags embedded instructions rather than relaying them\n- Updated the `.claude` folder permission option to say what it actually allows: editing files in the project's `.claude` folder (or `~/.claude`) for the session\n- Changed machines with `forceLoginGatewayUrl` in managed settings to be Claude apps gateway sessions from startup, like `forceLoginMethod: \"gateway\"`; a leftover claude.ai login or API key is not used\n- Changed image processing to use the runtime's built-in image support; the CLI no longer extracts a native image module to the temp directory\n- Changed plugin display metadata to prefer the marketplace entry over `plugin.json` on the Installed tab and `claude plugin details`, filling gaps from `plugin.json`\n- Changed Claude apps gateway sessions to export OpenTelemetry directly to a collector the gateway's managed settings name in `OTEL_EXPORTER_OTLP_ENDPOINT`, instead of through the gateway's relay; sessions without a named collector still use the relay\n- [VSCode] Added automatic archiving of sessions inactive for a set period (new \"Archive inactive sessions\" setting, default 14 days)\n- [VSCode] Fixed the sidebar chat coming back blank after Reload Window or a restart when the conversation had been open for more than 10 minutes\n- [VSCode] Fixed the timeline dot sitting below the text on the \"Remote Control is active\" message\n",
+    "summary": {
+      "headline": "`--plugin-dir` 폴더 지정과 캐시 재사용 개선",
+      "newFeatures": [
+        {
+          "text": "`--plugin-dir` 에 플러그인 묶음 폴더를 지정하면 manifest 를 가진 하위 폴더가 각각 로드되고, 실행 중 추가·삭제된 하위 폴더도 반영됨",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "디스크에 저장되는 도구 결과에 1GB 상한이 걸리고, 잘린 저장 파일은 대화 내 프리뷰에서 표시됨",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "Claude 앱 게이트웨이를 경유하는 Desktop·Cowork 텔레메트리에 `user.email` 과 `user.groups` 가 추가돼 터미널 세션과 항목이 맞춰짐",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "[VSCode] 지정 기간 미사용 세션 자동 보관 옵션 `Archive inactive sessions` 추가 (기본 14일)",
+          "originalRefs": [
+            47
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`--worktree` 기동 시 신규 worktree 체크아웃이 병렬 처리돼 대형 레포에서 빨라짐 (git 2.32+ 필요)",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "`/workflows` 상세에 도구 호출의 running·failed·done 상태와 서브에이전트 태스크 목록이 표시되고, Enter 로 호출 입력·결과를 펼침",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "프롬프트 중간에 입력한 슬래시 커맨드가 단일 제안 대신 목록으로 표시되고 (풀스크린 밖에서는 Tab), 플러그인 스킬을 이름만으로 찾음",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "로그인이 필요한 원격 MCP 서버는 실제 인증 시점까지 OAuth 클라이언트 등록을 미룸",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "managed settings 의 `forceLoginGatewayUrl` 이 설정된 머신은 기동부터 Claude 앱 게이트웨이 세션으로 동작하며 잔존 claude.ai 로그인·API 키를 쓰지 않음",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "이미지 처리를 런타임 내장 기능으로 전환해 네이티브 이미지 모듈을 temp 디렉토리에 풀지 않음",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "Claude 앱 게이트웨이 세션이 게이트웨이 relay 대신 managed settings 의 `OTEL_EXPORTER_OTLP_ENDPOINT` 로 OpenTelemetry 를 직접 내보냄 (미지정 세션은 relay 유지)",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "`.claude` 폴더 권한 옵션 문구가 실제 허용 범위(세션 동안 프로젝트 `.claude` 또는 `~/.claude` 파일 편집)로 정정됨",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "많은 파일을 읽은 긴 세션의 `/resume` 속도와, 크기 제한 초과 이미지 디코드 실패 시의 원인·해결 안내가 개선됨",
+          "originalRefs": [
+            39,
+            40
+          ]
+        },
+        {
+          "text": "다른 사람이 작성한 아티팩트를 Artifact 도구로 읽을 때 요약이 해당 페이지를 신뢰할 수 없는 콘텐츠로 취급하고 삽입된 지시문을 전달 대신 표시함",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "`plugin.json` 대신 마켓플레이스 항목의 표시 메타데이터를 우선 사용하고 빈 값만 `plugin.json` 으로 채움 (Installed 탭·`claude plugin details`)",
+          "originalRefs": [
+            45
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "foreground 로 띄운 서브에이전트를 재개할 때 도구 목록과 시스템 프롬프트 prefix 가 바뀌어 프롬프트 캐시 재사용이 깨지던 문제 수정",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "에이전트 teammate 와 재개된 서브에이전트가 이후 턴에서 SubagentStart 훅 컨텍스트·프리로드 스킬을 prefix 밖으로 옮겨 캐시 미스가 나던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "도구 실행 중 프로세스가 죽은 뒤 재개하면 마지막 프롬프트가 재작성되던 문제 수정 — 중단된 도구 호출은 interrupted 로 표시해 보존",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`/model opusplan[1m]` 이 `Model not found` 로 거부되던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "Windows: AppContainer·제한 토큰 샌드박스에서 Read·Write·Edit 가 `symlink resolution changed after permission was checked` 로 모든 파일을 거부하던 문제 수정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "macOS·Linux 에서 백슬래시가 포함된 플러그인 경로가 symlink 격리 검사를 우회하던 문제와, 점 두 개로 시작하는 플러그인 디렉토리가 잘못 거부되던 문제 수정",
+          "originalRefs": [
+            9,
+            10
+          ]
+        },
+        {
+          "text": "토큰 갱신 중 세션을 닫으면 VS Code·SDK 세션이 재로그인을 요구하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "Remote Control 이 응답 마지막 메시지보다 먼저 턴 종료 신호를 보내 Claude 앱에서 완료로 보이던 문제와, 유휴 타임아웃 직전 메시지 도착 시 `--bg` 세션이 턴 중간에 회수되던 문제 수정",
+          "originalRefs": [
+            12,
+            13
+          ]
+        },
+        {
+          "text": "작업 트리 안의 중첩 레포가 설정한 clean 필터가 자체 git status·diff 탐지에 적용되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "advisor 도구와 그 지시문이 요청 모델별로 매번 재결정되던 문제 수정 — 한 번만 결정하고 변경 시 대화에 알림",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "`Artifact` 발행이 커넥터가 노출하지 않는 도구 이름도 통과시키던 문제 수정 — 선언 도구가 전부 없으면 거부, 일부만 없으면 경고",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "managed settings 가 스킬만 플러그인으로 제한한 경우 `/add-dir <subdirectory>` 가 하위 디렉토리 에이전트 로드를 거부하던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "tmux 등에서 두 번째 키가 1초 넘게 늦으면 2키 단축키가 조용히 취소되던 문제 수정 — 3초 대기 후 타임아웃 안내 표시",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`context: fork` 스킬의 kickoff 프롬프트와 `--forward-subagent-text` 텍스트 턴이 stream-json 진행 이벤트로 스트리밍되지 않던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "symlink 루프처럼 OS 가 확인할 수 없는 플러그인 기본 컴포넌트 폴더가 조용히 건너뛰어지던 문제 수정 — `/plugin` 에 에러 코드와 함께 보고",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "게이트웨이 OTLP relay 가 payload 를 몇 건 거부한 뒤 collector 전달 전체를 30초간 멈추던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "메타데이터가 `plugin.json` 에만 있는 마켓플레이스 플러그인이 `/plugin` Discover·Browse 와 `claude plugin list --json --available` 에서 설명·표시명 없이 나오던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "managed settings 로 지정된 게이트웨이에 로그인한 세션에서 `/login` 재실행 시 `no gateway URL is configured` 가 나오던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "설정 파일 쓰기가 실패해도 `/model` 이 기본 모델 저장 성공으로 알리던 문제 수정 — 실패 사실과 이유를 표시",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "Remote Control 의 `/clear` 가 SessionStart 훅과 열린 터미널 다이얼로그를 기다린 뒤에야 완료되던 문제와, `/config` 다이얼로그 탭 전환 시 높이가 바뀌던 문제 수정",
+          "originalRefs": [
+            25,
+            26
+          ]
+        },
+        {
+          "text": "컨테이너 재시작 후 워크플로 재개 시 run journal 이 없으면 모든 에이전트를 다시 돌리던 문제 수정 — 명확한 에러로 실패",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "`claude-api` 스킬의 에러 코드 레퍼런스 정정 — 모델 접근 실패는 404, 미지원 beta 헤더는 400 (403 아님)",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "`-p` stream-json·Agent SDK·클라우드 세션이 사용자 메시지마다 셸 작업 디렉토리를 초기화하던 문제 수정 — `cd` 가 턴 간 유지됨",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "`http` 로 설정된 MCP 서버가 레거시 HTTP+SSE 전송만 지원할 때 연결되지 않던 문제 수정 — MCP 스펙대로 SSE 폴백",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "미지원 요청에 HTTP 401 을 반환하는 서버 탓에 claude.ai 커넥터가 클라우드 세션에서 인증 필요로 보이던 문제와, 커넥터 승인·로그인 대기 중 원격 세션 샌드박스 컨테이너가 계속 살아있던 문제 수정",
+          "originalRefs": [
+            31,
+            32
+          ]
+        },
+        {
+          "text": "재개된 세션의 `background task didn't finish` 알림에 긴 모델용 복구 지시문이 노출되던 문제 수정 — 짧은 상태 한 줄로 대체",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "권한 프롬프트·메시지의 구문 강조 코드에서 Ruby `?`, Erlang `$`, Perl `$` 시길 뒤 문자가 누락되던 문제와, 슬래시 커맨드·`@` 파일 제안 목록 개폐 시 풀스크린 트랜스크립트가 한 줄씩 튀던 문제 수정",
+          "originalRefs": [
+            7,
+            8
+          ]
+        },
+        {
+          "text": "[VSCode] Reload Window·재시작 후 10분 넘게 열려 있던 대화의 사이드바 채팅이 빈 화면으로 돌아오던 문제와, `Remote Control is active` 메시지의 타임라인 점 위치 문제 수정",
+          "originalRefs": [
+            48,
+            49
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "AppContainer·제한 토큰 샌드박스 안에서 Claude Code 를 돌리는 Windows 환경은 이 버전 전까지 파일 읽기·쓰기가 전부 막혀 있었음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "`forceLoginGatewayUrl` 을 managed settings 에 둔 조직은 기동 시점부터 게이트웨이 세션으로 강제되므로 기존 API 키 기반 인증 경로가 무효화됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "게이트웨이 세션의 OpenTelemetry 경로가 relay 에서 collector 직결로 바뀌므로 `OTEL_EXPORTER_OTLP_ENDPOINT` 미설정 여부에 따라 수집 경로가 달라짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "디스크 저장 도구 결과에 1GB 상한이 새로 걸려 그보다 큰 출력은 잘림.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "게이트웨이 텔레메트리에 `user.email`·`user.groups` 가 포함되므로 수집 파이프라인의 개인정보 처리 범위를 재확인해야 함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`--worktree` 병렬 체크아웃은 git 2.32 이상에서만 적용됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-09-09T04:24:18.708Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.263",
+    "tagName": "v2.1.263",
+    "publishedAt": "2026-09-06T02:54:20Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.263",
+    "originalBody": "## What's changed\n\n- Bug fixes and reliability improvements\n",
+    "summary": {
+      "headline": "버그 수정 및 안정성 개선",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "세부 항목 없이 버그 수정과 안정성 개선만 명시된 릴리즈 (`Bug fixes and reliability improvements`)",
+          "originalRefs": [
+            0
+          ]
+        }
+      ],
+      "devImpact": []
+    },
+    "summarizedAt": "2026-09-09T04:24:18.708Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.261",
+    "tagName": "v2.1.261",
+    "publishedAt": "2026-09-04T19:58:10Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.261",
+    "originalBody": "## What's changed\n\n- Added an \"Organization policy\" line to `/status` and `claude doctor` that says why your organization's policy could not be loaded, such as a proxy not passing the endpoint through\n- Added `bashOutputMaxChars` and `taskOutputMaxChars` settings to raise how much command and background-task output Claude receives inline before it is saved to a file, up to 128K characters\n- Added `--append-subagent-system-prompt-file` to read the subagent system prompt from a file, for prompts too large to pass on the command line\n- Added `/skill-doctor` to show which loaded skills go unused and what they cost in context, so you can prune them\n- Fixed typed or pasted characters occasionally landing out of order or being dropped during fast input or key repeat\n- Fixed `/add-dir <subdirectory>` printing a false \"couldn't be resolved\" error when the working directory is on a `/net` automount\n- Fixed the Bedrock setup wizard hanging when AWS or an AWS credential helper never responds (it now times out with a clear error), and its model checks failing behind a TLS-inspecting proxy\n- Fixed cloud sessions discarding a plugin synced from claude.ai when managed settings force-enable it in `enabledPlugins`, then falling back to a marketplace clone that could fail\n- Fixed being unable to delete the character immediately before an inline `[Image #N]` chip in the prompt input\n- Fixed resuming a session losing hook output and other context around parallel tool calls, which changed the resumed request\n- Fixed Remote Control showing a stale permission mode when a phone, browser, or claude.ai app attaches to a terminal session or after the mode changes in the terminal\n- Fixed Remote Control sessions showing as still working (stuck spinner and Stop button) after stopping a turn from a connected phone or browser, or after a local slash command like `/clear`\n- Fixed SDK and cloud sessions ignoring a Stop or interrupt sent just after the first prompt, before the turn had started; the turn now stops instead of running to completion\n- Fixed Remote Control uploading a session pulled with `/teleport` into the connected session, which appeared appended to the original on phone and web\n- Fixed Remote Control's inbound event stream failing behind TLS-inspecting corporate proxies on native Windows\n- Fixed Remote Control sessions showing the default effort level on claude.ai when the effort comes from settings\n- Fixed `gcpAuthRefresh` opening a browser at startup when the Google credential check was slow, even though the credential was still valid\n- Fixed claude.ai connectors staying absent for the whole session when the startup connector fetch timed out — the CLI now retries in the background\n- Fixed sustained high CPU usage when a background agent could not be resumed and its wake-up was retried in a tight loop\n- Fixed feature flags gated to a newer version occasionally applying to an older Claude Code version running on the same machine\n- Fixed `/usage` and the VS Code usage panel dropping a model-specific weekly limit row when the usage endpoint is rate limited or when opened right after startup\n- Fixed `claude -p --resume <file>` adopting a malformed session ID recorded in the transcript; it now resumes under a fresh session ID instead\n- Fixed the terminal progress indicator (iTerm2, Ghostty, ConEmu) showing the session as finished while a background workflow or agent was still running\n- Fixed a rare layout glitch where a box could render with the wrong height after its container switched between row and column direction\n- Fixed Claude apps gateway client IP when a trusted proxy appends a port to `X-Forwarded-For`; with an access list set, an unreadable entry now gets 403\n- Fixed Claude apps gateway telling Claude Desktop to export OpenTelemetry as JSON even when the terminal CLI uses protobuf, so protobuf-only collectors rejected Desktop's data\n- Fixed Desktop and web showing a session as busy while it only watches an artifact for updates\n- Fixed Claude in Chrome `file_upload` failing with \"paths: expected array, received undefined\" in local Cowork sessions run from the Claude Desktop app\n- Fixed `SendMessage` to an offline Remote Control session on another machine reading as delivered; the result now says delivery is queued until that machine reconnects\n- Fixed plugin install hints from CLIs run in background Bash commands: they are now detected, and the raw `<claude-code-hint>` tag no longer leaks into the conversation\n- Fixed in-process agent-team teammates re-sending their first-turn tool and skill announcements on the second turn, which changed the request prefix and missed the prompt cache\n- Improved the `/model` picker and the VS Code model pill to show a model's name instead of its raw Bedrock, Vertex AI, or LLM gateway ID when Claude Code recognizes it\n- Improved startup on Google Vertex AI when `GOOGLE_APPLICATION_CREDENTIALS` is set: API client creation no longer re-runs Google Cloud project discovery or spawns extra `gcloud` processes\n- Improved streaming performance: already-rendered blocks are no longer re-checked by layout on each update\n- Improved the dangerous-`rm` safety prompt to also catch `rm -rf` on positional parameters and inside double-quoted `sh -c` scripts\n- Improved handling when the API sends no response headers: the retry now waits up to `API_TIMEOUT_MS` (10 minutes by default) instead of another 3 minutes, and the messages say what to change\n- Changed a Claude apps gateway 403 on the managed settings load (at startup or after `/login`) to say Claude Code may not be enabled for the organization, instead of advising a new sign-in\n- Changed machines whose managed settings pin `forceLoginMethod: \"gateway\"` to ignore a leftover API key or claude.ai login and ask for `/login`; Bedrock, Vertex AI, and Foundry sessions are unaffected\n- Changed auto mode to treat a link that packs content into a public diagram renderer's URL as an upload to that site: no longer auto-approved unless you asked for it\n- Changed the prompt's word-editing keys to match Bash: Ctrl+W deletes back to whitespace, Alt+F and Alt+D stop at word end, punctuation separates words; `keybindingFlavor` no longer has any effect\n- Changed `/context` token counting to use a local estimate when the token-counting API is unavailable, instead of extra small-model requests\n- [VSCode] Added a \"Build a custom style\" walkthrough to the Output styles menu that writes a custom output style file and lists it right away\n- [VSCode] Added an Add server form and a Remove action to the MCP servers dialog, so MCP servers can be added and removed without leaving the IDE\n- [VSCode] Added a hollow ring in the session list for sessions open in a terminal, another VS Code window, or Claude Desktop, so they no longer look closed\n- [VSCode] Added a fold button to permission and question prompts so the conversation behind them can be read without dismissing them; the space beside the prompt now scrolls the conversation\n- [VSCode] Added \"Archive session\" to the session list's right-click menu and gave Unarchive its own icon\n- [VSCode] Fixed a session teleported from Claude Code on the web treating a question that was cut off when the cloud session shut down as declined\n- [VSCode] Fixed the session tab's Rename box opening empty for a tab restored with the window; it now starts with the current name\n- [VSCode] Fixed collapsed sections in the session list panel briefly showing expanded each time the panel loaded\n- [VSCode] Fixed Focus view showing a tool call as still running after Claude had moved on, such as while a question waited for your answer\n- [VSCode] Fixed the session list's active-row highlight going stale when an unfocused Claude tab's session ID is corrected\n- [VSCode] Fixed Cmd/Ctrl+Shift+T reopen and deep-link opens placing the Claude tab outside the Claude editor group when a Claude tab has focus\n- [VSCode] Fixed the session tab's \"Add to group\" putting a session opened from Claude Code on the Web in two groups; it now moves the entry the session list shows\n- [VSCode] Fixed the model picker showing models an organization has since disabled until the window was reloaded twice\n- [VSCode] Fixed a tab opened from the session list jumping back to that session, and a tab opened from a Web session restarting its teleport or staying empty, after VS Code reloads the tab's view\n- [VSCode] Fixed `/btw` side-question history from earlier sessions being overwritten when a question is asked right after a window reload or while a settings file has errors\n- [VSCode] Fixed the pending question card not reappearing after the Claude panel reloads when signed in with a Claude.ai or Console account\n- [VSCode] Fixed claude.ai-only features staying visible in a window's other Claude panels after one panel picked up a third-party provider from a settings file\n- [VSCode] Fixed the sign-in screen appearing despite the Disable Login Prompt setting when Claude Code reports no login or a request fails for lack of one\n- [VSCode] Fixed the next queued permission prompt keeping text typed on the previous prompt and accepting an immediate second click\n- [VSCode] Fixed install-plugin links opening the Claude sidebar without the install dialog in a window where only the session list had been shown\n- [VSCode] Fixed the sidebar usage meter staying empty on a new window until the Account & usage dialog was opened, and a 0% usage limit being left out of the meter\n- [VSCode] Fixed \"Start new session in this group\" losing the group after New conversation, and a missing unread dot for a session that finished before the sidebar's unread list loaded\n- [VSCode] Fixed the editor tab badge showing unread during a running turn or missing on a tab opened from the session list, and \"Add Session Tab to Group\" doing nothing for an archived session\n- [VSCode] Fixed \"Enable Remote Control for all sessions\" so flipping it also applies right away to sessions open in other VS Code windows\n- [VSCode] Fixed the session list's Open filter for sessions continued from claude.ai whose tab was still recorded under the web session, and labeled the filter menu's sections for screen readers\n- [VSCode] Changed the model picker to one flat list of every model, with rows kept for older model spellings listed last\n",
+    "summary": {
+      "headline": "`/skill-doctor` 신설과 출력 한도 설정 추가",
+      "newFeatures": [
+        {
+          "text": "`/skill-doctor` 추가 — 로드된 스킬 중 미사용 항목과 각자의 컨텍스트 비용을 보여줘 정리 판단 가능",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`bashOutputMaxChars` 와 `taskOutputMaxChars` 설정 추가 — 파일 저장 전 인라인으로 전달되는 명령·백그라운드 태스크 출력량을 최대 128K 문자까지 상향 가능",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`--append-subagent-system-prompt-file` 추가 — 커맨드라인으로 넘기기 어려운 대용량 서브에이전트 시스템 프롬프트를 파일로 지정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "`/status` 와 `claude doctor` 에 `Organization policy` 줄 추가 — 프록시가 엔드포인트를 통과시키지 않는 등 조직 정책 로드 실패 원인 표시",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "[VSCode] MCP 서버 다이얼로그에 Add server 폼과 Remove 액션이 생겨 IDE 안에서 서버 추가·삭제 가능",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "[VSCode] Output styles 메뉴에 커스텀 스타일 파일을 작성하고 즉시 목록에 반영하는 `Build a custom style` 워크스루 추가",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "[VSCode] 세션 목록에 터미널·다른 창·Desktop 에서 열린 세션을 표시하는 중공 링과 Archive session 우클릭 메뉴, 권한·질문 프롬프트 접기 버튼 추가",
+          "originalRefs": [
+            43,
+            44,
+            45
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "프롬프트의 단어 편집 키가 Bash 방식으로 통일됨 — Ctrl+W 는 공백까지 삭제, Alt+F·Alt+D 는 단어 끝에서 멈추고 구두점이 단어를 구분하며 `keybindingFlavor` 는 무효화됨",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "managed settings 가 `forceLoginMethod: \"gateway\"` 를 고정한 머신은 잔존 API 키·claude.ai 로그인을 무시하고 `/login` 을 요구함 (Bedrock·Vertex AI·Foundry 세션은 영향 없음)",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "auto 모드가 공개 다이어그램 렌더러 URL 에 콘텐츠를 실어 보내는 링크를 해당 사이트 업로드로 간주 — 명시 요청이 없으면 자동 승인하지 않음",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "`/context` 토큰 집계가 토큰 카운팅 API 불가 시 추가 소형 모델 요청 대신 로컬 추정치를 사용함",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "위험한 `rm` 확인 프롬프트가 위치 파라미터와 큰따옴표로 감싼 `sh -c` 스크립트 안의 `rm -rf` 도 잡아냄",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "`/model` 피커와 VS Code 모델 pill 이 Bedrock·Vertex AI·게이트웨이 원시 ID 대신 인식된 모델명을 표시함",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "API 응답 헤더가 없는 경우 재시도 대기가 3분에서 `API_TIMEOUT_MS` (기본 10분) 까지로 늘고 메시지가 조치 방법을 안내함",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "`GOOGLE_APPLICATION_CREDENTIALS` 지정 시 Vertex AI 기동에서 프로젝트 재탐색과 추가 `gcloud` 프로세스 spawn 이 제거됨",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "이미 렌더된 블록을 갱신마다 layout 에서 재검사하지 않게 되어 스트리밍 성능이 개선됨",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "managed settings 로드에서 게이트웨이가 403 을 반환하면 재로그인 권유 대신 조직에 Claude Code 가 활성화되지 않았을 수 있다고 안내함",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "[VSCode] 모델 피커가 구버전 모델 표기를 뒤에 두는 단일 평면 목록으로 바뀜",
+          "originalRefs": [
+            66
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "빠른 입력·key repeat 중 입력 문자가 순서를 벗어나거나 누락되던 문제 수정",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`/net` automount 경로에서 `/add-dir <subdirectory>` 가 잘못된 `couldn't be resolved` 에러를 내던 문제 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "AWS 또는 자격증명 헬퍼가 응답하지 않을 때 Bedrock 설정 위저드가 멈추던 문제 수정 (타임아웃 후 에러 표시) 및 TLS 검사 프록시 뒤 모델 확인 실패 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "managed settings 가 `enabledPlugins` 로 강제한 플러그인을 클라우드 세션이 버리고 실패 가능한 마켓플레이스 클론으로 대체하던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "프롬프트 입력에서 인라인 `[Image #N]` 칩 바로 앞 문자를 지울 수 없던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "세션 재개 시 병렬 도구 호출 주변의 hook 출력과 컨텍스트가 유실돼 재개 요청 내용이 달라지던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "백그라운드 에이전트 재개 실패 시 wake-up 이 타이트 루프로 재시도되며 CPU 사용률이 지속 상승하던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "같은 머신의 구버전 Claude Code 에 신버전용 기능 플래그가 간헐적으로 적용되던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "`claude -p --resume <file>` 이 트랜스크립트에 기록된 잘못된 세션 ID 를 그대로 채택하던 문제 수정 — 새 세션 ID 로 재개",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "iTerm2·Ghostty·ConEmu 진행 표시기가 백그라운드 워크플로·에이전트 실행 중에도 완료로 표시되던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "사용량 엔드포인트 rate limit 또는 기동 직후 열었을 때 `/usage` 와 VS Code 사용량 패널이 모델별 주간 한도 행을 누락하던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "Remote Control 이 휴대폰·브라우저 연결 시 옛 권한 모드를 보여주거나, 턴 중단·`/clear` 이후에도 작업 중(스피너·Stop 버튼)으로 남던 문제 수정",
+          "originalRefs": [
+            10,
+            11
+          ]
+        },
+        {
+          "text": "첫 프롬프트 직후 턴 시작 전 보낸 Stop·interrupt 를 SDK·클라우드 세션이 무시하고 끝까지 실행하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "`/teleport` 로 가져온 세션을 Remote Control 이 연결 세션에 업로드해 휴대폰·웹에서 원본에 덧붙여 보이던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "네이티브 Windows 에서 TLS 검사 기업 프록시 뒤 Remote Control 인바운드 이벤트 스트림이 실패하던 문제와, 설정에서 온 effort 를 claude.ai 에서 기본값으로 표시하던 문제 수정",
+          "originalRefs": [
+            14,
+            15
+          ]
+        },
+        {
+          "text": "Google 자격증명 확인이 느릴 때 유효한 자격증명이 있어도 `gcpAuthRefresh` 가 기동 시 브라우저를 열던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "기동 시 커넥터 조회가 타임아웃되면 claude.ai 커넥터가 세션 내내 사라져 있던 문제 수정 — 백그라운드 재시도 추가",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "row·column 방향 전환 후 컨테이너 내부 박스가 잘못된 높이로 렌더되던 드문 레이아웃 결함 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "신뢰 프록시가 `X-Forwarded-For` 에 포트를 덧붙일 때 게이트웨이 클라이언트 IP 판정 문제 수정 — 접근 목록 설정 시 판독 불가 항목은 403",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "게이트웨이가 Desktop 에는 OpenTelemetry 를 JSON 으로 내보내게 지시해 protobuf 전용 collector 가 Desktop 데이터를 거부하던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "아티팩트 갱신만 감시하는 세션이 Desktop·웹에서 작업 중으로 표시되던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "Desktop 앱에서 실행한 로컬 Cowork 세션의 Claude in Chrome `file_upload` 이 `paths: expected array, received undefined` 로 실패하던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "오프라인 머신의 Remote Control 세션에 보낸 `SendMessage` 가 전달 완료로 표시되던 문제 수정 — 재접속까지 큐 대기임을 명시",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "백그라운드 Bash 명령으로 실행한 CLI 의 플러그인 설치 힌트가 감지되지 않고 원시 `<claude-code-hint>` 태그가 대화에 노출되던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "인프로세스 에이전트 팀 teammate 가 두 번째 턴에 첫 턴 도구·스킬 공지를 재전송해 요청 prefix 가 바뀌고 프롬프트 캐시를 놓치던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "[VSCode] 웹에서 텔레포트한 세션이 클라우드 종료로 끊긴 질문을 거부로 처리하던 문제, 창 복원 탭의 Rename 박스가 빈 채로 열리던 문제, 세션 목록 접힌 섹션이 로드마다 잠깐 펼쳐 보이던 문제 수정",
+          "originalRefs": [
+            46,
+            47,
+            48
+          ]
+        },
+        {
+          "text": "[VSCode] Focus view 가 이미 진행된 도구 호출을 실행 중으로 표시하던 문제, 활성 행 하이라이트가 세션 ID 정정 시 갱신되지 않던 문제, Cmd/Ctrl+Shift+T 재열기·딥링크가 Claude 에디터 그룹 밖에 탭을 두던 문제 수정",
+          "originalRefs": [
+            49,
+            50,
+            51
+          ]
+        },
+        {
+          "text": "[VSCode] 웹 세션 탭의 `Add to group` 중복 등록, 조직이 비활성화한 모델이 창 두 번 리로드까지 피커에 남던 문제, 탭 뷰 리로드 후 탭이 원래 세션으로 되돌아가거나 비어 있던 문제 수정",
+          "originalRefs": [
+            52,
+            53,
+            54
+          ]
+        },
+        {
+          "text": "[VSCode] 창 리로드 직후·설정 파일 오류 중 질문 시 이전 세션의 `/btw` 사이드 질문 이력이 덮어써지던 문제와, 패널 리로드 후 대기 질문 카드가 다시 나타나지 않던 문제 수정",
+          "originalRefs": [
+            55,
+            56
+          ]
+        },
+        {
+          "text": "[VSCode] 한 패널이 서드파티 프로바이더를 인식한 뒤에도 다른 패널에 claude.ai 전용 기능이 남던 문제와, Disable Login Prompt 설정에도 로그인 화면이 뜨던 문제 수정",
+          "originalRefs": [
+            57,
+            58
+          ]
+        },
+        {
+          "text": "[VSCode] 다음 대기 권한 프롬프트가 이전 프롬프트에 입력한 텍스트를 유지하고 즉시 두 번째 클릭을 받던 문제와, 세션 목록만 표시된 창에서 플러그인 설치 링크가 다이얼로그 없이 사이드바만 열던 문제 수정",
+          "originalRefs": [
+            59,
+            60
+          ]
+        },
+        {
+          "text": "[VSCode] 새 창 사이드바 사용량 미터가 Account & usage 다이얼로그를 열기 전까지 비어 있던 문제와 0% 한도가 미터에서 빠지던 문제 수정",
+          "originalRefs": [
+            61
+          ]
+        },
+        {
+          "text": "[VSCode] `Start new session in this group` 이 New conversation 후 그룹을 잃던 문제, 편집기 탭 배지의 미읽음 표시 오류, 보관된 세션에서 `Add Session Tab to Group` 이 동작하지 않던 문제 수정",
+          "originalRefs": [
+            62,
+            63
+          ]
+        },
+        {
+          "text": "[VSCode] `Enable Remote Control for all sessions` 토글이 다른 창의 열린 세션에 즉시 적용되지 않던 문제와, 웹에서 이어온 세션의 Open 필터·필터 메뉴 스크린리더 라벨 문제 수정",
+          "originalRefs": [
+            64,
+            65
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`keybindingFlavor` 설정이 완전히 무효화되고 프롬프트 단어 편집 키가 Bash 규칙으로 고정되므로 기존 키 습관이 달라짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`forceLoginMethod: \"gateway\"` 가 고정된 머신은 잔존 API 키·claude.ai 로그인이 무시되고 `/login` 이 강제됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "auto 모드에서 공개 다이어그램 렌더러 URL 링크가 업로드로 재분류돼 이전에 자동 승인되던 흐름이 승인 대기로 바뀜.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "`bashOutputMaxChars`·`taskOutputMaxChars` 설정키가 신설돼 인라인 출력 한도를 128K 문자까지 조정할 수 있음.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "응답 헤더 없는 API 실패의 재시도 대기가 기본 10분(`API_TIMEOUT_MS`)으로 늘어나 실패 감지 시간이 길어짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "네이티브 Windows 에서 TLS 검사 프록시를 쓰는 환경은 이전까지 Remote Control 인바운드 스트림이 아예 동작하지 않았음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 14
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-09-09T04:24:18.708Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.260",
+    "tagName": "v2.1.260",
+    "publishedAt": "2026-09-03T23:48:12Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.260",
+    "originalBody": "## What's changed\n\n- Added a diff panel that opens beside the conversation in fullscreen mode and shows your uncommitted changes as Claude edits; toggle it with `/diff`\n- Added a likely cause for prompt-cache misses (e.g. tool definitions or system prompt changed, idle past the TTL) to `/cost` and the status line's `prompt_cache` field\n- Added `/reload-plugins` to headless sessions, so it appears in the Claude Code Desktop and SDK command lists\n- Added a text form of `/advisor` (`/advisor`, `/advisor <model>`, `/advisor off`) for the desktop app, Remote Control, and other headless (`-p`/Agent SDK) sessions\n- Added `oidc.scope_on_refresh` to the Claude apps gateway for IdPs that return an id_token on refresh only when asked for `openid` again\n- Added Claude apps gateway support for newer Claude Desktop keys in `desktop` policy blocks, including `userPluginMarketplacesEnabled` and `userPluginUploadsEnabled`\n- Fixed `Edit`/`Write`/`Read` permission rules whose path contains parentheses being dropped as invalid or ignored by the Bash sandbox, which left \"read-only\" folders writable\n- Fixed one file permission rule with an uncompilable pattern (e.g. an unclosed `[`) making every file edit fail with `Invalid regular expression`; such a deny rule now guards the literal path it spells\n- Fixed Bash permission checks auto-approving zsh commands that hide a command substitution in a REPORTTIME, REPORTMEMORY or DIRSTACKSIZE assignment; these now prompt for approval\n- Fixed Bedrock model discovery, token counting and AWS SSO/STS credential calls failing with \"unable to get local issuer certificate\" when the corporate root CA is only in the OS certificate store\n- Fixed `permissions.blockReadsOutsideWorkingDirectories` on macOS hiding the user's git config from sandboxed git and hiding a worktree-isolated sub-agent's own checkout\n- Fixed managed settings not loading for claude.ai Enterprise/Team users who also had a leftover API key from an earlier `/login`\n- Fixed `/status` listing a signed-in claude.ai account and a configured API key as if both were in effect; the credential not in use is now marked\n- Fixed managed `skillOverrides` entries keyed on a bundled skill's alias (e.g. `checkup` for `/doctor`) not applying, and `Skill(name)` deny rules not covering a nested skill listed as `<dir>:name`\n- Fixed `model: fable` agents ignoring the `[1m]` tag on an `ANTHROPIC_DEFAULT_FABLE_MODEL` pin and silently running with a 200K context window\n- Fixed the `/model` picker not showing Fable 5.1 for organizations that can use it, which was only accepted when typed as `/model claude-fable-5-1`\n- Fixed prompt caching on Claude Fable 5.1 not covering the context attached after tool results, so it was re-sent as uncached input on every tool-call turn\n- Fixed model switching staying blocked for the rest of the session after a plugin hook load failure; each switch now re-checks and the refusal names the cause\n- Fixed model switching being blocked for the session when an organization-managed plugin's marketplace could not be loaded\n- Fixed SDK-provided MCP servers (e.g. Desktop connectors) sometimes missing from the first turn and only appearing on the next one\n- Fixed Claude in Chrome tools failing with \"Not connected\" mid-task in cloud-hosted claude.ai sessions when a connector was added or removed\n- Fixed flags, joined emoji and accented letters splitting across wrapped lines, and stale text staying on screen when a flag or joined emoji falls in the terminal's last two columns (now shown as `…`)\n- Fixed Remote Control accepting a model pick that is not a valid model name; it is now refused with an error instead of failing on the next message\n- Fixed `/rewind` and `--rewind-files` reporting success when checkpoint backup files were missing and nothing was actually restored\n- Fixed `/rewind` leaving stale file-read tracking from the rewound-away turns, which caused \"File unchanged since last read\" stubs and full-file re-injection after external edits\n- Fixed `-p --resume`/`--continue` (as used by the desktop app) failing on every retry once a session's worktree directory lost its git metadata; it now fails once, then resumes without the worktree\n- Fixed a subagent that resumed another agent via SendMessage never being woken by that agent's completion (the notification went to the main conversation instead)\n- Fixed agent teams: an in-process teammate's transcript losing messages, or going blank, during long API retry waits (e.g. under `CLAUDE_CODE_RETRY_WATCHDOG`) as retry notices evicted real messages\n- Fixed a session that moved to the background appearing twice in ListAgents (once as a phantom \"interactive\" twin with the same name) and receiving SendMessage deliveries in the viewer\n- Fixed intermittent \"task output swap refused\" errors when many sessions share a project directory\n- Fixed Ctrl+Z in fullscreen leaving the shell on the alternate screen, drawn over the paused interface\n- Fixed Workflow tool subagents being restarted as stalled while a long context compaction was still in progress\n- Fixed plugins from a URL marketplace failing to install with \"marketplace entry path does not stay inside the marketplace directory\" when a host app (e.g. Claude Desktop) stores it as a directory\n- Fixed an extra browser tab opening when an artifact is published in a session you're driving from claude.ai, the desktop app, or mobile (Remote Control)\n- Fixed the Artifact tool's first call failing with an \"Invalid tool parameters\" validation error in some Cowork sessions\n- Fixed IDE line selections being dropped when running a skill or slash command (the \"N lines selected\" context now reaches Claude)\n- Fixed repository detection for GitLab projects in nested subgroups (e.g. `gitlab.com/group/subgroup/project`)\n- Fixed `owner/repo#123` issue references in rendered output linking to github.com when working in a GitLab repository; they now link to the gitlab.com issue\n- Glob/Grep: Fixed the search path being probed on disk before the permission check; a missing path is now reported after permission is decided, as Read does\n- Reverted the 2.1.259 change applying `Read()` deny rules to Bash arguments; it denied `npm run build` under a `Read(./**/build/**)` rule in every mode and made `cd … && grep` prompt even in auto mode\n- Improved structured output: Workflow `agent({schema})` rejects a JSON Schema that can never be satisfied up front, and retry-cap errors now include the last validation failure\n- Improved deleting a background session whose worktree has unpushed commits: the message now names the branch and commit count, and deleting again discards the worktree\n- Improved the Claude apps gateway's refresh-failure log to name the step that failed\n- Improved idle CPU usage of non-interactive (`-p` / SDK) sessions\n- Improved the Claude apps gateway on Amazon Bedrock: input tokens for an aborted request are now counted with AWS's free CountTokens API (grant `bedrock:CountTokens`) instead of a one-token request\n- Improved the settings error for rules such as `Edit(C:\\dir\\(name)\\**)`, where `\\(` is read as an escaped parenthesis rather than a path separator, to suggest an unambiguous spelling\n- Improved auto-compact for 1M-context models: Opus and Fable sessions now compact shortly before the 1M-token limit, and recovery compaction on very large contexts no longer times out at 10 minutes\n- Improved `/ultrareview` and `claude ultrareview` to wait up to 45 minutes (previously 30) for long-running cloud reviews\n- Improved `/effort` on Claude Fable 5.1 so changing effort mid-session no longer invalidates the prompt cache\n- Updated the bundled `claude-api` skill so its Go, Java, and C# samples use current-generation model IDs, and clarified that cheaper worker or sub-agent models should be current-generation too\n- Changed `ctrl+l` / `cmd+k` in fullscreen mode to clear the transcript view like a terminal `clear`; scroll up to see earlier messages\n- Changed permission rules with text after the closing parenthesis (e.g. `Bash(ls) x`), which never matched anything, to be reported as invalid settings instead of being silently ignored\n- Changed server-managed settings so a managed CLAUDE.md (`claudeMd`) no longer triggers the security approval dialog; hooks, shell-command, sandbox, and unsafe `env` settings still require approval\n- Changed Claude in Chrome to follow your organization's Claude in Chrome admin setting; when an admin turns it off, `--chrome`, `/chrome` and the browser tools are unavailable\n- Changed Claude apps gateway to send `orgPluginSettings` in the list form read by Claude Desktop 1.15200.0 and later; older desktops ignore it\n- Changed Claude apps gateway to also refuse to start, naming the field, when a `desktop` policy misspells a field in a nested object of a `managedMcpServers` or `orgPluginSettings` entry\n- Changed commands typed at the `!` bash-mode prompt to run outside the sandbox even when strict sandbox mode (`sandbox.allowUnsandboxedCommands: false`) is on, like typing into your own terminal\n- Changed self-hosted runner `--kill-session-after-min` to release a session that is only waiting on its user (paused, resumable on the next message) instead of killing it and reporting a failure\n- Removed the one-hour time limit on background commands started by subagents; they now run until they exit or are stopped, matching the main session\n- [VSCode] Added the selected effort level to the footer model pill, fixed a stale effort level after switching models, and returned the footer pills to their earlier compact size\n- [VSCode] Added Open and Closed to the session list's status filter menu\n- [VSCode] Fixed the welcome screen disappearing in a new session when Remote Control turns on automatically\n- [VSCode] Fixed the session history picker loading a session a second time when it is already open in another tab; it now switches to that tab\n- [VSCode] Fixed the session tab's Rename command silently doing nothing while the tab's view was reloading; it now always applies\n- [VSCode] Fixed a half-finished message, an empty tool card or an extra \"Thought for\" line staying on screen after Claude Code retried a dropped response\n- [VSCode] Fixed \"Enable Remote Control for all sessions\" not applying to a session tab that was still starting when the toggle was flipped\n",
+    "summary": {
+      "headline": "`/diff` 패널 추가와 권한 규칙 결함 수정",
+      "newFeatures": [
+        {
+          "text": "풀스크린 모드에서 대화 옆에 열려 편집 중 미커밋 변경을 보여주는 diff 패널 추가 — `/diff` 로 토글",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "`/cost` 와 상태줄 `prompt_cache` 필드에 프롬프트 캐시 미스 추정 원인(도구 정의·시스템 프롬프트 변경, TTL 초과 유휴 등) 표시",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`-p`·Agent SDK 등 헤드리스 세션용 텍스트형 `/advisor` 추가 (`/advisor`, `/advisor <model>`, `/advisor off`) 및 헤드리스 세션에 `/reload-plugins` 노출",
+          "originalRefs": [
+            2,
+            3
+          ]
+        },
+        {
+          "text": "갱신 시 `openid` 를 다시 요구해야 id_token 을 주는 IdP 를 위해 게이트웨이에 `oidc.scope_on_refresh` 추가",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "게이트웨이 `desktop` 정책 블록이 `userPluginMarketplacesEnabled`·`userPluginUploadsEnabled` 등 신규 Desktop 키를 지원",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "[VSCode] 푸터 모델 pill 에 선택된 effort 레벨 표시, 세션 목록 상태 필터에 Open·Closed 추가",
+          "originalRefs": [
+            59,
+            60
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "2.1.259 의 `Read()` deny 규칙을 Bash 인자에 적용하던 변경이 롤백됨 — `Read(./**/build/**)` 규칙 하에서 `npm run build` 가 모든 모드에서 거부되고 auto 모드에서도 `cd … && grep` 이 확인을 요구했음",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "1M 컨텍스트 모델의 auto-compact 개선 — Opus·Fable 세션이 1M 토큰 한도 직전에 압축하고 초대형 컨텍스트 복구 압축이 10분에 타임아웃되지 않음",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "`!` bash 모드 프롬프트에서 입력한 명령은 `sandbox.allowUnsandboxedCommands: false` 인 strict 샌드박스에서도 샌드박스 밖에서 실행됨",
+          "originalRefs": [
+            56
+          ]
+        },
+        {
+          "text": "server-managed settings 의 managed CLAUDE.md(`claudeMd`)가 보안 승인 다이얼로그를 띄우지 않음 (훅·셸 명령·샌드박스·비안전 `env` 는 여전히 승인 필요)",
+          "originalRefs": [
+            52
+          ]
+        },
+        {
+          "text": "Claude in Chrome 이 조직 관리자 설정을 따르며, 관리자가 끄면 `--chrome`·`/chrome` 과 브라우저 도구를 쓸 수 없음",
+          "originalRefs": [
+            53
+          ]
+        },
+        {
+          "text": "풀스크린의 `ctrl+l`·`cmd+k` 가 터미널 `clear` 처럼 트랜스크립트 뷰를 지움 (위로 스크롤하면 이전 메시지 확인 가능)",
+          "originalRefs": [
+            50
+          ]
+        },
+        {
+          "text": "닫는 괄호 뒤에 텍스트가 붙은 권한 규칙(예: `Bash(ls) x`)이 조용히 무시되는 대신 잘못된 설정으로 보고됨",
+          "originalRefs": [
+            51
+          ]
+        },
+        {
+          "text": "서브에이전트가 시작한 백그라운드 명령의 1시간 제한이 제거돼 메인 세션과 동일하게 종료·중단까지 실행됨",
+          "originalRefs": [
+            58
+          ]
+        },
+        {
+          "text": "self-hosted runner 의 `--kill-session-after-min` 이 사용자 입력만 기다리는 세션을 종료·실패 처리 대신 해제함",
+          "originalRefs": [
+            57
+          ]
+        },
+        {
+          "text": "게이트웨이가 `orgPluginSettings` 를 Claude Desktop 1.15200.0 이후가 읽는 list 형태로 전송하고, `managedMcpServers`·`orgPluginSettings` 중첩 객체의 필드 오타 시 필드명을 명시하며 기동을 거부함",
+          "originalRefs": [
+            54,
+            55
+          ]
+        },
+        {
+          "text": "Workflow `agent({schema})` 가 충족 불가능한 JSON Schema 를 사전 거부하고 재시도 상한 에러에 마지막 검증 실패를 포함함",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "`/ultrareview` 와 `claude ultrareview` 의 클라우드 리뷰 대기가 30분에서 45분으로 연장되고, Fable 5.1 에서 `/effort` 변경이 프롬프트 캐시를 무효화하지 않음",
+          "originalRefs": [
+            47,
+            48
+          ]
+        },
+        {
+          "text": "Bedrock 게이트웨이가 중단된 요청의 입력 토큰을 1토큰 요청 대신 AWS 무료 CountTokens API 로 계산함 (`bedrock:CountTokens` 권한 필요)",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "미푸시 커밋이 있는 백그라운드 세션 worktree 삭제 시 브랜치명·커밋 수를 안내하고 재삭제하면 worktree 를 버림",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "`Edit(C:\\dir\\(name)\\**)` 처럼 `\\(` 가 이스케이프 괄호로 읽히는 규칙에 대해 모호하지 않은 표기를 제안하는 에러로 개선됨",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "비대화형 `-p`·SDK 세션의 유휴 CPU 사용량과 게이트웨이 refresh 실패 로그의 단계 명시가 개선됨",
+          "originalRefs": [
+            42,
+            43
+          ]
+        },
+        {
+          "text": "번들 `claude-api` 스킬의 Go·Java·C# 샘플이 현세대 모델 ID 를 쓰도록 갱신되고, 저비용 워커·서브에이전트 모델도 현세대를 쓰라는 설명이 추가됨",
+          "originalRefs": [
+            49
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "경로에 괄호가 포함된 `Edit`·`Write`·`Read` 권한 규칙이 무효로 버려지거나 Bash 샌드박스에서 무시돼 읽기 전용 폴더가 쓰기 가능하게 남던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "닫히지 않은 `[` 처럼 컴파일 불가 패턴 규칙 하나 때문에 모든 파일 편집이 `Invalid regular expression` 으로 실패하던 문제 수정 — 해당 deny 규칙은 표기된 리터럴 경로만 보호",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "REPORTTIME·REPORTMEMORY·DIRSTACKSIZE 대입에 명령 치환을 숨긴 zsh 명령이 Bash 권한 검사에서 자동 승인되던 문제 수정 — 이제 승인 요구",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "기업 루트 CA 가 OS 인증서 저장소에만 있을 때 Bedrock 모델 탐색·토큰 카운팅·AWS SSO/STS 호출이 `unable to get local issuer certificate` 로 실패하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "macOS 에서 `permissions.blockReadsOutsideWorkingDirectories` 가 샌드박스 git 에게 사용자 git config 를, worktree 격리 서브에이전트에게 자기 체크아웃을 숨기던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "이전 `/login` 의 잔존 API 키를 가진 claude.ai Enterprise·Team 사용자에게 managed settings 가 로드되지 않던 문제와, `/status` 가 로그인 계정과 API 키를 둘 다 유효한 것처럼 표시하던 문제 수정",
+          "originalRefs": [
+            11,
+            12
+          ]
+        },
+        {
+          "text": "번들 스킬 별칭(예: `/doctor` 의 `checkup`)으로 지정한 managed `skillOverrides` 가 적용되지 않고, `<dir>:name` 형태 중첩 스킬에 `Skill(name)` deny 규칙이 걸리지 않던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`model: fable` 에이전트가 `ANTHROPIC_DEFAULT_FABLE_MODEL` 핀의 `[1m]` 태그를 무시하고 200K 컨텍스트로 조용히 실행되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "`/model` 피커에 Fable 5.1 이 표시되지 않아 `/model claude-fable-5-1` 로만 입력 가능했던 문제와, Fable 5.1 에서 도구 결과 이후 첨부 컨텍스트가 캐시되지 않아 매 턴 재전송되던 문제 수정",
+          "originalRefs": [
+            15,
+            16
+          ]
+        },
+        {
+          "text": "플러그인 hook 로드 실패나 조직 관리 플러그인 marketplace 로드 실패 이후 세션 내내 모델 전환이 막히던 문제 수정 — 전환마다 재확인하고 거부 시 원인 명시",
+          "originalRefs": [
+            17,
+            18
+          ]
+        },
+        {
+          "text": "Desktop 커넥터 등 SDK 제공 MCP 서버가 첫 턴에 빠지고 다음 턴에야 나타나던 문제와, 클라우드 claude.ai 세션에서 커넥터 추가·삭제 시 Claude in Chrome 도구가 `Not connected` 로 실패하던 문제 수정",
+          "originalRefs": [
+            19,
+            20
+          ]
+        },
+        {
+          "text": "국기·결합 이모지·강세 문자가 줄바꿈에서 쪼개지고, 터미널 마지막 두 칼럼에 걸리면 잔여 텍스트가 남던 문제 수정 (이제 `…` 로 표시)",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "Remote Control 이 유효하지 않은 모델명을 수락한 뒤 다음 메시지에서 실패하던 문제 수정 — 즉시 에러로 거부",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "체크포인트 백업 파일이 없어 아무것도 복원되지 않았는데도 `/rewind` 와 `--rewind-files` 가 성공으로 보고하던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "`/rewind` 가 되돌린 턴의 파일 읽기 추적을 남겨 외부 편집 후 `File unchanged since last read` 스텁과 전체 파일 재주입을 유발하던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "세션 worktree 가 git 메타데이터를 잃으면 Desktop 이 쓰는 `-p --resume`·`--continue` 가 매 재시도마다 실패하던 문제 수정 — 한 번 실패 후 worktree 없이 재개",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "SendMessage 로 다른 에이전트를 재개한 서브에이전트가 해당 에이전트 완료 알림을 받지 못하던 문제 수정 (알림이 메인 대화로 가고 있었음)",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_RETRY_WATCHDOG` 등 장기 API 재시도 대기 중 재시도 안내가 실제 메시지를 밀어내 인프로세스 teammate 트랜스크립트가 비거나 유실되던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "백그라운드로 전환된 세션이 ListAgents 에 같은 이름의 유령 `interactive` 쌍둥이로 중복 표시되고 SendMessage 를 뷰어에서 받던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "여러 세션이 프로젝트 디렉토리를 공유할 때 간헐적으로 발생한 `task output swap refused` 에러 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "풀스크린에서 Ctrl+Z 를 누르면 셸이 대체 화면에 남아 일시중지된 화면 위에 그려지던 문제와, 장기 컨텍스트 압축 중 Workflow 서브에이전트가 정지 판정으로 재시작되던 문제 수정",
+          "originalRefs": [
+            30,
+            31
+          ]
+        },
+        {
+          "text": "Desktop 등 호스트 앱이 URL 마켓플레이스를 디렉토리로 저장할 때 `marketplace entry path does not stay inside the marketplace directory` 로 설치가 실패하던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "claude.ai·Desktop·모바일에서 조작하는 세션이 아티팩트를 발행할 때 브라우저 탭이 하나 더 열리던 문제와, 일부 Cowork 세션에서 Artifact 도구 첫 호출이 `Invalid tool parameters` 로 실패하던 문제 수정",
+          "originalRefs": [
+            33,
+            34
+          ]
+        },
+        {
+          "text": "스킬·슬래시 커맨드 실행 시 IDE 선택 영역이 누락되던 문제 수정 — `N lines selected` 컨텍스트가 전달됨",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "중첩 subgroup GitLab 프로젝트(예: `gitlab.com/group/subgroup/project`) 인식 문제와, GitLab 레포에서 `owner/repo#123` 참조가 github.com 으로 링크되던 문제 수정",
+          "originalRefs": [
+            36,
+            37
+          ]
+        },
+        {
+          "text": "Glob·Grep 이 권한 검사 전에 디스크에서 검색 경로를 확인하던 문제 수정 — Read 처럼 권한 판정 후 경로 부재를 보고",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "[VSCode] Remote Control 자동 활성화 시 새 세션 환영 화면이 사라지던 문제와, 다른 탭에 이미 열린 세션을 히스토리 피커가 중복 로드하던 문제 수정",
+          "originalRefs": [
+            61,
+            62
+          ]
+        },
+        {
+          "text": "[VSCode] 탭 뷰 리로드 중 Rename 이 무반응이던 문제, 응답 재시도 후 반쪽 메시지·빈 도구 카드·잉여 `Thought for` 줄이 남던 문제, 시작 중인 탭에 Remote Control 일괄 토글이 적용되지 않던 문제 수정",
+          "originalRefs": [
+            63,
+            64,
+            65
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "괄호 포함 경로의 `Edit`·`Write`·`Read` deny 규칙이 무시돼 읽기 전용으로 의도한 폴더가 실제로 쓰기 가능했으므로, 해당 규칙을 쓰는 환경은 보안 영향 점검이 필요함.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "2.1.259 의 `Read()` deny 규칙 Bash 인자 적용이 롤백되므로 그 버전에서 우회용으로 조정한 권한 설정은 되돌려야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 0
+            }
+          ]
+        },
+        {
+          "text": "`!` bash 모드 명령이 strict 샌드박스(`sandbox.allowUnsandboxedCommands: false`)에서도 샌드박스 밖에서 실행되도록 동작이 바뀜.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "managed CLAUDE.md(`claudeMd`)가 보안 승인 다이얼로그 대상에서 제외됨 — 훅·셸 명령·샌드박스·`env` 는 그대로 승인 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "조직 관리자가 Claude in Chrome 을 끄면 `--chrome`·`/chrome` 과 브라우저 도구가 사용 불가해짐.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "text": "게이트웨이 `oidc.scope_on_refresh` 설정키가 신설되고, Bedrock 게이트웨이는 `bedrock:CountTokens` IAM 권한을 추가로 요구함.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 3
+            },
+            {
+              "bucket": "changes",
+              "index": 12
+            }
+          ]
+        },
+        {
+          "text": "서브에이전트 백그라운드 명령의 1시간 상한이 없어졌으므로 장기 실행 프로세스의 종료 관리를 직접 해야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 7
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-09-09T04:24:18.708Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.259",
     "tagName": "v2.1.259",
     "publishedAt": "2026-09-02T22:33:51Z",

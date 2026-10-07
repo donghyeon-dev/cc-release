@@ -1,5 +1,2718 @@
 [
   {
+    "version": "v2.1.292",
+    "tagName": "v2.1.292",
+    "publishedAt": "2026-10-06T18:59:30Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.292",
+    "originalBody": "## What's changed\n\n- Added `--marketplace <source>` to `claude plugin install`: adds the marketplace if needed, under the same policy checks as `claude plugin marketplace add`, then installs the plugin from it\n- Added an `effort` parameter to the Agent tool, so Claude runs a sub-agent at the effort level you ask for\n- Added `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS` environment variable to set a longer base delay for the backoff when retrying an overloaded (529) request\n- Added `prompt.autocomplete`, an event a mod hooks to add its own rows to the prompt box's autocomplete list\n- Added prompt caching to `$.model.complete` for mods: `prompt` and `system` take blocks of text, and `cache: true` on a block caches the request up to it\n- Added workflow agents to the `agent.spawn` mod hook, with their run and index, so a mod can refuse them\n- Fixed subagent definitions with `permissionMode: auto` entering auto mode when auto mode is unavailable (disabled by settings, circuit breaker, or a model that doesn't support it)\n- Fixed sandboxed commands being able to read the staged file copies of `/ultrareview` uploads under `~/.claude/seed-admin`\n- Fixed a managed sandbox read-deny path (and user ones beside it) that appears or re-points mid-session not dropping project grants inside it or ending credential injection from files it covers\n- Fixed a notebook or PDF read on macOS and Windows being able to return a file outside what was approved, through a link swapped in mid-read\n- Fixed a tampered on-disk cache of server-managed settings being able to switch off or unseat the built-in policy plugin while the settings fetch failed\n- Fixed `rm -rf` on the 8.3 short name or another alternate Windows spelling of the home folder or a drive not being treated as removing it\n- Security: Fixed PreToolUse hook approvals and auto mode bypassing the permission prompt for file reads from network (UNC) paths\n- Fixed a skill's or slash command's `allowed-tools` rule coming back in a later turn when you leave auto mode or plan mode partway through that turn\n- Fixed `NO_PROXY` being ignored for Claude Code's own API requests (sign-in, policy, feedback, artifacts) when `HTTPS_PROXY` is set\n- Fixed an MCP tool with a name longer than 128 characters making every request fail; that tool is now left out and an MCP error names it\n- Fixed `claude plugin` commands such as `marketplace add` and `install` running before an organization's managed settings had loaded on a first run\n- Fixed one-shot `claude -p` and Agent SDK runs stopping a background command 5 seconds after the final result, and one-shot `claude -p` runs dropping a scheduled wakeup; both are now waited for\n- Fixed plan mode not being restored when resuming a session from the `claude --resume` session picker or with `/resume`\n- Fixed saved scheduled tasks created after `/resume`, `/branch` or `/clear` never firing, and saved tasks ignoring later creates and deletes after two writes to the tasks file milliseconds apart\n- Fixed a background session's `/loop` silently stopping when the session's process restarted (for example after a crash), because its pending wakeup was lost\n- Fixed Grep and Glob reporting no matches when the file or folder they were given could not be read; Claude now retries once or tells you\n- Fixed the Read tool returning only the first entry, with no error, when a PDF's `pages` was a list such as \"6,9,15\"; it now returns an error saying to read each page or range separately\n- Fixed @-mentioned text files over 256KB being left out silently: Claude is now told the file's size and to read it in portions\n- Fixed the usage limit alert repeating once per background agent when agents failed on a limit that had already stopped the main conversation\n- Fixed Remote Control viewers seeing an empty subagent pane for background subagents in sessions hosted by the desktop app or an IDE\n- Fixed cross-session delivery notices showing two sessions with similar names as one recipient, and the expiry notice blaming the desktop app when a terminal session let the message lapse\n- Fixed Send now in the desktop app ending the subagent a turn was waiting on when another message was already queued\n- Fixed `/bug`, `/share` and `/feedback <text>` starting over after Ctrl+O or Ctrl+Z while a report was being sent, and closing as cancelled after it had been sent\n- Fixed `/remote-env` replacing your saved default environment when you pressed Enter right away: the list now opens on your default, and no row has a check mark when no default is in effect\n- Fixed some pasted text reaching Claude as typed text when several pastes overlapped in one prompt\n- Fixed vim mode leaving the cursor past the end of a line, j/k losing their column on shorter lines, and `f`/`t`/`F`/`T`/`;`/`,` jumping to, or deleting up to, a match on another line of the prompt\n- Fixed `/add-dir` path box letting Shift+Enter or a paste add a line break, and treating fast-typed \"tab\", \"up\" or \"down\" as those keys\n- Fixed fast typing, input-method text and decomposed accents being dropped while a prompt footer row was selected, and `!` leaving the row selected\n- Fixed fullscreen mode sending a full-screen clear on every window resize and Ctrl+L when iTerm2 is detected, which may be what filled iTerm2's scrollback with stale pages\n- Fixed a spurious \"could not be examined\" note for @-words that name no file when a Read deny rule is set and the working directory is under a symlink\n- Fixed \"instruction file not loaded\" lines going stale or missing after `/cd` or a permission change, and added a transcript line when a nested one isn't loaded\n- Fixed a compaction summary that repeated `/name` letting Claude invoke a skill that is reserved for the user\n- Fixed Write, Edit, NotebookEdit and LSP rows, and single Read, Grep and Glob rows, hiding why a mod denied the call: the row now shows the reason\n- Fixed a cloud session showing a turn that never ended when its worker was stopped just as the turn finished\n- Fixed cloud sessions with a large transcript sometimes asking for a permission again after it was approved\n- Fixed scheduled tasks and other queued notifications being lost in cloud sessions when a message was retried or edited while Claude was reading them\n- Fixed cloud sessions forgetting the thinking setting chosen in the client when the session's container restarted\n- Fixed Cowork cloud sessions saying a proxy blocked artifacts when Anthropic couldn't confirm the organization's settings\n- Fixed plugins whose hooks module makes many `$.state` calls through one const taking minutes to load or validate\n- Fixed `claude plugin validate` listing a matcher or state value for a hooks module that the engine reads from elsewhere\n- Fixed `claude plugin validate` listing a `$.state` value read through a top-level `var` that was declared again or reassigned; such a module is now refused\n- Fixed a plugin's served `$` method restarting the hook origin, which could run a guard hook with a `.catch` above it again without end\n- Fixed plugin interface calls made while the plugin hooks worker restarts running without the hooks other plugins put on them\n- Fixed a mod's `config.set`, `state.set`, `env.set` or `agent.spawn` hook that denies after calling `next(e)` being answered as a refusal: the hook is now reported as failed, by name\n- Fixed `/theme`, the `/config` Theme menu and the first-run theme step saving a theme before a plugin's `config.set` hook was asked\n- Fixed a plugin's `tool.check` hook answering allow running a tool that requires your answer (a question, a plan approval) without showing its dialog\n- Fixed a mod's start-up prompt, command or subagent being queued a second time when the hooks worker was replaced\n- Fixed a mod's hook that called `next(e)` and then failed while the turn was interrupted letting the call through; the call is now rejected\n- Fixed a plugin's prompt drop or setting deny being ignored when its reason was longer than 4,096 characters\n- Fixed an organization's plugin being unloaded on its own reload, or after another plugin crashed, when it returned a `$` name that a user-installed mod had added; the mod is now unloaded instead\n- Fixed tool calls made while the plugin hooks worker restarts being answered without the plugins' permission hooks\n- Fixed plugin `tool.call` hooks seeing some tool calls before misnamed parameters were repaired; a hook now sees the arguments the tool will run with\n- Fixed a mod's guard hook with a `.catch` being skipped silently for calls another mod's hook makes beneath the guard's own `$` call; its `.catch` is now asked\n- Improved startup of `claude -p` and SDK sessions: the first turn no longer waits for HTTP and SSE MCP servers to answer `resources/list`\n- Improved rendering speed of long bulleted or numbered replies: they stream, resize and re-open in the transcript (ctrl+o) much faster\n- Improved Ctrl+C draft recovery: a cleared prompt now stays reachable with Up after a slash command or a sent message\n- Improved hook output handling: `<system-reminder>` tags written in a hook's output are escaped before they reach Claude\n- Improved tool input handling: Grep accepts `file_path` for `path`, and Write, WebFetch and Read ignore a few stray parameters instead of failing the call\n- Improved the steps shown when a marketplace declared in a settings file has a name that looks like an official Anthropic marketplace\n- Improved sandbox auto-allow: with strict sandbox mode set in user, managed or --settings settings, an interpreter command with an env var prefix like `FOO=bar python3 app.py` runs unprompted\n- Improved the Artifact tool's listing: Claude now sees how many published artifacts you have and can list up to 200 at once instead of 50\n- Improved cloud sessions after a restart: Claude is now told which stopped background agents it can resume by id\n- Improved the Claude in Chrome message in claude.ai cloud sessions when the browser can't be reached: Claude is now told it may continue with alternatives if the user prefers\n- Improved the /focus tip: it now invites you to try focus view mid-turn and shows how to switch back\n- Improved startup with local (stdio) MCP servers that ignore the newer protocol check: after one slow connect they are remembered for 7 days and connected the older way without the wait\n- Changed local (stdio) MCP server connections to negotiate protocol version 2026-07-28 by default on every install, including Bedrock, Vertex and Foundry; `MCP_PROTOCOL_NEGOTIATION=legacy` opts out\n- Changed `claude plugin test`: a failed `expect` inside a hook the test registered, or a stub answer the engine refuses, now fails the test instead of passing silently\n- Changed usage limit messages to write claude.ai settings links with https:// so terminals and apps can make them clickable\n- Changed scheduled and Run now routine runs to publish a new artifact only you can see without asking for approval; artifacts that request connectors or other access still ask\n- Changed agent names to allow at most 256 characters: a longer one is rejected, and a skill's or a plugin file's `name` longer than that is ignored\n- [Cloud sessions] Fixed routine runs occasionally staying listed as running for hours after they had finished\n- [Cloud sessions] Fixed editing or duplicating a routine turning off its push notifications when the routine had no saved notification setting\n- [Cloud sessions] Fixed SVG, HEIC, TIFF and other less common image files failing to attach; they now attach as regular files\n- [Cloud sessions] Fixed approval prompts offering \"Always allow\" for connector tools that an organization set to require approval; the choice had no effect\n- [Remote Control] Fixed the first message of a new Remote Control session started from claude.ai/code accepting only images; it now accepts PDFs and other files like later messages\n- [Claude Tag] Added an Edit button to the Allowed domains card on a channel's Configure page, so Enterprise admins can open the access bundle that sets the channel's domains\n- [Claude Tag] Fixed replies sent in a Slack thread while Claude was still on its first request there being held until that request finished, or missed when sent seconds apart\n- [Claude Tag] Fixed Slack threads woken only by GitHub pull request activity or a routine staying on their original model after an admin changed the channel or workspace default model\n- [Claude Tag] Fixed Claude sometimes posting a spend limit notice in Slack when the real cause was that your organization had run out of usage credits\n- [Claude Tag] Fixed a session hanging until interrupted when a permission prompt that can't be answered from Slack was denied automatically\n- [Claude Tag] Improved `@Claude !status` in a channel to say when Claude has stopped reading its untagged messages, why, and that an @-mention starts it reading again\n- [Claude Tag] Changed the first message of a Slack thread continued with `!fork` to a card showing where it came from, the request, and who asked, with a link to the original thread\n- [Claude Tag] Changed the organization-wide and default spend limit boxes on Claude Tag's spend limits page in admin settings to save only when you press Save or Enter, not when you click away\n- [Code Review] Added the period's total with its change from the previous period, and a breakdown by repository, to the PRs reviewed chart in Code Review analytics\n- [Code Review] Fixed a queued review failing when the pull request moved to a new base branch and the old one was deleted; the commit is now re-queued for review\n- [Code Review] Fixed reviews ignoring a CLAUDE.md's rules when the pull request edits that file; reviews now use its version from the base branch\n",
+    "summary": {
+      "headline": "Agent tool `effort` 파라미터·UNC 읽기 보안 수정",
+      "newFeatures": [
+        {
+          "text": "`claude plugin install` 에 `--marketplace <source>` 추가 — `claude plugin marketplace add` 와 같은 policy 검사로 marketplace 를 등록한 뒤 거기서 플러그인 설치",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "Agent tool 에 `effort` 파라미터 추가 — 지정한 effort 수준으로 sub-agent 실행",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS` 환경변수 추가 — overloaded(529) 재시도 backoff 의 base delay 를 길게 설정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "mod 가 hook 해 프롬프트 박스 autocomplete 목록에 자체 행을 추가하는 `prompt.autocomplete` 이벤트 추가",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "mod 의 `$.model.complete` 에 prompt caching 추가 — `prompt`·`system` 이 텍스트 block 배열을 받고 block 의 `cache: true` 가 그 지점까지 요청을 캐시",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "`agent.spawn` mod hook 에 workflow agent 추가 — run 과 index 를 함께 전달해 mod 가 거부 가능",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "[Claude Tag] 채널 Configure 페이지의 Allowed domains 카드에 Edit 버튼 추가 — Enterprise admin 이 채널 도메인을 정하는 access bundle 을 바로 열기",
+          "originalRefs": [
+            81
+          ]
+        },
+        {
+          "text": "[Code Review] 분석의 PRs reviewed 차트에 기간 합계와 이전 기간 대비 변화, 레포별 분류 추가",
+          "originalRefs": [
+            89
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "`claude -p`·SDK 세션의 첫 턴이 HTTP·SSE MCP 서버의 `resources/list` 응답을 기다리지 않음",
+          "originalRefs": [
+            59
+          ]
+        },
+        {
+          "text": "긴 bullet·번호 목록 응답의 스트리밍·리사이즈·transcript(ctrl+o) 재오픈 렌더링 속도 개선",
+          "originalRefs": [
+            60
+          ]
+        },
+        {
+          "text": "Ctrl+C 초안 복구 개선 — slash command 나 메시지 전송 뒤에도 지운 프롬프트를 Up 으로 복원",
+          "originalRefs": [
+            61
+          ]
+        },
+        {
+          "text": "hook 출력에 쓰인 `<system-reminder>` 태그가 Claude 에 전달되기 전 escape 처리",
+          "originalRefs": [
+            62
+          ]
+        },
+        {
+          "text": "Grep 이 `path` 대신 `file_path` 를 받아들이고, Write·WebFetch·Read 가 일부 stray 파라미터를 실패 대신 무시",
+          "originalRefs": [
+            63
+          ]
+        },
+        {
+          "text": "settings 파일에 선언된 marketplace 이름이 공식 Anthropic marketplace 처럼 보일 때 표시되는 단계 안내 개선",
+          "originalRefs": [
+            64
+          ]
+        },
+        {
+          "text": "user·managed·`--settings` 의 strict sandbox 모드에서 `FOO=bar python3 app.py` 같은 env var prefix 가 붙은 interpreter 명령이 프롬프트 없이 실행",
+          "originalRefs": [
+            65
+          ]
+        },
+        {
+          "text": "Artifact tool 목록이 published artifact 개수를 보여주고 한 번에 50개 대신 최대 200개 나열",
+          "originalRefs": [
+            66
+          ]
+        },
+        {
+          "text": "재시작 후 cloud session 에서 id 로 resume 할 수 있는 중지된 background agent 를 Claude 에 안내",
+          "originalRefs": [
+            67
+          ]
+        },
+        {
+          "text": "claude.ai cloud session 에서 브라우저에 닿지 못할 때 Claude in Chrome 메시지가 사용자 선호에 따라 대안으로 진행 가능함을 안내",
+          "originalRefs": [
+            68
+          ]
+        },
+        {
+          "text": "/focus tip 이 턴 중간에 focus view 를 시도해 보라고 권하고 되돌아오는 방법도 표시",
+          "originalRefs": [
+            69
+          ]
+        },
+        {
+          "text": "신규 protocol check 를 무시하는 stdio MCP 서버는 느린 connect 1회 후 7일간 기억해 구방식으로 대기 없이 연결",
+          "originalRefs": [
+            70
+          ]
+        },
+        {
+          "text": "stdio MCP 서버 연결이 Bedrock·Vertex·Foundry 포함 모든 설치에서 protocol version 2026-07-28 을 기본 협상 — `MCP_PROTOCOL_NEGOTIATION=legacy` 로 opt-out",
+          "originalRefs": [
+            71
+          ]
+        },
+        {
+          "text": "`claude plugin test` — 테스트가 등록한 hook 안의 `expect` 실패나 엔진이 거부한 stub 답변이 무음 통과 대신 테스트 실패로 처리",
+          "originalRefs": [
+            72
+          ]
+        },
+        {
+          "text": "usage limit 메시지의 claude.ai settings 링크를 https:// 포함으로 작성 — 터미널·앱에서 클릭 가능",
+          "originalRefs": [
+            73
+          ]
+        },
+        {
+          "text": "scheduled·Run now routine 실행이 본인만 보는 새 artifact 를 승인 없이 publish — connector 등 접근을 요청하는 artifact 는 계속 질문",
+          "originalRefs": [
+            74
+          ]
+        },
+        {
+          "text": "agent 이름을 최대 256자로 제한 — 초과 시 거부, skill·플러그인 파일의 `name` 초과는 무시",
+          "originalRefs": [
+            75
+          ]
+        },
+        {
+          "text": "[Claude Tag] 채널의 `@Claude !status` 가 untagged 메시지 읽기 중단 여부와 사유, @-mention 으로 재개됨을 안내",
+          "originalRefs": [
+            86
+          ]
+        },
+        {
+          "text": "[Claude Tag] `!fork` 로 이어진 Slack 스레드의 첫 메시지가 출처·요청·요청자와 원 스레드 링크를 담은 카드로 표시",
+          "originalRefs": [
+            87
+          ]
+        },
+        {
+          "text": "[Claude Tag] admin settings 의 spend limits 페이지에서 조직 전체·기본 spend limit 박스가 Save·Enter 때만 저장 — 포커스 이탈로는 저장 안 함",
+          "originalRefs": [
+            88
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "`permissionMode: auto` subagent 정의가 auto mode 불가 상태(설정 비활성·circuit breaker·미지원 모델)에서도 auto mode 로 진입하던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "sandboxed 명령이 `~/.claude/seed-admin` 아래 `/ultrareview` 업로드의 staged 복사본을 읽을 수 있던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "세션 중 생기거나 re-point 된 managed sandbox read-deny 경로(및 그 옆 user 경로)가 내부 project grant 를 제거하거나 해당 파일의 credential injection 을 끝내지 않던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "macOS·Windows 의 notebook·PDF 읽기가 읽기 중 교체된 link 로 승인 범위 밖 파일을 반환할 수 있던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "조작된 server-managed settings 의 on-disk cache 가 settings fetch 실패 중 built-in policy plugin 을 끄거나 교체할 수 있던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "홈 폴더·드라이브의 8.3 short name 등 대체 Windows 표기에 대한 `rm -rf` 가 삭제로 취급되지 않던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "보안 — PreToolUse hook 승인과 auto mode 가 네트워크(UNC) 경로 파일 읽기의 권한 프롬프트를 우회하던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "턴 중간에 auto mode·plan mode 를 떠나면 skill·slash command 의 `allowed-tools` 규칙이 이후 턴에 되살아나던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "`HTTPS_PROXY` 설정 시 자체 API 요청(sign-in·policy·feedback·artifacts)에 `NO_PROXY` 가 무시되던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "이름이 128자를 넘는 MCP tool 이 모든 요청을 실패시키던 문제 수정 — 해당 tool 을 제외하고 MCP 오류로 이름 표시",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "첫 실행에서 조직 managed settings 로드 전에 `claude plugin` 의 `marketplace add`·`install` 이 실행되던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "one-shot `claude -p`·Agent SDK 실행이 최종 결과 5초 후 background 명령을 중단하고 `claude -p` 가 scheduled wakeup 을 버리던 문제 수정 — 둘 다 완료까지 대기",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "`claude --resume` 세션 picker 나 `/resume` 으로 재개할 때 plan mode 가 복원되지 않던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "`/resume`·`/branch`·`/clear` 뒤 만든 saved scheduled task 가 발화하지 않고, tasks 파일을 밀리초 간격으로 2회 쓴 뒤 생성·삭제가 무시되던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "세션 프로세스 재시작(크래시 등) 시 pending wakeup 유실로 background session 의 `/loop` 가 무음 중단되던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "주어진 파일·폴더를 읽을 수 없을 때 Grep·Glob 이 매치 없음으로 보고하던 문제 수정 — 1회 재시도 또는 안내",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "PDF 의 `pages` 가 \"6,9,15\" 같은 목록이면 Read tool 이 오류 없이 첫 항목만 반환하던 문제 수정 — 페이지·범위별로 나눠 읽으라는 오류 반환",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "256KB 를 넘는 @-mention 텍스트 파일이 무음 누락되던 문제 수정 — 파일 크기와 부분 읽기 안내",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "메인 대화를 이미 멈춘 limit 에 background agent 가 실패하면 usage limit 알림이 agent 마다 반복되던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "데스크톱 앱·IDE 가 호스팅한 세션의 background subagent pane 이 Remote Control 뷰어에 비어 보이던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "cross-session 전달 알림이 이름이 비슷한 두 세션을 한 수신자로 보이고, 터미널 세션이 메시지를 만료시켜도 데스크톱 앱 탓을 하던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "데스크톱 앱의 Send now 가 다른 메시지가 큐에 있을 때 턴이 기다리던 subagent 를 종료하던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "보고서 전송 중 Ctrl+O·Ctrl+Z 를 누르면 `/bug`·`/share`·`/feedback <text>` 가 처음부터 다시 시작하고 전송 후엔 취소로 닫히던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "`/remote-env` 에서 바로 Enter 를 누르면 저장된 기본 환경이 교체되던 문제 수정 — 목록이 기본값에서 열리고 기본값 없으면 체크 표시 없음",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "한 프롬프트에 여러 붙여넣기가 겹치면 일부가 타이핑 텍스트로 Claude 에 전달되던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "vim 모드에서 커서가 줄 끝을 넘어가고 j/k 가 짧은 줄에서 column 을 잃고 `f`/`t`/`F`/`T`/`;`/`,` 가 다른 줄의 매치로 점프·삭제하던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "`/add-dir` 경로 입력란에 Shift+Enter·붙여넣기로 줄바꿈이 들어가고 빠르게 친 \"tab\"·\"up\"·\"down\" 이 키로 처리되던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "프롬프트 footer 행 선택 중 빠른 타이핑·IME 텍스트·분해 accent 가 drop 되고 `!` 가 행 선택을 유지하던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "iTerm2 감지 시 fullscreen 모드가 창 리사이즈·Ctrl+L 마다 full-screen clear 를 보내던 문제 수정 — iTerm2 scrollback 에 stale 페이지가 쌓인 원인으로 추정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "Read deny 규칙이 있고 working directory 가 symlink 아래일 때 파일이 아닌 @-word 에 \"could not be examined\" 가 잘못 뜨던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "`/cd`·권한 변경 후 \"instruction file not loaded\" 라인이 stale·누락되던 문제 수정, 중첩 파일 미로드 시 transcript 라인 추가",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "`/name` 을 반복한 compaction 요약이 사용자 전용 skill 을 Claude 가 호출하게 하던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "Write·Edit·NotebookEdit·LSP 행과 단일 Read·Grep·Glob 행이 mod 의 거부 사유를 숨기던 문제 수정 — 행에 사유 표시",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "턴 종료 직후 worker 가 중지되면 cloud session 이 끝나지 않은 턴을 보이던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "transcript 가 큰 cloud session 이 이미 승인된 권한을 다시 묻던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "Claude 가 읽는 중 메시지를 재시도·편집하면 cloud session 의 scheduled task 등 큐 알림이 유실되던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "컨테이너 재시작 시 cloud session 이 클라이언트에서 고른 thinking 설정을 잊던 문제 수정",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "Anthropic 이 조직 설정을 확인하지 못할 때 Cowork cloud session 이 proxy 가 artifact 를 막았다고 말하던 문제 수정",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "hooks module 이 한 const 를 통해 다수 `$.state` 호출을 하는 플러그인의 로드·검증이 수 분 걸리던 문제 수정",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "`claude plugin validate` 가 엔진이 다른 곳에서 읽는 hooks module 의 matcher·state 값을 나열하고, 재선언·재할당된 최상위 `var` 로 읽은 `$.state` 값도 나열하던 문제 수정 — 후자 module 은 거부",
+          "originalRefs": [
+            45,
+            46
+          ]
+        },
+        {
+          "text": "플러그인의 served `$` method 가 hook origin 을 재시작해 `.catch` 를 위에 둔 guard hook 이 끝없이 재실행되던 문제 수정",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "plugin hooks worker 재시작 중 플러그인 interface 호출이 다른 플러그인의 hook 없이 실행되고, tool call 이 플러그인 permission hook 없이 응답되던 문제 수정",
+          "originalRefs": [
+            48,
+            56
+          ]
+        },
+        {
+          "text": "`next(e)` 호출 후 거부하는 mod 의 `config.set`·`state.set`·`env.set`·`agent.spawn` hook 이 refusal 로 응답되던 문제 수정 — 이름과 함께 실패로 보고",
+          "originalRefs": [
+            49
+          ]
+        },
+        {
+          "text": "`/theme`·`/config` Theme 메뉴·첫 실행 theme 단계가 플러그인의 `config.set` hook 에 묻기 전에 테마를 저장하던 문제 수정",
+          "originalRefs": [
+            50
+          ]
+        },
+        {
+          "text": "플러그인 `tool.check` hook 의 allow 응답이 사용자 답변이 필요한 도구(질문·plan 승인)를 dialog 없이 실행하던 문제 수정",
+          "originalRefs": [
+            51
+          ]
+        },
+        {
+          "text": "hooks worker 교체 시 mod 의 start-up prompt·command·subagent 가 두 번 큐잉되던 문제 수정",
+          "originalRefs": [
+            52
+          ]
+        },
+        {
+          "text": "턴 interrupt 중 `next(e)` 호출 후 실패한 mod hook 이 호출을 통과시키던 문제 수정 — 호출 거부",
+          "originalRefs": [
+            53
+          ]
+        },
+        {
+          "text": "사유가 4,096자를 넘으면 플러그인의 prompt drop·setting deny 가 무시되던 문제 수정",
+          "originalRefs": [
+            54
+          ]
+        },
+        {
+          "text": "user-installed mod 가 추가한 `$` 이름을 반환한 조직 플러그인이 자체 reload 나 타 플러그인 크래시 후 unload 되던 문제 수정 — mod 쪽이 unload 됨",
+          "originalRefs": [
+            55
+          ]
+        },
+        {
+          "text": "플러그인 `tool.call` hook 이 잘못된 파라미터명이 복구되기 전의 tool call 을 보던 문제 수정 — 실제 실행 인자 전달",
+          "originalRefs": [
+            57
+          ]
+        },
+        {
+          "text": "다른 mod 의 hook 이 guard 의 `$` 호출 아래에서 만든 호출에 `.catch` 있는 guard hook 이 무음 건너뛰어지던 문제 수정 — `.catch` 호출됨",
+          "originalRefs": [
+            58
+          ]
+        },
+        {
+          "text": "[Cloud sessions] 완료된 routine 실행이 수 시간 running 으로 남던 문제 수정",
+          "originalRefs": [
+            76
+          ]
+        },
+        {
+          "text": "[Cloud sessions] 저장된 알림 설정이 없는 routine 을 편집·복제하면 push 알림이 꺼지던 문제 수정",
+          "originalRefs": [
+            77
+          ]
+        },
+        {
+          "text": "[Cloud sessions] SVG·HEIC·TIFF 등 비일반 이미지 파일 첨부 실패 수정 — 일반 파일로 첨부",
+          "originalRefs": [
+            78
+          ]
+        },
+        {
+          "text": "[Cloud sessions] 조직이 승인 필수로 둔 connector tool 에 효과 없는 \"Always allow\" 가 제안되던 문제 수정",
+          "originalRefs": [
+            79
+          ]
+        },
+        {
+          "text": "[Remote Control] claude.ai/code 에서 시작한 새 Remote Control 세션의 첫 메시지가 이미지만 받던 문제 수정 — PDF 등 파일 허용",
+          "originalRefs": [
+            80
+          ]
+        },
+        {
+          "text": "[Claude Tag] Claude 가 첫 요청을 처리 중인 Slack 스레드의 답장이 완료까지 보류되거나 수 초 간격 전송 시 누락되던 문제 수정",
+          "originalRefs": [
+            82
+          ]
+        },
+        {
+          "text": "[Claude Tag] GitHub PR 활동·routine 으로만 깨어난 Slack 스레드가 admin 의 채널·workspace 기본 모델 변경 후에도 원래 모델에 머물던 문제 수정",
+          "originalRefs": [
+            83
+          ]
+        },
+        {
+          "text": "[Claude Tag] 조직 usage credit 소진이 원인인데 Slack 에 spend limit 알림을 올리던 문제 수정",
+          "originalRefs": [
+            84
+          ]
+        },
+        {
+          "text": "[Claude Tag] Slack 에서 답할 수 없는 권한 프롬프트가 자동 거부되면 interrupt 전까지 세션이 hang 하던 문제 수정",
+          "originalRefs": [
+            85
+          ]
+        },
+        {
+          "text": "[Code Review] PR 의 base branch 가 바뀌고 구 branch 가 삭제되면 큐에 있던 review 가 실패하던 문제 수정 — commit 재큐잉",
+          "originalRefs": [
+            90
+          ]
+        },
+        {
+          "text": "[Code Review] PR 이 CLAUDE.md 를 수정하면 그 규칙을 무시하던 문제 수정 — base branch 버전 사용",
+          "originalRefs": [
+            91
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "stdio MCP 서버가 protocol version 2026-07-28 로 기본 협상되므로 구형 서버가 연결에 실패하면 `MCP_PROTOCOL_NEGOTIATION=legacy` 로 되돌릴 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 12
+            }
+          ]
+        },
+        {
+          "text": "529 overloaded 재시도의 base delay 를 `CLAUDE_CODE_OVERLOADED_RETRY_BASE_DELAY_MS` 로 늘릴 수 있어 피크 시간대 배치 작업의 재시도 폭주 완화 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "text": "Agent tool 에 `effort` 를 지정할 수 있어 단순 탐색 subagent 는 낮은 effort 로 돌려 비용 절감 가능.",
+          "refs": [
+            {
+              "bucket": "newFeatures",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "네트워크(UNC) 경로 파일 읽기가 PreToolUse hook 승인·auto mode 로 더 이상 우회되지 않음 — 네트워크 드라이브 작업 자동화는 권한 프롬프트 대응 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "agent 이름이 256자로 제한되고 초과한 skill·플러그인 `name` 은 무시됨 — 긴 이름을 쓰는 정의 파일 점검 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 16
+            }
+          ]
+        },
+        {
+          "text": "strict sandbox 모드에서 `FOO=bar python3 app.py` 형태의 env prefix interpreter 명령이 자동 허용됨 — 이전엔 프롬프트가 떴던 명령이 무음 실행될 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "one-shot `claude -p` 가 background 명령·scheduled wakeup 완료까지 기다리므로 CI 에서 실행 시간이 길어질 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 11
+            }
+          ]
+        },
+        {
+          "text": "hook 출력의 `<system-reminder>` 태그가 escape 되므로 hook 으로 system-reminder 를 주입하던 커스텀 hook 은 더 이상 동작하지 않음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "routine 실행이 private artifact 를 승인 없이 publish 하므로 routine 프롬프트에서 artifact 생성 여부를 명시적으로 통제할 것.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 15
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-10-07T02:01:24.916Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.291",
+    "tagName": "v2.1.291",
+    "publishedAt": "2026-10-06T03:55:19Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.291",
+    "originalBody": "## What's changed\n\n- Fixed a regression in 2.1.290 where cloud sessions could drop answers to permission prompts\n- Fixed a regression in 2.1.288 where the last messages of a session could be lost when quitting\n",
+    "summary": {
+      "headline": "2.1.288·2.1.290 회귀 2건 긴급 수정",
+      "newFeatures": [],
+      "changes": [],
+      "fixes": [
+        {
+          "text": "2.1.290 회귀 — cloud session 이 권한 프롬프트의 답변을 drop 할 수 있던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "2.1.288 회귀 — 종료 시 세션의 마지막 메시지들이 유실될 수 있던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "2.1.288~2.1.290 에서는 종료 직전 메시지가 사라질 수 있으므로 해당 버전 사용자는 즉시 업데이트 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 1
+            }
+          ]
+        },
+        {
+          "text": "cloud session 에서 권한 응답이 무시되는 것처럼 보였다면 2.1.290 회귀가 원인이며 이 버전에서 해소.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-10-07T02:01:24.916Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.290",
+    "tagName": "v2.1.290",
+    "publishedAt": "2026-10-05T23:33:17Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.290",
+    "originalBody": "## What's changed\n\n- Added `serverToolUses` to the result of a mod's `turn.step` hook: the tool calls the API ran itself (the advisor), each with its id, name, input, start and end\n- Added `agentId` to the `tool.check` event of plugin hooks, so a hook can tell a subagent's permission check from the main session's\n- Added `ceiling` to the question and verdict a mod's `tool.check` hook reads, naming the approval an organization requires for a tool\n- Added `ThemeKey` and `Color` types to the plugin hooks typings, so an editor lists the theme colors a mod's drawing can name\n- Added to `claude plugin validate`: each hook a mod registers at a gating site is listed with whether it has a `.catch` (`gatingHooks` under `--json`)\n- Added a Deny button to the Claude apps gateway's sign-in approval page: it ends the pending sign-in, so the waiting terminal stops within seconds\n- Added `claude attach <name>` and `claude logs <name>`: part of a session name works in place of the id\n- Added `/claude-api managed-agents-onboard <url>` to set up the Managed Agents pattern a page describes as `ant apply` files\n- Added `/claude-api managed-agents-onboard <quickstart-name>` to build a Console quickstart template, such as `deep-researcher`, with the `ant` CLI\n- Added a warning when a managed settings file is a link to a file outside the managed settings folder\n- Added a /status and doctor warning when managed settings ignore user-configured sandbox allowRead paths or allowed domains\n- Fixed requests failing behind proxies and gateways that reject one of Claude Code's beta headers with a status other than 400, or together with a second beta\n- Fixed long sessions with hundreds of images getting stuck on \"Request rejected as unprocessable by the model\" errors\n- Fixed a turn ending at once when the API's output content filter stopped a reply while Claude was still thinking; the request is now retried once before the error is shown\n- Fixed resumed subagents and teammates losing their earlier thinking and prompt cache after receiving a message mid-run\n- Fixed WebFetch silently dropping page text past 100,000 characters; it now says how much was unread and takes an `offset` to read on\n- Fixed a crash (\"Maximum call stack size exceeded\") when a response nested lists or quotes thousands of levels deep\n- Fixed `/rewind` not listing a prompt sent while Claude was still working\n- Fixed scheduled tasks (`/loop` with an interval, reminders) silently not coming back on resume once the conversation was compacted; covers compactions made from this version on\n- Fixed scheduled tasks set in the foreground never firing after a ← or `/background` hand-off, and recurring ones firing an extra run on every resume, respawn or fork\n- Fixed headless `--json-schema` runs exiting non-zero with `is_error: true` on a `success` result when the connection dropped after the structured output was already delivered\n- Fixed plan mode letting the auto mode classifier approve non-read-only connector tools that carry a server-pushed ask policy\n- Fixed a project `CLAUDE.md`, rule or `AGENTS.md` symlinked outside the working directories loading under `permissions.blockReadsOutsideWorkingDirectories` or a `Read` deny rule\n- Fixed URL allow and deny patterns with a wildcard inside an `xn--` host label matching differently from one process to the next\n- Fixed an MCP server provided by your organization being relisted as your own after signing in or reconnecting, including from a late result in headless and SDK sessions\n- Fixed `/ultrareview` dropping uncommitted changes without a warning on Windows when `git stash create` failed, and refusing them after a `git add -N` file was deleted or moved\n- Fixed the `plansDirectory` setting's project-root check for paths that contain a backslash on macOS and Linux\n- Fixed replies in very long Remote Control and cloud sessions that could appear a block at a time instead of streaming in\n- Fixed the background daemon's log passing terminal control characters to the screen under `claude daemon run` and `claude daemon logs`; they now show as `\\uXXXX` escapes\n- Self-hosted runner: Fixed a crafted, very long line of a session's error output freezing the runner for several seconds\n- Fixed a plugin hook with a `.catch` being unloaded, and its `.catch` skipped, when the hook kept the hooks worker busy on a prompt or tool call\n- Fixed a mod's `turn.step` result listing a tool call that a mid-response model fallback had discarded\n- Fixed a Cowork cloud session's reply sometimes never finishing when its container restarted just after Claude sent a message or a file\n- Fixed `claude plugin validate` and plugin loading refusing a hooks module that destructures an option named like one of its top-level functions\n- Fixed `/ultrareview` failing to upload uncommitted changes when `core.safecrlf=true` is set in git's configuration\n- Fixed the effort level changing when a flagged message is retried on a fallback model that has a different level saved in settings\n- Windows: Fixed multi-line `!` shell blocks in skills and commands failing when the file is saved with CRLF line endings\n- Fixed Claude Code hanging until killed when a `/permissions` tab was clicked while searching in fullscreen mode\n- Fixed conversation compaction sometimes failing with a \"null is not an object\" error\n- Fixed plugin hooks reading an empty `answer` on `turn.complete` for a subagent that hands its report back in auto mode\n- Fixed a mod being unloaded without a message when a refresh followed its failed reload; its failure line now says the version loaded before is unloaded\n- Fixed a mod's `prompt.submit` hook that drops a prompt after calling `next(e)` being ignored silently: the hook is now reported as failed, by name\n- Fixed a mod's pane or band being redrawn without end when it followed its end over a tree that changed height at every drawing\n- Fixed an image read on macOS and Windows being able to return a file outside what was approved, through a link swapped in mid-read\n- Fixed a case where a user-installed mod could get an organization's plugin unloaded; the mod is now the one unloaded\n- Fixed `disableClaudeAiConnectors` and `allowedMcpServers` URL rules not being applied to some MCP entries declared in `.mcp.json`, plugins or agents\n- Fixed a mod's inline pane being redrawn without end when its tree changed height at every drawing\n- Fixed an `@`-mention under the read block or `--restricted` being able to read a file outside the working directories through a link changed mid-read\n- Fixed Esc in the agents view confirming \"Press enter again to restart this session — it isn't responding\"; Esc now just reopens the session\n- Fixed agent view losing a background session's `/loop` run count, countdown and live status line after the session enters a worktree that it creates\n- Fixed `claude agents` sessions in manual permission mode asking for approval to read an image pasted into a reply or a new agent's prompt\n- Fixed a deny or ask rule missing a command or path whose name came from a variable set as a prefix on `declare`, `typeset`, `export` or `readonly`\n- Fixed Read deny rules not applying to image paths pasted or dragged into the prompt, or to file names listed for an @-mentioned folder\n- Fixed a case where a user-installed mod could make an organization's guard skip its check; such a mod is now unloaded\n- Fixed plugin hooks stalling each redraw when a mod draws a long multi-line text holding non-Latin characters\n- Fixed repeated Ctrl+X in the agents view deleting the whole next section after the bottom session of a section was deleted\n- Fixed You should know writing its notes in English regardless of the `language` setting\n- Fixed a freeze after sending some very long messages\n- Fixed a slowdown when expanding the transcript (ctrl+o) or resizing over large tool output that contains non-ASCII characters such as arrows, dashes or box-drawing\n- Fixed `claude respawn` re-sending an earlier message to a backgrounded session that has no saved transcript instead of starting it with an empty conversation\n- Fixed Esc after an `n:` or Ctrl+F search in the agents view moving focus to a section header, where Ctrl+X twice would delete every session in the section\n- Fixed `claude agents` saving a slash command it could not deliver to a stopped session and then running it by itself the next time that session restarted\n- Fixed `/ultrareview` uploading uncommitted changes unfiltered for files under a git filter driver named `unset` or `unspecified`; the upload now stops and asks you to rename the driver\n- Fixed auto mode denials suggesting a permission rule that would skip the classifier for a whole tool or that Claude Code would ignore\n- Fixed `claude --teleport` and `/teleport` deleting the files in a folder that had replaced a tracked file of the same name when you chose to stash: the stash is now refused, and says why\n- Fixed Esc confirming agent view's \"Press enter again to restart this session fresh\" prompt\n- Fixed agent view's `/loop` run count freezing and its countdown disappearing after `/clear`; the count now restarts with the new conversation\n- Fixed `--channels` permission relay: a reply ID that repeats within a session is now ignored instead of approving a different prompt\n- Fixed `/chrome` \"Reconnect extension\" not restoring browser tools after a failed Chrome connection, and added an explanation when it can't (anthropics/claude-code#98135)\n- Fixed mods staying off for people who reach Claude through a gateway (`ANTHROPIC_BASE_URL` with `ANTHROPIC_AUTH_TOKEN`) and have no Anthropic account\n- Fixed replies sent from `claude agents` just after a background session crashed being refused after 2 seconds: they are now retried for up to 12 seconds while the session restarts\n- Fixed slash commands and answers to a multiple-choice question that `claude agents` could not deliver to a running session being saved and sent by themselves the next time it was restarted\n- Fixed sandboxed commands that pipe a heredoc into another command (`cat <<EOF | python3`) asking for approval on every run\n- Fixed `claude agents` failing with \"Couldn't restart the background service\" and background sessions stopping after a Homebrew upgrade (takes effect from the upgrade after this one)\n- Fixed agent view's \"restart this session fresh\" re-sending an earlier message from the session instead of starting with an empty conversation\n- Fixed Bash permission checks auto-approving some read-only commands (such as `rg` or `git grep`) whose arguments the shell would still expand as wildcards; these now prompt for approval\n- Fixed `claude plugin test` refusing to run after an upgrade because of an out-of-date saved setting\n- Fixed Bash permission checks auto-approving certain commands whose variable names zsh reads differently from bash; these now prompt for approval\n- Fixed a short form of a `git clone` option keeping the sandbox exemption from a git pattern such as `git *` in `sandbox.excludedCommands`; it is now treated like the long form\n- Fixed the first feature-flag request of a session ignoring a proxy or API endpoint set in a project's settings\n- Fixed `/ultrareview` of a local branch silently leaving uncommitted work out of the upload in a repository that keeps its branches outside `.git` (git 2.54+); it now refuses with an explanation\n- Fixed cloud sessions staying asleep after a container restart lost a pending `/loop` wakeup or scheduled task; Claude is now told and can schedule it again\n- Fixed the Claude apps gateway's retention sweep deleting a returning developer's identity row refreshed at the same moment, on PostgreSQL versions without the November 2025 fixes\n- Fixed sandboxed Monitor tool commands skipping the permission prompt under sandbox auto-allow; they now follow your permission rules\n- Fixed the Claude apps gateway failing to start when the certificate it presents to the identity provider has an empty subject\n- Fixed the Claude apps gateway exiting with a bare \"Invalid URL\" when `store.postgres_url` can't be parsed; the error now names the setting and says what the URL may hold\n- Fixed background agents failing with \"Agent stalled\" and Workflow tool subagents restarting from their prompt when a Mac woke from sleep\n- Fixed slow or failed startup since 2.1.285 under SDK hosts such as the VS Code extension when managed settings deny reads of many paths on a slow filesystem (notably Windows drives under WSL)\n- Fixed a response interrupted by computer sleep being treated as a stalled stream on Bedrock, Vertex, Foundry, and custom gateways\n- Fixed a freeze before the first request and in the `/sandbox` Config tab on Linux and WSL when a sandbox read rule such as `~/**/.env` covers a large folder\n- Fixed skills not being found when asked for by the name in SKILL.md when their folder has a different name (for example a non-English name): the skill listing now shows both names\n- Fixed a plan written in plan mode being lost when a cloud session's container restarted before the plan was presented\n- Fixed the Bash tool occasionally losing shell aliases, functions and plugin PATH entries for a whole session when its first command ran seconds after startup on a new config directory\n- Fixed unbounded memory use when an HTTP MCP server sends a very large response\n- Fixed artifact operations failing in a Claude Code run started from inside a cloud session (for example `claude -p` run from the Bash tool)\n- Fixed files sent from remote sessions sometimes being refused as \"not the one approved\" when four or more were sent at once\n- Fixed plan mode not being restored when resuming a session with `--continue` or `--resume <session-id>` in the terminal\n- Fixed a marketplace named after another GitHub marketplace's download folder stopping that marketplace from downloading\n- Fixed automatic compaction giving up with \"Prompt is too long\" when a Mac went to sleep while it was running\n- Fixed the rewind menu (Esc Esc / `/rewind`) freezing for hundreds of milliseconds per keypress when the conversation contains a very large pasted stack trace or source file\n- Fixed a subdirectory's AGENTS.md not being attached when a file under it is @-mentioned\n- Fixed self-hosted runner sessions resumed after a stopped runner failing with \"missing but already registered worktree\" when the sessions folder is a relative symlink\n- Fixed a freeze when the secret scan or a permission prompt met long token-like text\n- Fixed Bash permission checks not applying Read deny rules or the outside-directory read block to a wildcard in some option values of read-only commands\n- Fixed `CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS=5m` being read as 5 ms and cancelling remote dialogs at once; values with a unit suffix now fall back to `dialogExpiry`\n- Fixed a stall when an MCP server's tool listing contains very long runs of combining characters\n- Fixed two pastes that overlap in one prompt being sent to the model partly as typed text instead of as one pasted block\n- Fixed Claude in Chrome's browser picker showing a message meant for Claude when the chosen browser is no longer connected, and the VS Code dialog's list going stale after a switch\n- Fixed background subagents losing write and Bash access in their worktree after the main session enters or exits a different worktree\n- Fixed background commands, the agents view and daemon workers sending telemetry and a feature-flag request to Anthropic behind a Claude apps gateway when no managed settings on the machine force gateway login\n- Fixed `--restricted` (and `CLAUDE_CODE_RESTRICTED=1`) sessions opening the cross-session messaging socket\n- Fixed sessions moved to the background while idle reopening as \"no saved transcript\" after a restart or idle cleanup; they now resume their conversation\n- Fixed background workers honoring `--allow-dangerously-skip-permissions` on respawn without the bypass-permissions disclaimer having been accepted\n- Fixed Claude replying in an endless loop when a plugin's async Stop hook passes an unquoted script path under a folder with a space, such as Application Support\n- Fixed a freeze of several seconds when secret masking met very long unbroken text\n- Fixed some permission rules and safety checks not being applied to a tool call after a PreToolUse hook rewrote its input\n- Fixed first launch asking to pick a login method again after `claude auth login` or with a credentials file already in the config directory\n- Fixed file names containing line breaks being displayed incorrectly in file tool errors and permission prompts\n- Fixed a large paste expanded in place being sent to the model as typed text after the next keystroke when it held accents stored as separate characters, as macOS file names do\n- Fixed macOS `/login` reporting success when the keychain refused the new login and kept an old one it could not remove\n- Fixed SDK hosts using `--include-partial-messages` seeing a reply stay open after the turn ended when its stream was cut, interrupted or fell back to non-streaming\n- Fixed sandboxed Bash commands on Linux running `ConfigChange` hooks and reloading settings mid-command when `.claude/settings.json` or `.claude/settings.local.json` does not exist\n- Fixed errors reading \"Premature close\" instead of naming the missing program when a tool Claude Code runs, such as git or gh, is not installed (macOS, Linux)\n- Fixed `/loop` and other recurring session-only scheduled tasks running an extra time after a sandboxed Bash command on Linux or after `.claude/scheduled_tasks.json` was deleted\n- Fixed edits to the file a symlinked settings file points at running without the settings-file permission question\n- Improved MCP startup behind a network proxy: a server the proxy blocks (HTTP 403) is no longer retried three times\n- Improved permission prompts from background agents to show the Ctrl+X Ctrl+K shortcut that stops all background agents\n- Improved the built-in `plugin-authoring` skill: Claude now gives the one command another person runs to install a mod you made, and writes it in a README's install section\n- Improved the reply to `/plugin` in the desktop app's Code tab: it now says where to install and manage plugins there\n- Improved the Bash changed-files view: when a chained command includes git merge, pull or checkout, it lists the files without full diffs\n- Improved the Claude apps gateway's log when an upstream's cloud credentials or connection fail: the warning now ends with the underlying cause\n- Improved the error shown when a cloud session is started without a claude.ai sign-in: it now names `claude auth login` and /login and no longer blames API-key authentication\n- Improved the Read tool's message for binary files: it now points Claude to a skill or a shell command that can read the format\n- Improved the error shown when a git config file stops the `/ultrareview` upload: it is about half as long and says what kind of file is the problem\n- Improved the errors shown when the `/ultrareview` upload refuses a checkout: each known cause now has its own message, with a way to fix it\n- Improved the Claude apps gateway to log a warning during the last 30 days before the certificate it presents to the identity provider expires\n- Improved Claude in Chrome: a `browser_batch` call now gets 90 seconds, up from 60, before it is reported as timed out\n- Improved the Claude apps gateway's browser sign-in pages: brand fonts, centered layout, and dark mode\n- Improved responsiveness while resuming large sessions: timers, input and rendering keep running while the transcript loads\n- Improved the / and @ suggestion lists: the selected row now starts with a ❯ pointer, so you can see it without color\n- Changed `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` to also skip the startup connection warm-up\n- Changed Claude in Chrome so that a project's settings files can no longer turn it on; use `--chrome`, `/chrome` or your user settings\n- Changed the Bash tool to ask for permission before running `pyright`, which is no longer treated as a read-only command\n- Changed what a mod's `$.process.spawn` rejects with when another mod denies it after the child ran: it now says the call ran and a plugin withheld its result\n- Changed the background daemon's log to write a multi-line message as one JSON-quoted line\n- Changed skills and custom commands to refuse a `!` shell command that contains raw control characters other than tab and newline, with a message that shows where they are\n- Changed `/artifacts`: opening an artifact in your browser now closes the list\n- Changed Bash permission checks so that more forms of the `ps` command ask for approval instead of running without asking\n- Changed plugin hooks so long text is clipped and logged instead of being refused or dropped silently\n- Changed background sessions whose scheduled task is gone: they now move to Completed about 20 seconds later and can be updated or shut down when idle\n- Changed the \"Press ← again\" confirm on a just-cleared prompt: a second ← no longer has to wait a second before it switches, and holding ← down now switches too\n- Changed the errors shown when the `/ultrareview` upload fails at a git step: they name the step and what to try, and no longer repeat git's own error text\n- Changed `/code-review` at medium effort to also report cleanup and CLAUDE.md conventions findings on models without tuned review settings, including Opus 5.5 and Sonnet 5.5\n- Changed an in-process teammate's `agent_id` in Agent results to its agent ID (its `name@team` address stays in `teammate_id`); TeammateIdle hooks no longer fire from its subagents or forks\n- Changed background sessions waiting on a scheduled wakeup (`/loop`): they are now left running through updates and low memory, where being restarted or shut down could silently lose the wakeup\n- Changed `/model`, `/effort` and `/rename` sent from `claude agents` to a busy background session to apply right away, without a confirmation, instead of when the turn ends\n- Changed the Claude apps gateway's minimum supported PostgreSQL version from 14 to 11\n- Changed the interactive session's WebSearch budget to refill over time (100 calls/hour; `CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR` sets the rate, 0 turns it off) instead of ending after 200 calls\n- Changed `CLAUDE_CODE_DISABLE_ATTACHMENTS` so a repository's `.claude/settings.json` or `.claude/settings.local.json` can no longer set it; shell, user and managed settings still can\n- Changed `claude plugin update` on a plugin loaded from a directory to print just its reason, without the \"Failed to update plugin\" prefix, as for built-in plugins\n- Changed the built-in `gh api` in cloud sessions: a host other than github.com set in `GH_HOST` or `GH_REPO` is now refused (use `--hostname` or a full URL), and stderr notes requests to other hosts\n- Changed the `claude-api` skill's Managed Agents examples to turn off the web tools unless the agent needs them and to use the `auto` permission policy\n- Self-hosted runners: Changed `claude --environment <id>` to create its session through the current Sessions API; printed and JSON session ids keep their session_… form\n- [VSCode] Added a screen reader announcement, \"Message queued.\", when you send a message while Claude is working\n- [VSCode] Added a way to review and run a plugin marketplace's install or update command from the Manage plugins dialog\n- [VSCode] Fixed a blank chat you never typed into keeping a background Claude process running after you open a saved conversation in its place\n- [VSCode] Fixed settings dialogs blaming a timeout when Claude Code stopped unexpectedly during a save\n- [VSCode] Fixed the branch switch dialog offering to switch when it could not check for uncommitted changes\n- [VSCode] Fixed a permission prompt that arrived behind an open dialog taking keyboard focus, so a key pressed in the dialog could answer it\n- [VSCode] Fixed sign-in and new sessions giving no clear reason when Claude Code cannot find or start its program\n- [VSCode] Fixed the agent map showing a nested sub-agent with \"Tool calls (0)\" and placing the agents it starts under the main agent\n- [VSCode] Improved Continue After Reload: tabs reopened after VS Code restarts its extensions now also finish a step the restart interrupted\n- [VSCode] Improved file pills in messages: hovering one now shows the file's path from the project folder, so same-named files can be told apart\n- [VSCode] Changed message timestamps to show by default (turn them off with the Claude Code: Show Message Timestamps setting)\n- [Cloud sessions] Fixed turning off prompt suggestions through a cloud environment's environment variables having no effect in new cloud sessions\n- [Cloud sessions] Fixed the working indicator in a cloud session spinning on for several seconds after Claude's reply had finished; it now stops with the reply\n- [Cloud sessions] Fixed History on a never-run routine's page still saying \"No runs yet\" after you pressed Run now; it now shows the new run\n- [Cloud sessions] Fixed an unarchived cloud session looking as if Claude were still working until you sent another message\n- [Remote Control] Fixed a computer that just started Remote Control taking up to a minute to appear in the Remote Control menu of a new session; it now appears within seconds\n- [Claude Tag] Added fast mode in Slack: mention Claude with `!fast` to switch a thread to fast mode, moving it to Opus if needed, and `!fast off` to switch back; replies show (fast) while it's on\n- [Claude Tag] Added the optional Path prefixes field when creating a custom connection in an access bundle, so its allow rule can cover only those paths instead of the whole host\n- [Claude Tag] Fixed members with the Claude Tag Admin permission getting \"Couldn't load memory files\" on the Activity page's Memory tab; they can now read workspace and channel memory\n- [Claude Tag] Fixed a workspace guest's Confirm on a Claude settings card in Slack removing its buttons for everyone; only the guest sees the refusal, and members can still confirm or cancel\n- [Claude Tag] Fixed scheduled routines in Slack channels running on a model other than the channel's default; each run that starts a new session now uses the current default model\n- [Claude Tag] Fixed GitHub repositories in an access bundle attached by a channel-name rule being refused in the channels the rule covers; Claude can now add, list and clone them there\n- [Claude Tag] Improved Claude's notice in your direct messages when your own Claude plan's usage limit is reached: it shows within seconds and says when the limit resets\n- [Claude Tag] Improved the earlier Claude in Slack app's reply when it can't start a session: it now says what failed and who can fix it, in full only once per thread\n- [Claude Tag] Changed the channel instructions limit to 8,192 characters instead of bytes, so non-English text gets the same room, and added a character count beside Save on the Configure page\n- [Code Review] Fixed blocking review comments sometimes opening with a \"nit\" label that contradicted their severity\n- [Code Review] Fixed tips to comment \"@claude review\" being posted on fork and Manual-mode pull requests in organizations that have turned Code Review off\n",
+    "summary": {
+      "headline": "mod hook 확장·WebSearch 시간당 100회 refill",
+      "newFeatures": [
+        {
+          "text": "mod `turn.step` hook 결과에 `serverToolUses` 추가 — API 가 직접 실행한 tool call(advisor)의 id·name·input·시작·종료 시각 포함",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "플러그인 hook 의 `tool.check` 이벤트에 `agentId` 추가 — subagent 권한 검사와 메인 세션 검사를 구분 가능",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "mod `tool.check` hook 이 읽는 question·verdict 에 `ceiling` 추가 — 조직이 그 도구에 요구하는 승인 수준 명시",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "플러그인 hooks typings 에 `ThemeKey`·`Color` 타입 추가 — 에디터가 mod 가 쓸 수 있는 테마 색상 목록 제공",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`claude plugin validate` 가 gating site 에 등록된 hook 별 `.catch` 유무를 나열 (`--json` 의 `gatingHooks`)",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "Claude apps gateway 의 sign-in 승인 페이지에 Deny 버튼 추가 — pending 로그인이 끝나 대기 중 터미널이 수 초 내 멈춤",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "`claude attach <name>`·`claude logs <name>` 추가 — 세션 이름 일부로 id 대체 가능",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "`/claude-api managed-agents-onboard <url|quickstart-name>` 추가 — 페이지가 설명하는 Managed Agents 패턴을 `ant apply` 파일로 구성하거나 `deep-researcher` 같은 Console quickstart 템플릿을 `ant` CLI 로 빌드",
+          "originalRefs": [
+            7,
+            8
+          ]
+        },
+        {
+          "text": "managed settings 파일이 managed settings 폴더 밖 파일로의 link 이면 경고 표시",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "managed settings 가 사용자 설정 sandbox allowRead 경로·허용 도메인을 무시할 때 /status 와 doctor 에 경고 추가",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "[VSCode] 작업 중 메시지를 보내면 \"Message queued.\" screen reader 안내 추가",
+          "originalRefs": [
+            163
+          ]
+        },
+        {
+          "text": "[VSCode] Manage plugins 대화상자에서 plugin marketplace 의 install·update 명령을 검토하고 실행 가능",
+          "originalRefs": [
+            164
+          ]
+        },
+        {
+          "text": "[Claude Tag] Slack 에서 `!fast` 로 스레드를 fast mode 로 전환(필요 시 Opus 로 이동), `!fast off` 로 복귀, 켜진 동안 응답에 (fast) 표시",
+          "originalRefs": [
+            179
+          ]
+        },
+        {
+          "text": "[Claude Tag] access bundle 의 custom connection 생성 시 선택 필드 Path prefixes 추가 — allow rule 이 호스트 전체 대신 지정 경로만 허용",
+          "originalRefs": [
+            180
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "프록시가 차단(HTTP 403)한 MCP 서버를 startup 시 3회 재시도하지 않음",
+          "originalRefs": [
+            125
+          ]
+        },
+        {
+          "text": "background agent 의 권한 프롬프트에 모든 background agent 를 멈추는 Ctrl+X Ctrl+K 단축키 표시",
+          "originalRefs": [
+            126
+          ]
+        },
+        {
+          "text": "내장 `plugin-authoring` skill 개선 — 만든 mod 를 타인이 설치할 한 줄 명령을 제시하고 README install 섹션에 기록",
+          "originalRefs": [
+            127
+          ]
+        },
+        {
+          "text": "데스크톱 앱 Code 탭에서 `/plugin` 응답이 플러그인 설치·관리 위치를 안내",
+          "originalRefs": [
+            128
+          ]
+        },
+        {
+          "text": "Bash changed-files view 개선 — chained 명령에 git merge·pull·checkout 이 포함되면 전체 diff 없이 파일 목록만 표시",
+          "originalRefs": [
+            129
+          ]
+        },
+        {
+          "text": "Claude apps gateway 로그 개선 — upstream cloud 자격증명·연결 실패 경고가 근본 원인으로 끝남",
+          "originalRefs": [
+            130
+          ]
+        },
+        {
+          "text": "claude.ai 로그인 없이 cloud session 을 시작할 때 오류가 `claude auth login` 과 /login 을 안내하고 API-key 인증 탓을 하지 않음",
+          "originalRefs": [
+            131
+          ]
+        },
+        {
+          "text": "Read tool 의 binary 파일 메시지가 해당 포맷을 읽을 수 있는 skill 이나 셸 명령을 안내",
+          "originalRefs": [
+            132
+          ]
+        },
+        {
+          "text": "`/ultrareview` 업로드 오류 메시지 정비 — git config 파일 문제는 절반 길이로 파일 종류 명시, checkout 거부는 원인별 메시지와 해결법, git 단계 실패는 단계명과 조치만 표시하고 git 오류문 반복 생략",
+          "originalRefs": [
+            133,
+            134,
+            151
+          ]
+        },
+        {
+          "text": "Claude apps gateway 가 identity provider 에 제시하는 인증서 만료 30일 전부터 경고 로그 기록",
+          "originalRefs": [
+            135
+          ]
+        },
+        {
+          "text": "Claude in Chrome 의 `browser_batch` 호출 timeout 을 60초에서 90초로 연장",
+          "originalRefs": [
+            136
+          ]
+        },
+        {
+          "text": "Claude apps gateway 브라우저 sign-in 페이지에 brand font·중앙 정렬·dark mode 적용",
+          "originalRefs": [
+            137
+          ]
+        },
+        {
+          "text": "대형 세션 재개 중 transcript 로드 동안에도 타이머·입력·렌더링이 계속 동작",
+          "originalRefs": [
+            138
+          ]
+        },
+        {
+          "text": "`/`·`@` 제안 목록의 선택 행이 ❯ 포인터로 시작 — 색상 없이도 식별 가능",
+          "originalRefs": [
+            139
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 이 startup connection warm-up 도 건너뜀",
+          "originalRefs": [
+            140
+          ]
+        },
+        {
+          "text": "프로젝트 settings 파일로는 Claude in Chrome 을 켤 수 없음 — `--chrome`, `/chrome` 또는 user settings 사용",
+          "originalRefs": [
+            141
+          ]
+        },
+        {
+          "text": "`pyright` 가 read-only 명령에서 제외돼 Bash tool 이 실행 전 권한 요청",
+          "originalRefs": [
+            142
+          ]
+        },
+        {
+          "text": "다른 mod 가 자식 프로세스 실행 후 거부하면 `$.process.spawn` 이 \"호출은 실행됐으나 플러그인이 결과를 보류\" 로 reject",
+          "originalRefs": [
+            143
+          ]
+        },
+        {
+          "text": "background daemon 로그가 multi-line 메시지를 JSON-quoted 한 줄로 기록",
+          "originalRefs": [
+            144
+          ]
+        },
+        {
+          "text": "skill·custom command 의 `!` 셸 명령에 tab·newline 외 raw 제어문자가 있으면 위치를 표시하며 거부",
+          "originalRefs": [
+            145
+          ]
+        },
+        {
+          "text": "`/artifacts` 에서 브라우저로 artifact 를 열면 목록이 닫힘",
+          "originalRefs": [
+            146
+          ]
+        },
+        {
+          "text": "더 많은 형태의 `ps` 명령이 Bash 권한 검사에서 무음 실행 대신 승인 요청",
+          "originalRefs": [
+            147
+          ]
+        },
+        {
+          "text": "플러그인 hook 의 긴 텍스트를 거부·무음 drop 대신 잘라서 기록",
+          "originalRefs": [
+            148
+          ]
+        },
+        {
+          "text": "scheduled task 가 사라진 background session 은 약 20초 후 Completed 로 이동하고 idle 시 업데이트·종료 가능",
+          "originalRefs": [
+            149
+          ]
+        },
+        {
+          "text": "방금 지운 프롬프트의 \"Press ← again\" 확인 — 두 번째 ← 가 1초 대기 없이 전환되고 ← 를 길게 눌러도 전환",
+          "originalRefs": [
+            150
+          ]
+        },
+        {
+          "text": "tuned review 설정이 없는 모델(Opus 5.5·Sonnet 5.5 포함)에서도 `/code-review` medium effort 가 cleanup·CLAUDE.md 컨벤션 finding 보고",
+          "originalRefs": [
+            152
+          ]
+        },
+        {
+          "text": "in-process teammate 의 Agent 결과 `agent_id` 가 agent ID 로 변경(`name@team` 주소는 `teammate_id` 유지), TeammateIdle hook 이 그 subagent·fork 에서 발화하지 않음",
+          "originalRefs": [
+            153
+          ]
+        },
+        {
+          "text": "scheduled wakeup(`/loop`) 대기 중인 background session 은 업데이트·저메모리 상황에서도 재시작·종료 없이 유지 — wakeup 무음 유실 방지",
+          "originalRefs": [
+            154
+          ]
+        },
+        {
+          "text": "`claude agents` 에서 busy background session 에 보낸 `/model`·`/effort`·`/rename` 이 확인 없이 즉시 적용",
+          "originalRefs": [
+            155
+          ]
+        },
+        {
+          "text": "Claude apps gateway 최소 지원 PostgreSQL 버전을 14 에서 11 로 완화",
+          "originalRefs": [
+            156
+          ]
+        },
+        {
+          "text": "대화형 세션의 WebSearch 예산이 200회 후 종료 대신 시간당 100회로 refill — `CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR` 로 속도 조정(0 이면 끔)",
+          "originalRefs": [
+            157
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_DISABLE_ATTACHMENTS` 를 레포의 `.claude/settings.json`·`.claude/settings.local.json` 에서 설정 불가 — 셸·user·managed settings 만 허용",
+          "originalRefs": [
+            158
+          ]
+        },
+        {
+          "text": "디렉토리에서 로드한 플러그인의 `claude plugin update` 가 \"Failed to update plugin\" 접두사 없이 사유만 출력",
+          "originalRefs": [
+            159
+          ]
+        },
+        {
+          "text": "cloud session 내장 `gh api` 가 `GH_HOST`·`GH_REPO` 의 github.com 외 호스트를 거부(`--hostname` 이나 전체 URL 사용), stderr 에 타 호스트 요청 기록",
+          "originalRefs": [
+            160
+          ]
+        },
+        {
+          "text": "`claude-api` skill 의 Managed Agents 예시가 필요 없으면 web tool 을 끄고 `auto` permission policy 사용",
+          "originalRefs": [
+            161
+          ]
+        },
+        {
+          "text": "Self-hosted runner `claude --environment <id>` 가 현재 Sessions API 로 세션 생성 — 출력·JSON 의 session id 는 session_… 형식 유지",
+          "originalRefs": [
+            162
+          ]
+        },
+        {
+          "text": "[VSCode] Continue After Reload 개선 — 확장 재시작 후 다시 열린 탭이 중단된 단계도 마무리",
+          "originalRefs": [
+            171
+          ]
+        },
+        {
+          "text": "[VSCode] 메시지의 file pill 에 hover 하면 프로젝트 폴더 기준 경로 표시 — 동명 파일 구분",
+          "originalRefs": [
+            172
+          ]
+        },
+        {
+          "text": "[VSCode] 메시지 timestamp 를 기본 표시 — `Claude Code: Show Message Timestamps` 설정으로 끔",
+          "originalRefs": [
+            173
+          ]
+        },
+        {
+          "text": "[Claude Tag] 본인 Claude plan 의 usage limit 도달 시 DM 알림이 수 초 내 뜨고 reset 시각 안내",
+          "originalRefs": [
+            185
+          ]
+        },
+        {
+          "text": "[Claude Tag] 구 Claude in Slack 앱이 세션 시작 실패 시 실패 원인과 해결 가능한 사람을 스레드당 한 번 전체 안내",
+          "originalRefs": [
+            186
+          ]
+        },
+        {
+          "text": "[Claude Tag] 채널 instructions 한도를 8,192 바이트에서 8,192 문자로 변경, Configure 페이지 Save 옆에 글자 수 표시",
+          "originalRefs": [
+            187
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "beta header 중 하나를 400 외 상태로 거부하거나 두 번째 beta 와 함께 거부하는 프록시·gateway 뒤에서 요청이 실패하던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "수백 장 이미지가 있는 긴 세션이 `Request rejected as unprocessable by the model` 오류에 갇히던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "thinking 중 API output content filter 가 응답을 멈추면 턴이 즉시 끝나던 문제 수정 — 오류 표시 전 1회 재시도",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "실행 중 메시지를 받은 재개 subagent·teammate 가 이전 thinking 과 prompt cache 를 잃던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "WebFetch 가 100,000자 이후 페이지 텍스트를 무음 drop 하던 문제 수정 — 미읽은 분량을 알리고 `offset` 으로 이어 읽기",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "수천 단계로 중첩된 리스트·인용 응답에서 `Maximum call stack size exceeded` 크래시 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "`/rewind` 가 Claude 작업 중 보낸 프롬프트를 나열하지 않던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "compaction 후 재개 시 scheduled task(interval `/loop`, reminder)가 무음 복구되지 않던 문제 수정 — 이 버전부터의 compaction 에 적용",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "foreground 에서 설정한 scheduled task 가 ←·`/background` 전환 후 발화하지 않고, 반복 task 가 resume·respawn·fork 마다 한 번 더 실행되던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "headless `--json-schema` 실행이 structured output 전달 후 연결이 끊기면 `success` 결과에 `is_error: true` 로 non-zero 종료하던 문제 수정",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "plan mode 에서 auto mode classifier 가 server-pushed ask policy 를 가진 read-only 가 아닌 connector tool 을 승인하던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "working directory 밖으로 symlink 된 프로젝트 `CLAUDE.md`·rule·`AGENTS.md` 가 `permissions.blockReadsOutsideWorkingDirectories`·`Read` deny 하에서도 로드되던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "`xn--` 호스트 라벨 안의 wildcard URL allow·deny 패턴이 프로세스마다 다르게 매칭되던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "조직 제공 MCP 서버가 로그인·재연결 후 사용자 소유로 다시 나열되던 문제 수정 (headless·SDK 세션의 늦은 결과 포함)",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "Windows 에서 `git stash create` 실패 시 `/ultrareview` 가 경고 없이 uncommitted 변경을 버리고, `git add -N` 파일 삭제·이동 후 거부하던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "macOS·Linux 에서 backslash 포함 경로의 `plansDirectory` project-root 검사 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "매우 긴 Remote Control·cloud session 의 응답이 스트리밍 대신 블록 단위로 표시되던 문제 수정",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "`claude daemon run`·`claude daemon logs` 에서 daemon 로그의 터미널 제어문자가 화면에 그대로 전달되던 문제 수정 — `\\uXXXX` escape 로 표시",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "Self-hosted runner — 세션 오류 출력의 조작된 초장문 한 줄이 runner 를 수 초 freeze 시키던 문제 수정",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "`.catch` 있는 플러그인 hook 이 prompt·tool call 에서 hooks worker 를 점유하면 unload 되고 `.catch` 가 건너뛰어지던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "mid-response 모델 fallback 이 폐기한 tool call 을 mod 의 `turn.step` 결과가 나열하던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "메시지·파일 전송 직후 컨테이너가 재시작되면 Cowork cloud session 응답이 끝나지 않던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "hooks module 이 최상위 함수와 같은 이름의 option 을 destructure 하면 `claude plugin validate` 와 플러그인 로딩이 거부하던 문제 수정",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "git 설정에 `core.safecrlf=true` 가 있으면 `/ultrareview` 가 uncommitted 변경 업로드에 실패하던 문제 수정",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "flagged 메시지가 다른 effort 가 저장된 fallback 모델로 재시도될 때 effort level 이 바뀌던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "Windows — CRLF 로 저장된 skill·command 파일의 multi-line `!` 셸 블록이 실패하던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "fullscreen 모드 검색 중 `/permissions` 탭을 클릭하면 kill 전까지 hang 하던 문제 수정",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "conversation compaction 이 `null is not an object` 오류로 실패하던 문제 수정",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "auto mode 에서 보고서를 넘기는 subagent 의 `turn.complete` 에서 플러그인 hook 이 빈 `answer` 를 읽던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "실패한 reload 뒤 refresh 시 mod 가 메시지 없이 unload 되던 문제 수정 — 실패 라인에 이전 로드 버전이 unload 됨을 명시",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "`next(e)` 호출 후 프롬프트를 drop 하는 mod `prompt.submit` hook 이 무음 무시되던 문제 수정 — 이름과 함께 실패로 보고",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "매 그리기마다 높이가 바뀌는 tree 뒤의 mod pane·band 와 inline pane 이 끝없이 redraw 되던 문제 수정",
+          "originalRefs": [
+            42,
+            46
+          ]
+        },
+        {
+          "text": "macOS·Windows 의 이미지 읽기와 read block·`--restricted` 하의 `@`-mention 이 읽기 중 교체된 link 로 승인 범위·working directory 밖 파일을 반환할 수 있던 문제 수정",
+          "originalRefs": [
+            43,
+            47
+          ]
+        },
+        {
+          "text": "user-installed mod 가 조직 플러그인을 unload 시키거나 조직 guard 의 검사를 건너뛰게 할 수 있던 문제 수정 — 해당 mod 쪽이 unload 됨",
+          "originalRefs": [
+            44,
+            53
+          ]
+        },
+        {
+          "text": "`.mcp.json`·플러그인·에이전트가 선언한 일부 MCP 항목에 `disableClaudeAiConnectors`·`allowedMcpServers` URL 규칙이 적용되지 않던 문제 수정",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "agents view 에서 Esc 가 `Press enter again to restart this session` 확인을 승인하던 문제 수정 — Esc 는 세션만 다시 염",
+          "originalRefs": [
+            48,
+            65
+          ]
+        },
+        {
+          "text": "세션이 직접 만든 worktree 에 들어간 뒤 agent view 가 background session 의 `/loop` 실행 횟수·countdown·live status line 을 잃던 문제 수정",
+          "originalRefs": [
+            49
+          ]
+        },
+        {
+          "text": "manual permission mode 의 `claude agents` 세션이 답장·새 에이전트 프롬프트에 붙여넣은 이미지 읽기에 승인을 요청하던 문제 수정",
+          "originalRefs": [
+            50
+          ]
+        },
+        {
+          "text": "`declare`·`typeset`·`export`·`readonly` prefix 변수에서 온 명령·경로 이름을 deny·ask 규칙이 놓치던 문제 수정",
+          "originalRefs": [
+            51
+          ]
+        },
+        {
+          "text": "프롬프트에 붙여넣거나 드래그한 이미지 경로와 @-mention 폴더의 파일 목록에 Read deny 규칙이 적용되지 않던 문제 수정",
+          "originalRefs": [
+            52
+          ]
+        },
+        {
+          "text": "non-Latin 문자의 긴 multi-line 텍스트를 mod 가 그리면 플러그인 hook 이 매 redraw 를 stall 시키던 문제 수정",
+          "originalRefs": [
+            54
+          ]
+        },
+        {
+          "text": "agents view 에서 섹션 마지막 세션 삭제 후 반복 Ctrl+X 가 다음 섹션 전체를 지우고, `n:`·Ctrl+F 검색 후 Esc 가 섹션 헤더로 포커스를 옮겨 Ctrl+X 두 번에 섹션 전체가 삭제되던 문제 수정",
+          "originalRefs": [
+            55,
+            60
+          ]
+        },
+        {
+          "text": "You should know 노트가 `language` 설정과 무관하게 영어로 쓰이던 문제 수정",
+          "originalRefs": [
+            56
+          ]
+        },
+        {
+          "text": "매우 긴 메시지 일부를 전송한 뒤 freeze 하던 문제 수정",
+          "originalRefs": [
+            57
+          ]
+        },
+        {
+          "text": "화살표·대시·box-drawing 등 non-ASCII 가 많은 대형 tool output 에서 transcript 확장(ctrl+o)·리사이즈가 느리던 문제 수정",
+          "originalRefs": [
+            58
+          ]
+        },
+        {
+          "text": "`claude respawn` 과 agent view 의 \"restart this session fresh\" 가 저장 transcript 없는 세션에 이전 메시지를 재전송하던 문제 수정 — 빈 대화로 시작",
+          "originalRefs": [
+            59,
+            74
+          ]
+        },
+        {
+          "text": "`claude agents` 가 중지·실행 중 세션에 전달하지 못한 slash command·객관식 답변을 저장했다가 다음 재시작 때 스스로 실행하던 문제 수정",
+          "originalRefs": [
+            61,
+            71
+          ]
+        },
+        {
+          "text": "`unset`·`unspecified` 이름의 git filter driver 하 파일을 `/ultrareview` 가 필터 없이 업로드하던 문제 수정 — 업로드를 멈추고 driver 이름 변경 요청",
+          "originalRefs": [
+            62
+          ]
+        },
+        {
+          "text": "auto mode 거부가 도구 전체의 classifier 를 건너뛰거나 무시될 permission rule 을 제안하던 문제 수정",
+          "originalRefs": [
+            63
+          ]
+        },
+        {
+          "text": "`claude --teleport`·`/teleport` 에서 stash 를 고르면 추적 파일과 동명인 폴더의 파일을 삭제하던 문제 수정 — stash 거부 후 사유 표시",
+          "originalRefs": [
+            64
+          ]
+        },
+        {
+          "text": "`/clear` 후 agent view 의 `/loop` 실행 횟수가 멈추고 countdown 이 사라지던 문제 수정 — 새 대화에서 카운트 재시작",
+          "originalRefs": [
+            66
+          ]
+        },
+        {
+          "text": "`--channels` 권한 relay 에서 세션 내 반복되는 reply ID 가 다른 프롬프트를 승인하던 문제 수정 — 반복 ID 무시",
+          "originalRefs": [
+            67
+          ]
+        },
+        {
+          "text": "Chrome 연결 실패 후 `/chrome` \"Reconnect extension\" 이 브라우저 도구를 복원하지 못하던 문제 수정, 불가 시 설명 추가 (#98135)",
+          "originalRefs": [
+            68
+          ]
+        },
+        {
+          "text": "gateway(`ANTHROPIC_BASE_URL` + `ANTHROPIC_AUTH_TOKEN`)로 접속하고 Anthropic 계정이 없는 사용자에게 mod 가 꺼져 있던 문제 수정",
+          "originalRefs": [
+            69
+          ]
+        },
+        {
+          "text": "background session 크래시 직후 `claude agents` 에서 보낸 답장이 2초 후 거부되던 문제 수정 — 재시작 동안 최대 12초 재시도",
+          "originalRefs": [
+            70
+          ]
+        },
+        {
+          "text": "heredoc 을 다른 명령에 pipe 하는 sandboxed 명령(`cat <<EOF | python3`)이 매번 승인을 요청하던 문제 수정",
+          "originalRefs": [
+            72
+          ]
+        },
+        {
+          "text": "Homebrew 업그레이드 후 `claude agents` 가 `Couldn't restart the background service` 로 실패하고 background session 이 멈추던 문제 수정 (다음 업그레이드부터 적용)",
+          "originalRefs": [
+            73
+          ]
+        },
+        {
+          "text": "셸이 wildcard 로 확장할 인자를 가진 read-only 명령(`rg`·`git grep`)과 zsh 가 bash 와 다르게 읽는 변수명을 가진 명령이 Bash 권한 검사에서 자동 승인되던 문제 수정 — 이제 승인 요청",
+          "originalRefs": [
+            75,
+            77
+          ]
+        },
+        {
+          "text": "업그레이드 후 `claude plugin test` 가 오래된 저장 설정 때문에 실행을 거부하던 문제 수정",
+          "originalRefs": [
+            76
+          ]
+        },
+        {
+          "text": "`git clone` 옵션의 short form 이 `sandbox.excludedCommands` 의 `git *` 패턴 sandbox 예외를 유지하던 문제 수정 — long form 과 동일 취급",
+          "originalRefs": [
+            78
+          ]
+        },
+        {
+          "text": "세션의 첫 feature-flag 요청이 프로젝트 settings 의 proxy·API endpoint 를 무시하던 문제 수정",
+          "originalRefs": [
+            79
+          ]
+        },
+        {
+          "text": "branch 를 `.git` 밖에 두는 레포(git 2.54+)에서 `/ultrareview` 의 로컬 branch 업로드가 uncommitted 작업을 무음 누락하던 문제 수정 — 설명과 함께 거부",
+          "originalRefs": [
+            80
+          ]
+        },
+        {
+          "text": "컨테이너 재시작으로 pending `/loop` wakeup·scheduled task 를 잃은 cloud session 이 잠든 채 남던 문제 수정 — Claude 에 알려 재스케줄 가능",
+          "originalRefs": [
+            81
+          ]
+        },
+        {
+          "text": "2025년 11월 fix 가 없는 PostgreSQL 에서 Claude apps gateway 의 retention sweep 이 같은 순간 갱신된 복귀 개발자의 identity row 를 삭제하던 문제 수정",
+          "originalRefs": [
+            82
+          ]
+        },
+        {
+          "text": "sandbox auto-allow 하에서 sandboxed Monitor tool 명령이 권한 프롬프트를 건너뛰던 문제 수정 — permission rule 준수",
+          "originalRefs": [
+            83
+          ]
+        },
+        {
+          "text": "identity provider 에 제시하는 인증서의 subject 가 비어 있으면 Claude apps gateway 가 시작에 실패하던 문제 수정",
+          "originalRefs": [
+            84
+          ]
+        },
+        {
+          "text": "`store.postgres_url` 파싱 불가 시 Claude apps gateway 가 \"Invalid URL\" 만 내고 종료하던 문제 수정 — 설정명과 허용 형식 안내",
+          "originalRefs": [
+            85
+          ]
+        },
+        {
+          "text": "Mac 이 sleep 에서 깨어나면 background agent 가 \"Agent stalled\" 로 실패하고 Workflow tool subagent 가 프롬프트부터 재시작하던 문제 수정",
+          "originalRefs": [
+            86
+          ]
+        },
+        {
+          "text": "managed settings 가 느린 파일시스템(특히 WSL 하 Windows 드라이브)의 다수 경로 읽기를 거부할 때 VS Code 확장 등 SDK host 에서 2.1.285 이후 시작이 느리거나 실패하던 문제 수정",
+          "originalRefs": [
+            87
+          ]
+        },
+        {
+          "text": "Bedrock·Vertex·Foundry·custom gateway 에서 computer sleep 으로 끊긴 응답이 stalled stream 으로 취급되던 문제 수정",
+          "originalRefs": [
+            88
+          ]
+        },
+        {
+          "text": "Linux·WSL 에서 `~/**/.env` 같은 sandbox read rule 이 큰 폴더를 덮으면 첫 요청 전과 `/sandbox` Config 탭에서 freeze 하던 문제 수정",
+          "originalRefs": [
+            89
+          ]
+        },
+        {
+          "text": "폴더명이 다른(비영어 이름 등) skill 을 SKILL.md 의 name 으로 찾지 못하던 문제 수정 — skill 목록에 두 이름 모두 표시",
+          "originalRefs": [
+            90
+          ]
+        },
+        {
+          "text": "plan 제시 전 cloud session 컨테이너가 재시작되면 plan mode 로 작성한 plan 이 사라지던 문제 수정",
+          "originalRefs": [
+            91
+          ]
+        },
+        {
+          "text": "새 config directory 에서 시작 수 초 후 첫 명령을 실행하면 Bash tool 이 세션 내내 셸 alias·함수·플러그인 PATH 를 잃던 문제 수정",
+          "originalRefs": [
+            92
+          ]
+        },
+        {
+          "text": "HTTP MCP 서버의 초대형 응답에 메모리가 무한 증가하던 문제 수정",
+          "originalRefs": [
+            93
+          ]
+        },
+        {
+          "text": "cloud session 안에서 시작한 Claude Code 실행(Bash tool 의 `claude -p` 등)에서 artifact 작업이 실패하던 문제 수정",
+          "originalRefs": [
+            94
+          ]
+        },
+        {
+          "text": "remote session 에서 4개 이상 파일을 동시에 보내면 \"not the one approved\" 로 거부되던 문제 수정",
+          "originalRefs": [
+            95
+          ]
+        },
+        {
+          "text": "터미널에서 `--continue`·`--resume <session-id>` 로 재개할 때 plan mode 가 복원되지 않던 문제 수정",
+          "originalRefs": [
+            96
+          ]
+        },
+        {
+          "text": "다른 GitHub marketplace 의 다운로드 폴더명과 같은 이름의 marketplace 가 그 marketplace 의 다운로드를 막던 문제 수정",
+          "originalRefs": [
+            97
+          ]
+        },
+        {
+          "text": "자동 compaction 실행 중 Mac 이 sleep 에 들어가면 \"Prompt is too long\" 으로 포기하던 문제 수정",
+          "originalRefs": [
+            98
+          ]
+        },
+        {
+          "text": "초대형 stack trace·소스 파일이 붙여넣어진 대화에서 rewind 메뉴(Esc Esc / `/rewind`)가 키 입력마다 수백 ms freeze 하던 문제 수정",
+          "originalRefs": [
+            99
+          ]
+        },
+        {
+          "text": "하위 디렉토리의 파일을 @-mention 해도 그 디렉토리의 AGENTS.md 가 첨부되지 않던 문제 수정",
+          "originalRefs": [
+            100
+          ]
+        },
+        {
+          "text": "sessions 폴더가 relative symlink 면 중지된 runner 뒤 재개한 self-hosted runner 세션이 `missing but already registered worktree` 로 실패하던 문제 수정",
+          "originalRefs": [
+            101
+          ]
+        },
+        {
+          "text": "secret scan·secret masking·권한 프롬프트가 긴 token 형태의 unbroken 텍스트를 만나면 수 초 freeze 하던 문제 수정",
+          "originalRefs": [
+            102,
+            114
+          ]
+        },
+        {
+          "text": "read-only 명령의 일부 옵션값에 든 wildcard 에 Bash 권한 검사가 Read deny 규칙·outside-directory read block 을 적용하지 않던 문제 수정",
+          "originalRefs": [
+            103
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS=5m` 이 5ms 로 읽혀 원격 dialog 가 즉시 취소되던 문제 수정 — 단위 suffix 값은 `dialogExpiry` 로 fallback",
+          "originalRefs": [
+            104
+          ]
+        },
+        {
+          "text": "MCP 서버의 tool listing 에 combining character 가 매우 길게 이어지면 stall 하던 문제 수정",
+          "originalRefs": [
+            105
+          ]
+        },
+        {
+          "text": "한 프롬프트에서 겹친 두 붙여넣기와 분리 저장된 accent(macOS 파일명 등)를 담은 대형 붙여넣기가 모델에 타이핑 텍스트로 전송되던 문제 수정",
+          "originalRefs": [
+            106,
+            118
+          ]
+        },
+        {
+          "text": "선택한 브라우저 연결이 끊기면 Claude in Chrome 의 browser picker 가 Claude 용 메시지를 보이고, VS Code dialog 목록이 전환 후 stale 하던 문제 수정",
+          "originalRefs": [
+            107
+          ]
+        },
+        {
+          "text": "메인 세션이 다른 worktree 에 진입·이탈하면 background subagent 가 자기 worktree 의 write·Bash 접근을 잃던 문제 수정",
+          "originalRefs": [
+            108
+          ]
+        },
+        {
+          "text": "managed settings 가 gateway 로그인을 강제하지 않을 때 background 명령·agents view·daemon worker 가 Claude apps gateway 뒤에서 Anthropic 에 telemetry·feature-flag 요청을 보내던 문제 수정",
+          "originalRefs": [
+            109
+          ]
+        },
+        {
+          "text": "`--restricted`(`CLAUDE_CODE_RESTRICTED=1`) 세션이 cross-session messaging socket 을 열던 문제 수정",
+          "originalRefs": [
+            110
+          ]
+        },
+        {
+          "text": "idle 상태로 background 에 보낸 세션이 재시작·idle cleanup 후 \"no saved transcript\" 로 열리던 문제 수정 — 대화 재개",
+          "originalRefs": [
+            111
+          ]
+        },
+        {
+          "text": "bypass-permissions disclaimer 를 수락하지 않았는데 background worker 가 respawn 시 `--allow-dangerously-skip-permissions` 를 존중하던 문제 수정",
+          "originalRefs": [
+            112
+          ]
+        },
+        {
+          "text": "공백이 있는 폴더(Application Support 등)의 unquoted script 경로를 플러그인 async Stop hook 이 쓰면 Claude 가 무한 응답 루프에 빠지던 문제 수정",
+          "originalRefs": [
+            113
+          ]
+        },
+        {
+          "text": "PreToolUse hook 이 input 을 재작성한 tool call 에 일부 permission rule·safety check 가 적용되지 않던 문제 수정",
+          "originalRefs": [
+            115
+          ]
+        },
+        {
+          "text": "`claude auth login` 후나 config directory 에 credentials 파일이 이미 있어도 첫 실행이 로그인 방법을 다시 묻던 문제 수정",
+          "originalRefs": [
+            116
+          ]
+        },
+        {
+          "text": "줄바꿈이 포함된 파일명이 file tool 오류·권한 프롬프트에 잘못 표시되던 문제 수정",
+          "originalRefs": [
+            117
+          ]
+        },
+        {
+          "text": "keychain 이 새 로그인을 거부하고 제거 불가한 구 로그인을 유지해도 macOS `/login` 이 성공을 보고하던 문제 수정",
+          "originalRefs": [
+            119
+          ]
+        },
+        {
+          "text": "`--include-partial-messages` SDK host 에서 스트림 중단·interrupt·non-streaming fallback 후 응답이 턴 종료 뒤에도 열려 있던 문제 수정",
+          "originalRefs": [
+            120
+          ]
+        },
+        {
+          "text": "`.claude/settings.json`·`.claude/settings.local.json` 이 없으면 Linux sandboxed Bash 명령이 `ConfigChange` hook 실행과 settings reload 를 명령 도중에 하던 문제 수정",
+          "originalRefs": [
+            121
+          ]
+        },
+        {
+          "text": "git·gh 등 실행할 프로그램이 없을 때 오류가 누락 프로그램명 대신 \"Premature close\" 로 나오던 문제 수정 (macOS, Linux)",
+          "originalRefs": [
+            122
+          ]
+        },
+        {
+          "text": "Linux sandboxed Bash 명령 뒤나 `.claude/scheduled_tasks.json` 삭제 뒤 `/loop` 등 세션 한정 반복 task 가 한 번 더 실행되던 문제 수정",
+          "originalRefs": [
+            123
+          ]
+        },
+        {
+          "text": "symlink 된 settings 파일이 가리키는 실제 파일 편집이 settings-file 권한 질문 없이 실행되던 문제 수정",
+          "originalRefs": [
+            124
+          ]
+        },
+        {
+          "text": "[VSCode] 입력한 적 없는 빈 chat 이 저장 대화로 교체된 뒤에도 background Claude 프로세스를 유지하던 문제 수정",
+          "originalRefs": [
+            165
+          ]
+        },
+        {
+          "text": "[VSCode] 저장 중 Claude Code 가 예기치 않게 멈추면 settings dialog 가 timeout 탓을 하던 문제 수정",
+          "originalRefs": [
+            166
+          ]
+        },
+        {
+          "text": "[VSCode] uncommitted 변경을 확인할 수 없을 때도 branch switch dialog 가 전환을 제안하던 문제 수정",
+          "originalRefs": [
+            167
+          ]
+        },
+        {
+          "text": "[VSCode] 열린 dialog 뒤로 도착한 권한 프롬프트가 키보드 포커스를 가져가 dialog 에서 누른 키가 프롬프트에 응답하던 문제 수정",
+          "originalRefs": [
+            168
+          ]
+        },
+        {
+          "text": "[VSCode] Claude Code 프로그램을 찾거나 시작하지 못할 때 sign-in·새 세션이 사유 없이 실패하던 문제 수정",
+          "originalRefs": [
+            169
+          ]
+        },
+        {
+          "text": "[VSCode] agent map 이 중첩 sub-agent 를 \"Tool calls (0)\" 으로 보이고 그 하위 에이전트를 main agent 아래 두던 문제 수정",
+          "originalRefs": [
+            170
+          ]
+        },
+        {
+          "text": "[Cloud sessions] cloud environment 의 환경변수로 prompt suggestion 을 꺼도 새 cloud session 에 적용되지 않던 문제 수정",
+          "originalRefs": [
+            174
+          ]
+        },
+        {
+          "text": "[Cloud sessions] 응답이 끝난 뒤에도 working indicator 가 수 초 더 돌던 문제 수정",
+          "originalRefs": [
+            175
+          ]
+        },
+        {
+          "text": "[Cloud sessions] 실행된 적 없는 routine 페이지의 History 가 Run now 후에도 \"No runs yet\" 로 남던 문제 수정",
+          "originalRefs": [
+            176
+          ]
+        },
+        {
+          "text": "[Cloud sessions] unarchive 한 cloud session 이 메시지를 다시 보내기 전까지 작업 중으로 보이던 문제 수정",
+          "originalRefs": [
+            177
+          ]
+        },
+        {
+          "text": "[Remote Control] 방금 Remote Control 을 시작한 컴퓨터가 새 세션 메뉴에 최대 1분 뒤에 나타나던 문제 수정 — 수 초 내 표시",
+          "originalRefs": [
+            178
+          ]
+        },
+        {
+          "text": "[Claude Tag] Claude Tag Admin 권한 멤버가 Activity 페이지 Memory 탭에서 `Couldn't load memory files` 를 보던 문제 수정 — workspace·채널 memory 읽기 가능",
+          "originalRefs": [
+            181
+          ]
+        },
+        {
+          "text": "[Claude Tag] workspace guest 가 Slack 설정 카드의 Confirm 을 누르면 모두의 버튼이 사라지던 문제 수정 — guest 만 거부를 보고 멤버는 confirm·cancel 가능",
+          "originalRefs": [
+            182
+          ]
+        },
+        {
+          "text": "[Claude Tag] Slack 채널의 scheduled routine 이 채널 기본 모델과 다른 모델로 실행되던 문제 수정 — 새 세션을 여는 run 마다 현재 기본 모델 사용",
+          "originalRefs": [
+            183
+          ]
+        },
+        {
+          "text": "[Claude Tag] 채널명 규칙으로 연결된 access bundle 의 GitHub 레포가 해당 채널에서 거부되던 문제 수정 — add·list·clone 가능",
+          "originalRefs": [
+            184
+          ]
+        },
+        {
+          "text": "[Code Review] blocking review comment 가 severity 와 모순되는 \"nit\" 라벨로 시작하던 문제 수정",
+          "originalRefs": [
+            188
+          ]
+        },
+        {
+          "text": "[Code Review] Code Review 를 끈 조직의 fork·Manual-mode PR 에 \"@claude review\" 안내 tip 이 게시되던 문제 수정",
+          "originalRefs": [
+            189
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`pyright` 가 read-only 명령에서 빠져 Bash 권한 프롬프트가 뜨고, wildcard 인자의 `rg`·`git grep` 과 더 많은 `ps` 형태도 승인 요청 — 자동화에서 무프롬프트를 기대했다면 allow rule 추가 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 16
+            },
+            {
+              "bucket": "changes",
+              "index": 21
+            },
+            {
+              "bucket": "fixes",
+              "index": 57
+            }
+          ]
+        },
+        {
+          "text": "대화형 WebSearch 예산이 200회 고정에서 시간당 100회 refill 로 바뀜 — `CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR` 로 조정하거나 0 으로 끌 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 30
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_DISABLE_ATTACHMENTS` 는 레포 `.claude/settings.json` 에서 더 이상 설정 불가 — 셸·user·managed 로 옮겨야 함.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 31
+            }
+          ]
+        },
+        {
+          "text": "프로젝트 settings 파일로 Claude in Chrome 을 켜던 설정은 무효 — `--chrome`, `/chrome` 또는 user settings 로 이전 필요.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 15
+            }
+          ]
+        },
+        {
+          "text": "in-process teammate 의 Agent 결과에서 `agent_id` 의미가 바뀜 — `name@team` 주소를 파싱하던 자동화는 `teammate_id` 로 전환.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 26
+            }
+          ]
+        },
+        {
+          "text": "cloud session 내장 `gh api` 가 `GH_HOST`·`GH_REPO` 의 github.com 외 호스트를 거부 — GitHub Enterprise 는 `--hostname` 이나 전체 URL 로 지정.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 33
+            }
+          ]
+        },
+        {
+          "text": "Claude apps gateway 최소 PostgreSQL 이 11 로 내려가 구형 DB 에서도 운영 가능, 단 2025년 11월 fix 없는 버전의 retention sweep 버그는 이 버전에서 수정됨.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 29
+            },
+            {
+              "bucket": "fixes",
+              "index": 63
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS` 에 `5m` 같은 단위 suffix 를 주면 이제 `dialogExpiry` 로 fallback — 밀리초 정수로 명시 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 85
+            }
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` 이 startup warm-up 까지 막으므로 폐쇄망 환경의 시작 지연·오류가 줄어듦.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 14
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-10-07T02:01:24.916Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.289",
+    "tagName": "v2.1.289",
+    "publishedAt": "2026-10-03T23:07:17Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.289",
+    "originalBody": "## What's changed\n\n- Fixed a deny or ask rule on a nested part of a compound shell command not holding over a user-installed mod's approval on managed machines\n- Fixed the terminal freezing on short code blocks with many unclosed `<script>` tags or deeply nested `${` substitutions\n- Fixed `Read` deny rules not applying to files @-mentioned, changed, or selected in the IDE through a symlink\n- [VSCode] Reverted a 2.1.288 change to `claude auth status` that may have made sign-outs more frequent\n- Improved how quickly large files open in a plugin code pane by laying the highlighted view out once at its final width\n- Fixed `plugin list`, `plugin eval` and `plugin update` showing a stale copy of a plugin installed from a local folder marketplace, and hot reload for a symlinked `--plugin-dir`\n- Fixed installed mods not loading in the first session after an upgrade\n- Fixed a plugin's rows above the prompt showing a stale row while the Background tasks dialog was open in fullscreen\n- Fixed plugin panes drawing nothing when a link used a localhost address, an `@` in its path, an uppercase host or a `file:` path\n- Fixed a user-installed plugin being able to rewrite the descriptions of an organization-managed MCP server's sign-in tools\n- Fixed a freeze or forced quit at launch when a plugin drew a Box with a border style the terminal does not know\n- Fixed supervised and background sessions ending when a plugin's on-screen handler threw asynchronously\n- Fixed sessions ending with an interface error when a plugin region with no height kept growing\n- Fixed Bash deny and ask rules missing a command behind an environment variable prefix with an expanded value (e.g. `TZ=\"$HOME\" rm -rf build`) when the sandbox auto-allows commands\n- Fixed a Bash deny or ask rule being skipped under sandbox auto-allow when a bare variable assignment came before the command\n- Fixed `claude plugin validate` skipping the plugin when the folder also holds a marketplace manifest\n- Added `agent.spawn` for teammates, one agent id across plugin hook events, and idle and waiting states in `$.agent.list()`\n- Fixed sessions ending with \"unrecoverable interface error\" when a value a mod's `ui.render` hook wrote made a row throw while drawn; the engine now draws its own row instead\n- Fixed text with a tab, a stray escape and a C1 control, or a short text with a tab and CRLF line endings, drawing over the rows below it\n- Fixed right-aligned content in a mod's pane or band drawing under the close mark or `[-]`, which now also keep one column in from the terminal's edge\n- Fixed a mod's `Client` that fails while drawn taking down everything the mod drew around it; it now fails alone and raises `ui.fault`\n- Fixed `claude plugin validate` failing an Anthropic marketplace's own plugin and listing a clean `plugin.json` in `--json`\n- Fixed a mod's band that fails to draw briefly telling the cards under it to step aside\n- Fixed a failed plugin component showing `Error` or nothing as its reason when the failure carried no message\n- Improved the line a mod's author sees when its band or pane fails to draw: it names the mod and says nothing was drawn\n- Fixed published artifact pages freezing or crashing the reader's browser tab on short code blocks with many unclosed `<script>` tags\n- Fixed a mod's Client region staying failed for the whole session after the terminal threw while drawing it\n",
+    "summary": {
+      "headline": "mod 렌더링 안정화·sandbox deny 규칙 우회 수정",
+      "newFeatures": [
+        {
+          "text": "`agent.spawn` hook 이 teammate 에도 적용되고, 플러그인 hook 이벤트 전반에 단일 agent id 사용, `$.agent.list()` 에 idle·waiting 상태 추가",
+          "originalRefs": [
+            16
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "플러그인 code pane 에서 하이라이트 뷰를 최종 폭에 맞춰 한 번만 레이아웃해 큰 파일 열기 속도 개선",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "mod 의 band·pane 그리기 실패 시 작성자에게 mod 이름과 아무것도 그려지지 않았음을 알리는 라인 표시",
+          "originalRefs": [
+            24
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "managed 머신에서 복합 셸 명령의 중첩 부분에 걸린 deny·ask 규칙이 user-installed mod 의 승인에 밀리던 문제 수정",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "닫히지 않은 `<script>` 태그 다수나 깊게 중첩된 `${` 치환이 있는 짧은 코드 블록에서 터미널이 freeze 하던 문제 수정",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "IDE 에서 symlink 를 통해 @-mention·변경·선택된 파일에 `Read` deny 규칙이 적용되지 않던 문제 수정",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "[VSCode] 로그아웃을 잦게 만들었을 수 있는 2.1.288 의 `claude auth status` 변경을 되돌림",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "로컬 폴더 marketplace 에서 설치한 플러그인이 `plugin list`·`plugin eval`·`plugin update` 에 stale 복사본으로 보이던 문제와 symlink `--plugin-dir` 의 hot reload 수정",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "업그레이드 후 첫 세션에서 설치된 mod 가 로드되지 않던 문제 수정",
+          "originalRefs": [
+            6
+          ]
+        },
+        {
+          "text": "fullscreen 에서 Background tasks 대화상자가 열린 동안 프롬프트 위 플러그인 행이 stale 하게 남던 문제 수정",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "링크가 localhost 주소·경로 내 `@`·대문자 호스트·`file:` 경로일 때 플러그인 pane 이 아무것도 그리지 않던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "user-installed 플러그인이 조직 관리 MCP 서버의 sign-in 도구 설명을 덮어쓸 수 있던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "터미널이 모르는 border style 의 Box 를 플러그인이 그리면 실행 시 freeze·강제 종료되던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "플러그인 on-screen handler 의 비동기 throw 로 supervised·background 세션이 종료되던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "높이 0 인 플러그인 region 이 계속 커지면 interface error 로 세션이 끝나던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "sandbox auto-allow 에서 확장값 환경변수 prefix(`TZ=\"$HOME\" rm -rf build`) 뒤의 명령을 Bash deny·ask 규칙이 놓치던 문제 수정",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "sandbox auto-allow 에서 bare 변수 할당이 명령 앞에 오면 Bash deny·ask 규칙이 건너뛰어지던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "폴더에 marketplace manifest 가 함께 있으면 `claude plugin validate` 가 플러그인을 건너뛰던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "mod 의 `ui.render` hook 이 쓴 값으로 행이 그리는 중 throw 하면 \"unrecoverable interface error\" 로 세션이 끝나던 문제 수정 — 엔진이 자체 행을 대신 그림",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "tab + stray escape + C1 제어문자 텍스트, 또는 tab 과 CRLF 가 섞인 짧은 텍스트가 아래 행을 덮어 그리던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "mod pane·band 의 우측 정렬 콘텐츠가 close mark·`[-]` 아래로 그려지던 문제 수정 — 터미널 가장자리에서 1열 안쪽 유지",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "그려지는 중 실패한 mod `Client` 가 주변에 그린 것까지 지우던 문제 수정 — 단독 실패 후 `ui.fault` 발생",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "`claude plugin validate` 가 Anthropic marketplace 자체 플러그인을 실패 처리하고 `--json` 에 정상 `plugin.json` 을 나열하던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "그리기에 실패한 mod band 가 아래 카드에 잠시 비켜달라고 요청하던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "실패한 플러그인 컴포넌트가 메시지 없는 실패 시 사유로 `Error` 나 공백만 보이던 문제 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "닫히지 않은 `<script>` 태그 다수의 짧은 코드 블록에서 published artifact 페이지가 독자 브라우저 탭을 freeze·crash 시키던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "터미널이 그리는 중 throw 하면 mod 의 Client region 이 세션 내내 failed 로 남던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "[VSCode] 2.1.288 에서 로그아웃이 잦아졌다면 `claude auth status` 변경이 되돌려진 이 버전으로 업데이트 권장.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "text": "sandbox auto-allow 환경에서 env prefix·bare 할당 뒤 명령에 deny·ask 규칙이 적용되기 시작 — 이전엔 무음 통과하던 `rm -rf` 류가 프롬프트를 띄울 수 있음.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 12
+            },
+            {
+              "bucket": "fixes",
+              "index": 13
+            }
+          ]
+        },
+        {
+          "text": "IDE 에서 symlink 경유 파일에도 `Read` deny 규칙이 적용되므로 symlink 로 민감 경로를 우회하던 워크플로는 차단됨.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-10-07T02:01:24.916Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
+    "version": "v2.1.288",
+    "tagName": "v2.1.288",
+    "publishedAt": "2026-10-02T20:19:57Z",
+    "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.288",
+    "originalBody": "## What's changed\n\n- Added `$.ui.selection()` for mods: returns the text you last selected in fullscreen mode and, when the selection lies within one transcript row, that row\n- Added a built-in `gh api` to cloud sessions whose image has no GitHub CLI, and fixed the built-in sending control characters from file names, jq filters or GitHub errors to the terminal\n- Added recovery for a prompt cleared with Ctrl+C: pressing Up on the empty prompt brings the draft back, including pasted text and images\n- Added a re-authenticate prompt when an MCP server asks for more OAuth scope during a tool call\n- Added `--max-findings <n>|all` to /code-review to report more or fewer findings than the usual limit; the choice is reused until you pass `--max-findings default`\n- Added Ctrl+F to find a session by name and Alt+↑/↓ to jump between groups in the agents view; both, and rename, can be rebound in keybindings.json\n- Added a screen reader mode announcement of the new permission mode when you approve a plan, including with Shift+Tab\n- Fixed mid-response API timeouts failing the turn: non-interactive sessions and subagents now continue from the partial response, and thinking-only responses are retried\n- Fixed long conversations failing with \"Prompt is too long\" instead of auto-compacting when the last reply reported zero token usage\n- Fixed `--resume` sometimes dropping files and other context that a compaction had just restored\n- Fixed a resumed session sometimes not saving the last response of a turn, so that the next `--resume` showed the prompt unanswered\n- Fixed resume occasionally loading a transcript cut short when the same session rewrote the file during the load\n- Fixed resuming a conversation started on 2.1.286 or earlier dropping the model's earlier thinking\n- Fixed session titles, memory recall and prompt hooks failing on Mantle or behind gateways that reject structured outputs; added `CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS` to turn structured outputs off\n- Fixed auto mode denials pointing Claude at a Bash permission rule when the blocked tool was not Bash\n- Fixed auto mode on Bedrock and Mantle switching to the local classifier for the rest of the session after a request to an older model, such as a WebFetch summary or a `sonnet` subagent\n- Fixed cloud sessions that restarted on a newly picked model replying with that model after the server refused it\n- Fixed Cowork cloud sessions staying marked as waiting for input after a WebFetch permission prompt for an unapproved URL went unanswered for five minutes\n- Fixed prompt suggestions not appearing on a phone that joins a Cowork cloud session started on another device\n- Fixed a mod's button sometimes running a different button's action when pressed on a view drawn before Claude Code restarted\n- Fixed a plugin's pane showing nothing when one `Code` element held a diff that does not parse; it now draws as plain code\n- Fixed plugin LSP servers receiving literal `${user_config.*}` and `${CLAUDE_PLUGIN_ROOT}` placeholders in `initializationOptions` and `settings` instead of substituted values or manifest defaults\n- Fixed a plugin's `tool.call` hook making Bash fail and file searches read the wrong folder in subagents that run in a worktree\n- Fixed `git-subdir` plugin installs failing, or caching an incomplete plugin, on older git (before 2.39, e.g. Ubuntu 22.04's 2.34)\n- Fixed plugins loaded with `--plugin-dir` not showing \"Configure options\" in `/plugin`\n- Fixed background sessions ending when a plugin was reloaded or disabled while one of its timers or reads was still running\n- Fixed sandboxed heredocs with an unquoted delimiter (`python3 <<EOF`) asking for approval on every run under sandbox auto-allow when the body holds only plain text and simple `$VAR` references\n- Fixed Bash tool permission check to prompt before a `BASHPID` assignment whose value the shell would evaluate as arithmetic, instead of allowing it silently\n- Fixed fullscreen sessions exiting with \"unrecoverable interface error\" when opening the background tasks dialog while a plugin or mod showed rows above the prompt\n- Fixed Claude reporting a message to another session as delivered when that session held it: the notice now says it wasn't delivered and names the session, and in SDK sessions Claude can now learn of it mid-turn\n- Fixed OpenTelemetry `claude_code.tool.blocked_on_user` spans reporting `unknown` source or decision in `-p` and SDK sessions and for PreToolUse hook approvals\n- Fixed permission asks that ended unanswered, in `-p` or on an interrupted turn, emitting no `tool_decision` event\n- Fixed Edit and Retry in Cowork cloud sessions refusing a message sent before `/compact` even though its history was still saved\n- Fixed unattended sessions (`CLAUDE_CODE_RETRY_WATCHDOG`) retrying for hours after a very long response stream failed; Claude Code now streams again, and gives up after three timeouts\n- Fixed `/login` reporting \"Login successful\" when credentials could not be saved to secure storage; it now shows the failure, and offers a retry when the new login didn't take effect (anthropics/claude-code#73861)\n- Fixed a Stop during Bedrock credential lookup sometimes moving the session to a fallback model instead of ending the request\n- Fixed a second `gcpAuthRefresh`/`awsAuthRefresh` browser sign-in opening when a laptop wakes from sleep while another Claude Code process is signing in\n- Fixed agent teams: a plugin-defined agent spawned by name now runs with its own prompt, tools, disallowedTools and effort instead of the defaults\n- Fixed headless (`-p` / SDK) sessions occasionally ignoring SIGTERM when a supervisor such as `timeout` or systemd sends SIGCONT alongside it\n- Fixed restarted cloud sessions restoring a model that the organization's enforced model list refuses\n- Fixed MCP tool calls sometimes running twice when a remote server's result was over 16 MB or could not be parsed\n- Fixed subagents in Claude Desktop's Code tab getting none of the tools of a user-configured MCP server named `memory`\n- Fixed Claude in Chrome asking before every screenshot and page read on a site you allowed when auto mode is unavailable (such as with `disableAutoMode` or an older model); typing, navigation and JavaScript still ask\n- Fixed `claude plugin install` failing for GitHub-source plugins on macOS and Linux machines with no GitHub SSH key: the clone now falls back to HTTPS and prints a notice\n- Fixed `sandbox.credentials.files` entries on git config files not taking effect while `permissions.blockReadsOutsideWorkingDirectories` is on\n- Fixed Claude leaving out your organization's design systems when starting slides or a design with the Artifact tool on Team and Enterprise plans or machines with managed settings\n- Fixed the keyboard not working on Windows after Claude Code restarts itself (first sign-in to a Claude apps gateway, provider setup, `/tui`)\n- Fixed a stall when launching an agent whose `tools:` lists very many `Agent(...)` entries\n- Fixed sessions on Claude 3 Opus and Claude 3 Sonnet failing on every turn after a whole PDF entered the conversation\n- Fixed the npm auto-updater reporting success when the platform-native binary failed to download and only the placeholder `claude` stub was installed\n- Fixed Remote Control cleanup archiving a session that is still connected or was just re-attached by another Claude Code process\n- Fixed `owner/repo` plugin marketplaces showing only the second attempt's error when both the SSH and HTTPS fetch fail; both errors are now shown, with the transport tried first on top\n- Fixed path-scoped `.claude/rules` and nested CLAUDE.md files not loading when Write or Edit creates or changes a file in their scope (previously only Read loaded them)\n- Fixed a dangerous `rm` (such as one on `/` or the home directory) inside a `bash -c` or `sh -c` script running without a prompt in bypassPermissions mode or under a shell allow rule (anthropics/claude-code#96300)\n- Fixed LSP tool calls hanging indefinitely when a language server uses dynamic capability registration or stops responding; requests now time out after 60s (per-server `requestTimeout`)\n- Fixed `idle_prompt` notification hooks firing while background agents are still running (anthropics/claude-code#93672)\n- Fixed PreToolUse and PermissionRequest hooks being skipped when matching them failed or the tool's input could not be serialized to JSON; the call is now blocked\n- Fixed the first request in a fresh environment or after a model switch using the built-in output limit and auto-compact window, not the server's; that request may now wait up to 1.5 seconds\n- Fixed the \"What should Claude do instead?\" hint showing on the Interrupted row after sending queued messages with ctrl+enter\n- Fixed `/login` in a `--bare` session running a sign-in the session never reads, which could replace your saved login; it now says which credentials work\n- Fixed the InstructionsLoaded hook omitting agent_id and agent_type when a subagent's file access loads a rule or nested CLAUDE.md; rules and nested CLAUDE.md files loaded on file access now also report effort\n- Fixed the Agent tool in `claude mcp serve` always reporting no available agents and rejecting every subagent_type\n- Fixed the terminal cursor not following the typed text in the fullscreen transcript viewer's search and in `/theme`'s custom color search\n- Fixed `/permissions` in screen reader mode: typing a rule's number now picks it instead of opening the search box\n- Improved auto mode: when a conversation grows too long for the client-side safety classifier to review, it is now compacted instead of prompting for, or failing, every tool call\n- Improved screen reader mode: short announcements, such as a deleted word, now stay on screen until your next key press or until something above them on screen changes\n- Improved screen reader mode: answered questions in question dialogs now say \"answered\" beside their box\n- Improved the `/usage-credits` message shown to Team and Enterprise members whose organization has turned off usage credit requests\n- Improved cloud sessions: a new conversation's first turn no longer waits for a stdio MCP server whose config sets `alwaysLoad: false`\n- Improved \"You should know\" notes to say \"we\", \"the main agent\" or \"you\" depending on who was responsible for a decision\n- Improved the error for an artifact database write refused at the database's size limit: it now states the limit and what frees space\n- Improved Bash permission prompts to give a shorter reason when part of a command can't be checked before it runs\n- Self-hosted runner: Improved the built-in `gh api`: a refused gh command now prints its `gh api` equivalent, `--paginate` follows every page of a repository's lists, and a nested `claude` no longer removes it\n- Improved Remote Control's recovery from an expired server credential: sessions stay connected during renewal and are kept if it gives up after a server outage\n- Changed the background command time limit to apply only in unattended sessions (`-p`, Agent SDK, CI, cloud); terminal, desktop app and VS Code sessions have no limit\n- Changed the client-side auto mode classifier to ignore an `ANTHROPIC_DEFAULT_SONNET_MODEL` pin that names Claude Sonnet 5.5 or Opus 5.5 and use Claude Sonnet 5 instead\n- Changed `claude project purge` to `claude purge`; the old name still works and prints a notice\n- Changed the agents view `n:` filter (and Ctrl+F search) so Enter opens the session whose name matches best instead of the top row\n- Changed `/autocompact` to save the auto-compact window per model, so each model keeps its own setting when you switch\n- Changed MCP URL prompts from servers that can't report when you're done to wait for \"I'm done, continue\" before the tool call continues, so you can finish in the browser first\n- [VSCode] Fixed a claude.ai connector staying on \"Needs authentication\" after you authorize it: the MCP servers dialog now offers Check connection\n- [VSCode] Fixed the opt-in New Conversation shortcut (Cmd/Ctrl+N) starting a conversation in every visible Claude view instead of only the one you are in\n- [VSCode] Fixed the chat view resuming the next saved session after you archive the one it shows; it now starts a new conversation instead\n- [Cloud sessions] Fixed the Cloud sessions switch in Claude Code admin settings staying locked off while an unrelated security setting was loading or had failed to load\n- [Cloud sessions] Fixed pressing Stop while a self-hosted runner was still starting not cancelling the queued message, which could then run once the runner was up\n- [Claude Tag] Fixed Claude Tag admin settings offering a \"Remove this scope\" option, which always failed, on channels whose settings were created automatically\n- [Claude Tag] Improved Claude to also follow a related Slack thread in another channel that it only read, so updates there reach the conversation that depends on them\n- [Claude Tag] Improved save errors on a channel's Configure page: too-long channel instructions now say to shorten them, and a save refused for lost access no longer says to try again\n- Fixed `claude plugin test` reporting mods as turned off remotely when it had only read an out-of-date saved setting\n",
+    "summary": {
+      "headline": "`claude purge` 로 개명·`--max-findings` 추가",
+      "newFeatures": [
+        {
+          "text": "mod 용 `$.ui.selection()` 추가 — fullscreen 모드에서 마지막 선택 텍스트와, 한 transcript 행 안이면 그 행을 반환",
+          "originalRefs": [
+            0
+          ]
+        },
+        {
+          "text": "GitHub CLI 없는 이미지의 cloud session 에 내장 `gh api` 추가, 파일명·jq 필터·GitHub 오류의 제어문자가 터미널로 흘러가던 문제도 차단",
+          "originalRefs": [
+            1
+          ]
+        },
+        {
+          "text": "Ctrl+C 로 지운 프롬프트 복구 — 빈 프롬프트에서 Up 을 누르면 붙여넣은 텍스트·이미지까지 초안 복원",
+          "originalRefs": [
+            2
+          ]
+        },
+        {
+          "text": "MCP 서버가 tool call 중 추가 OAuth scope 를 요구하면 재인증 프롬프트 표시",
+          "originalRefs": [
+            3
+          ]
+        },
+        {
+          "text": "`/code-review` 에 `--max-findings <n>|all` 추가 — 선택값은 `--max-findings default` 전까지 재사용",
+          "originalRefs": [
+            4
+          ]
+        },
+        {
+          "text": "agents view 에 Ctrl+F 세션 이름 검색과 Alt+↑/↓ 그룹 이동 추가 — rename 포함 `keybindings.json` 에서 재바인딩 가능",
+          "originalRefs": [
+            5
+          ]
+        },
+        {
+          "text": "screen reader 모드에서 plan 승인(Shift+Tab 포함) 시 새 permission mode 를 음성 안내",
+          "originalRefs": [
+            6
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "text": "auto mode 에서 대화가 client-side safety classifier 한도를 넘으면 매 tool call 프롬프트·실패 대신 compaction 수행",
+          "originalRefs": [
+            64
+          ]
+        },
+        {
+          "text": "screen reader 모드의 짧은 알림(삭제된 단어 등)이 다음 키 입력 또는 상단 화면 변경 전까지 유지",
+          "originalRefs": [
+            65
+          ]
+        },
+        {
+          "text": "screen reader 모드 question dialog 의 답변 완료 항목 옆에 \"answered\" 표시",
+          "originalRefs": [
+            66
+          ]
+        },
+        {
+          "text": "조직이 usage credit 요청을 꺼둔 Team·Enterprise 멤버에게 보이는 `/usage-credits` 메시지 개선",
+          "originalRefs": [
+            67
+          ]
+        },
+        {
+          "text": "cloud session 새 대화의 첫 턴이 `alwaysLoad: false` stdio MCP 서버를 기다리지 않음",
+          "originalRefs": [
+            68
+          ]
+        },
+        {
+          "text": "\"You should know\" 노트가 결정 주체에 따라 \"we\"·\"the main agent\"·\"you\" 로 구분해 서술",
+          "originalRefs": [
+            69
+          ]
+        },
+        {
+          "text": "artifact database 크기 한도로 쓰기가 거부되면 오류에 한도와 공간 확보 방법 명시",
+          "originalRefs": [
+            70
+          ]
+        },
+        {
+          "text": "Bash 권한 프롬프트가 실행 전 검사 불가한 부분이 있을 때 더 짧은 사유 표시",
+          "originalRefs": [
+            71
+          ]
+        },
+        {
+          "text": "Self-hosted runner 내장 `gh api` 개선 — 거부된 gh 명령의 `gh api` 등가 출력, `--paginate` 로 레포 목록 전체 페이지 순회, 중첩 `claude` 가 이를 제거하지 않음",
+          "originalRefs": [
+            72
+          ]
+        },
+        {
+          "text": "Remote Control 의 만료된 서버 자격증명 갱신 중 세션 연결 유지, 서버 장애 후 갱신 포기해도 세션 보존",
+          "originalRefs": [
+            73
+          ]
+        },
+        {
+          "text": "background command 시간 제한을 unattended 세션(`-p`, Agent SDK, CI, cloud)에만 적용 — 터미널·데스크톱 앱·VS Code 세션은 무제한",
+          "originalRefs": [
+            74
+          ]
+        },
+        {
+          "text": "클라이언트 측 auto mode classifier 가 Sonnet 5.5·Opus 5.5 를 가리키는 `ANTHROPIC_DEFAULT_SONNET_MODEL` 핀을 무시하고 Claude Sonnet 5 사용",
+          "originalRefs": [
+            75
+          ]
+        },
+        {
+          "text": "`claude project purge` 를 `claude purge` 로 개명 — 구 이름은 안내 출력 후 계속 동작",
+          "originalRefs": [
+            76
+          ]
+        },
+        {
+          "text": "agents view `n:` 필터와 Ctrl+F 검색에서 Enter 가 최상단 행 대신 이름이 가장 잘 맞는 세션을 염",
+          "originalRefs": [
+            77
+          ]
+        },
+        {
+          "text": "`/autocompact` 가 auto-compact 윈도우를 모델별로 저장 — 모델 전환 시 각자 설정 유지",
+          "originalRefs": [
+            78
+          ]
+        },
+        {
+          "text": "완료 시점을 보고하지 못하는 서버의 MCP URL 프롬프트가 \"I'm done, continue\" 입력까지 대기 — 브라우저 작업 먼저 마칠 수 있음",
+          "originalRefs": [
+            79
+          ]
+        },
+        {
+          "text": "[Claude Tag] 읽기만 한 다른 채널의 연관 Slack 스레드도 follow 해 그쪽 업데이트가 의존 대화에 반영",
+          "originalRefs": [
+            86
+          ]
+        },
+        {
+          "text": "[Claude Tag] 채널 Configure 페이지 저장 오류 개선 — 긴 channel instructions 는 단축 안내, 접근 상실로 거부된 저장은 재시도 안내 생략",
+          "originalRefs": [
+            87
+          ]
+        }
+      ],
+      "fixes": [
+        {
+          "text": "응답 중간 API timeout 이 턴을 실패시키던 문제 수정 — non-interactive 세션·subagent 는 partial response 에서 이어가고 thinking-only 응답은 재시도",
+          "originalRefs": [
+            7
+          ]
+        },
+        {
+          "text": "마지막 응답이 token 사용량 0 을 보고하면 auto-compact 대신 \"Prompt is too long\" 으로 실패하던 문제 수정",
+          "originalRefs": [
+            8
+          ]
+        },
+        {
+          "text": "`--resume` 이 compaction 직후 복원된 파일·컨텍스트를 간혹 누락하던 문제 수정",
+          "originalRefs": [
+            9
+          ]
+        },
+        {
+          "text": "재개된 세션이 턴의 마지막 응답을 저장하지 않아 다음 `--resume` 에서 프롬프트가 미응답으로 보이던 문제 수정",
+          "originalRefs": [
+            10
+          ]
+        },
+        {
+          "text": "같은 세션이 로드 중 파일을 재작성하면 resume 이 잘린 transcript 를 읽던 문제 수정",
+          "originalRefs": [
+            11
+          ]
+        },
+        {
+          "text": "2.1.286 이전에 시작한 대화를 재개하면 모델의 이전 thinking 이 사라지던 문제 수정",
+          "originalRefs": [
+            12
+          ]
+        },
+        {
+          "text": "Mantle 이나 structured output 을 거부하는 gateway 에서 세션 제목·memory recall·prompt hook 이 실패하던 문제 수정 — `CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS` 로 끌 수 있음",
+          "originalRefs": [
+            13
+          ]
+        },
+        {
+          "text": "차단된 도구가 Bash 가 아닌데 auto mode 거부가 Bash 권한 규칙을 안내하던 문제 수정",
+          "originalRefs": [
+            14
+          ]
+        },
+        {
+          "text": "Bedrock·Mantle 의 auto mode 가 구형 모델 요청(WebFetch 요약, `sonnet` subagent) 후 세션 내내 local classifier 로 전환되던 문제 수정",
+          "originalRefs": [
+            15
+          ]
+        },
+        {
+          "text": "새로 고른 모델로 재시작한 cloud session 이 서버가 거부한 뒤에도 그 모델로 응답하던 문제 수정",
+          "originalRefs": [
+            16
+          ]
+        },
+        {
+          "text": "미승인 URL 의 WebFetch 권한 프롬프트가 5분간 무응답이면 Cowork cloud session 이 입력 대기 상태로 남던 문제 수정",
+          "originalRefs": [
+            17
+          ]
+        },
+        {
+          "text": "다른 기기에서 시작한 Cowork cloud session 에 폰으로 합류하면 prompt suggestion 이 안 보이던 문제 수정",
+          "originalRefs": [
+            18
+          ]
+        },
+        {
+          "text": "재시작 전 그려진 view 에서 mod 버튼이 다른 버튼의 동작을 실행하던 문제 수정",
+          "originalRefs": [
+            19
+          ]
+        },
+        {
+          "text": "플러그인 pane 의 `Code` 요소가 파싱 불가한 diff 를 담으면 빈 화면이던 문제 수정 — plain code 로 렌더",
+          "originalRefs": [
+            20
+          ]
+        },
+        {
+          "text": "플러그인 LSP 서버의 `initializationOptions`·`settings` 에 `${user_config.*}`·`${CLAUDE_PLUGIN_ROOT}` 가 치환되지 않은 채 전달되던 문제 수정",
+          "originalRefs": [
+            21
+          ]
+        },
+        {
+          "text": "worktree 에서 실행되는 subagent 에서 플러그인 `tool.call` hook 이 Bash 실패와 잘못된 폴더 검색을 유발하던 문제 수정",
+          "originalRefs": [
+            22
+          ]
+        },
+        {
+          "text": "구형 git(2.39 미만, Ubuntu 22.04 의 2.34 등)에서 `git-subdir` 플러그인 설치 실패·불완전 캐시 수정",
+          "originalRefs": [
+            23
+          ]
+        },
+        {
+          "text": "`--plugin-dir` 로 로드한 플러그인이 `/plugin` 에 \"Configure options\" 를 보이지 않던 문제 수정",
+          "originalRefs": [
+            24
+          ]
+        },
+        {
+          "text": "타이머·읽기가 진행 중인 플러그인을 reload·disable 하면 background session 이 종료되던 문제 수정",
+          "originalRefs": [
+            25
+          ]
+        },
+        {
+          "text": "sandbox auto-allow 에서 unquoted delimiter heredoc(`python3 <<EOF`)이 평문과 단순 `$VAR` 만 담아도 매번 승인을 요청하던 문제 수정",
+          "originalRefs": [
+            26
+          ]
+        },
+        {
+          "text": "셸이 산술 평가하는 값의 `BASHPID` 할당을 무음 허용 대신 실행 전 프롬프트",
+          "originalRefs": [
+            27
+          ]
+        },
+        {
+          "text": "플러그인·mod 행이 프롬프트 위에 있을 때 background tasks 대화상자를 열면 fullscreen 세션이 \"unrecoverable interface error\" 로 종료되던 문제 수정",
+          "originalRefs": [
+            28
+          ]
+        },
+        {
+          "text": "다른 세션이 메시지를 보류했는데 전달됨으로 보고하던 문제 수정 — 미전달과 세션명을 표시하고 SDK 세션은 턴 중간에 인지",
+          "originalRefs": [
+            29
+          ]
+        },
+        {
+          "text": "OpenTelemetry `claude_code.tool.blocked_on_user` span 이 `-p`·SDK 세션과 PreToolUse hook 승인에서 `unknown` source·decision 을 보고하던 문제 수정",
+          "originalRefs": [
+            30
+          ]
+        },
+        {
+          "text": "`-p` 또는 중단된 턴에서 미응답으로 끝난 권한 요청이 `tool_decision` 이벤트를 내지 않던 문제 수정",
+          "originalRefs": [
+            31
+          ]
+        },
+        {
+          "text": "Cowork cloud session 의 Edit·Retry 가 히스토리가 남아 있는 `/compact` 이전 메시지를 거부하던 문제 수정",
+          "originalRefs": [
+            32
+          ]
+        },
+        {
+          "text": "`CLAUDE_CODE_RETRY_WATCHDOG` unattended 세션이 긴 응답 스트림 실패 후 수 시간 재시도하던 문제 수정 — 재스트리밍 후 timeout 3회면 포기",
+          "originalRefs": [
+            33
+          ]
+        },
+        {
+          "text": "secure storage 저장 실패에도 `/login` 이 \"Login successful\" 을 표시하던 문제 수정 — 실패 표시 및 미적용 시 재시도 제공 (#73861)",
+          "originalRefs": [
+            34
+          ]
+        },
+        {
+          "text": "Bedrock 자격증명 조회 중 Stop 이 요청 종료 대신 fallback 모델로 전환시키던 문제 수정",
+          "originalRefs": [
+            35
+          ]
+        },
+        {
+          "text": "다른 Claude Code 프로세스가 로그인 중일 때 노트북이 깨어나면 `gcpAuthRefresh`/`awsAuthRefresh` 브라우저 로그인이 중복으로 열리던 문제 수정",
+          "originalRefs": [
+            36
+          ]
+        },
+        {
+          "text": "agent teams 에서 이름으로 spawn 한 플러그인 정의 에이전트가 기본값 대신 자체 prompt·tools·disallowedTools·effort 로 실행",
+          "originalRefs": [
+            37
+          ]
+        },
+        {
+          "text": "`timeout`·systemd 가 SIGCONT 와 함께 보낸 SIGTERM 을 headless(`-p`/SDK) 세션이 간혹 무시하던 문제 수정",
+          "originalRefs": [
+            38
+          ]
+        },
+        {
+          "text": "재시작한 cloud session 이 조직 enforced model list 가 거부하는 모델을 복원하던 문제 수정",
+          "originalRefs": [
+            39
+          ]
+        },
+        {
+          "text": "원격 서버 결과가 16MB 를 넘거나 파싱 불가하면 MCP tool call 이 두 번 실행되던 문제 수정",
+          "originalRefs": [
+            40
+          ]
+        },
+        {
+          "text": "Claude Desktop Code 탭의 subagent 가 `memory` 라는 이름의 사용자 MCP 서버 도구를 하나도 받지 못하던 문제 수정",
+          "originalRefs": [
+            41
+          ]
+        },
+        {
+          "text": "auto mode 불가 상황(`disableAutoMode`, 구형 모델)에서 Claude in Chrome 이 허용 사이트의 매 스크린샷·페이지 읽기마다 묻던 문제 수정 — 타이핑·내비게이션·JavaScript 는 계속 질문",
+          "originalRefs": [
+            42
+          ]
+        },
+        {
+          "text": "GitHub SSH 키 없는 macOS·Linux 에서 GitHub 소스 `claude plugin install` 이 실패하던 문제 수정 — HTTPS 로 fallback 하고 안내 출력",
+          "originalRefs": [
+            43
+          ]
+        },
+        {
+          "text": "`permissions.blockReadsOutsideWorkingDirectories` 활성 시 git config 파일의 `sandbox.credentials.files` 항목이 적용되지 않던 문제 수정",
+          "originalRefs": [
+            44
+          ]
+        },
+        {
+          "text": "Team·Enterprise 플랜이나 managed settings 머신에서 Artifact tool 로 slides·design 을 시작할 때 조직 design system 이 빠지던 문제 수정",
+          "originalRefs": [
+            45
+          ]
+        },
+        {
+          "text": "Windows 에서 자체 재시작(Claude apps gateway 첫 로그인, provider 설정, `/tui`) 후 키보드가 먹통이던 문제 수정",
+          "originalRefs": [
+            46
+          ]
+        },
+        {
+          "text": "`tools:` 에 매우 많은 `Agent(...)` 항목이 있는 에이전트 실행 시 stall 수정",
+          "originalRefs": [
+            47
+          ]
+        },
+        {
+          "text": "PDF 전체가 대화에 들어간 뒤 Claude 3 Opus·Claude 3 Sonnet 세션이 매 턴 실패하던 문제 수정",
+          "originalRefs": [
+            48
+          ]
+        },
+        {
+          "text": "플랫폼 네이티브 바이너리 다운로드 실패로 placeholder `claude` stub 만 설치됐는데 npm auto-updater 가 성공 보고하던 문제 수정",
+          "originalRefs": [
+            49
+          ]
+        },
+        {
+          "text": "Remote Control cleanup 이 아직 연결 중이거나 다른 프로세스가 방금 재연결한 세션을 archive 하던 문제 수정",
+          "originalRefs": [
+            50
+          ]
+        },
+        {
+          "text": "`owner/repo` plugin marketplace 의 SSH·HTTPS fetch 가 모두 실패하면 두 번째 오류만 보이던 문제 수정 — 먼저 시도한 transport 를 위에 두고 둘 다 표시",
+          "originalRefs": [
+            51
+          ]
+        },
+        {
+          "text": "Write·Edit 가 범위 내 파일을 생성·변경할 때 path-scoped `.claude/rules`·중첩 CLAUDE.md 가 로드되지 않던 문제 수정 (기존엔 Read 만 로드)",
+          "originalRefs": [
+            52
+          ]
+        },
+        {
+          "text": "`bash -c`·`sh -c` 스크립트 안의 위험한 `rm`(`/`·홈 디렉토리)이 bypassPermissions 모드나 shell allow rule 하에서 프롬프트 없이 실행되던 문제 수정 (#96300)",
+          "originalRefs": [
+            53
+          ]
+        },
+        {
+          "text": "dynamic capability registration 을 쓰거나 응답을 멈춘 language server 에서 LSP tool call 이 무한 대기하던 문제 수정 — 60s timeout (서버별 `requestTimeout`)",
+          "originalRefs": [
+            54
+          ]
+        },
+        {
+          "text": "background agent 실행 중에 `idle_prompt` notification hook 이 발화하던 문제 수정 (#93672)",
+          "originalRefs": [
+            55
+          ]
+        },
+        {
+          "text": "hook 매칭 실패나 tool input JSON 직렬화 불가 시 PreToolUse·PermissionRequest hook 이 건너뛰어지던 문제 수정 — 해당 호출 차단",
+          "originalRefs": [
+            56
+          ]
+        },
+        {
+          "text": "새 환경 첫 요청·모델 전환 후 첫 요청이 서버 값 대신 내장 output limit·auto-compact 윈도우를 쓰던 문제 수정 — 최대 1.5초 대기 가능",
+          "originalRefs": [
+            57
+          ]
+        },
+        {
+          "text": "ctrl+enter 로 큐 메시지 전송 후 Interrupted 행에 `What should Claude do instead?` 힌트가 뜨던 문제 수정",
+          "originalRefs": [
+            58
+          ]
+        },
+        {
+          "text": "`--bare` 세션의 `/login` 이 세션이 읽지 않는 로그인을 실행해 저장된 로그인을 덮어쓸 수 있던 문제 수정 — 유효한 자격증명 방식 안내",
+          "originalRefs": [
+            59
+          ]
+        },
+        {
+          "text": "subagent 파일 접근으로 rule·중첩 CLAUDE.md 가 로드될 때 InstructionsLoaded hook 에 agent_id·agent_type 이 빠지던 문제 수정 — effort 도 함께 보고",
+          "originalRefs": [
+            60
+          ]
+        },
+        {
+          "text": "`claude mcp serve` 의 Agent tool 이 항상 에이전트 없음을 보고하고 모든 subagent_type 을 거부하던 문제 수정",
+          "originalRefs": [
+            61
+          ]
+        },
+        {
+          "text": "fullscreen transcript viewer 검색과 `/theme` 커스텀 색상 검색에서 커서가 입력 텍스트를 따라가지 않던 문제 수정",
+          "originalRefs": [
+            62
+          ]
+        },
+        {
+          "text": "screen reader 모드 `/permissions` 에서 규칙 번호 입력 시 검색창 대신 해당 규칙 선택",
+          "originalRefs": [
+            63
+          ]
+        },
+        {
+          "text": "[VSCode] claude.ai connector 인증 후에도 \"Needs authentication\" 에 머물던 문제 수정 — MCP servers 대화상자에 Check connection 제공",
+          "originalRefs": [
+            80
+          ]
+        },
+        {
+          "text": "[VSCode] opt-in New Conversation 단축키(Cmd/Ctrl+N)가 보이는 모든 Claude view 에 대화를 시작하던 문제 수정",
+          "originalRefs": [
+            81
+          ]
+        },
+        {
+          "text": "[VSCode] 표시 중인 세션을 archive 하면 chat view 가 다음 저장 세션을 재개하던 문제 수정 — 새 대화 시작",
+          "originalRefs": [
+            82
+          ]
+        },
+        {
+          "text": "[Cloud sessions] 무관한 보안 설정이 로딩 중이거나 실패하면 admin settings 의 Cloud sessions 스위치가 꺼진 채 잠기던 문제 수정",
+          "originalRefs": [
+            83
+          ]
+        },
+        {
+          "text": "[Cloud sessions] self-hosted runner 기동 중 Stop 이 큐 메시지를 취소하지 않아 runner 가 뜬 뒤 실행되던 문제 수정",
+          "originalRefs": [
+            84
+          ]
+        },
+        {
+          "text": "[Claude Tag] 자동 생성된 채널 설정에서 항상 실패하던 \"Remove this scope\" 옵션 제거",
+          "originalRefs": [
+            85
+          ]
+        },
+        {
+          "text": "`claude plugin test` 가 오래된 저장 설정만 읽고 mod 가 원격에서 꺼졌다고 보고하던 문제 수정",
+          "originalRefs": [
+            88
+          ]
+        }
+      ],
+      "devImpact": [
+        {
+          "text": "`claude project purge` 가 `claude purge` 로 바뀜 — 스크립트의 구 명령은 당분간 동작하나 안내가 출력되므로 교체 권장.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 12
+            }
+          ]
+        },
+        {
+          "text": "Mantle·structured output 미지원 gateway 환경은 `CLAUDE_CODE_DISABLE_STRUCTURED_OUTPUTS` 로 세션 제목·memory recall 실패를 우회 가능.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "text": "background command 시간 제한이 터미널·데스크톱·VS Code 세션에서 사라지고 `-p`·SDK·CI·cloud 에만 남음 — 장시간 백그라운드 작업 설계 시 참고.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 10
+            }
+          ]
+        },
+        {
+          "text": "`ANTHROPIC_DEFAULT_SONNET_MODEL` 에 Sonnet 5.5·Opus 5.5 를 핀해도 auto mode classifier 는 Claude Sonnet 5 를 사용.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 11
+            }
+          ]
+        },
+        {
+          "text": "`bash -c` 안의 위험한 `rm` 이 bypassPermissions·allow rule 하에서도 프롬프트를 띄우고 LSP 요청은 60s(`requestTimeout`) 후 timeout — 자동화 파이프라인의 무응답 가정 재점검 필요.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 46
+            },
+            {
+              "bucket": "fixes",
+              "index": 47
+            }
+          ]
+        },
+        {
+          "text": "hook 매칭 실패·입력 직렬화 실패 시 PreToolUse·PermissionRequest hook 을 건너뛰지 않고 호출 자체를 차단 — hook 스크립트 오류가 곧 도구 차단으로 이어짐.",
+          "refs": [
+            {
+              "bucket": "fixes",
+              "index": 49
+            }
+          ]
+        },
+        {
+          "text": "`/autocompact` 윈도우가 모델별로 저장되므로 모델 전환 후 compaction 시점이 달라질 수 있음.",
+          "refs": [
+            {
+              "bucket": "changes",
+              "index": 14
+            }
+          ]
+        }
+      ]
+    },
+    "summarizedAt": "2026-10-07T02:01:24.916Z",
+    "summaryModel": "claude-sonnet-4-6"
+  },
+  {
     "version": "v2.1.287",
     "tagName": "v2.1.287",
     "publishedAt": "2026-10-01T18:00:22Z",
